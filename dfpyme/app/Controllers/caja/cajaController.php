@@ -74,6 +74,14 @@ class cajaController extends BaseController
         ];
 
         $apertura = model('aperturaModel')->insert($data);
+        $id_apertura=model('aperturaModel')->insertID();
+        $apertura_registro=[
+           'idcaja'=>1,
+           'numero'=>$id_apertura
+
+        ];
+        $apertura_registro=model('aperturaRegistroModel')->insert($apertura_registro);
+
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
         return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Apertura de caja éxitoso ');

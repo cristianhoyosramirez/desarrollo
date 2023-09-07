@@ -28,6 +28,7 @@ class FacturaElectronica extends BaseController
         $nit_cliente = $this->request->getPost('nit_cliente');
         $estado = $this->request->getPost('estado');
         $pago_total = $this->request->getPost('pago_total');
+        $propina = $this->request->getPost('propina_format');
 
         /*      $id_mesa = 95;
         $tipo_pago = 1;         // Tipo de pago 1 = pago completo; 0 pago parcial
@@ -87,6 +88,15 @@ class FacturaElectronica extends BaseController
 
         $id_factura = $id_fact['id'];
 
+
+        $data = [
+            'estado' => $estado,
+            'valor_propina' => $propina,
+            'id_factura' => $id_fact['id']
+        ];
+
+        $propina_factura = model('FacturaPropinaModel')->insert($data);
+
         $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
 
 
@@ -103,7 +113,7 @@ class FacturaElectronica extends BaseController
         }
 
         if ($tipo_pago == 0) {
-            $productos = model('partirFacturaModel')->get_productos_pago_parcial($numero_pedido['id']); // Tipo de pago 2 = pago completo; los productos salen de la tabla partirFactura 
+            $productos = model('partirFacturaModel')->get_productos_pago_parcial($numero_pedido['id']); // Tipo de pago 0 = pago parcial; los productos salen de la tabla partirFactura 
         }
 
         if ($id_regimen['idregimen'] == 1) {  // Empresa con impuestos 
@@ -162,6 +172,25 @@ class FacturaElectronica extends BaseController
                 $costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
                 $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $detalle['valor_unitario'], $detalle['valor_total']);
+
+                $data = [
+                    'idcompra' => 0,
+                    'codigo' => $detalle['codigointernoproducto'],
+                    'idusuario' => $id_usuario,
+                    'idconcepto' => 10,
+                    'numerodocumento' => $id_factura,
+                    'fecha' => date('Y-m-d'),
+                    'hora' => date('H:i:s'),
+                    'cantidad' => $detalle['cantidad_producto'],
+                    'valor' => $detalle['valor_unitario'],
+                    'total' => $detalle['valor_total'],
+                    'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                ];
+
+  
+                $insertar=model('kardexModel')->insert($data);
+
+
             }
         }
         if ($insert) {

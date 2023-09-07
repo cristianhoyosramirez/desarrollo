@@ -22,8 +22,10 @@ function pago_parcial() {
                     $('#total_pago_parcial').html(resultado.total);
                     $("#partir_factura").modal("show");
 
+                }
 
-
+                if (resultado.resultado == 0) {
+                   sweet_alert('warning','¡ Debe abrir la caja !')
                 }
             },
         });

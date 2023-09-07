@@ -262,335 +262,10 @@ class Imprimir extends BaseController
     }
 
 
-    /*  public function imprimir_factura()
-    {
-
-        $id_factura = 120137;
-        //$id_factura = $_POST['numero_de_factura']; 
-
-        $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
-
-        if (!empty($numero_factura['numerofactura_venta'])) {
-
-            $numero_factura['numerofactura_venta'];
-
-
-            $fecha_factura_venta = model('facturaVentaModel')->select('fecha_factura_venta')->where('id', $id_factura)->first();
-            $hora_factura_venta = model('facturaVentaModel')->select('horafactura_venta')->where('id', $id_factura)->first();
-            $id_usuario = model('facturaVentaModel')->select('idusuario_sistema')->where('id', $id_factura)->first();
-            $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario['idusuario_sistema'])->first();
-            $datos_empresa = model('empresaModel')->datosEmpresa();
-
-            $nit_cliente = model('facturaVentaModel')->select('nitcliente')->where('id', $id_factura)->first();
-            $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente['nitcliente'])->first();
-
-            $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
-
-            $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
-
-            $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
-            $printer = new Printer($connector);
-
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->setTextSize(1, 2);
-            $printer->text($datos_empresa[0]['nombrecomercialempresa'] . "\n");
-            $printer->setTextSize(1, 1);
-            $printer->text($datos_empresa[0]['nombrejuridicoempresa'] . "\n");
-            $printer->text("NIT :" . $datos_empresa[0]['nitempresa'] . "\n");
-            $printer->text($datos_empresa[0]['direccionempresa'] . "  " . $datos_empresa[0]['nombreciudad'] . " " . $datos_empresa[0]['nombredepartamento'] . "\n");
-            $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
-            $printer->text($datos_empresa[0]['nombreregimen'] . "\n");
-            $printer->text("\n");
-
-
-            $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->setTextSize(1, 1);
-            $estado_factura = model('facturaVentaModel')->estado_factura($id_factura);
-
-            $printer->text("TIPO DE VENTA:" . $estado_factura[0]['descripcionestado'] . "\n");
-
-            $printer->text("FECHA:" . " " . $fecha_factura_venta['fecha_factura_venta'] . "  " . date("g:i a", strtotime($hora_factura_venta['horafactura_venta'])) . "\n");
-            if ($estado_factura[0]['idestado'] == 2) {
-                $printer->text("FECHA LIMITE:" . $estado_factura[0]['fechalimitefactura_venta'] . "\n");
-            }
-            $printer->text("CAJA : 1" . "\n");
-            $printer->text("CAJERO: " . $nombre_usuario['nombresusuario_sistema'] . "\n");
-
-            $printer->text("---------------------------------------------" . "\n");
-            $printer->text("CLIENTE :" . " " . $nombre_cliente['nombrescliente'] . "\n");
-            $printer->text("NIT     :" . $nit_cliente['nitcliente'] . "\n");
-            $printer->text("---------------------------------------------" . "\n");
-            $printer->text("CODIGO    DESCRIPCION   VALOR UNITARIO    TOTAL" . "\n");
-            $printer->text("---------------------------------------------" . "\n");
-
-
-
-            $items = model('productoFacturaVentaModel')->getProductosFacturaVentaModel($id_factura);
-
-
-            $maxCodigoLength = 0;
-
-            // Calcular la longitud máxima de la columna de códigos
-            foreach ($items as $detalle) {
-                $codigoLength = strlen($detalle['codigointernoproducto']);
-                $maxCodigoLength = max($maxCodigoLength, $codigoLength);
-            }
-
-
-            foreach ($items as $detalle) {
-                $valor_venta = $detalle['total'] / $detalle['cantidadproducto_factura_venta'];
-                $codigoLength = strlen($detalle['codigointernoproducto']);
-                $temp = 0;
-
-                $diferencia = $maxCodigoLength - $codigoLength;
-
-                $codigoLength .= str_repeat('0', $diferencia);
-                $cadena_formateada = str_pad($detalle['codigointernoproducto'], $maxCodigoLength, $temp, STR_PAD_LEFT);
-                //echo "Cod." . $cadena_formateada . " c</br>";
-
-                $codigo = $cadena_formateada;
-                $nombre = $detalle['nombreproducto'];
-                $cantidad = $detalle['cantidadproducto_factura_venta'] . " X";
-                $valor_unitario = "$" . number_format($valor_venta, 0, ',', '.');
-                $total = "$" . number_format($detalle['total'], 0, ',', '.');
-
-                // Ajustar la longitud de cada campo para que las columnas estén alineadas
-                $codigo = str_pad($codigo, 10);
-                $nombre = str_pad($nombre, 22);
-                $cantidad = str_pad($cantidad, 10);
-                $valor_unitario = str_pad($valor_unitario, 23);
-                $total = str_pad($total, 15);
-
-                // Imprimir la línea formateada
-                $printer->setJustification(Printer::JUSTIFY_LEFT);
-                //$printer->text("$codigo$nombre$cantidad$valor_unitario$total\n");
-                $printer->text("$codigo$nombre\n$cantidad$valor_unitario$total\n");
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            $printer->text("---------------------------------------------" . "\n");
-            $total = model('productoFacturaVentaModel')->selectSum('total')->where('id_factura', $id_factura)->find();
-            $printer->setJustification(Printer::JUSTIFY_RIGHT);
-
-
-          
-
-            $descuento = model('facturaVentaModel')->select('descuento')->where('id', $id_factura)->first();
-            
-            $printer->text("DESCUENTO :" . "$" . number_format($descuento['descuento'], 0, ",", ".") . "\n");
-
-            $propina = model('facturaVentaModel')->select('propina')->where('id', $id_factura)->first();
-            $printer->text("PROPINA :" . "$" . number_format($propina['propina'], 0, ",", ".") . "\n\n");
-            $printer->setTextSize(2, 2);
-            $total = ($total[0]['total'] - $descuento['descuento']) + $propina['propina'];
-            $printer->text("TOTAL :" . "$" . number_format($total, 0, ",", ".") . "\n\n");
-
-            $efectivo = model('facturaFormaPagoModel')->selectSum('valor_pago')->where('id_factura', $id_factura)->find();
-            $printer->setTextSize(1, 1);
-            $id_forma_pago = model('facturaFormaPagoModel')->id_forma_pago($id_factura);
-            $nombre_max_length = 0; // Longitud máxima de "nombre forma de pago"
-
-            foreach ($id_forma_pago as $forma_pago) {
-                $nombre_forma_pago = model('facturaFormaPagoModel')->nombre_forma_pago($forma_pago['idforma_pago']);
-                $valor_forma_pago = model('facturaFormaPagoModel')->valor_forma_pago($forma_pago['idforma_pago'], $id_factura);
-
-                // Calcular la longitud de "nombre forma de pago" y actualizar la longitud máxima si es necesario
-                $nombre_length = strlen($nombre_forma_pago[0]['nombreforma_pago']);
-                $nombre_max_length = max($nombre_max_length, $nombre_length);
-
-                $printer->text($nombre_forma_pago[0]['nombreforma_pago'] . "$" . number_format($valor_forma_pago[0]['valor_pago'], 0, ",", ".") . "\n");
-            }
-
-            // Imprimir una línea horizontal para separar
-            $printer->text(str_repeat('-', $nombre_max_length + 2) . "\n");
-
-            if ($estado_factura[0]['idestado'] == 1 or $estado_factura[0]['idestado'] == 7) {
-                $cambio = $efectivo[0]['valor_pago'] - $total;
-                $printer->text("CAMBIO :" . "$" . number_format($cambio, 0, ",", ".") . "\n");
-            }
-
-
-            $regimen = model('empresaModel')->select('idregimen')->first();
-
-            if ($regimen['idregimen'] == 1) {
-                if ($estado_factura[0]['idestado'] == 1 or $estado_factura[0]['idestado'] == 2) {
-                    $tarifa_iva = model('productoFacturaVentaModel')->tarifa_iva($id_factura);
-                    if (!empty($tarifa_iva)) {
-                        $printer->setJustification(Printer::JUSTIFY_CENTER);
-                        $printer->setTextSize(1, 1);
-                        $printer->text("**DISCRIMINACION TARIFAS DE IVA** \n");
-                        $printer->setJustification(Printer::JUSTIFY_LEFT);
-                        $printer->text("TARIFA    COMPRA       BASE/IMP         IVA" . "\n");
-                        foreach ($tarifa_iva as $iva) {
-                            $datos_iva = model('productoFacturaVentaModel')->base_iva($iva['valor_iva'], $id_factura);
-                            if (!empty($datos_iva)) {
-                                $printer->text($iva['valor_iva'] . "%" . "          " . "$" . number_format($datos_iva[0]['compra'], 0, ",", ".") . "   " . "$" . number_format($datos_iva[0]['base'] * $datos_iva[0]['cantidadproducto_factura_venta'], 0, ",", ".") . "    " . "$" . number_format($datos_iva[0]['compra'] - ($datos_iva[0]['base'] * $datos_iva[0]['cantidadproducto_factura_venta']), 0, ",", ".") . "\n");
-                            }
-                        }
-                    }
-
-                    $tarifa_ico = model('productoFacturaVentaModel')->tarifa_ico($id_factura);
-
-
-
-                    if (!empty($tarifa_ico)) {
-                        $printer->text("\n");
-                        $printer->setJustification(Printer::JUSTIFY_CENTER);
-                        $printer->setTextSize(1, 1);
-                        $printer->text("**DISCRIMINACION TARIFAS DE IPO CONSUMO** \n");
-                        $printer->setJustification(Printer::JUSTIFY_LEFT);
-                        $printer->text("TARIFA    COMPRA     BASE/IMP        IPO CONSUMO" . "\n");
-
-                        foreach ($tarifa_ico as $ico) {
-                            //  $printer->text($iva['valor_iva']."%". "\n");
-                            $total_compra = model('productoFacturaVentaModel')->total_compra($ico['valor_ico'], $id_factura);
-                            $base_ico = model('productoFacturaVentaModel')->base_ico($ico['valor_ico'], $id_factura);
-                            $printer->text($ico['valor_ico'] . "%" . "          " . "$" . number_format($total_compra[0]['compra'], 0, ",", ".") . "   " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "    " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "\n");
-                        }
-                    }
-
-
-                    // if ($estado_factura[0]['descripcionestado'] == 1 or $estado_factura[0]['descripcionestado'] == 2) {
-                    $id_registro_dian = model('consecutivosModel')->select('numeroconsecutivo')->Where('idconsecutivos', 6)->first();
-
-
-                    // $prefijo_factura = model('consecutivosModel')->select('numeroconsecutivo')->where('conceptoconsecutivo =', 'FacturaPrefijo')->first();
-                    $prefijo_factura = model('dianModel')->select('inicialestatica')->where('iddian ', $id_registro_dian['numeroconsecutivo'])->first();
-
-                    $id_resolucion_dian = model('consecutivosModel')->select('numeroconsecutivo')->where('conceptoconsecutivo =', 'IdRegistroDian')->first();
-
-                    $factura_prefijo = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', $id_resolucion_dian['numeroconsecutivo'])->first();
-
-                    $fecha_dian = model('dianModel')->select('fechadian')->where('iddian', $id_resolucion_dian['numeroconsecutivo'])->first();
-                    $rango_inicial = model('dianModel')->select('rangoinicialdian')->where('iddian', $id_resolucion_dian['numeroconsecutivo'])->first();
-                    $rango_final = model('dianModel')->select('rangofinaldian')->where('iddian', $id_resolucion_dian['numeroconsecutivo'])->first();
-                    $texto_inicial = model('dianModel')->select('texto_inicial')->where('iddian', $id_resolucion_dian['numeroconsecutivo'])->first();
-                    $texto_final = model('dianModel')->select('texto_final')->where('iddian', $id_resolucion_dian['numeroconsecutivo'])->first();
-
-                    $numero_resolucion_dian = model('dianModel')->select('numeroresoluciondian')->where('iddian', $id_resolucion_dian['numeroconsecutivo'])->first();
-                    $printer->text("\n");
-                    $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->setTextSize(1, 1);
-                    $printer->text($texto_inicial['texto_inicial'] . " " . $numero_resolucion_dian['numeroresoluciondian'] . " de" . " " . $fecha_dian['fechadian'] . "\n");
-                    $printer->text($texto_final['texto_final'] . " Del " . $rango_inicial['rangoinicialdian'] . " al " . " "  . $rango_final['rangofinaldian'] . " " . "Prefijo " . $prefijo_factura['inicialestatica'] . "\n");
-                }
-            }
-
-            $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->setTextSize(1, 1);
-            $fk_usuario_mesero = model('facturaVentaModel')->select('fk_usuario_mesero')->where('id', $id_factura)->first();
-            $nombreusuario_sistema = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $fk_usuario_mesero['fk_usuario_mesero'])->first();
-            $printer->text("ATENDIDO POR:" . $nombreusuario_sistema['nombresusuario_sistema'] . "\n");
-
-            $observaciones_genereles = model('facturaVentaModel')->select('observaciones_generales')->where('id', $id_factura)->first();
-            $fk_mesa = model('facturaVentaModel')->select('fk_mesa')->where('id', $id_factura)->first();
-            $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $fk_mesa['fk_mesa'])->first();
-            if (!empty($nombre_mesa['nombre'])) {
-                $printer->text("MESA:" . $nombre_mesa['nombre'] . "\n");
-            }
-            if (empty($nombre_mesa['nombre'])) {
-                $printer->text("MESA: VENTAS DE MOSTRADOR" . "\n");
-            }
-
-            if (!empty($observaciones_genereles['observaciones_generales'])) {
-                $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $printer->setTextSize(1, 2);
-                $printer->text("OBSERVACIONES GENERALES\n");
-                $printer->setJustification(Printer::JUSTIFY_LEFT);
-                $printer->setTextSize(1, 1);
-                $printer->text($observaciones_genereles['observaciones_generales'] . "\n");
-            }
-
-            $printer->text("-----------------------------------------------" . "\n");
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->setTextSize(1, 1);
-            $printer->text("IMPRESO POR SOFTWARE DFPYME INTREDETE" . "\n");
-
-            $printer->text("-----------------------------------------------" . "\n");
-            $printer->text("GRACIAS POR SU VISITA " . "\n");
-
-            $printer->feed(1);
-            $printer->cut();
-
-            $printer->close();
-
-            $movimientos_transaccion = model('facturaformaPagoModel')->valor_pago_transaccion($id_factura);
-            $movimientos_efectivo = model('facturaformaPagoModel')->valor_pago_transaccion($id_factura);
-
-            $imprime_boucher = model('cajaModel')->select('imp_comprobante_transferencia')->where('numerocaja', 1)->first();
-
-            if ($imprime_boucher['imp_comprobante_transferencia'] == 1) {
-
-                if (!empty($movimientos_transaccion[0]['valor_pago'])) {
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->setTextSize(1, 1);
-                    $printer->text("SOPORTE TRANSFERENCIA\n");
-                    $printer->text($datos_empresa[0]['nombrecomercialempresa'] . "\n");
-                    //$printer->text($datos_empresa[0]['representantelegalempresa'] . "\n");
-                    $printer->text("NIT :" . $datos_empresa[0]['nitempresa'] . "\n");
-
-                    $printer->text("\n");
-
-                    $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->setTextSize(1, 1);
-                    $printer->text("FACTURA DE VENTA:" . $numero_factura['numerofactura_venta'] . "\n");
-                    $printer->text("FECHA:" . " " . $fecha_factura_venta['fecha_factura_venta'] . "  " . $hora_factura_venta['horafactura_venta'] . "\n");
-
-                    $printer->text("TOTAL :" . "$" . number_format($total[0]['total'], 0, ",", ".") . "\n\n");
-                    $efectivo = "";
-                    if (!empty($movimientos_efectivo[0]['valor_pago'])) {
-                        //$printer->text("EFECTIVO :" . "$" . number_format($movimientos_efectivo[0]['valorfactura_forma_pago'], 0, ",", ".") . "\n");
-                        $efectivo = $movimientos_efectivo[0]['valor_pago'];
-                    }
-                    if (empty($movimientos_efectivo[0]['valor_pago'])) {
-                        //$printer->text("EFECTIVO :" . "$" . number_format($movimientos_efectivo[0]['valorfactura_forma_pago'], 0, ",", ".") . "\n");
-                        $efectivo = 0;
-                    }
-                    $printer->setTextSize(1, 1);
-                    $printer->text("Pago efectivo  :" . "$" . number_format($efectivo, 0, ",", ".") . "\n");
-                    $printer->text("Pago transferencia :" . "$" . number_format($movimientos_transaccion[0]['valor_pago'], 0, ",", ".") . "\n");
-                    $printer->text("Cambio :" . "$" . number_format(($movimientos_transaccion[0]['valor_pago'] + $movimientos_efectivo[0]['valor_pago']) - $total[0]['total'], 0, ",", ".") . "\n\n\n");
-
-                    $printer->text("Nota:____________________________________" . "\n\n");
-                    $printer->setTextSize(1, 1);
-                    $printer->text("Nombre:_________________________________ \n\n");
-                    $printer->text("Identificación:__________________________ \n\n");
-                    $printer->text("Teléfono:________________________________\n\n");
-
-
-                    $printer->feed(1);
-                    $printer->cut();
-                    $printer->pulse();
-                    $printer->close();
-                } else if (empty($movimientos_transaccion)) {
-                    $printer->pulse();
-                    $printer->close();
-                }
-            }
-            $returnData = array(
-                "resultado" => 1, //Falta plata 
-                "tabla" => view('factura_pos/tabla_reset_factura')
-            );
-            echo  json_encode($returnData);
-        }
-    } */
     public function imprimir_factura()
     {
 
-        //$id_factura = 120255;
+        //$id_factura = 120397;
         $id_factura = $_POST['numero_de_factura'];
 
         $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
@@ -674,6 +349,10 @@ class Imprimir extends BaseController
             $iva_temp = 0;
             $ico_temp = 0;
             $venta_real_temp = 0;
+
+
+
+
             foreach ($cantidad_iva  as $detalle) {
                 $iva = $detalle['cantidadproducto_factura_venta'] * $detalle['iva'];
                 $impuesto_al_consumo = $detalle['cantidadproducto_factura_venta'] * $detalle['impuesto_al_consumo'];
@@ -684,16 +363,22 @@ class Imprimir extends BaseController
                 $ico_temp = $total_ico;
 
                 $sub_total = $detalle['valor_venta_real'] * $detalle['cantidadproducto_factura_venta'];
+                //$sub_total = $detalle['valor_venta_real'] * $detalle['cantidadproducto_factura_venta'];
                 $sub_totales = $sub_total + $venta_real_temp;
                 $venta_real_temp = $sub_totales;
             }
+
+            //echo $total_iva."</br>";
+
 
             $printer->text("---------------------------------------------" . "\n");
             $total = model('productoFacturaVentaModel')->selectSum('total')->where('id_factura', $id_factura)->find();
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
 
 
-            $printer->text("SUB TOTAL :" . "$" . number_format($sub_totales, 0, ",", ".") . "\n");
+            $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva), 0, ",", ".") . "\n");
+
+
             if ($total_iva != 0) {
                 $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");
             }

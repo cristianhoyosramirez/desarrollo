@@ -208,7 +208,7 @@ class duplicadoFacturaController extends BaseController
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
 
 
-            $printer->text("SUB TOTAL :" . "$" . number_format($sub_totales, 0, ",", ".") . "\n");
+            $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total']-($total_ico+$total_iva), 0, ",", ".") . "\n");
             if ($total_iva != 0) {
                 $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");
             }

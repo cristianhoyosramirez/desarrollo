@@ -61,10 +61,11 @@ class productoController extends BaseController
         //$data = $this->db->query($sql_data)->getResult();
         if (!empty($datos)) {
             foreach ($datos as $detalle) {
+                $cantidad=model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto',$detalle['codigointernoproducto'])->first();
                 $sub_array = array();
                 $sub_array[] = $detalle['codigointernoproducto'];
                 $sub_array[] = $detalle['nombreproducto'];
-                $sub_array[] = $detalle['nombrecategoria'];
+                $sub_array[] = $cantidad['cantidad_inventario'];
                 $sub_array[] = "$" . number_format($detalle['valorventaproducto'], 0, ",", ".");
 
                 $sub_array[] = '<a  class="btn btn-success "  onclick="editar_producto(' . $detalle['codigointernoproducto'] . ')"  >Editar</a> <a  class="btn btn-danger "  onclick="eliminar_producto(' . $detalle['codigointernoproducto'] . ')"  >Eliminar</a>  ';

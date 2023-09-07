@@ -18,20 +18,21 @@ class CerrarVenta extends BaseController
     public function cerrar_venta()
     {
 
+        /* 
+        $numero_pedido = 189;
 
-        //$numero_pedido = 11;}
-
-        /*  $efectivo = 200000;
+        $efectivo = 200000;
         $transaccion = 200000;
         $valor_venta = 400000;
         $nit_cliente = 22222222;
         $id_usuario = 6;
         $estado = 1;
         $descuento = 0;
-        $id_mesa = 55;
+        $id_mesa = 95;
         $propina = 0;
         $numero_pedid = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
-        $numero_pedido = $numero_pedid['id']; */
+        $numero_pedido = $numero_pedid['id'];
+        $tipo_pago = 1; */
         //$total_pagado = 300000;
 
         /**
@@ -40,16 +41,17 @@ class CerrarVenta extends BaseController
 
 
         $id_mesa = $this->request->getPost('id_mesa');
-        $numero_pedid = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
-        $numero_pedido = $numero_pedid['id'];
+        $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
+        $numero_pedido = $pedido['id'];
         $efectivo = $_POST['efectivo'];
         $transaccion = $_POST['transaccion'];
         $valor_venta = $_POST['valor_venta'];
         $nit_cliente = $_POST['nit_cliente'];
         $id_usuario = $_POST['id_usuario'];
         $estado = $_POST['estado'];
+        $propina = $_POST['propina_Format'];
         $descuento = 0;
-        $propina = 0;
+        $tipo_pago = $_POST['tipo_pago'];
 
 
 
@@ -115,10 +117,7 @@ class CerrarVenta extends BaseController
         $fecha_y_hora = $fech->format('Y-m-d H:i:s.u');
 
 
-        //echo $facturas_sin_alerta."</br>";
-        //echo $numero_facturas['numeroconsecutivo']."</br>";
         $facturas_restantes = $rango_final['rangofinaldian'] - $numero_facturas['numeroconsecutivo'];
-
 
         if ($numero_facturas['numeroconsecutivo'] <= $rango_final['rangofinaldian'] and $diferencia_fecha->format('%R%a') >= 0) {  // Se puede facturar esta bien la fecha y la numeracion
 
@@ -144,41 +143,81 @@ class CerrarVenta extends BaseController
                 $propina
             );
 
+            //Guardar la propina 
+            $data = [
+                'estado' => $estado,
+                'valor_propina' => $propina,
+                'id_factura' => $factura_venta
+            ];
+
+            $propina_factura = model('FacturaPropinaModel')->insert($data);
+
             $consecutivo = ['numeroconsecutivo' => $numero_facturas['numeroconsecutivo'] + 1];
             $numero_factura = ['numero_factura' => $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo']];
 
             $actualiar_pedido_consecutivos =   model('cerrarVentaModel')->actualiar_pedido_consecutivos($numero_pedido, $numero_factura, $consecutivo);
-            $productos = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
 
-            $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora);
+            if ($tipo_pago == 1) {
+                $productos = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
+                //Insertar en la tabla producto factura_venta 
+                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario);
+            }
 
-            $forma_pago_efectivo = model('facturaFormaPagoModel')->factura_forma_pago(
-                $prefijo_factura['inicialestatica'] . "-" . $numero_factura['numero_factura'], //Numero de factura 
-                $id_usuario, // id de l usuario
-                1, // id_forma_pago 1 = efectivo 
-                $fecha,
-                $hora,
-                $efectivo,
-                $efectivo, // con cuanto pagan en efectivo la factura 
-                $factura_venta, // id de la factura 
-                $fecha_y_hora
-            );
 
-            $forma_pago_transaccion = model('facturaFormaPagoModel')->factura_forma_pago(
-                $prefijo_factura['inicialestatica'] . "-" . $numero_factura['numero_factura'], //Numero de factura 
-                $id_usuario, // id de l usuario
-                4, // id_forma_pago 1 = efectivo 
-                $fecha,
-                $hora,
-                $transaccion,
-                $transaccion, // con cuanto pagan en efectivo la factura 
-                $factura_venta, // id de la factura 
-                $fecha_y_hora
-            );
+            if ($tipo_pago == 0) {
 
-            $borrar_producto_pedido = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido);
-            $borrar_producto_pedido->delete();
+                $productos = model('partirFacturaModel')->get_productos($numero_pedido);
+                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario);
+            }
 
+            if ($efectivo > 1) {
+                //Insertar en la tabla factura venta 
+                $forma_pago_efectivo = model('facturaFormaPagoModel')->factura_forma_pago(
+                    $prefijo_factura['inicialestatica'] . "-" . $numero_factura['numero_factura'], //Numero de factura 
+                    $id_usuario, // id de l usuario
+                    1, // id_forma_pago 1 = efectivo 
+                    $fecha,
+                    $hora,
+                    $efectivo,
+                    $efectivo, // con cuanto pagan en efectivo la factura 
+                    $factura_venta, // id de la factura 
+                    $fecha_y_hora
+                );
+            }
+
+            if ($transaccion > 1) {
+                $forma_pago_transaccion = model('facturaFormaPagoModel')->factura_forma_pago(
+                    $prefijo_factura['inicialestatica'] . "-" . $numero_factura['numero_factura'], //Numero de factura 
+                    $id_usuario, // id de l usuario
+                    4, // id_forma_pago 1 = efectivo 
+                    $fecha,
+                    $hora,
+                    $transaccion,
+                    $transaccion, // con cuanto pagan en efectivo la factura 
+                    $factura_venta, // id de la factura 
+                    $fecha_y_hora
+                );
+            }
+            if ($tipo_pago == 1) {  // si el tipo de pago es 1 quiere decir que se factura el pedido completo 
+                // borrar productos del pedido 
+                $borrar_producto_pedido = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido);
+                $borrar_producto_pedido->delete();
+
+                //Borrar el pedido 
+                $borrar_producto_pedido = model('pedidoModel')->where('id', $numero_pedido);
+                $borrar_producto_pedido->delete();
+            }
+            if ($tipo_pago == 0) {  // Si el tipo de pago es 0 es un pago parcial se debe borrar la tabla partir factura y actualizar la tabla pedido 
+                $borrar_partir_factura = model('partirFacturaModel')->where('numero_de_pedido', $numero_pedido);
+                $borrar_partir_factura->delete();
+
+                $total = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido)->findAll();
+
+                $model = model('pedidoModel');
+                $actualizar = $model->set('valor_total', $total[0]['valor_total']);
+                $actualizar = $model->where('id', $numero_pedido);
+                $actualizar = $model->update();
+            }
             $mensaje = "";
 
 
@@ -199,22 +238,56 @@ class CerrarVenta extends BaseController
             }
 
             $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
-            $borrar_pedido = model('pedidoModel')->where('id', $numero_pedido);
-            $borrar_pedido->delete();
-            $returnData = array(
-                "id_factura" => $factura_venta,
-                "resultado" => 1,
-                "total" => "$ " . number_format($valor_venta, 0, ",", "."),
-                "valor_pago" => "$ " . number_format($efectivo + $transaccion, 0, ",", "."),
-                "cambio" => "$ " . number_format(($efectivo + $transaccion) - $valor_venta, 0, ",", "."),
-                "mensaje" => $mensaje,
-                "mesas" => view('pedidos/todas_las_mesas_lista', [
-                    "mesas" => $mesas,
-                ]),
 
-            );
-            
-            echo  json_encode($returnData);
+            $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido);
+            $valor_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
+            $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
+
+            if ($tipo_pago == 0) {
+                $returnData = array(
+                    "id_factura" => $factura_venta,
+                    "resultado" => 1,
+                    "total" => "$ " . number_format($valor_venta, 0, ",", "."),
+                    "valor_pago" => "$ " . number_format($efectivo + $transaccion, 0, ",", "."),
+                    "cambio" => "$ " . number_format(($efectivo + $transaccion) - $valor_venta, 0, ",", "."),
+                    "mensaje" => $mensaje,
+                    "mesas" => view('pedidos/todas_las_mesas_lista', [
+                        "mesas" => $mesas,
+                    ]),
+                    "productos" => view('pedidos/productos_pedido', [
+                        "productos" => $productos_pedido,
+                        "pedido" => $numero_pedido
+                    ]),
+                    "id_mesa" => $id_mesa,
+                    "valor_pedio" => "$ " . number_format($valor_pedido['valor_total'], 0, ",", "."),
+                    "nombre_mesa" => $nombre_mesa['nombre'],
+                    "pedido" => $pedido['id'],
+                    "tipo_pago" => $tipo_pago
+
+
+                );
+
+                echo  json_encode($returnData);
+            }
+
+
+            if ($tipo_pago == 1) {
+
+                $returnData = array(
+                    "id_factura" => $factura_venta,
+                    "resultado" => 1,
+                    "total" => "$ " . number_format($valor_venta, 0, ",", "."),
+                    "valor_pago" => "$ " . number_format($efectivo + $transaccion, 0, ",", "."),
+                    "cambio" => "$ " . number_format(($efectivo + $transaccion) - $valor_venta, 0, ",", "."),
+                    "mensaje" => $mensaje,
+                    "mesas" => view('pedidos/todas_las_mesas_lista', [
+                        "mesas" => $mesas,
+                    ]),
+                    "tipo_pago" => $tipo_pago
+                );
+
+                echo  json_encode($returnData);
+            }
         } else if ($numero_facturas['numeroconsecutivo'] > $rango_final['rangofinaldian'] and $diferencia_fecha->format('%R%a') >= 0) {  // No se puede facturar por que la numeracion esta vencida 
 
             $returnData = array(

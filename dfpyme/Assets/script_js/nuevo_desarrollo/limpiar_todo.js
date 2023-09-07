@@ -14,7 +14,10 @@ function limpiar_todo() {
     $('#subtotal_pedido').val('$0')
 
 
-    $('#efectivo').val('');
+    $('#propina_del_pedido').val(0);
+    $('#total_propina').val(0);
+    $('#efectivo').val(0);
+    $('#propina_pesos').val(0);
     $('#transaccion').val('');
     $("#documento")[0].selectedIndex = 0;
     $('#pago').html('Valor pago: 0');

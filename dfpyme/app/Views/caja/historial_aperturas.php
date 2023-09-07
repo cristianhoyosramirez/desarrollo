@@ -31,12 +31,12 @@
 
 
     ?>
-    <tr>
+    <tr onclick="movimiento(<?php echo $detalle[0] ?>)" class="cursor-pointer">
         <td>
-            <p onclick="movimiento(<?php echo $detalle[0] ?>)" class="cursor-pointer"> <?php echo  $fecha_apertura_formateada . " " .  $hora_apertura_formateada;  ?> </p> <!-- feccha y hora apertura -->
+            <p> <?php echo  $fecha_apertura_formateada . " " .  $hora_apertura_formateada;  ?> </p> <!-- feccha y hora apertura -->
         </td>
         <td>
-            <p onclick="movimiento(<?php echo $detalle[0] ?>)" class="cursor-pointer"> <?php echo  $fecha_cierre_formateada . " " .  $hora_cierre_formateada;  ?> </p> <!-- feccha y hora apertura -->
+            <p> <?php echo  $fecha_cierre_formateada . " " .  $hora_cierre_formateada;  ?> </p> <!-- feccha y hora apertura -->
         </td>
 
 

@@ -60,11 +60,11 @@
         <div class="container">
             <div class="row text-center align-items-center flex-row-reverse">
                 <div class="col-lg-auto ms-lg-auto">
-                   
+
                 </div>
 
                 <div class="col-lg-auto ms-lg-auto">
-                    <p class="text-primary h3">INGRESO DE CANTIDADES AL INVENTARIO  </p>
+                    <p class="text-primary h3">INGRESO DE CANTIDADES AL INVENTARIO </p>
                 </div>
                 <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                     <a class="nav-link"><img style="cursor:pointer;" src="<?php echo base_url(); ?>/Assets/img/atras.png" width="20" height="20" onClick="history.go(-1);" title="Sección anterior"></a>
@@ -79,24 +79,48 @@
 
             <div class="card container">
                 <div class="card-body">
-                    <form action="<?= base_url('mesas/save') ?>" method="POST">
+                    <form action="<?= base_url('inventario/ingreso_inventario') ?>" method="POST">
                         <input type="hidden" value="<?php echo $user_session->id_usuario; ?>" name="id_usuario">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="inputEmail4" class="form-label">Producto </label>
-                                <input type="text" class="form-control" autofocus>
+                                <input type="hidden" value="<?php echo base_url() ?>" id="url">
+                                <input type="hidden" id="id_producto" name="id_producto">
+                                <input type="text" class="form-control" id="producto" name="producto" autofocus>
                                 <div class="text-danger"><?= session('errors.salon') ?></div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="inputEmail4" class="form-label">Cantidad</label>
-                                <input type="text" class="form-control" name="nombre">
+                                <input type="text" class="form-control" name="cantidad" id="cantidad" required>
                                 <div class="text-danger"><?= session('errors.nombre') ?></div>
                             </div>
+
+
                         </div>
-                        <div class="mt-4">
+                        <div class="col-md-4">
+                            <br><br>
                             <button type="submit" class="btn btn-primary w-md"><i class="mdi mdi-plus"></i> Agregar al inventario </button>
                         </div>
                     </form>
+                    <br>
+                    <table id="tablaProductos" class="table table-borderless table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <td width: 100%>Código</td>
+                                <td width: 100%>Descripción</td>
+                                <td width: 100%>Valor unitario</td>
+                                <td width: 100%>Cantidad</td>
+                                <td width: 100%>Total</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                        </tbody>
+                    </table>
+
+
                 </div>
             </div>
 
@@ -118,30 +142,30 @@
 
 
 
-<script>
-    $("#producto").autocomplete({
-    source: function (request, response) {
-        var url = document.getElementById("url").value;
-        $.ajax({
-            type: "POST",
-            url: url + "/" + "producto/pedido",
-            data: request,
-            success: response,
-            dataType: "json",
+    <script>
+        $("#producto").autocomplete({
+            source: function(request, response) {
+                var url = document.getElementById("url").value;
+                $.ajax({
+                    type: "POST",
+                    url: url + "/" + "producto/pedido",
+                    data: request,
+                    success: response,
+                    dataType: "json",
+                });
+            },
+        }, {
+            minLength: 1,
+        }, {
+            select: function(event, ui) {
+
+
+                $('#id_producto').val(ui.item.id_producto)
+
+
+            },
         });
-    },
-}, {
-    minLength: 1,
-}, {
-    select: function (event, ui) {
-
-        let id_producto = ui.item.id_producto;
-
-       
-    },
-});
-
-</script>
+    </script>
 
 
 

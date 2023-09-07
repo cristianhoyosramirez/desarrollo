@@ -3,7 +3,7 @@ function pagar() {
 
     let requiere_factura_electronica = document.getElementById("requiere_factura_electronica").value; // Determinar si se requiere factura electronica o no  
     let estado = document.getElementById("documento").value; // Tipo de documento 
-    let valor_venta = document.getElementById("valor_total_a_pagar").value; // El valor de la venta 
+
     let valor_efectivo = document.getElementById("efectivo").value;
     efectivoFormat = valor_efectivo.replace(/[.]/g, "");
     let valor_e = efectivoFormat;
@@ -21,25 +21,46 @@ function pagar() {
     let pago_total = parseInt(efectivo) + parseInt(transaccion);
     let tipo_pago = document.getElementById("tipo_pago").value; // Tipo de pago 1 = pago completo; 2 pago parcial
 
-    
+    let valor_venta = "";
+
+    if (tipo_pago == 1) {
+        var propina = document.getElementById("propina_del_pedido").value;
+        let val_venta = document.getElementById("valor_total_a_pagar").value; // El valor de la venta 
+        valor_venta = parseInt(val_venta)
+    }
+    if (tipo_pago == 0) {
+        var propina = document.getElementById("total_propina").value;
+        var subtotal_venta = document.getElementById("valor_total_a_pagar").value;
+        var subtotal_propina = document.getElementById("total_propina").value;
+        subtotal_propina = propina.replace(/[.]/g, "");
+
+        valor_venta = parseInt(subtotal_propina) + parseInt(subtotal_venta)
+    }
+
+
+
+    propina_Format = propina.replace(/[.]/g, "");
+
     if (requiere_factura_electronica == "si") {  // Validacion de si requiere o no factura electronica 
 
         if (estado == 8) {    // Validacion de que este seleccionada la factura electronica 
 
-            factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url,pago_total,valor_venta,tipo_pago,efectivo,transaccion,id_usuario)
+            factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario, propina_Format)
         } else if (estado != 8) {
             $('#error_documento').html('! Para continuar por favor seleccione Factura electrónica !')
         }
 
     } else if (requiere_factura_electronica == "no") {
-          
+
         if (pago_total >= parseInt(valor_venta)) {
 
             if (estado == 8) {
 
-                factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url,pago_total,valor_venta,tipo_pago,efectivo,transaccion,id_usuario)
+                factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario, propina_Format)
 
             } else if (estado != 8) {
+
+
 
                 $.ajax({
                     data: {
@@ -49,7 +70,9 @@ function pagar() {
                         estado,
                         nit_cliente,
                         valor_venta,
-                        id_usuario
+                        id_usuario,
+                        propina_Format,
+                        tipo_pago
 
                     },
                     url: url + "/" + "pedidos/cerrar_venta",
@@ -57,16 +80,41 @@ function pagar() {
                     success: function (resultado) {
                         var resultado = JSON.parse(resultado);
                         if (resultado.resultado == 1) {
-                            limpiar_todo();
-                            //$('#efectivo').val(0)
+
                             $('#finalizar_venta').modal('hide');
                             $('#todas_las_mesas').html(resultado.mesas)
                             $('#lista_completa_mesas').html(resultado.mesas)
-                            
+                            $('#efectivo').val(0)
+                            $('#transaccion').val(0)
+                            $('#propina_pesos_final').val(0)
+                            $('#total_propina').val(0)
+                            $('#tipo_pago').val(1)
+
+                            if (resultado.tipo_pago == 1) {
+                                limpiar_todo();
+                                //$('#efectivo').val(0)
+
+                            }
+                            if (resultado.tipo_pago == 0) {
+                                $('#mesa_productos').html(resultado.productos)
+                                //$('#mesa_pedido').html(resultado.nombre_mesa)
+                                //$('#pedido_mesa').html('Pedido: ' + resultado.pedido)
+                                $('#valor_pedido').html(resultado.valor_pedio)
+                                $('#subtotal_pedido').val(resultado.valor_pedio)
+                                $('#productos_categoria').html('')
+                                //$('#id_mesa_pedido').val(resultado.id_mesa)
+                                $('#propina_pesos').val(0)
+                                $('#propina_pesos_final').val(0)
+                                $('#total_propina').val(0)
+
+
+
+
+                            }
                             let mesas = document.getElementById("todas_las_mesas");
                             mesas.style.display = "block"
 
-                            
+
 
                             Swal.fire({
                                 title: 'Resumen',
@@ -100,8 +148,9 @@ function pagar() {
                             }).then((result) => {
                                 /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
-                                    // Swal.fire('Saved!', '', 'success')
 
+                                    let categorias = document.getElementById("lista_categorias");
+                                    categorias.style.display = "block"
 
                                     let numero_de_factura = resultado.id_factura
 

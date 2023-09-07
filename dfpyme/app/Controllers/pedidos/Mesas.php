@@ -8,7 +8,7 @@ class Mesas extends BaseController
 {
     public function index()
     {
-        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->findAll();
+        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
         $salones = model('salonesModel')->findAll();
         $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
         $estado = model('estadoModel')->orderBy('idestado', 'ASC')->findAll();
@@ -33,7 +33,7 @@ class Mesas extends BaseController
 
         $productos = model('productoModel')->tipoInventario($id_categoria);
 
-        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->findAll();
+        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
         $returnData = array(
             "resultado" => 1,
@@ -340,7 +340,7 @@ class Mesas extends BaseController
     function mesas_salon()
     {
         $id_salon = $this->request->getPost('id_salon');
-        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->findAll();
+        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
         $mesas = model('mesasModel')->where('fk_salon', $id_salon)->orderBy('id', 'ASC')->findAll();
         $returnData = array(
@@ -862,36 +862,47 @@ class Mesas extends BaseController
     function productos_pedido()
     {
 
-        $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $this->request->getPost('id_mesa'))->first();
+        $apertura_registro = model('aperturaRegistroModel')->first();
+
+        if (!empty($apertura_registro)) {
+
+            $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $this->request->getPost('id_mesa'))->first();
 
 
 
-        $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
+            $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
 
-        foreach ($productos_pedido as $detalle) {
-            $data = [
-                'numero_de_pedido' => $numero_pedido['id'],
-                'cantidad_producto' => 0,
-                'valor_unitario' => $detalle['valor_unitario'],
-                'valor_total' => $detalle['valor_total'],
-                'codigointernoproducto' => $detalle['codigointernoproducto'],
-                'nombreproducto' => $detalle['nombreproducto'],
-                'id_tabla_producto' => $detalle['id']
-            ];
-            $insert = model('partirFacturaModel')->insert($data);
+            foreach ($productos_pedido as $detalle) {
+                $data = [
+                    'numero_de_pedido' => $numero_pedido['id'],
+                    'cantidad_producto' => 0,
+                    'valor_unitario' => $detalle['valor_unitario'],
+                    'valor_total' => $detalle['valor_total'],
+                    'codigointernoproducto' => $detalle['codigointernoproducto'],
+                    'nombreproducto' => $detalle['nombreproducto'],
+                    'id_tabla_producto' => $detalle['id']
+                ];
+                $insert = model('partirFacturaModel')->insert($data);
+            }
+
+            $producto_partir_factura = model('partirFacturaModel')->productos($numero_pedido['id']);
+            //$total = model('partirFacturaModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['id'])->findAll();
+            //$total = model('partirFacturaModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['id'])->findAll();
+
+            $returnData = array(
+                "resultado" => 1,
+                "productos" => view('pedidos/productos_pedido_parcial', [
+                    "productos" => $producto_partir_factura,
+                ]),
+                "total" => "Total $ 0"
+            );
+            echo  json_encode($returnData);
+        }else if (empty($apertura_registro)){
+            $returnData = array(
+                "resultado" => 0,
+                
+            );
+            echo  json_encode($returnData);
         }
-
-        $producto_partir_factura = model('partirFacturaModel')->productos($numero_pedido['id']);
-        //$total = model('partirFacturaModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['id'])->findAll();
-        //$total = model('partirFacturaModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['id'])->findAll();
-
-        $returnData = array(
-            "resultado" => 1,
-            "productos" => view('pedidos/productos_pedido_parcial', [
-                "productos" => $producto_partir_factura,
-            ]),
-            "total" => "Total $ 0" 
-        );
-        echo  json_encode($returnData);
     }
 }

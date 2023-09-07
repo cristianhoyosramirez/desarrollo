@@ -54,4 +54,17 @@ class partirFacturaModel extends Model
         ");
         return $datos->getResultArray();
     }
+
+    public function get_productos($numero_pedido)
+    {
+        $datos = $this->db->query("
+        SELECT
+            *
+        FROM
+            partir_factura
+        WHERE
+            numero_de_pedido = $numero_pedido AND cantidad_producto > 0
+        ");
+        return $datos->getResultArray();
+    }
 }

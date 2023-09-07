@@ -46,7 +46,7 @@ LISTADO DE PRODUCTOS
                         <thead class="table-dark">
                             <td>Código interno </th>
                             <td>Nombre producto</th>
-                            <td>Categoria</td>
+                            <td>Cantidad</td>
                             <td>Valor venta </th>
                             <td>Acciones</th>
                         </thead>

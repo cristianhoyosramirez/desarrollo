@@ -25,6 +25,12 @@
 
   }
 </style>
+
+
+
+
+
+
 <div class="modal fade" id="finalizar_venta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -127,16 +133,18 @@
 
                     <div class="col-sm-12">
                       <div class="input-group">
+<!-- 
+                        <select class="form-select w-1" aria-label="Default select example" id="criterio_propina_final"  >
+                          
+                          <option value="1">Propina % </option>
+                          
+                        </select> -->
 
-                        <select class="form-select w-1" aria-label="Default select example" disabled>
-                          <option value="">Propina</option>
-
-                          <option value="">Propina % </option>
-                          <option value="">Propina $ </option>
-
-                        </select>
-                        <input type="text" value=0 class="form-control" disabled>
-                        <input type="text" value=0 class="form-control" disabled>
+                        <input type="hidden" value="1"  id="criterio_propina_final">
+                        <label for="" class="col-sm-4 col-form-label" style="width: 100px;">Propina</label>
+                        <input type="text" value=0 class="form-control" onkeyup="calcular_propina_final(this.value)" id="propina_pesos_final" placeholder="%" >
+                        <input type="text"  class="form-control" id="total_propina" onkeyup="total_pedido_final(this.value)"  placeholder="$" value=0 >
+                        
                       </div>
                     </div>
                   </div>
@@ -196,8 +204,8 @@
                   </div>
                   <div class="row mb-3">
                     <div class="col-sm-12 text-center">
-                      <input type="hidden" id="tipo_pago"  value="1"> <!-- Tipo de pago 1 = pago completo; 0 pago parcial -->
-                      <input type="hidden" id="requiere_factura_electronica" >
+                      <input type="hidden" id="tipo_pago" value="1"> <!-- Tipo de pago 1 = pago completo; 0 pago parcial -->
+                      <input type="hidden" id="requiere_factura_electronica">
                       <button type="button" class="btn btn-outline-success col-sm-4 " id="btn_pagar" onclick="pagar()">Pagar</button>
                       <button type="button" class="btn btn-outline-red col-sm-4" onclick="cancelar_pagar()">Cancelar</button>
                     </div>
@@ -218,53 +226,50 @@
               </div>
               <div class="card-body">
 
-                <table class="table-numeric" id="formulario">
-                  <tbody>
-                    <tr>
-                      <td style="width: 10px;"><button type="button" class="btn btn-outline-success py-3 " onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '1';">1</button></td>
-                      <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '2';">2</button></td>
-                      <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '3';">3</button></td>
-                    </tr>
-                    <tr>
-                      <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '4';">4</button></td>
-                      <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '5';">5</button></td>
-                      <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '6';">6</button></td>
-                    </tr>
-                    <tr>
-                      <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '7';">7</button></td>
-                      <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '8';">8</button></td>
-                      <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '9';">9</button></td>
-                    </tr>
-
-                    <tr>
-                      <td> <button type="button" class="btn bg-orange-lt py-3 w-7" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value.slice(0, -1);borrar_error()"><!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="10" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                            <line x1="5" y1="12" x2="11" y2="18" />
-                            <line x1="5" y1="12" x2="11" y2="6" />
-                          </svg></button></td>
-                      <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '0';">0</button></td>
-                      <td> <button type="button" class="btn bg-green-lt py-3" onclick="login()"><!-- Download SVG icon from http://tabler-icons.io/i/letter-x -->
-                          <!-- Download SVG icon from http://tabler-icons.io/i/check -->
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M5 12l5 5l10 -10" />
-                          </svg></button></td>
-                  </tbody>
-                </table>
                 <div class="row mb-3">
 
-                </div>
-                <div class="row mb-3">
+                  <div class="col">
+                    <table class="table-numeric" id="formulario">
+                      <tbody>
+                        <tr>
+                          <td style="width: 10px;"><button type="button" class="btn btn-outline-success py-3 " onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '1';">1</button></td>
+                          <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '2';">2</button></td>
+                          <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '3';">3</button></td>
+                        </tr>
+                        <tr>
+                          <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '4';">4</button></td>
+                          <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '5';">5</button></td>
+                          <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '6';">6</button></td>
+                        </tr>
+                        <tr>
+                          <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '7';">7</button></td>
+                          <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '8';">8</button></td>
+                          <td><button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '9';">9</button></td>
+                        </tr>
 
+                        <tr>
+                          <td> <button type="button" class="btn bg-orange-lt py-3 w-7" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value.slice(0, -1);borrar_error()"><!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+                              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="10" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <line x1="5" y1="12" x2="11" y2="18" />
+                                <line x1="5" y1="12" x2="11" y2="6" />
+                              </svg></button></td>
+                          <td> <button type="button" class="btn btn-outline-success py-3" onclick="document.getElementById('efectivo').value=document.getElementById('efectivo').value + '0';">0</button></td>
+                          <td> <button type="button" class="btn bg-green-lt py-3" onclick="login()"><!-- Download SVG icon from http://tabler-icons.io/i/letter-x -->
+                              <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M5 12l5 5l10 -10" />
+                              </svg></button></td>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <div class="row mb-3">
 
-                </div>
-                <div class="row mb-3">
 
-                </div>
+
+
 
               </div>
             </div>
@@ -275,3 +280,8 @@
   </div>
 </div>
 </div>
+
+
+<script>
+
+</script>

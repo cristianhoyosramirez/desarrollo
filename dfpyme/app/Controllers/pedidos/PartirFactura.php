@@ -79,7 +79,10 @@ class PartirFactura extends BaseController
 
 
         $tiene_apertura = model('aperturaRegistroModel')->select('id')->first();
-        if (empty($tiene_apertura['id'])) {
+
+       
+      
+        if (!empty($tiene_apertura['id'])) {
             $impuestos = new Impuestos();
 
             $id_mesa = $this->request->getPost('id_mesa');
@@ -127,7 +130,7 @@ class PartirFactura extends BaseController
                 "requiere_factura_electronica" => $requiere_factura_electronica
             );
             echo  json_encode($returnData);
-        }else if (!empty($tiene_apertura['id'])) {    
+        }else if (empty($tiene_apertura['id'])) {    
             $returnData = array(
                 "resultado" => 0,
             );

@@ -438,6 +438,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->get('ingreso', 'Inventarios::ingreso');
+    $routes->post('ingreso_inventario', 'Inventarios::ingreso_inventario');
   
 
 });

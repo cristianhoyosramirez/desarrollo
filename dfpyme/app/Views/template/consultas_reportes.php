@@ -26,7 +26,7 @@
 <body>
   <div class="wrapper">
     <?= $this->include('layout/header_mesas') ?>
-   
+
 
     <div class="page-wrapper">
       <div class="container-xl">
@@ -934,6 +934,9 @@
             if (resultado.resultado == 1) {
               $("#movimientos_de_caja").html(resultado.aperturas);
 
+
+
+
             }
           },
         });
@@ -1320,7 +1323,7 @@
     <script>
       $(document).ready(function() {
         //let url = document.getElementById("url").value;
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
 
         /*  $('#aperturas').DataTable({
              serverSide: true,
@@ -1374,7 +1377,7 @@
 
     <script>
       function movimiento(id) {
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
 
         $.ajax({
           data: {
@@ -1403,6 +1406,23 @@
               $('#id_apertura').val(resultado.id_apertura)
               $('#id_aperturas').val(resultado.id_apertura)
 
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+
+              Toast.fire({
+                icon: 'success',
+                title: 'Movimientos de caja encontrados' 
+              })
+
             }
           },
         });
@@ -1414,7 +1434,7 @@
     <script>
       function fiscal() {
 
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
         var id_apertura = document.getElementById("id_aperturas").value;
         $.ajax({
           data: {
@@ -1438,7 +1458,7 @@
     <script>
       function reporte_ventas() {
 
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
         var id_apertura = document.getElementById("id_apertura").value;
         $.ajax({
           data: {

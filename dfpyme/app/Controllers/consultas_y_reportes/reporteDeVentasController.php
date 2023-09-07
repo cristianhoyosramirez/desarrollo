@@ -375,120 +375,130 @@ class reporteDeVentasController extends BaseController
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $ultimo_id)->first();
         $fecha_y_hora_apertura = model('aperturaModel')->select('fecha_y_hora_apertura')->where('id', $ultimo_id)->first();
 
+        $aperturas = model('aperturaModel')->findAll();
 
-        if (empty($tiene_cierre)) {
-            $estado = "ABIERTA";
-            $cierre = 'Sin cierre';
+        if (!empty($aperturas)) {
 
-            $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
-            if (empty($efectivo)) {
-                $ingresos_efectivo = 0;
-            } else if (!empty($efectivo)) {
-                $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
-            }
+            if (empty($tiene_cierre)) {
+                $estado = "ABIERTA";
+                $cierre = 'Sin cierre';
 
-            $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
-            if (empty($transaccion)) {
-                $ingresos_transaccion = 0;
-            } else if (!empty($transaccion)) {
-                $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
-            }
-            $valor_cierre = 0;
-            $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
 
-            if (empty($devolucion_venta)) {
-                $devoluciones = 0;
-            } else if (!empty($devolucion_venta)) {
-                $devoluciones = $devolucion_venta[0]['total_devoluciones'];
-            }
-            $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+                $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
 
-            if (empty($total_retiros[0]['total_retiros'])) {
-                $retiros = 0;
-            }
-            if (!empty($total_retiros[0]['total_retiros'])) {
-                $retiros = $total_retiros[0]['total_retiros'];
-            }
+                if (empty($efectivo)) {
+                    $ingresos_efectivo = 0;
+                } else if (!empty($efectivo)) {
+                    $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
+                }
 
-            $efectivo_cierre = 0;
-            $transaccion_cierre = 0;
-            $saldo = 0;
+                $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+                if (empty($transaccion)) {
+                    $ingresos_transaccion = 0;
+                } else if (!empty($transaccion)) {
+                    $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
+                }
+                $valor_cierre = 0;
+                $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
 
-            $diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
-        }
-        if (!empty($tiene_cierre)) {
-            $estado = 'CERRADA';
-            $fecha_cierre = model('cierreModel')->select('fecha')->where('idapertura', $ultimo_id)->first();
-            $cierre = $fecha_cierre['fecha'];
+                if (empty($devolucion_venta)) {
+                    $devoluciones = 0;
+                } else if (!empty($devolucion_venta)) {
+                    $devoluciones = $devolucion_venta[0]['total_devoluciones'];
+                }
+                $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
 
-            $fecha_y_hora_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $ultimo_id)->first();
-            $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            if (empty($efectivo)) {
-                $ingresos_efectivo = 0;
-            } else if (!empty($efectivo)) {
-                $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
-            }
+                if (empty($total_retiros[0]['total_retiros'])) {
+                    $retiros = 0;
+                }
+                if (!empty($total_retiros[0]['total_retiros'])) {
+                    $retiros = $total_retiros[0]['total_retiros'];
+                }
 
-            $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            if (empty($transaccion)) {
-                $ingresos_transaccion = 0;
-            } else if (!empty($transaccion)) {
-                $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
-            }
-            $valor_cierre = 0;
-            $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-
-            if (empty($devolucion_venta)) {
-                $devoluciones = 0;
-            } else if (!empty($devolucion_venta)) {
-                $devoluciones = $devolucion_venta[0]['total_devoluciones'];
-            }
-            $id_cierre = model('cierreModel')->select('id')->where('idapertura', $ultimo_id)->first();
-            $efectivo = model('cierreFormaPagoModel')->cierre_efectivo($id_cierre['id']);
-            $transaccion = model('cierreFormaPagoModel')->cierre_transaccion($id_cierre['id']);
-
-            if (!empty($efectivo)) {
-                $efectivo_cierre = $efectivo[0]['valor'];
-            }
-            if (empty($efectivo)) {
                 $efectivo_cierre = 0;
-            }
-            if (empty($transaccion)) {
                 $transaccion_cierre = 0;
-            }
-            if (!empty($transaccion)) {
-                $transaccion_cierre = $transaccion[0]['valor'];
-            }
+                $saldo = 0;
 
-            $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-
-            if (empty($total_retiros[0]['total_retiros'])) {
-                $retiros = 0;
+                $diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
             }
-            if (!empty($total_retiros[0]['total_retiros'])) {
-                $retiros = $total_retiros[0]['total_retiros'];
-            }
+            if (!empty($tiene_cierre)) {
+                $estado = 'CERRADA';
+                $fecha_cierre = model('cierreModel')->select('fecha')->where('idapertura', $ultimo_id)->first();
+                $cierre = $fecha_cierre['fecha'];
 
-            $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+                $fecha_y_hora_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $ultimo_id)->first();
+                $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+                if (empty($efectivo)) {
+                    $ingresos_efectivo = 0;
+                } else if (!empty($efectivo)) {
+                    $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
+                }
+
+                $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+                if (empty($transaccion)) {
+                    $ingresos_transaccion = 0;
+                } else if (!empty($transaccion)) {
+                    $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
+                }
+                $valor_cierre = 0;
+                $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+
+                if (empty($devolucion_venta)) {
+                    $devoluciones = 0;
+                } else if (!empty($devolucion_venta)) {
+                    $devoluciones = $devolucion_venta[0]['total_devoluciones'];
+                }
+                $id_cierre = model('cierreModel')->select('id')->where('idapertura', $ultimo_id)->first();
+                $efectivo = model('cierreFormaPagoModel')->cierre_efectivo($id_cierre['id']);
+                $transaccion = model('cierreFormaPagoModel')->cierre_transaccion($id_cierre['id']);
+
+                if (!empty($efectivo)) {
+                    $efectivo_cierre = $efectivo[0]['valor'];
+                }
+                if (empty($efectivo)) {
+                    $efectivo_cierre = 0;
+                }
+                if (empty($transaccion)) {
+                    $transaccion_cierre = 0;
+                }
+                if (!empty($transaccion)) {
+                    $transaccion_cierre = $transaccion[0]['valor'];
+                }
+
+                $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+
+                if (empty($total_retiros[0]['total_retiros'])) {
+                    $retiros = 0;
+                }
+                if (!empty($total_retiros[0]['total_retiros'])) {
+                    $retiros = $total_retiros[0]['total_retiros'];
+                }
+
+                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+            }
+            return view('consultas_y_reportes/datos_consultas_caja', [
+                'estado' => $estado,
+                'fecha_apertura' => $fecha_apertura['fecha'],
+                'fecha_cierre' => $cierre,
+                'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
+                'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo, 0, ",", "."),
+                'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
+                'total_ingresos' =>  "$" . number_format($ingresos_transaccion + $ingresos_efectivo, 0, ",", "."),
+                'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
+                'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
+                'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
+                'devoluciones' => "$" . number_format($devoluciones, 0, ",", "."),
+                'retiros' => "$" . number_format($retiros, 0, ",", "."),
+                'retirosmasdevoluciones' => "$" . number_format($retiros + $devoluciones, 0, ",", "."),
+                'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_transaccion + $ingresos_efectivo) - ($retiros + $devoluciones), 0, ",", "."),
+                'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
+                'id_apertura' => $ultimo_id
+            ]);
+        } else if (empty($aperturas)) {
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'success');
+            return redirect()->to(base_url('consultas_y_reportes/consultas_caja'))->with('mensaje', 'No hay registros disponibles para consultar  ');
         }
-        return view('consultas_y_reportes/datos_consultas_caja', [
-            'estado' => $estado,
-            'fecha_apertura' => $fecha_apertura['fecha'],
-            'fecha_cierre' => $cierre,
-            'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-            'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo, 0, ",", "."),
-            'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
-            'total_ingresos' =>  "$" . number_format($ingresos_transaccion + $ingresos_efectivo, 0, ",", "."),
-            'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
-            'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
-            'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
-            'devoluciones' => "$" . number_format($devoluciones, 0, ",", "."),
-            'retiros' => "$" . number_format($retiros, 0, ",", "."),
-            'retirosmasdevoluciones' => "$" . number_format($retiros + $devoluciones, 0, ",", "."),
-            'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_transaccion + $ingresos_efectivo) - ($retiros + $devoluciones), 0, ",", "."),
-            'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
-            'id_apertura' => $ultimo_id
-        ]);
     }
     function consultas_caja_por_fecha()
     {

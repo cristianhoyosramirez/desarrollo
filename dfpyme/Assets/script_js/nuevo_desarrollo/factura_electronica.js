@@ -1,4 +1,4 @@
-function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario) {
+function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario,propina_format) {
 
     if (pago_total >= parseInt(valor_venta)) {
         $.ajax({
@@ -11,7 +11,8 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                 efectivo,
                 transaccion,
                 estado,
-                pago_total
+                pago_total,
+                propina_format
             },
             url: url + "/" + "factura_electronica/pre_factura",
             type: "POST",
