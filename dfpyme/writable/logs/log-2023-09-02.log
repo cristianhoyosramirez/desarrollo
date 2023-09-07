@@ -300,3 +300,63 @@ CRITICAL - 2023-09-02 16:43:56 --> Undefined array key "numero_de_factura"
 #3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
 #4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
 #5 {main}
+CRITICAL - 2023-09-02 17:20:49 --> Trying to access array offset on value of type null
+#0 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(383): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to acces...', 'C:\\xampp\\htdocs...', 383)
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultas_caja_por_fecha()
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-09-02 17:23:45 --> Trying to access array offset on value of type null
+#0 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(383): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to acces...', 'C:\\xampp\\htdocs...', 383)
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultas_caja_por_fecha()
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-09-02 17:24:24 --> Trying to access array offset on value of type null
+#0 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(383): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to acces...', 'C:\\xampp\\htdocs...', 383)
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultas_caja_por_fecha()
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-09-02 17:27:50 --> Trying to access array offset on value of type null
+#0 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(383): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to acces...', 'C:\\xampp\\htdocs...', 383)
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultas_caja_por_fecha()
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-09-02 17:29:17 --> Trying to access array offset on value of type null
+#0 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(383): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to acces...', 'C:\\xampp\\htdocs...', 383)
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultas_caja_por_fecha()
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-09-02 17:30:28 --> Trying to access array offset on value of type null
+#0 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(384): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to acces...', 'C:\\xampp\\htdocs...', 384)
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultas_caja_por_fecha()
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-09-02 18:31:18 --> syntax error, unexpected variable "$cantidad_inventario"
+#0 C:\xampp\htdocs\dfpyme\system\Autoloader\Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs...')
+#1 C:\xampp\htdocs\dfpyme\system\Autoloader\Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Controllers...')
+#2 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass('App\\Controllers...')
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(797): class_exists('\\App\\Controller...', true)
+#4 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(406): CodeIgniter\CodeIgniter->startController()
+#5 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-09-02 18:31:31 --> syntax error, unexpected token "}"
+#0 C:\xampp\htdocs\dfpyme\system\Autoloader\Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs...')
+#1 C:\xampp\htdocs\dfpyme\system\Autoloader\Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Controllers...')
+#2 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass('App\\Controllers...')
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(797): class_exists('\\App\\Controller...', true)
+#4 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(406): CodeIgniter\CodeIgniter->startController()
+#5 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
