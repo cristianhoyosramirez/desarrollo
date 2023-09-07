@@ -178,7 +178,7 @@ class CerrarVenta extends BaseController
                     1, // id_forma_pago 1 = efectivo 
                     $fecha,
                     $hora,
-                    $efectivo,
+                    $valor_venta,
                     $efectivo, // con cuanto pagan en efectivo la factura 
                     $factura_venta, // id de la factura 
                     $fecha_y_hora
@@ -192,7 +192,7 @@ class CerrarVenta extends BaseController
                     4, // id_forma_pago 1 = efectivo 
                     $fecha,
                     $hora,
-                    $transaccion,
+                    $valor_venta,
                     $transaccion, // con cuanto pagan en efectivo la factura 
                     $factura_venta, // id de la factura 
                     $fecha_y_hora
