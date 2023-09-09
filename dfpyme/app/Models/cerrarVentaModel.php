@@ -12,7 +12,7 @@ class cerrarVentaModel extends Model
     // protected $primaryKey = 'id';
     protected $allowedFields = ['nombre'];
 
-    function producto_pedido($productos, $factura_venta, $numero_pedido, $numero_factura, $fecha_y_hora, $tipo_pago, $id_usuario)
+    function producto_pedido($productos, $factura_venta, $numero_pedido, $numero_factura, $fecha_y_hora, $tipo_pago, $id_usuario,$id_apertura)
     {
 
         $impuestos = new Impuestos();
@@ -147,6 +147,10 @@ class cerrarVentaModel extends Model
                 'valor' => $valor_unidad,
                 'total' => $valor_unidad * $detalle['cantidad_producto'],
                 'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                'id_categoria'=>$codigo_categoria['codigocategoria'],
+                'id_apertura'=>$id_apertura,
+                'valor_unitario'=>$detalle['valor_unitario']
+
             ];
 
             $insertar = model('kardexModel')->insert($data_kardex);

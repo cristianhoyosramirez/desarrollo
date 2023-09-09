@@ -434,6 +434,8 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('restar_partir_factura', 'PartirFactura::restar_partir_factura');
     $routes->post('cancelar_pago_parcial', 'PartirFactura::cancelar_pago_parcial');
     $routes->post('valor_pago_parcial', 'PartirFactura::valor_pago_parcial');
+    $routes->post('propinas', 'CerrarVenta::propinas');
+    $routes->post('reporte_propinas', 'Mesas::reporte_propinas');
 });
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {

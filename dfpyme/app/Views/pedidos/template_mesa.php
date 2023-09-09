@@ -10,6 +10,7 @@
 
     <!-- CSS files -->
     <link href="<?= base_url() ?>/public/css/tabler.min.css" rel="stylesheet" />
+    <link href="<?= base_url() ?>/public/css/tabler-payments.min.css?1684106062" rel="stylesheet" />
     <link href="<?= base_url() ?>/Assets/css/mesas.css" rel="stylesheet" />
     <!-- Jquery date picker  -->
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>/Assets/plugin/calendario/jquery-ui-1.12.1.custom/jquery-ui.css">
@@ -193,28 +194,28 @@
     </script>
 
 
-<script>
-    function total_pedido_final(valor) {
-    var sub_total = document.getElementById("valor_total_a_pagar").value;
+    <script>
+        function total_pedido_final(valor) {
+            var sub_total = document.getElementById("valor_total_a_pagar").value;
 
-    temp_valor = "";
+            temp_valor = "";
 
-    if (valor === "") {
-        temp_valor = 0
-    } else {
-        temp_valor = valor;
-    }
+            if (valor === "") {
+                temp_valor = 0
+            } else {
+                temp_valor = valor;
+            }
 
-    if (temp_valor != 0) {
-        temp_valor = valor.replace(/\./g, ''); // Elimina el punto
-    }
+            if (temp_valor != 0) {
+                temp_valor = valor.replace(/\./g, ''); // Elimina el punto
+            }
 
-    valor_pedido = parseInt(sub_total) + parseInt(temp_valor)
+            valor_pedido = parseInt(sub_total) + parseInt(temp_valor)
 
-    $('#total_pedido').html('Total: $ ' + valor_pedido.toLocaleString('es-CO'))
+            $('#total_pedido').html('Total: $ ' + valor_pedido.toLocaleString('es-CO'))
 
-}
-</script>
+        }
+    </script>
 
     <script>
         function calcular_propina_final(propina) {
@@ -530,17 +531,19 @@
             res = parseInt(sub_total) - parseInt(valor_venta);
 
 
+
             resultado = res.toLocaleString('es-CO');
             if (res > 0) {
                 $('#cambio').html('Cambio: $' + resultado)
             }
             if (res < 0) {
                 $('#cambio').html('Cambio: $ 0')
+                $('#pago').html('Valor pago: $ 0')
             }
 
-            if (sub_total > 0) {
+            //if (sub_total > valor_venta) {
                 $('#pago').html('Valor pago: $' + sub_total.toLocaleString('es-CO'))
-            }
+            //}
 
         }
     </script>
@@ -636,6 +639,8 @@
                             $('#tipo_pago').val(0)
                             $('#valor_total_a_pagar').val(resultado.valor_total)
                             $('#requiere_factura_electronica').val(resultado.requiere_factura_electronica)
+                            $('#total_propina').val(0)
+
                         } else if (resultado.valor_total === null) {
                             sweet_alert('warning', ' ! No hay productos para efectuar pagos parciales ¡')
                         }
@@ -643,6 +648,36 @@
                     }
                 },
             });
+        }
+    </script>
+
+
+    <script>
+        function calculo_propina() {
+            let url = document.getElementById("url").value;
+            let id_mesa = document.getElementById("id_mesa_pedido").value;
+
+            if (id_mesa == "") {
+                sweet_alert('warning', 'No hay pedido')
+            } else if (id_mesa != "") {
+
+                $.ajax({
+                    data: {
+                        id_mesa,
+                    },
+                    url: url + "/" + "pedidos/propinas",
+                    type: "POST",
+                    success: function(resultado) {
+                        var resultado = JSON.parse(resultado);
+                        if (resultado.resultado == 1) {
+
+                            $('#propina_del_pedido').val(resultado.propina)
+                            $('#valor_pedido').html(resultado.total_pedido)
+
+                        }
+                    },
+                });
+            }
         }
     </script>
 

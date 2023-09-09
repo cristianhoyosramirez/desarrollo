@@ -4,6 +4,8 @@ namespace App\Controllers\pedidos;
 
 use App\Controllers\BaseController;
 
+use App\Libraries\Impuestos;
+
 class Mesas extends BaseController
 {
     public function index()
@@ -85,6 +87,7 @@ class Mesas extends BaseController
                 'fk_usuario' => $id_usuario,
                 'valor_total' => $valor_unitario['valorventaproducto'],
                 'cantidad_de_productos' => 1,
+
             ];
             $insert = model('pedidoModel')->insert($data);
 
@@ -290,6 +293,7 @@ class Mesas extends BaseController
         $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $total_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
         $nota_pedido = model('pedidoModel')->select('nota_pedido')->where('fk_mesa', $id_mesa)->first();
+        $propina = model('pedidoModel')->select('propina')->where('fk_mesa', $id_mesa)->first();
 
         $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
         $returnData = array(
@@ -300,8 +304,10 @@ class Mesas extends BaseController
                 "productos" => $productos_pedido,
             ]),
             "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
+            "propina" =>   number_format($propina['propina'], 0, ',', '.'),
             //"cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
-            "nota_pedido" => $nota_pedido['nota_pedido']
+            "nota_pedido" => $nota_pedido['nota_pedido'],
+            "total_propina" => number_format($propina['propina'] + $total_pedido['valor_total'], 0, ',', '.'),
 
         );
         echo  json_encode($returnData);
@@ -897,12 +903,31 @@ class Mesas extends BaseController
                 "total" => "Total $ 0"
             );
             echo  json_encode($returnData);
-        }else if (empty($apertura_registro)){
+        } else if (empty($apertura_registro)) {
             $returnData = array(
                 "resultado" => 0,
-                
+
             );
             echo  json_encode($returnData);
         }
+    }
+
+
+    function reporte_propinas()
+    {
+
+        //$id_apertura = 29;
+        $id_apertura = $_REQUEST['id_apertura'];
+        
+        $propinas = model('facturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
+
+        $returnData = array(
+            "resultado" => 1,
+            "propinas" => view('pedidos/propinas',[
+                "total_propinas"=>"$ ".number_format($propinas[0]['valor_propina'], 0, ",", ".")
+            ])
+
+        );
+        echo  json_encode($returnData);
     }
 }

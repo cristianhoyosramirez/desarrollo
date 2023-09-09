@@ -73,4 +73,9 @@ class Impuestos
 
         return $resultado;
     }
+
+function propina($porcentje_propina, $valor_pedido ){
+
+}
+
 }

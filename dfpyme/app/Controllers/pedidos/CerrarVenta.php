@@ -141,13 +141,21 @@ class CerrarVenta extends BaseController
                 $fecha_y_hora,
                 $descuento,
                 $propina
+
             );
+
+
+            $apertura = model('aperturaRegistroModel')->select('numero')->where('idcaja', 1)->first();
 
             //Guardar la propina 
             $data = [
                 'estado' => $estado,
                 'valor_propina' => $propina,
-                'id_factura' => $factura_venta
+                'id_factura' => $factura_venta,
+                'id_apertura' => $apertura['numero'],
+                'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                'fecha' => $fecha,
+                'hora' => $hora
             ];
 
             $propina_factura = model('FacturaPropinaModel')->insert($data);
@@ -160,14 +168,14 @@ class CerrarVenta extends BaseController
             if ($tipo_pago == 1) {
                 $productos = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
                 //Insertar en la tabla producto factura_venta 
-                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario);
+                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario, $apertura['numero']);
             }
 
 
             if ($tipo_pago == 0) {
 
                 $productos = model('partirFacturaModel')->get_productos($numero_pedido);
-                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario);
+                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario, $apertura['numero']);
             }
 
             if ($efectivo > 1) {
@@ -211,12 +219,22 @@ class CerrarVenta extends BaseController
                 $borrar_partir_factura = model('partirFacturaModel')->where('numero_de_pedido', $numero_pedido);
                 $borrar_partir_factura->delete();
 
+
+
                 $total = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido)->findAll();
 
-                $model = model('pedidoModel');
-                $actualizar = $model->set('valor_total', $total[0]['valor_total']);
-                $actualizar = $model->where('id', $numero_pedido);
-                $actualizar = $model->update();
+                if (empty($total[0]['valor_total'])) {
+
+                    $borrar_producto_pedido = model('pedidoModel')->where('id', $numero_pedido);
+                    $borrar_producto_pedido->delete();
+                }
+
+                if (!empty($total[0]['valor_total'])) {
+                    $model = model('pedidoModel');
+                    $actualizar = $model->set('valor_total', $total[0]['valor_total']);
+                    $actualizar = $model->where('id', $numero_pedido);
+                    $actualizar = $model->update();
+                }
             }
             $mensaje = "";
 
@@ -240,7 +258,14 @@ class CerrarVenta extends BaseController
             $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
 
             $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido);
-            $valor_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
+            $valor_pedido = "";
+            $val_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
+            if (empty($val_pedido)) {
+                $valor_pedido = 0;
+            }
+            if (!empty($val_pedido)) {
+                $valor_pedido = $val_pedido['valor_total'];
+            }
             $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
 
             if ($tipo_pago == 0) {
@@ -259,7 +284,7 @@ class CerrarVenta extends BaseController
                         "pedido" => $numero_pedido
                     ]),
                     "id_mesa" => $id_mesa,
-                    "valor_pedio" => "$ " . number_format($valor_pedido['valor_total'], 0, ",", "."),
+                    "valor_pedio" => "$ " . number_format($valor_pedido, 0, ",", "."),
                     "nombre_mesa" => $nombre_mesa['nombre'],
                     "pedido" => $pedido['id'],
                     "tipo_pago" => $tipo_pago
@@ -316,5 +341,34 @@ class CerrarVenta extends BaseController
             );
             echo  json_encode($returnData);
         }
+    }
+
+
+    function propinas()
+    {
+
+        $id_mesa = $this->request->getPost('id_mesa');
+
+        $valor_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
+
+        $propina = $valor_pedido['valor_total'] * 0.1;
+
+               // Redondear la propina al valor más cercano a mil
+               $Propina_redondeada = round($propina / 1000) * 1000;
+
+
+
+
+         $model = model('pedidoModel');
+         $actualizar = $model->set('propina',$Propina_redondeada);
+         $actualizar = $model->where('fk_mesa', $id_mesa);
+         $actualizar = $model->update();
+
+        $returnData = array(
+            "resultado" => 1,
+            "propina"=>number_format($Propina_redondeada, 0, ",", "."),
+            "total_pedido"=>number_format($Propina_redondeada+$valor_pedido['valor_total'], 0, ",", ".")
+        );
+        echo  json_encode($returnData);
     }
 }

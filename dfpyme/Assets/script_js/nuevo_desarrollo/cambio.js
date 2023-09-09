@@ -21,6 +21,13 @@ function cambio(valor) { //Se recibe un un valor desde el formulario de pagos
     sub_total = parseInt(efectivo) + parseInt(banco);
     res = parseInt(sub_total) - parseInt(valor_venta);
     resultado = res.toLocaleString('es-CO');
+   
+    
+    
+    if (res <= 0) {
+        $('#cambio').html('Cambio: $' + 0)
+    }
+    
 
     if (res > 0) {
         $('#cambio').html('Cambio: $' + resultado)

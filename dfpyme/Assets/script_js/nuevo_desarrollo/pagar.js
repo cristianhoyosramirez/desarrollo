@@ -90,10 +90,16 @@ function pagar() {
                             $('#total_propina').val(0)
                             $('#tipo_pago').val(1)
 
+
+                            if (resultado.valor_pedio=='$ 0'){
+                                $('#mesa_pedido').html('')
+                                $('#pedido_mesa').html('Pedido')
+                                
+                            }
+
                             if (resultado.tipo_pago == 1) {
                                 limpiar_todo();
                                 //$('#efectivo').val(0)
-
                             }
                             if (resultado.tipo_pago == 0) {
                                 $('#mesa_productos').html(resultado.productos)
@@ -102,7 +108,8 @@ function pagar() {
                                 $('#valor_pedido').html(resultado.valor_pedio)
                                 $('#subtotal_pedido').val(resultado.valor_pedio)
                                 $('#productos_categoria').html('')
-                                //$('#id_mesa_pedido').val(resultado.id_mesa)
+                                $('#pago').html('Valor pago: 0')
+                                $('#cambio').html('Cambio: 0')
                                 $('#propina_pesos').val(0)
                                 $('#propina_pesos_final').val(0)
                                 $('#total_propina').val(0)

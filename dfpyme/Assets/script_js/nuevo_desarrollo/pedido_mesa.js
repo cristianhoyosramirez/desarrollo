@@ -27,9 +27,10 @@ function pedido_mesa(id_mesa, nombre_mesa) {
                 $('#mesa_productos').html(resultado.productos_pedido)
                 $('#id_mesa_pedido').val(resultado.id_mesa)
                 $('#pedido_mesa').html('Pedido: ' + resultado.numero_pedido)
-                $('#valor_pedido').html(resultado.total_pedido)
+                $('#valor_pedido').html(resultado.total_propina)
                 $('#nota_pedido').val(resultado.nota_pedido)
                 $('#subtotal_pedido').val(resultado.total_pedido)
+                $('#propina_del_pedido').val(resultado.propina)
                 //$("#producto").readOnly = false;
                 $("#producto").attr("readonly", false);
                 $("#producto").focus();

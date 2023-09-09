@@ -98,12 +98,12 @@
                     </div>
                   </div>
 
-                  <div class="row mb-2">
+                  <!--     <div class="row mb-2">
                     <label for="inputEmail3" class="col-sm-4 col-form-label">Fecha limite</label>
                     <div class="col-sm-8">
                       <input type="date" class="form-control" id="inputEmail3" value="<?php echo date('Y-m-d') ?>">
                     </div>
-                  </div>
+                  </div> -->
 
                   <div class="row mb-2">
 
@@ -133,18 +133,18 @@
 
                     <div class="col-sm-12">
                       <div class="input-group">
-<!-- 
-                        <select class="form-select w-1" aria-label="Default select example" id="criterio_propina_final"  >
-                          
-                          <option value="1">Propina % </option>
-                          
-                        </select> -->
 
-                        <input type="hidden" value="1"  id="criterio_propina_final">
-                        <label for="" class="col-sm-4 col-form-label" style="width: 100px;">Propina</label>
-                        <input type="text" value=0 class="form-control" onkeyup="calcular_propina_final(this.value)" id="propina_pesos_final" placeholder="%" >
-                        <input type="text"  class="form-control" id="total_propina" onkeyup="total_pedido_final(this.value)"  placeholder="$" value=0 >
-                        
+                        <select class="form-select w-1" aria-label="Default select example" id="criterio_propina_final">
+
+                          <option value="1">Propina % </option>
+
+                        </select>
+
+                        <!-- <input type="hidden" value="1" id="criterio_propina_final"> 
+                        <label for="" class="col-sm-4 col-form-label" style="width: 100px;">Propina</label>-->
+                        <input type="text" value=0 class="form-control" onkeyup="calcular_propina_final(this.value)" id="propina_pesos_final" placeholder="%">
+                        <input type="text" class="form-control" id="total_propina" onkeyup="total_pedido_final(this.value)" placeholder="$" value=0>
+
                       </div>
                     </div>
                   </div>
@@ -179,17 +179,24 @@
                     <div class="col-sm-9">
 
                       <div class="input-group">
-
+                        <!-- 
                         <select class="form-select w-20" aria-label="Default select example" id="banco" name="banco">
 
-                          <?php foreach ($bancos as $detalle) : ?>
-                            <option value="<?php echo $detalle['id'] ?>"><?php echo  $detalle['nombre'] ?> </option>
-                          <?php endforeach ?>
-                        </select>
+                          <?php #foreach ($bancos as $detalle) : 
+                          ?>
+                            <option value="<?php #echo $detalle['id'] 
+                                            ?>"><?php # echo  $detalle['nombre'] 
+                                                                          ?> </option>
+                          <?php #endforeach 
+                          ?>
+                        </select> -->
+
+                        <input type="hidden" name="banco" id="banco" value=1>
                         <input type="text" aria-label="Last name" class="form-control" id="transaccion" name="transaccion" value=0 onkeyup="cambio_transaccion(this.value),saltar_factura_pos(event,'btn_pagar')">
                       </div>
                     </div>
                   </div>
+
                   <div class="row mb-3">
 
                     <div class="col-sm-12">

@@ -1154,14 +1154,16 @@ class cajaDiariaController extends BaseController
 
     function reporte_de_ventas()
     {
+        //$id_apertura = 29;
         $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 770;
+
 
         $fecha_cierre = "";
         $fecha_y_hora_cierre = "";
         $hora_cierre = "";
         $fecha_y_hora_apertura = model('aperturaModel')->select('fecha_y_hora_apertura')->where('id', $id_apertura)->first();
 
+        $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
         $hor_apertura = model('aperturaModel')->select('hora')->where('id', $id_apertura)->first();
         $hora_apertura = $hor_apertura['hora'];
         $fecha_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $id_apertura)->first();
@@ -1175,13 +1177,69 @@ class cajaDiariaController extends BaseController
         }
 
 
-        $resultado_fechas = model('productoFacturaVentaModel')->consulta_entre_fechas_con_hora_inicial_y_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
+        //$resultado_fechas = model('productoFacturaVentaModel')->consulta_entre_fechas_con_hora_inicial_y_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
 
-        $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
 
-        if (empty($validar_tabla_reporte_producto)) {
+        //$productos = model('kardexModel')->where('id_apertura', $id_apertura)->findAll();
 
-            foreach ($resultado_fechas as $detalle) {
+
+        $productos_distinct = model('kardexModel')->get_productos($id_apertura);
+        $categorias = model('kardexModel')->get_categorias($id_apertura);
+
+
+
+        foreach ($productos_distinct as $detalle) {
+
+            $total = model('kardexModel')->get_total($id_apertura, $detalle['valor_unitario'], $detalle['codigo']);
+
+            $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigo'])->first();
+            $cantidad = $total[0]['cantidad'];
+
+            $data = [
+                'cantidad' => $cantidad,
+                'nombre_producto' => $nombre_producto['nombreproducto'],
+                'precio_venta' => $detalle['valor_unitario'],
+                'valor_total' => $detalle['valor_unitario'] * $cantidad,
+                'id_categoria' => $detalle['id_categoria'],
+                'codigo_interno_producto' => $detalle['codigo'],
+                'valor_unitario' => $detalle['valor_unitario']
+            ];
+            $insert = model('reporteProductoModel')->insert($data);
+        }
+
+   
+        $devoluciones = model('detalleDevolucionVentaModel')->where('id_apertura', $id_apertura)->find();
+
+        $returnData = [
+            'resultado' => 1,
+            'datos' =>  view('consultas_y_reportes/reporte_ventas_producto', [
+                'productos_distinct' => $productos_distinct,
+                'fecha_inicial' => $fecha_y_hora_apertura['fecha_y_hora_apertura'],
+                'fecha_apertura' => $fecha_apertura['fecha'],
+                'fecha_inicial_format' =>  date("g:i a", strtotime($fecha_y_hora_apertura['fecha_y_hora_apertura'])),
+                'fecha_final' => $fecha_y_hora_cierre,
+                'fecha_final_format' =>  date("g:i a", strtotime($fecha_y_hora_cierre)),
+                'fecha_cierre' => $fecha_cierre,
+
+                'devoluciones' => $devoluciones,
+                //'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
+                'hora_inicial' => $hora_apertura,
+                'hora_final' => $hora_cierre,
+                //'categorias' => $categorias,
+                'id_apertura' => $id_apertura,
+                'categorias' => $categorias,
+                'devoluciones'=>$devoluciones
+            ])
+        ];
+        echo json_encode($returnData);
+
+
+
+
+        /*    if (empty($validar_tabla_reporte_producto)) {
+
+            foreach ($productos as $detalle) {
+                //$productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades_con_horas($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
                 $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades_con_horas($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
                 $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
                 $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
@@ -1217,7 +1275,7 @@ class cajaDiariaController extends BaseController
             $returnData = [
                 'resultado' => 1,
                 'datos' =>  view('consultas_y_reportes/reporte_ventas_producto', [
-                    'datos_productos' => $resultado_fechas,
+                    //'datos_productos' => $resultado_fechas,
                     'fecha_inicial' => $fecha_y_hora_apertura['fecha_y_hora_apertura'],
                     'fecha_apertura' => $fecha_apertura['fecha'],
                     'fecha_inicial_format' =>  date("g:i a", strtotime($fecha_y_hora_apertura['fecha_y_hora_apertura'])),
@@ -1234,8 +1292,8 @@ class cajaDiariaController extends BaseController
                 ])
             ];
             echo json_encode($returnData);
-        }
-        if (!empty($validar_tabla_reporte_producto)) {
+        } */
+        /* if (!empty($validar_tabla_reporte_producto)) {
 
             $devoluciones = model('devolucionModel')->resutado_suma_entre_fecha_con_hora_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
 
@@ -1259,7 +1317,7 @@ class cajaDiariaController extends BaseController
                 ])
             ];
             echo json_encode($returnData);
-        }
+        } */
     }
     function detalle_retiros()
     {

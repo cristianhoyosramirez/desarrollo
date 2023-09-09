@@ -35,19 +35,24 @@ MOVIMIENTO DE CAJA
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                     <span class="d-none d-sm-inline">
-                        <a href="#" class="btn btn-white" onclick="imprimir_movimientos(<?php echo $id_apertura ?>)">
+                        <a href="#" class="btn btn-outline-indigo" onclick="reporte_propinas()">
+                            Propinas
+                        </a>
+                    </span>
+                    <span class="d-none d-sm-inline">
+                        <a href="#" class="btn btn-outline-green" onclick="imprimir_movimientos(<?php echo $id_apertura ?>)">
                             Imprimir
                         </a>
                     </span>
                     <span class="d-none d-sm-inline">
                         <form action="<?= base_url('consultas_y_reportes/reporte_de_ventas') ?>" method="POST" target="_blank">
                             <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_apertura">
-                            <button type="button" class="btn btn-white btn-icon" onclick="reporte_ventas()">Ventas</button>
+                            <button type="button" class="btn btn-outline-warning btn-icon" onclick="reporte_ventas()">Ventas</button>
                         </form>
                     </span>
                     <form action="<?= base_url('consultas_y_reportes/informe_fiscal_desde_caja') ?>" method="POST">
                         <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_aperturas">
-                        <button type="button" class="btn btn-primary btn-icon" target="_blank" onclick="fiscal()">Fiscal </button>
+                        <button type="button" class="btn btn-outline-dark btn-icon" target="_blank" onclick="fiscal()">Fiscal </button>
                     </form>
                 </div>
             </div>
@@ -434,5 +439,48 @@ MOVIMIENTO DE CAJA
 <?= $this->include('consultas_y_reportes/modal_editar_cierre_efectivo') ?>
 <?= $this->include('consultas_y_reportes/modal_editar_cierre_transaccion') ?>
 <?= $this->include('caja/modal_edicion_retiro') ?>
+
+<!-- Modal -->
+<div class="modal fade" id="propinas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Reporte de propinas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="tabla_propinas"></div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
+<script>
+    function reporte_propinas() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "pedidos/reporte_propinas",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+                    $('#tabla_propinas').html(resultado.propinas)
+                    $("#propinas").modal("show");
+
+                    sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+    }
+</script>
+
 
 <?= $this->endSection('content') ?>

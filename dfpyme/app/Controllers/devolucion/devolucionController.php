@@ -139,6 +139,7 @@ class devolucionController extends BaseController
                     'valor_total_producto' => $valor_total_producto,
                     'fecha_y_hora_venta' => $fecha_y_hora,
                     'fecha_venta' => date('Y-m-d'),
+                    'id_apertura'=>$id_apertura['numero']
                 ];
 
                 $insert = model('detalleDevolucionVentaModel')->insert($detalle_devolucion_venta);

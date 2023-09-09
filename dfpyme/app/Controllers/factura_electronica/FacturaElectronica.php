@@ -52,6 +52,8 @@ class FacturaElectronica extends BaseController
         $fecha->setTimeZone(new DateTimeZone('America/Bogota'));
         $fecha_y_hora = $fecha->format('Y-m-d H:i:s.u');
 
+        $apertura = model('aperturaRegistroModel')->select('numero')->where('idcaja', 1)->first();
+
         $data = [
             'nit_cliente' => $nit_cliente,
             //'nit_cliente' => '222222222222',
@@ -92,7 +94,12 @@ class FacturaElectronica extends BaseController
         $data = [
             'estado' => $estado,
             'valor_propina' => $propina,
-            'id_factura' => $id_fact['id']
+            'id_factura' => $id_fact['id'],
+            'id_apertura' => $apertura['numero'],
+            'fecha_y_hora_factura_venta' => $fecha_y_hora,
+            'fecha' => date('Y-m-d'),
+            'hora' => date("H:i:s"),
+
         ];
 
         $propina_factura = model('FacturaPropinaModel')->insert($data);
@@ -158,6 +165,27 @@ class FacturaElectronica extends BaseController
                         $iva = $porcentaje_iva['valoriva'];
                         $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $valor_antes_de_iva, $detalle['valor_unitario']);
                     }
+
+                    $codigo_categoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+
+                    $data = [
+                        'idcompra' => 0,
+                        'codigo' => $detalle['codigointernoproducto'],
+                        'idusuario' => $id_usuario,
+                        'idconcepto' => 10,
+                        'numerodocumento' => $id_factura,
+                        'fecha' => date('Y-m-d'),
+                        'hora' => date('H:i:s'),
+                        'cantidad' => $detalle['cantidad_producto'],
+                        'valor' => $detalle['valor_unitario'],
+                        'total' => $detalle['valor_total'],
+                        'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                        'id_categoria'=>$codigo_categoria['codigocategoria'],
+                        'id_apertura' => $apertura['numero'],
+                        'valor_unitario'=>$detalle['valor_unitario']
+                    ];
+
+                    $insertar = model('kardexModel')->insert($data);
                 }
             }
         } else if (($id_regimen['idregimen'] == 2)) {  //Empresa no responsabel de impuestos 
@@ -169,6 +197,7 @@ class FacturaElectronica extends BaseController
 
             foreach ($productos as $detalle) {
                 $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                $codigo_categoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
                 $costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
                 $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $detalle['valor_unitario'], $detalle['valor_total']);
@@ -185,12 +214,13 @@ class FacturaElectronica extends BaseController
                     'valor' => $detalle['valor_unitario'],
                     'total' => $detalle['valor_total'],
                     'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                    'id_categoria' => $codigo_categoria['codigocategoria'],
+                    'id_apertura' => $apertura['numero'],
+                    'valor_unitario'=>$detalle['valor_unitario']
                 ];
 
-  
-                $insertar=model('kardexModel')->insert($data);
 
-
+                $insertar = model('kardexModel')->insert($data);
             }
         }
         if ($insert) {

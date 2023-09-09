@@ -87,7 +87,8 @@ Bienvenido DFpyme
                     </div>
                 </div>
 
-                <?php $alturaCalc = "23rem + 10px"; // Calcula la altura ?>
+                <?php $alturaCalc = "23rem + 10px"; // Calcula la altura 
+                ?>
 
                 <!--Productos-->
                 <div class="col-md-3" id="pedido" style="display: block">
@@ -178,7 +179,7 @@ Bienvenido DFpyme
                 <!--valor Pedido-->
                 <div class="col-md-3">
 
-                    <div class="card"style="height: calc(<?php echo $alturaCalc; ?>)">
+                    <div class="card" style="height: calc(<?php echo $alturaCalc; ?>)">
                         <div class="card-header border-1" style="margin-bottom: -10px; padding-bottom: 0;">
                             <div class="card-title">
                                 <div class="row align-items-start">
@@ -198,16 +199,28 @@ Bienvenido DFpyme
                                     </div>
                                 </div>
 
-                                <div class="row mb-2">
+                                <div class="row mb-2 gy-2">
                                     <div class="col-sm-12">
                                         <div class="input-group">
-<!-- 
+                                            <!-- 
                                             <select class="form-select" aria-label="Default select example" id="criterio_propina" style="width: 90px;">
                                                 <option value="1">Propina %</option>
                                                 <option value="2">Propina $</option>
 
                                             </select> -->
-                                            <label for="" class="col-sm-4 col-form-label" style="width: 100px;">Propina</label>
+
+
+
+                                            <a href="#" class="btn btn-outline-green  col-sm-4"  onclick="calculo_propina()"  title="Propina"  style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <circle cx="12" cy="12" r="9" />
+                                                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                                                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                                                    <path d="M8 13a4 4 0 1 0 8 0m0 0h-8" />
+                                                </svg></a>
+
+
                                             <input type="text" aria-label="Last name" class="form-control w-1" style="width: 50px;" value=0 onkeyup="calcular_propina(this.value)" id="propina_pesos" placeholder="%">
                                             <input type="text" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
                                         </div>
