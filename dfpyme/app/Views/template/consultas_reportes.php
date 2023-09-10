@@ -1460,9 +1460,11 @@
 
         var url = document.getElementById("url").value;
         var id_apertura = document.getElementById("id_apertura").value;
+        var tipo_reporte = document.getElementById("tipo_reporte").value;
         $.ajax({
           data: {
-            id_apertura
+            id_apertura,
+            tipo_reporte
           },
           url: url + "/" + "consultas_y_reportes/reporte_de_ventas",
           type: "POST",

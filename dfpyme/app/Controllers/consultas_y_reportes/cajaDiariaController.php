@@ -1154,10 +1154,10 @@ class cajaDiariaController extends BaseController
 
     function reporte_de_ventas()
     {
-        //$id_apertura = 29;
+       
         $id_apertura = $this->request->getPost('id_apertura');
-
-
+       
+        
         $fecha_cierre = "";
         $fecha_y_hora_cierre = "";
         $hora_cierre = "";
@@ -1175,12 +1175,6 @@ class cajaDiariaController extends BaseController
             $fecha_y_hora_cierre = $fecha_cierre['fecha_y_hora_cierre'];
             $hora_cierre = $hora_cierre['hora'];
         }
-
-
-        //$resultado_fechas = model('productoFacturaVentaModel')->consulta_entre_fechas_con_hora_inicial_y_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-
-
-        //$productos = model('kardexModel')->where('id_apertura', $id_apertura)->findAll();
 
 
         $productos_distinct = model('kardexModel')->get_productos($id_apertura);
@@ -1207,7 +1201,6 @@ class cajaDiariaController extends BaseController
             $insert = model('reporteProductoModel')->insert($data);
         }
 
-   
         $devoluciones = model('detalleDevolucionVentaModel')->where('id_apertura', $id_apertura)->find();
 
         $returnData = [
@@ -1228,96 +1221,10 @@ class cajaDiariaController extends BaseController
                 //'categorias' => $categorias,
                 'id_apertura' => $id_apertura,
                 'categorias' => $categorias,
-                'devoluciones'=>$devoluciones
+                'devoluciones' => $devoluciones
             ])
         ];
         echo json_encode($returnData);
-
-
-
-
-        /*    if (empty($validar_tabla_reporte_producto)) {
-
-            foreach ($productos as $detalle) {
-                //$productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades_con_horas($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades_con_horas($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-
-                $data = [
-                    'cantidad' => $productos_suma[0]['cantidad'],
-                    'nombre_producto' => $nombre_producto['nombreproducto'],
-                    'precio_venta' => $productos_suma[0]['valor_total_producto'],
-                    'valor_total' => $productos_suma[0]['valor_total_producto'] * $productos_suma[0]['cantidad'],
-                    'id_categoria' => $codigocategoria['codigocategoria'],
-                    'codigo_interno_producto' => $detalle['codigointernoproducto']
-                ];
-                $insert = model('reporteProductoModel')->insert($data);
-            }
-
-            $devoluciones = model('devolucionModel')->resutado_suma_entre_fecha_con_hora_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-
-            $total_devoluciones = model('devolucionModel')->total_con_hora_final_y_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-            $categorias = model('productoFacturaVentaModel')->categorias($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-
-
-            //echo  date("g:i a", strtotime($fecha_y_hora_apertura['fecha_y_hora_apertura'])); exit();
-            $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
-            $fecha_cierre = "";
-            $fecha_cierr = model('cierreModel')->select('fecha')->where('idapertura', $id_apertura)->first();
-            if (empty($fecha_cierr)) {
-                $fecha_cierre = "Sin cierre";
-            }
-            if (!empty($fecha_cierr)) {
-                $fecha_cierre = $fecha_cierr['fecha'];
-            }
-
-            $returnData = [
-                'resultado' => 1,
-                'datos' =>  view('consultas_y_reportes/reporte_ventas_producto', [
-                    //'datos_productos' => $resultado_fechas,
-                    'fecha_inicial' => $fecha_y_hora_apertura['fecha_y_hora_apertura'],
-                    'fecha_apertura' => $fecha_apertura['fecha'],
-                    'fecha_inicial_format' =>  date("g:i a", strtotime($fecha_y_hora_apertura['fecha_y_hora_apertura'])),
-                    'fecha_final' => $fecha_y_hora_cierre,
-                    'fecha_final_format' =>  date("g:i a", strtotime($fecha_y_hora_cierre)),
-                    'fecha_cierre' => $fecha_cierre,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'hora_inicial' => $hora_apertura,
-                    'hora_final' => $hora_cierre,
-                    'categorias' => $categorias,
-                    'id_apertura' => $id_apertura
-                ])
-            ];
-            echo json_encode($returnData);
-        } */
-        /* if (!empty($validar_tabla_reporte_producto)) {
-
-            $devoluciones = model('devolucionModel')->resutado_suma_entre_fecha_con_hora_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-
-            $total_devoluciones = model('devolucionModel')->total_con_hora_final_y_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-            $categorias = model('productoFacturaVentaModel')->categorias_con_horas($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-
-            $returnData = [
-                'resultado' => 1, //No hay resultados
-                'datos' => view('consultas_y_reportes/reporte_ventas_producto', [
-                    'datos_productos' => $resultado_fechas,
-                    //'fecha_inicial' => $fecha_y_hora_apertura['fecha_y_hora_apertura'],
-                    'fecha_inicial' => date("g:i a", strtotime($fecha_y_hora_apertura['fecha_y_hora_venta'])),
-                    'fecha_final' => $fecha_y_hora_cierre,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'hora_inicial' => $hora_apertura,
-                    'hora_final' => $hora_cierre,
-                    'categorias' => $categorias,
-                    'id_apertura' => $id_apertura
-                ])
-            ];
-            echo json_encode($returnData);
-        } */
     }
     function detalle_retiros()
     {

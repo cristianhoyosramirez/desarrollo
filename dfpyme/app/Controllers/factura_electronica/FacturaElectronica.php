@@ -365,6 +365,11 @@ class FacturaElectronica extends BaseController
                 $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
                 $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
 
+
+                $valor_pedido = model('pedidoModel')->select('valor_total')->where('id',$numero_pedido['id'])->first();
+                $nombre_mesa=model('mesasModel')->select('nombre')->where('id',$id_mesa)->first();
+
+
                 $returnData = array(
                     "id_factura" => $id_factura,
                     "resultado" => 1,
@@ -379,7 +384,11 @@ class FacturaElectronica extends BaseController
                         "productos" => $productos_pedido,
                         "pedido" => $numero_pedido
                     ]),
-                    "tipo_pago" => 0
+                    "tipo_pago" => 0,
+                    "valor_pedio"=>"$ " . number_format($valor_pedido['valor_total'], 0, ",", "."),
+                    "id_mesa"=>$id_mesa,
+                    "pedido"=>$numero_pedido['id'],
+                    "nombre_mesa"=>$nombre_mesa['nombre']
                 );
                 echo  json_encode($returnData);
             }

@@ -225,9 +225,11 @@ class Imprimir extends BaseController
             $total = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->setTextSize(2, 1);
-
+            $printer->setTextSize(1, 1);
             $printer->text("SUB TOTAL  :" . "$" . number_format($total['valor_total'], 0, ",", ".") . "\n");
             $printer->text("PROPINA    :" . "$" . number_format($propina, 0, ",", ".") . "\n");
+            $printer->text("---------------------------------------------" . "\n");
+
             $printer->setTextSize(2, 2);
             $printer->text("TOTAL      :" . "$" . number_format($propina+$total['valor_total'], 0, ",", ".") . "\n");
             $printer->setTextSize(1, 1);

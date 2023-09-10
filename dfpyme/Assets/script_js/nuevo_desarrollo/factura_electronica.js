@@ -38,6 +38,17 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     $('#todas_las_mesas').html(resultado.mesas)
                     $('#mesa_productos').html(resultado.productos)
                     $('#lista_categorias').html(resultado.categorias)
+                    $('#valor_pedido').html(resultado.valor_pedio)
+                    $('#subtotal_pedido').val(resultado.valor_pedio)
+
+                    $('#id_mesa_pedido').val(resultado.id_mesa)
+                    $('#pedido_mesa').html("Pedido: "+resultado.pedido)
+                    $('#mesa_pedido').html("Mesa: "+resultado.nombre_mesa)
+                    $('#tipo_pago').val(1)
+                    
+
+
+
                     let lista_categorias = document.getElementById("lista_categorias");
                     lista_categorias.style.display = "none";
 

@@ -46,6 +46,7 @@ MOVIMIENTO DE CAJA
                     </span>
                     <span class="d-none d-sm-inline">
                         <form action="<?= base_url('consultas_y_reportes/reporte_de_ventas') ?>" method="POST" target="_blank">
+                            <input type="hidden" value="pantalla" name="tipo_reporte" id="tipo_reporte">
                             <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_apertura">
                             <button type="button" class="btn btn-outline-warning btn-icon" onclick="reporte_ventas()">Ventas</button>
                         </form>
@@ -451,7 +452,7 @@ MOVIMIENTO DE CAJA
             <div class="modal-body">
                 <div id="tabla_propinas"></div>
             </div>
-           
+
         </div>
     </div>
 </div>

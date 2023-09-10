@@ -1379,13 +1379,7 @@ class reporteDeVentasController extends BaseController
 
     function datos_consultar_producto_agrupado_pdf()
     {
-        $fecha_inicial = $_REQUEST['fecha_inicial_agrupado'];
 
-        $hora_inicial = $_REQUEST['hora_inicial_agrupado'];
-
-        $fecha_final = $_REQUEST['fecha_final_agrupado'];
-
-        $hora_final = $_REQUEST['hora_final_agrupado'];
 
 
         $dompdf = new Dompdf();
@@ -1402,212 +1396,79 @@ class reporteDeVentasController extends BaseController
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
 
-        if (empty($hora_inicial) and empty($hora_final)) {
-            $resultado = model('productoFacturaVentaModel')->resutado_suma_entre_fechas($fecha_inicial, $fecha_final);
-
-            $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
-            if (empty($validar_tabla_reporte_producto)) {
-                foreach ($resultado as $detalle) {
-
-                    $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades($fecha_inicial, $fecha_final, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                    $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $data = [
-                        'cantidad' => $productos_suma[0]['cantidad'],
-                        'nombre_producto' => $nombre_producto['nombreproducto'],
-                        'precio_venta' => $productos_suma[0]['valor_total_producto'],
-                        'valor_total' => $productos_suma[0]['valor_total_producto'] * $productos_suma[0]['cantidad'],
-                        'id_categoria' => $codigocategoria['codigocategoria'],
-                        'codigo_interno_producto' => $detalle['codigointernoproducto']
-                    ];
-                    $insert = model('reporteProductoModel')->insert($data);
-                }
 
 
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fechas($fecha_inicial, $fecha_final);
-
-                $total_devoluciones = model('devolucionModel')->total($fecha_inicial, $fecha_final);
-
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        $id_apertura = $this->request->getGet('id_apertura');
 
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            } else if (!empty($validar_tabla_reporte_producto)) {
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
 
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fechas($fecha_inicial, $fecha_final);
+        $fecha_cierre = "";
+        $fecha_y_hora_cierre = "";
+        $hora_cierre = "";
+        $fecha_y_hora_apertura = model('aperturaModel')->select('fecha_y_hora_apertura')->where('id', $id_apertura)->first();
 
-                $total_devoluciones = model('devolucionModel')->total($fecha_inicial, $fecha_final);
-
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
-
-
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
+        $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
+        $hor_apertura = model('aperturaModel')->select('hora')->where('id', $id_apertura)->first();
+        $hora_apertura = $hor_apertura['hora'];
+        $fecha_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $id_apertura)->first();
+        $hora_cierre = model('cierreModel')->select('hora')->where('idapertura', $id_apertura)->first();
+        if (empty($fecha_cierre) and empty($hora_cierre)) {
+            $fecha_y_hora_cierre = date('Y-m-d H:i:s');
+            $hora_cierre = date('H:i:s');
+        } else if (!empty($fecha_cierre)) {
+            $fecha_y_hora_cierre = $fecha_cierre['fecha_y_hora_cierre'];
+            $hora_cierre = $hora_cierre['hora'];
         }
 
-        if (empty($hora_inicial) and !empty($hora_final)) {
 
-            $temp_fecha_inicial = $fecha_inicial;
-            $temp_fecha_final = $fecha_final . " " . $hora_final;
-            $resultado_fecha = model('productoFacturaVentaModel')->consulta_entre_fechas_sin_hora_inicial($temp_fecha_inicial, $temp_fecha_final);
-            // $total = model('productoFacturaVentaModel')->total_entre_fechas_sin_hora_inicial($fecha_inicial, $temp_fecha_final);
-
-            $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
-
-            if (empty($validar_tabla_reporte_producto)) {
-
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fecha_y_hora_final($fecha_inicial, $temp_fecha_final);
-
-                $total_devoluciones = model('devolucionModel')->total_con_hora_final($fecha_inicial, $temp_fecha_final);
-
-                foreach ($resultado as $detalle) {
-                    $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades($fecha_inicial, $fecha_final, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                    $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $data = [
-                        'cantidad' => $productos_suma[0]['cantidad'],
-                        'nombre_producto' => $nombre_producto['nombreproducto'],
-                        'precio_venta' => $productos_suma[0]['valor_total_producto'],
-                        'valor_total' => $productos_suma[0]['valor_total_producto'] * $productos_suma[0]['cantidad'],
-                        'id_categoria' => $codigocategoria['codigocategoria'],
-                        'codigo_interno_producto' => $detalle['codigointernoproducto']
-                    ];
-                    $insert = model('reporteProductoModel')->insert($data);
-                }
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        $productos_distinct = model('kardexModel')->get_productos($id_apertura);
+        $categorias = model('kardexModel')->get_categorias($id_apertura);
 
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
-            if (empty($validar_tabla_reporte_producto)) {
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
 
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        foreach ($productos_distinct as $detalle) {
 
+            $total = model('kardexModel')->get_total($id_apertura, $detalle['valor_unitario'], $detalle['codigo']);
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
+            $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigo'])->first();
+            $cantidad = $total[0]['cantidad'];
+
+            $data = [
+                'cantidad' => $cantidad,
+                'nombre_producto' => $nombre_producto['nombreproducto'],
+                'precio_venta' => $detalle['valor_unitario'],
+                'valor_total' => $detalle['valor_unitario'] * $cantidad,
+                'id_categoria' => $detalle['id_categoria'],
+                'codigo_interno_producto' => $detalle['codigo'],
+                'valor_unitario' => $detalle['valor_unitario']
+            ];
+            $insert = model('reporteProductoModel')->insert($data);
         }
-        if (!empty($hora_inicial) and !empty($hora_final)) {
 
-            $temp_fecha_inicial = $fecha_inicial;
-            $temp_fecha_final = $fecha_final;
+        $devoluciones = model('detalleDevolucionVentaModel')->where('id_apertura', $id_apertura)->find();
 
-            $resultado_fechas = model('productoFacturaVentaModel')->consulta_entre_fechas_con_hora_inicial_y_final($temp_fecha_inicial, $temp_fecha_final);
-
-
-            $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
-
-            if (empty($validar_tabla_reporte_producto)) {
-
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fecha_con_hora_final($temp_fecha_inicial, $temp_fecha_final);
-
-                $total_devoluciones = model('devolucionModel')->total_con_hora_final_y_final($temp_fecha_inicial, $temp_fecha_final);
-
-                foreach ($resultado_fechas as $detalle) {
-                    $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades($fecha_inicial, $fecha_final, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                    $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $data = [
-                        'cantidad' => $productos_suma[0]['cantidad'],
-                        'nombre_producto' => $nombre_producto['nombreproducto'],
-                        'precio_venta' => $productos_suma[0]['valor_total_producto'],
-                        'valor_total' => $productos_suma[0]['valor_total_producto'] * $productos_suma[0]['cantidad'],
-                        'id_categoria' => $codigocategoria['codigocategoria'],
-                        'codigo_interno_producto' => $detalle['codigointernoproducto']
-                    ];
-                    $insert = model('reporteProductoModel')->insert($data);
-                }
-
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado_fechas,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
+            'datos_productos' => $productos_distinct,
+            'fecha_inicial' => $fecha_y_hora_apertura['fecha_y_hora_apertura'],
+            'fecha_final' => $fecha_y_hora_cierre,
+            //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
+            'devoluciones' => $devoluciones,
+            //'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
+            'datos_empresa' => $datos_empresa,
+            'regimen' => $regimen['nombreregimen'],
+            'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
+            'nombre_departamento' => $nombre_departamento['nombredepartamento'],
+            'categorias' => $categorias,
+            'id_apertura'=>$id_apertura
+        ]));
 
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
-        }
+        $options = $dompdf->getOptions();
+        $dompdf->setPaper('letter');
+        $dompdf->render();
+        $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
+
+
 
         //echo  $hora_consulta_inicial = $fecha_inicial . " " . $hora_inicial;
     }

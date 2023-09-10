@@ -114,9 +114,6 @@ function pagar() {
                                 $('#propina_pesos_final').val(0)
                                 $('#total_propina').val(0)
 
-
-
-
                             }
                             let mesas = document.getElementById("todas_las_mesas");
                             mesas.style.display = "block"
