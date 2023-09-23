@@ -1154,10 +1154,11 @@ class cajaDiariaController extends BaseController
 
     function reporte_de_ventas()
     {
-       
+
+        //$id_apertura = 24;
         $id_apertura = $this->request->getPost('id_apertura');
-       
-        
+
+
         $fecha_cierre = "";
         $fecha_y_hora_cierre = "";
         $hora_cierre = "";
@@ -1166,14 +1167,18 @@ class cajaDiariaController extends BaseController
         $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
         $hor_apertura = model('aperturaModel')->select('hora')->where('id', $id_apertura)->first();
         $hora_apertura = $hor_apertura['hora'];
-        $fecha_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $id_apertura)->first();
+        $fecha_cierr = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $id_apertura)->first();
         $hora_cierre = model('cierreModel')->select('hora')->where('idapertura', $id_apertura)->first();
-        if (empty($fecha_cierre) and empty($hora_cierre)) {
+        if (empty($fecha_cierr) and empty($hora_cierre)) {
             $fecha_y_hora_cierre = date('Y-m-d H:i:s');
             $hora_cierre = date('H:i:s');
-        } else if (!empty($fecha_cierre)) {
-            $fecha_y_hora_cierre = $fecha_cierre['fecha_y_hora_cierre'];
+            $fecha_cierre = date('Y-m-d');
+        } else if (!empty($fecha_cierr)) {
+
+            $fecha_y_hora_cierre = $fecha_cierr['fecha_y_hora_cierre'];
             $hora_cierre = $hora_cierre['hora'];
+            $fecha_cierr = model('cierreModel')->select('fecha')->where('idapertura', $id_apertura)->first();
+            $fecha_cierre = $fecha_cierr['fecha'];
         }
 
 
@@ -1203,6 +1208,8 @@ class cajaDiariaController extends BaseController
 
         $devoluciones = model('detalleDevolucionVentaModel')->where('id_apertura', $id_apertura)->find();
 
+
+
         $returnData = [
             'resultado' => 1,
             'datos' =>  view('consultas_y_reportes/reporte_ventas_producto', [
@@ -1213,7 +1220,6 @@ class cajaDiariaController extends BaseController
                 'fecha_final' => $fecha_y_hora_cierre,
                 'fecha_final_format' =>  date("g:i a", strtotime($fecha_y_hora_cierre)),
                 'fecha_cierre' => $fecha_cierre,
-
                 'devoluciones' => $devoluciones,
                 //'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
                 'hora_inicial' => $hora_apertura,
@@ -1687,7 +1693,7 @@ class cajaDiariaController extends BaseController
     {
 
         $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 15;
+        //$id_apertura = 25;
         $fecha_y_hora_cierre = "";
         $ventas_credito = "";
 
@@ -1751,10 +1757,11 @@ class cajaDiariaController extends BaseController
 
         if (!empty($ico)) {
             foreach ($ico as $detalle) {
+                $valor_ico = ($detalle['valor_ico'] / 100) + 1;
                 $datos_ico = model('productoFacturaVentaModel')->datos_ico($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_ico']);
 
                 $data_ico['tarifa_ico'] =  $datos_ico[0]['tarifa_ico'];
-                $data_ico['base'] = $datos_ico[0]['base'];
+                $data_ico['base'] = $datos_ico[0]['base'] / $valor_ico;
                 $data_ico['total_ico'] = $datos_ico[0]['total_ico'];
                 $data_ico['valor_venta'] = $datos_ico[0]['total'];
                 array_push($array_ico, $data_ico);
@@ -1766,6 +1773,8 @@ class cajaDiariaController extends BaseController
             $data_ico['valor_venta'] = 0;
             array_push($array_ico, $data_ico);
         }
+
+
 
         /**
          * Total de ventas crédito y de contado 

@@ -11,7 +11,7 @@
 
                 $dia_final = $dias[(date('N', strtotime($fecha_cierre))) - 1];
                 $mes_final = $meses[(date('m', strtotime($fecha_cierre))) - 1];
-
+         
                 ?>
 
                <div class="col">
@@ -41,7 +41,7 @@
                             $id_apertura = "";
                         }
                         ?>
-                       <input type="text" value="<?php echo $id_apertura ?>" id="id_apertura" name="id_apertura">
+                       <input type="hidden" value="<?php echo $id_apertura ?>" id="id_apertura" name="id_apertura">
                        <input type="hidden" value="<?php echo $fecha_inicial ?>" id="fecha_inicial_reporte" name="fecha_inicial_agrupado">
                        <input type="hidden" value="<?php echo $fecha_final ?>" id="fecha_final_reporte" name="fecha_final_agrupado">
                        <input type="hidden" value="<?php echo $hora_inicial ?>" id="hora_inicial_reporte" name="hora_inicial_agrupado">

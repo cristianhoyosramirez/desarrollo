@@ -9,5 +9,5 @@ class configuracionPedidoModel extends Model
     protected $table      = 'configuracion_pedido';
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['agregar_item'];
+    protected $allowedFields = ['agregar_item','valor_factura_antes_de_impuestos','mesero_pedido'];
 }

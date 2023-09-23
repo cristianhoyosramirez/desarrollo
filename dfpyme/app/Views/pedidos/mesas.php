@@ -33,12 +33,27 @@ Bienvenido DFpyme
         <div class="div"></div>
         <input type="hidden" value="<?php echo base_url() ?>" id="url">
         <input type="hidden" value="<?php echo $user_session->id_usuario ?>" id="id_usuario">
+        <input type="hidden" value="<?php echo $requiere_mesero ?>" id="requiere_mesero" name="requiere_mesero">
         <div class="container-fluid">
             <div class="row row-deck row-cards">
                 <div class="col-md-12 col-xl-12">
                     <div class="card">
                         <ul class="nav nav-tabs" data-bs-toggle="tabs">
 
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" onclick="todas_las_mesas()"><!-- Download SVG icon from http://tabler-icons.io/i/arrows-maximize -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="16 4 20 4 20 8" />
+                                        <line x1="14" y1="10" x2="20" y2="4" />
+                                        <polyline points="8 20 4 20 4 16" />
+                                        <line x1="4" y1="20" x2="10" y2="14" />
+                                        <polyline points="16 20 20 20 20 16" />
+                                        <line x1="14" y1="14" x2="20" y2="20" />
+                                        <polyline points="8 4 4 4 4 8" />
+                                        <line x1="4" y1="4" x2="10" y2="10" />
+                                    </svg></a>
+                            </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link " data-bs-toggle="tab" onclick="get_mesas()">TODAS</a>
                             </li>
@@ -128,18 +143,21 @@ Bienvenido DFpyme
                             <div class="card-title">
                                 <div class="row align-items-start">
                                     <div class="col">
-                                        <div class="row gy-1">
+                                        <div class="row ">
                                             <div class="col-3">
                                                 <p class="text-dark">Mesa: </p>
                                             </div>
-                                            <div class="col">
+                                            <div class="col-2">
                                                 <p id="mesa_pedido" class="text-warning fw-bold"> </p>
                                             </div>
                                         </div>
 
                                     </div>
-                                    <div class="col">
+                                    <div class="col-3">
                                         <p id="pedido_mesa">Pedido </p>
+                                    </div>
+                                    <div class="col-3">
+                                        <p id="nombre_mesero">Mesero  </p>
                                     </div>
                                 </div>
                             </div>
@@ -211,7 +229,7 @@ Bienvenido DFpyme
 
 
 
-                                            <a href="#" class="btn btn-outline-green  col-sm-4"  onclick="calculo_propina()"  title="Propina"  style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
+                                            <a href="#" class="btn btn-outline-green  col-sm-4" onclick="calculo_propina()" title="Propina" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                     <circle cx="12" cy="12" r="9" />

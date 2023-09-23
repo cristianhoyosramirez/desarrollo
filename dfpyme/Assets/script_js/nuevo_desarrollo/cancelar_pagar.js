@@ -2,7 +2,10 @@ function cancelar_pagar() {
     $('#finalizar_venta').modal('hide')
     $('#efectivo').val('')
     $('#transaccion').val('')
+    $('#total_propina').val(0)
+    $('#propina_pesos_fina').val(0)
     $('#pago').html('Valor pago: 0')
+    $('#faltante').html('Faltante: 0')
     $('#cambio').html('Cambio: 0')
     $('#error_documento').html('')
 
@@ -10,7 +13,7 @@ function cancelar_pagar() {
     let url = document.getElementById("url").value;
     let tipo_pago = document.getElementById("tipo_pago").value;
 
-  
+
     if (tipo_pago == 0) {
         $.ajax({
             type: 'post',

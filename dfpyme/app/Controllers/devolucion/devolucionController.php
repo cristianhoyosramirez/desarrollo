@@ -262,7 +262,8 @@ class devolucionController extends BaseController
                 'concepto' => $concepto_retiro,
                 'id_cuenta_retiro' => $cuenta_retiro['id_cuenta_retiro'],
                 'fecha' => date('Y-m-d'),
-                'fecha_y_hora_retiro_forma_pago' => $fecha_y_hora
+                'fecha_y_hora_retiro_forma_pago' => $fecha_y_hora,
+                'id_apertura'=>$id_apertura['numero']
             ];
 
             $insertar = model('retiroFormaPagoModel')->insert($retiro_forma_pago);

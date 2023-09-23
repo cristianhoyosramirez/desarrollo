@@ -4,8 +4,8 @@
             <?php $tiene_pedido = model('pedidoModel')->pedido_mesa($detalle['id']); ?>
             <?php if (empty($tiene_pedido)) : ?>
                 <li>
-                    <div class="cursor-pointer card card_mesas text-white bg-green-lt" onclick="pedido('<?php echo $detalle['id'] ?>','<?php echo $detalle['nombre'] ?>')">
-                        <div class="row">
+                    <div class="cursor-pointer card card_mesas text-white bg-green-lt" >
+                        <div class="row " onclick="pedido('<?php echo $detalle['id'] ?>','<?php echo $detalle['nombre'] ?>')">
                             <div class="col-3">
                                 <span class="avatar">
                                     <img src="<?php echo base_url(); ?>/images/productos/producto.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">

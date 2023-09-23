@@ -31,6 +31,8 @@ function finalizar_venta() {
 
                     $('#total_pedido').html('Total: ' + totales.toLocaleString('es-ES'))
                     $('#total_propina').val(propina_pedido)
+                    $('#efectivo').val(totales.toLocaleString('es-ES'))
+                    $('#efectivo').select()
 
 
                     if (resultado.factura_electronica == 1) {

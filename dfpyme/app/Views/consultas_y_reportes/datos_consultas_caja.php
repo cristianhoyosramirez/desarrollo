@@ -35,8 +35,8 @@ MOVIMIENTO DE CAJA
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                     <span class="d-none d-sm-inline">
-                        <a href="#" class="btn btn-outline-indigo" onclick="reporte_propinas()">
-                            Propinas
+                        <a href="#" class="btn btn-outline-indigo" onclick="consolidado_ventas()">
+                            Consolidado
                         </a>
                     </span>
                     <span class="d-none d-sm-inline">
@@ -126,9 +126,9 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col cursor-pointer" onclick="ingresos()">
                                         <div class="font-weight-medium">
-                                            Efectivo
+                                            Ingresos
                                         </div>
                                         <div class="text-muted">
                                             <p id="valor_efectivo"> <?php echo $ingresos_efectivo ?></p>
@@ -153,12 +153,12 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col cursor-pointer" onclick="reporte_propinas()" title="Detalle de propinas ">
                                         <div class="font-weight-medium">
-                                            Tranferencia
+                                            Propinas
                                         </div>
                                         <div class="text-muted">
-                                            <p id="valor_transferencia"><?php echo $ingresos_transaccion ?></p>
+                                            <p id="valor_transferencia"><?php echo $propinas ?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@ MOVIMIENTO DE CAJA
                                     </div>
                                     <div class="col">
                                         <div class="font-weight-medium">
-                                            Total Ingreso
+                                            Total ingresos
                                         </div>
                                         <div class="text-muted">
                                             <p id="total_ingresos"><?php echo $total_ingresos ?></p>
@@ -192,7 +192,7 @@ MOVIMIENTO DE CAJA
                     <div class="card-header">
                         <h4 class="card-title">Salidas</h4>
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="retiros()">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -219,7 +219,7 @@ MOVIMIENTO DE CAJA
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-3 cursor-pointer"  onclick="devoluciones()">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -408,7 +408,8 @@ MOVIMIENTO DE CAJA
                                             Diferencia
                                         </div>
                                         <div class="text-muted">
-                                            <p id="diferencia"> <?php echo $diferencia ?></p>
+                                            <p id="diferencia"> <?php #echo $diferencia 
+                                                                ?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -440,23 +441,114 @@ MOVIMIENTO DE CAJA
 <?= $this->include('consultas_y_reportes/modal_editar_cierre_efectivo') ?>
 <?= $this->include('consultas_y_reportes/modal_editar_cierre_transaccion') ?>
 <?= $this->include('caja/modal_edicion_retiro') ?>
+<?= $this->include('consultas/modal_propinas') ?>
+<?= $this->include('consultas/modal_propinas_2') ?>
+<?= $this->include('consultas/modal_consolidado_ventas') ?>
+<?= $this->include('consultas/modal_retiros') ?>
+<?= $this->include('consultas/modal_devoluciones') ?>
 
-<!-- Modal -->
-<div class="modal fade" id="propinas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Reporte de propinas</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="tabla_propinas"></div>
-            </div>
-
-        </div>
-    </div>
-</div>
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
+
+
+<script>
+    function retiros() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/retiros",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+
+                    $("#modal_retiros").modal("show");
+                    $("#datos_retiro").html(resultado.retiros);
+
+                    sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+
+    }
+</script>
+
+<script>
+    function devoluciones() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/devoluciones",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+
+                    $("#modal_devoluciones").modal("show");
+                    $("#datos_devoluciones").html(resultado.devoluciones);
+
+                    sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+
+    }
+</script>
+
+
+
+
+<script>
+    function ingresos() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/ventas",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+                    $('#tabla_propinas').html(resultado.movimientos)
+                    $('#ventas_pos').html(resultado.ventas_pos)
+                    $('#ventas_electronicas').html(resultado.ventas_electronicas)
+                    $('#valor_total_propinas').html(resultado.propinas)
+                    $('#total_documento').html(resultado.total_documento)
+                    $('#efectivo').html(resultado.efectivo)
+                    $('#transferencia').html(resultado.transferencia)
+                    $('#total_de_ingresos').html(resultado.total_ingresos)
+                    $('#total_ventas').html(resultado.valor)
+                    $("#modal_propinas").modal("show");
+
+                    sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+
+
+
+    }
+</script>
+
+
 <script>
     function reporte_propinas() {
         let url = document.getElementById("url").value;
@@ -472,7 +564,8 @@ MOVIMIENTO DE CAJA
                 var resultado = JSON.parse(resultado);
                 if (resultado.resultado == 1) {
 
-                    $('#tabla_propinas').html(resultado.propinas)
+                    $('#reporte_propinas').html(resultado.propinas)
+                    $('#total_propinas').html(resultado.total_propinas)
                     $("#propinas").modal("show");
 
                     sweet_alert('success', 'Registros encontrados  ');
@@ -482,6 +575,31 @@ MOVIMIENTO DE CAJA
 
     }
 </script>
+<script>
+    function consolidado_ventas() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/consolidado_ventas",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
 
+                    $('#electronicas').html(resultado.ventas_electronicas)
+                    $('#pos').html(resultado.ventas_pos)
+                    $('#total').html(resultado.total)
+                    $("#consolidado_ventas").modal("show");
+
+                    sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+    }
+</script>
 
 <?= $this->endSection('content') ?>

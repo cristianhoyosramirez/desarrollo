@@ -7,7 +7,7 @@
                     <input type="hidden" value="<?php echo $fecha_apertura ?>" name="fecha_reporte">
                     <input type="hidden" value="<?php echo $id_apertura; ?>" name="id_apertura">
 
-                    <button type="submit" title="Exportar a pdf" class="btn btn-danger w-150 btn-icon">
+                    <button type="submit" title="Exportar a pdf" class="btn btn-outline-danger w-150 btn-icon">
                         Pdf
                     </button>
                 </form>

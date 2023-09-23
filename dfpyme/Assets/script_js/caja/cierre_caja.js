@@ -167,11 +167,13 @@ function cierre_caja() {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
+                    id_apertura=resultado.id_apertura
+                    console.log(id_apertura)
                     $.ajax({
                       data: {
-                        id_cierre,
+                        id_apertura,
                       },
-                      url: url + "/" + "caja/imprimir_movimiento_caja",
+                      url: url + "/" + "pedidos/imprimir_movimiento_caja",
                       type: "POST",
                       success: function (resultado) {
                         var resultado = JSON.parse(resultado);
@@ -263,11 +265,13 @@ function cierre_caja() {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
+                    id_apertura=resultado.id_apertura
+                    console.log(id_apertura)
                     $.ajax({
                       data: {
-                        id_cierre,
+                        id_apertura,
                       },
-                      url: url + "/" + "caja/imprimir_movimiento_caja",
+                      url: url + "/" + "pedidos/imprimir_movimiento_caja",
                       type: "POST",
                       success: function (resultado) {
                         var resultado = JSON.parse(resultado);

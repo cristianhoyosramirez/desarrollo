@@ -9,7 +9,11 @@ class facturaVentaModel extends Model
     protected $table      = 'factura_venta';
     // Uncomment below if you want a
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['numerofactura_venta', 'nitcliente', 'idusuario_sistema', 'idcaja', 'idestado', 'fecha_factura_venta', 'horafactura_venta', 'descuentofactura_venta', 'fechalimitefactura_venta', 'aplica_descuento', 'estado', 'serie', 'id_resolucion_dian', 'observaciones_generales', 'fk_usuario_mesero', 'fk_mesa', 'valor_factura', 'numero_pedido', 'saldo', 'fecha_y_hora_factura_venta'];
+    protected $allowedFields = ['numerofactura_venta', 'nitcliente', 'idusuario_sistema',
+     'idcaja', 'idestado', 'fecha_factura_venta', 'horafactura_venta', 'descuentofactura_venta', 
+     'fechalimitefactura_venta', 'aplica_descuento', 'estado', 'serie', 'id_resolucion_dian',
+      'observaciones_generales', 'fk_usuario_mesero', 'fk_mesa', 'valor_factura', 'numero_pedido',
+       'saldo', 'fecha_y_hora_factura_venta','id_apertura'];
 
 
 
@@ -284,7 +288,8 @@ class facturaVentaModel extends Model
         $numero_pedido,
         $fecha_y_hora,
         $descuento,
-        $propina
+        $propina,
+        $id_apertura
 
     ) {
 
@@ -310,7 +315,8 @@ class facturaVentaModel extends Model
             'numero_pedido' => $numero_pedido,
             'fecha_y_hora_factura_venta' => $fecha_y_hora,
             'descuento' => $descuento,
-            'propina' => $propina
+            'propina' => $propina,
+            'id_apertura'=>$id_apertura
 
         ];
 

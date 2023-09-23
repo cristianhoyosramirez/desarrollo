@@ -181,3 +181,82 @@ CRITICAL - 2023-09-10 16:13:09 --> Undefined array key "nombreproducto"
 #7 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
 #8 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
 #9 {main}
+CRITICAL - 2023-09-10 17:06:07 --> Call to a member function get_cellmap() on null
+#0 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableCell->reflow(NULL)
+#1 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\TableRow.php(57): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#2 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableRow->reflow(Object(Dompdf\FrameDecorator\Block))
+#3 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Block.php(865): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow(Object(Dompdf\FrameDecorator\Block))
+#4 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Block->reflow(NULL)
+#5 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Page.php(142): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#6 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Page->reflow(NULL)
+#7 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\Dompdf.php(770): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#8 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(1468): Dompdf\Dompdf->render()
+#9 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultar_producto_agrupado_pdf()
+#10 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#11 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}
+CRITICAL - 2023-09-10 17:06:12 --> Allowed memory size of 536870912 bytes exhausted (tried to allocate 268439552 bytes)
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2023-09-10 17:06:25 --> Call to a member function get_cellmap() on null
+#0 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableCell->reflow(NULL)
+#1 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\TableRow.php(57): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#2 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableRow->reflow(Object(Dompdf\FrameDecorator\Block))
+#3 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Block.php(865): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow(Object(Dompdf\FrameDecorator\Block))
+#4 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Block->reflow(NULL)
+#5 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Page.php(142): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#6 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Page->reflow(NULL)
+#7 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\Dompdf.php(770): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#8 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(1468): Dompdf\Dompdf->render()
+#9 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultar_producto_agrupado_pdf()
+#10 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#11 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}
+CRITICAL - 2023-09-10 17:06:29 --> Allowed memory size of 536870912 bytes exhausted (tried to allocate 262148096 bytes)
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2023-09-10 17:06:46 --> Call to a member function get_cellmap() on null
+#0 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableCell->reflow(NULL)
+#1 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\TableRow.php(57): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#2 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableRow->reflow(Object(Dompdf\FrameDecorator\Block))
+#3 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Block.php(865): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow(Object(Dompdf\FrameDecorator\Block))
+#4 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Block->reflow(NULL)
+#5 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Page.php(142): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#6 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Page->reflow(NULL)
+#7 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\Dompdf.php(770): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#8 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(1468): Dompdf\Dompdf->render()
+#9 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultar_producto_agrupado_pdf()
+#10 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#11 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}
+CRITICAL - 2023-09-10 17:06:50 --> Allowed memory size of 536870912 bytes exhausted (tried to allocate 264245248 bytes)
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2023-09-10 17:08:36 --> Call to a member function get_cellmap() on null
+#0 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableCell->reflow(NULL)
+#1 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\TableRow.php(57): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#2 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\TableRow->reflow(Object(Dompdf\FrameDecorator\Block))
+#3 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Block.php(865): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow(Object(Dompdf\FrameDecorator\Block))
+#4 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Block->reflow(NULL)
+#5 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameReflower\Page.php(142): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#6 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(916): Dompdf\FrameReflower\Page->reflow(NULL)
+#7 C:\xampp\htdocs\dfpyme\vendor\dompdf\dompdf\src\Dompdf.php(770): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#8 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(1468): Dompdf\Dompdf->render()
+#9 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultar_producto_agrupado_pdf()
+#10 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#11 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}
+CRITICAL - 2023-09-10 17:08:41 --> Allowed memory size of 536870912 bytes exhausted (tried to allocate 266342400 bytes)
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2023-09-10 17:12:18 --> Array to string conversion
+#0 C:\xampp\htdocs\dfpyme\app\Controllers\consultas_y_reportes\reporteDeVentasController.php(1469): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Array to string...', 'C:\\xampp\\htdocs...', 1469)
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\consultas_y_reportes\reporteDeVentasController->datos_consultar_producto_agrupado_pdf()
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\consultas_y_reportes\reporteDeVentasController))
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}

@@ -74,13 +74,13 @@ class cajaController extends BaseController
         ];
 
         $apertura = model('aperturaModel')->insert($data);
-        $id_apertura=model('aperturaModel')->insertID();
-        $apertura_registro=[
-           'idcaja'=>1,
-           'numero'=>$id_apertura
+        $id_apertura = model('aperturaModel')->insertID();
+        $apertura_registro = [
+            'idcaja' => 1,
+            'numero' => $id_apertura
 
         ];
-        $apertura_registro=model('aperturaRegistroModel')->insert($apertura_registro);
+        $apertura_registro = model('aperturaRegistroModel')->insert($apertura_registro);
 
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
@@ -249,6 +249,7 @@ class cajaController extends BaseController
                         $returnData = array(
                             "id_cierre" => $id_cierre,
                             "resultado" => 1,
+                            "id_apertura"=>$id_apertura['numero']
 
                         );
                         echo  json_encode($returnData);
@@ -348,8 +349,10 @@ class cajaController extends BaseController
         $id_apert = model('cierreModel')->select('idapertura')->where('id', $ultimo_id_cierre['id'])->first();
 
         $id_apertura = $this->request->getPost('id_apertura');
+        //$id_apertura = 26;
 
         $tiene_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura)->first();
+
 
         if (!empty($tiene_cierre)) {
             $id_cierre = $tiene_cierre['id'];
@@ -402,12 +405,13 @@ class cajaController extends BaseController
 
             $fecha_y_hora_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('id', $id_cierre)->first();
 
-            $ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            $ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            if (!empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
-                $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'], 0, ",", ".") . "\n");
+            //$ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            $ingresos_efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $id_apertura)->findAll();
+            //$ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            if (!empty($ingresos_efectivo[0]['efectivo'])) {
+                $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
             }
-            if (empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
+            if (empty($ingresos_efectivo[0]['efectivo'])) {
                 $printer->text("Ingresos efectivo:      " . "$0" . "\n");
             }
             if (!empty($ingresos_transaccion[0]['ingresos_transaccion'])) {
@@ -598,12 +602,15 @@ class cajaController extends BaseController
         $fecha->setTimeZone(new DateTimeZone('America/Bogota'));
         $fecha_y_hora_actual = $fecha->format('Y-m-d H:i:s.u');
 
-        $ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
+        //$ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
+        $ingresos_efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $id_apertura)->findAll();
+
+
         $ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
-        if (!empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
-            $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'], 0, ",", ".") . "\n");
+        if (!empty($ingresos_efectivo[0]['efectivo'])) {
+            $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
         }
-        if (empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
+        if (empty($ingresos_efectivo[0]['efectivo'])) {
             $printer->text("Ingresos efectivo: $0"  . "\n");
         }
         if (!empty($ingresos_transaccion[0]['ingresos_transaccion'])) {
@@ -682,12 +689,12 @@ class cajaController extends BaseController
         $printer->text("Ingresos-retiros-devoluciones \n");
         $printer->text("------------------------------------------------\n");
 
-        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
 
         $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
         $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
-        $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
+        $temp = $ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'];
         $total_caja = $total_retiros + $total_devoluciones;
         $total_en_caja = $temp - $total_caja;
 

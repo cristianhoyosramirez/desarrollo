@@ -16,6 +16,15 @@ class Mesas extends BaseController
         $estado = model('estadoModel')->orderBy('idestado', 'ASC')->findAll();
         $cliente_dian = model('clientesModel')->where('nitcliente', '22222222')->first();
         $bancos = model('BancoModel')->findAll();
+        $requiere_mesero = model('configuracionPedidoModel')->select('mesero_pedido')->first();
+        $meseros = model('usuariosModel')->where('idtipo', 2)->orderBy('nombresusuario_sistema', 'asc')->find();
+
+
+
+
+
+
+
         return view('pedidos/mesas', [
             'categorias' => $categorias,
             'salones' => $salones,
@@ -23,7 +32,9 @@ class Mesas extends BaseController
             'estado' => $estado,
             'nit_cliente' => $cliente_dian['nitcliente'],
             'nombre_cliente' => '22222222 CUANTIAS MENORES',
-            'bancos' => $bancos
+            'bancos' => $bancos,
+            'requiere_mesero' => $requiere_mesero['mesero_pedido'],
+            'meseros' => $meseros
         ]);
     }
 
@@ -916,17 +927,88 @@ class Mesas extends BaseController
     function reporte_propinas()
     {
 
-        //$id_apertura = 29;
+        //$id_apertura = 26;
         $id_apertura = $_REQUEST['id_apertura'];
-        
-        $propinas = model('facturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
+
+        $meseros  = model('facturaPropinaModel')->get_meseros($id_apertura);
+        $total_propinas = model('facturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
+
 
         $returnData = array(
             "resultado" => 1,
-            "propinas" => view('pedidos/propinas',[
-                "total_propinas"=>"$ ".number_format($propinas[0]['valor_propina'], 0, ",", ".")
+            "propinas" => view('pedidos/propinas', [
+                "meseros" => $meseros,
+                "id_apertura" => $id_apertura
+            ]),
+            "total_propinas" => "Total: $ " . number_format($total_propinas[0]['valor_propina'], 0, ",", ".")
+
+        );
+        echo  json_encode($returnData);
+    }
+
+    function todas_las_mesas()
+    {
+
+        $mesas = model('mesasModel')->orderBy('id', 'asc')->findAll();
+
+        $returnData = array(
+            "resultado" => 1,
+            "mesas" => view('pedidos/lista_mesas', [
+                "mesas" => $mesas
             ])
 
+        );
+        echo  json_encode($returnData);
+    }
+
+    function buscar_mesas()
+    {
+
+
+        $mesas = model('mesasModel')->buscar_mesa($this->request->getPost('valor'));
+
+        $returnData = array(
+            "resultado" => 1,
+            "mesas" => view('pedidos/lista_mesas', [
+                "mesas" => $mesas
+            ])
+
+        );
+        echo  json_encode($returnData);
+    }
+
+
+    function crear_mesero()
+    {
+        $nombre = $this->request->getPost('nombre');
+        $id_mesa = $this->request->getPost('id_mesa');
+
+        $data = [
+            'idtipo' => 2,
+            'cedulausuario_sistema' => 123456,
+            'nombresusuario_sistema' => $nombre,
+            'usuariousuario_sistema' => $nombre,
+            'contraseniausuario_sistema' => $nombre,
+            'estadousuario_sistema' => true,
+            'telefonousuario_sistema' => "",
+            'direccion_sistema' => "",
+            'pinusuario_sistema' => "",
+        ];
+
+        $insert = model('usuariosModel')->insert($data);
+
+        // Obtener el último ID insertado
+        $ultimo_id = model('usuariosModel')->insertID();
+
+
+        $model = model('mesasModel');
+        $actualizar = $model->set('id_mesero', $ultimo_id);
+        $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
+        $actualizar = $model->update();
+
+        $returnData = array(
+            "resultado" => 1,
+            "nombre"=>$nombre
         );
         echo  json_encode($returnData);
     }

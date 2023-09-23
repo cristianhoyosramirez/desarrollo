@@ -10,8 +10,9 @@
 
     <!-- CSS files -->
     <link href="<?= base_url() ?>/public/css/tabler.min.css" rel="stylesheet" />
-    <link href="<?= base_url() ?>/public/css/tabler-payments.min.css?1684106062" rel="stylesheet" />
+    <link href="<?= base_url() ?>/Assets/css/tabler-payments.min.css?1684106062" rel="stylesheet" />
     <link href="<?= base_url() ?>/Assets/css/mesas.css" rel="stylesheet" />
+
     <!-- Jquery date picker  -->
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>/Assets/plugin/calendario/jquery-ui-1.12.1.custom/jquery-ui.css">
     <!-- Jquery-ui -->
@@ -116,6 +117,8 @@
     <script src="<?= base_url() ?>/public/js/tabler.min.js?1684106062" defer></script>
     <script src="<?= base_url() ?>/public/js/demo.min.js?1684106062" defer></script>
 
+    <?= $this->include('pedidos/modal_meseros') ?>
+    <?= $this->include('pedidos/modal_todas_las_mesas') ?>
     <?= $this->include('pedidos/modal_pago_parcial') ?>
     <?= $this->include('pedidos/modal_agregar_nota') ?>
     <?= $this->include('pedidos/modal_finaliza_venta') ?>
@@ -123,6 +126,8 @@
     <?= $this->include('ventanas_modal_pedido/cambiar_de_mesa') ?>
     <?= $this->include('ventanas_modal_retiro_de_dinero/imprimir_retiro') ?>
     <?= $this->include('ventanas_modal_retiro_de_dinero/devolucion') ?>
+    <?= $this->include('pedidos/crear_cliente') ?>
+
     <!--jQuery -->
     <script src="<?= base_url() ?>/Assets/js/jquery-3.5.1.js"></script>
     <!-- jQuery-ui -->
@@ -175,6 +180,377 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/buscar_por_codigo_de_barras_devolucion.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_producto_cantidad.js"></script>
 
+    <script>
+        function nuevo_cliente() {
+            $("#crear_cliente").modal("show");
+            $("#finalizar_venta").modal("hide");
+        }
+    </script>
+
+
+
+
+
+    <!--  <script>
+        function cambio_teclado() {
+            var tipo_pago = document.getElementById("tipo_pago").value;
+            var efectivo = document.getElementById("efectivo").value;
+            var transaccion = document.getElementById("transaccion").value;
+
+            // Utiliza el operador ternario para asignar 0 si las variables son null
+            efectivo = efectivo === null ? 0 : efectivo;
+            transaccion = transaccion === null ? 0 : transaccion;
+
+            // Elimina los puntos de los valores y convierte a números enteros
+            efectivo = parseInt(efectivo.replace(/\./g, ''));
+            transaccion = parseInt(transaccion.replace(/\./g, ''));
+
+            // Ahora las variables efectivo y transaccion son enteros o 0 si eran null
+
+            
+            total_venta = parseInt(total_venta.replace(/\./g, ''));
+
+            // Suma efectivo y transaccion
+            let suma_efectivo_transaccion = efectivo + transaccion;
+
+
+            
+              cambio ="";
+            if (tipo_pago == 1) {
+                // Calcula el cambio
+                let cambio = suma_efectivo_transaccion - total_venta;
+
+                // Muestra el cambio en el campo de transacción (o donde desees)
+                //document.getElementById("transaccion").value = cambio.toLocaleString('es-CO');
+
+                $('#pago').html('Valor pago: $ '+suma_efectivo_transaccion.toLocaleString('es-CO'))
+
+
+                if (cambio > 1){
+                    $('#cambio').html("Cambio: $ "+cambio.toLocaleString('es-CO'))
+                }
+            }
+
+            
+        }
+    </script> -->
+
+
+
+    <!--    <script>
+        function cambio_teclado() {
+            var tipo_pago = document.getElementById("tipo_pago").value;
+            var efectivo = document.getElementById("efectivo").value;
+            var transaccion = document.getElementById("transaccion").value;
+
+            // Utiliza el operador ternario para asignar 0 si las variables son null
+            efectivo = efectivo === null ? 0 : efectivo;
+            transaccion = transaccion === null ? 0 : transaccion;
+
+            // Elimina los puntos de los valores y convierte a números enteros
+            efectivo = parseInt(efectivo.replace(/\./g, ''));
+            transaccion = parseInt(transaccion.replace(/\./g, ''));
+
+            // Ahora las variables efectivo y transaccion son enteros o 0 si eran null
+
+            let total_venta = document.getElementById("valor_total_a_pagar").value;
+            total_venta = parseInt(total_venta.replace(/\./g, ''));
+
+            // Suma efectivo y transaccion
+            let suma_efectivo_transaccion = efectivo + transaccion;
+
+            if (tipo_pago == 1) {
+                // Calcula el cambio
+                let cambio = suma_efectivo_transaccion - total_venta;
+
+                // Muestra el cambio en el campo de transacción (o donde desees)
+                //document.getElementById("transaccion").value = cambio.toLocaleString('es-CO');
+
+                $('#pago').html('Valor pago: $ ' + suma_efectivo_transaccion.toLocaleString('es-CO'))
+
+
+                if (cambio > 1) {
+                    $('#cambio').html("Cambio: $ " + cambio.toLocaleString('es-CO'))
+                }
+            }
+
+            faltante = parseInt(total_venta) - parseInt(efectivo) + parseInt(transaccion);
+
+            $('#faltante').html('Faltante: $' + faltante.toLocaleString('es-CO'))
+
+
+
+        }
+    </script> -->
+
+    <script>
+        function cambio_teclado() {
+            var tipo_pago = document.getElementById("tipo_pago").value;
+            var efectivo = document.getElementById("efectivo").value;
+            var transaccion = document.getElementById("transaccion").value;
+
+            // Convierte efectivo y transaccion a números enteros o asigna 0 si están vacíos
+            efectivo = efectivo.trim() === '' ? 0 : parseInt(efectivo.replace(/\./g, ''));
+            transaccion = transaccion.trim() === '' ? 0 : parseInt(transaccion.replace(/\./g, ''));
+
+            let total_venta = document.getElementById("valor_total_a_pagar").value;
+            total_venta = parseInt(total_venta.replace(/\./g, ''));
+
+            // Suma efectivo y transaccion
+            let suma_efectivo_transaccion = efectivo + transaccion;
+
+            if (tipo_pago == 1) {
+                // Calcula el cambio
+                let cambio = suma_efectivo_transaccion - total_venta;
+
+                // Muestra el cambio en el campo de transacción (o donde desees)
+                //document.getElementById("transaccion").value = cambio.toLocaleString('es-CO');
+
+                $('#pago').html('Valor pago: $ ' + suma_efectivo_transaccion.toLocaleString('es-CO'))
+
+                if (cambio > 1) {
+                    $('#cambio').html("Cambio: $ " + cambio.toLocaleString('es-CO'))
+                }
+                // Calcula el faltante y asegura que nunca sea negativo
+                let faltante = total_venta - efectivo - transaccion;
+                faltante = Math.max(faltante, 0); // Asegura que faltante no sea negativo
+
+                $('#faltante').html('Faltante: $' + faltante.toLocaleString('es-CO'))
+            }
+
+
+            if (tipo_pago == 0) {
+                // Asegúrate de convertir total_propina a número antes de sumarlo
+                let propina_parcial = document.getElementById("total_propina").value;
+                // Reemplaza todos los puntos en la propina
+                let total_propina = propina_parcial.replace(/\./g, '');
+
+                let total_venta = document.getElementById("valor_total_a_pagar").value;
+                venta = parseInt(total_venta.replace(/\./g, ''));
+
+
+                //console.log(efectivo)
+                let suma_efectivo_transaccion = parseInt(efectivo) - parseInt(transaccion)
+
+                let faltante = parseInt(total_venta) + parseInt(propina_parcial) - parseInt(efectivo) - parseInt(transaccion);
+               
+                faltante = Math.max(faltante, 0); // Asegura que faltante no sea negativo
+
+                $('#faltante').html('Faltante: $' + faltante.toLocaleString('es-CO'))
+                //$('#fpago').html('Faltante: $' + faltante.toLocaleString('es-CO'))
+                if (faltante == 0 ){
+                    $('#cambio').html("Cambio: $0 " ) 
+                }
+                let cambio = (parseInt(total_venta) + parseInt(propina_parcial)) - parseInt(efectivo) - parseInt(transaccion);
+          
+
+      
+                    if (cambio > 1) {
+                        $('#cambio').html("Cambio: $ " + cambio.toLocaleString('es-CO'))
+                    }
+            
+
+
+                $('#pago').html('Valor pago: $ ' + suma_efectivo_transaccion.toLocaleString('es-CO'))
+
+
+            }
+        }
+    </script>
+
+
+
+
+    <script>
+        function pago_efectivo() {
+            var tipo_pago = document.getElementById("tipo_pago").value;
+            let total_venta = parseFloat(document.getElementById("valor_total_a_pagar").value);
+            let propina_parcial = document.getElementById("total_propina").value;
+            // Reemplaza todos los puntos en la propina
+            let total_propina = propina_parcial.replace(/\./g, '');
+
+            if (tipo_pago == 1) {
+                $('#efectivo').val(total_venta.toLocaleString('es-CO'))
+                $('#pago').html('Pago: ' + total_venta.toLocaleString('es-CO'))
+                $('#faltante').html('Faltante: 0')
+                $('#cambio').html('Cambio: 0')
+                $('#transaccion').val(0)
+            }
+
+            if (tipo_pago == 0) {
+                // Asegúrate de convertir total_propina a número antes de sumarlo
+                let total = total_venta + parseFloat(total_propina);
+                $('#efectivo').val(total.toLocaleString('es-CO'))
+                $('#pago').html('Pago: ' + total.toLocaleString('es-CO'))
+                $('#faltante').html('Faltante: 0')
+                $('#cambio').html('Cambio: 0')
+                $('#transaccion').val(0)
+            }
+        }
+    </script>
+
+
+    <script>
+        function pago_transaccion() {
+            var tipo_pago = document.getElementById("tipo_pago").value;
+            let total_venta = parseFloat(document.getElementById("valor_total_a_pagar").value);
+            let propina_parcial = document.getElementById("total_propina").value;
+            // Reemplaza todos los puntos en la propina
+            let total_propina = propina_parcial.replace(/\./g, '');
+
+
+            if (tipo_pago == 1) {
+                $('#transaccion').val(total_venta.toLocaleString('es-CO'))
+                $('#efectivo').val(0)
+                $('#pago').html('Valor pago: ' + total_venta.toLocaleString('es-CO'))
+                $('#faltante').html('Faltante: 0 ')
+                $('#cambio').html('Cambio: 0')
+            }
+
+
+            if (tipo_pago == 0) {
+                let total = total_venta + parseFloat(total_propina);
+                $('#transaccion').val(total.toLocaleString('es-CO'))
+                $('#pago').html('Pago: ' + total.toLocaleString('es-CO'))
+                $('#faltante').html('Faltante: 0')
+                $('#cambio').html('Cambio: 0')
+                $('#efectivo').val(0)
+            }
+
+        }
+    </script>
+
+
+
+
+    <script>
+        let campoActual = null; // Variable global para almacenar el campo de entrada actual
+
+        function guardarCampoActual(input) {
+            campoActual = input;
+        }
+
+        function agregarNumero() {
+            if (campoActual) {
+                // Obtiene el número del botón que se hizo clic
+                let numero = event.target.textContent;
+
+                // Agrega el número al campo de entrada actual
+                campoActual.value += numero;
+
+                // Formatea el valor del campo de entrada actual
+                campoActual.value = formatearNumero(campoActual.value);
+            }
+        }
+
+        function formatearNumero(valor) {
+            // Elimina cualquier separador de miles o punto decimal existente
+            valor = valor.replace(/[.,]/g, '');
+
+            // Formatea el valor con separador de miles y punto decimal
+            let numeroFormateado = parseFloat(valor).toLocaleString('es-CO');
+
+            return numeroFormateado;
+        }
+
+        function borrarCampoActual() {
+            if (campoActual) {
+                campoActual.value = ''; // Borra el contenido del campo de entrada actual
+            }
+        }
+    </script>
+
+
+
+
+
+
+    <script>
+        function buscar_mesas(valor) {
+            var url = document.getElementById("url").value;
+
+
+            $.ajax({
+                data: {
+                    valor
+                },
+                url: url +
+                    "/" +
+                    "pedidos/buscar_mesas",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#listado_de_mesas').html(resultado.mesas)
+                        //$("#lista_todas_las_mesas").modal("show");
+
+
+
+                    }
+                },
+            });
+
+        }
+    </script>
+
+
+    <script>
+        function todas_las_mesas() {
+            var url = document.getElementById("url").value;
+
+            $.ajax({
+                url: url +
+                    "/" +
+                    "pedidos/todas_las_mesas",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#listado_de_mesas').html(resultado.mesas)
+                        $("#lista_todas_las_mesas").modal("show");
+
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
+
+    <script>
+        function meseros(id_mesero) {
+            var url = document.getElementById("url").value;
+            var id_mesa = document.getElementById("id_mesa_actualizar").value;
+
+            $.ajax({
+                data: {
+                    id_mesero,
+                    id_mesa
+                },
+                url: url +
+                    "/" +
+                    "pedidos/actualizar_mesero",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#modal_meseros').modal('hide')
+                        sweet_alert('success', 'Mesero asignado')
+
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
+
+
 
     <script>
         const total_propina = document.querySelector("#total_propina");
@@ -217,6 +593,30 @@
         }
     </script>
 
+
+    <script>
+        function calculo_propina_parcial() {
+            var subtotal = document.getElementById("valor_total_a_pagar").value;
+
+
+            var propina = subtotal * 0.10; // 10% en forma decimal
+
+            // Formatea la propina con separador de miles y coloca el resultado en un input
+            var inputPropina = document.getElementById("total_propina");
+            inputPropina.value = propina.toLocaleString('es-CO'); // Separador de miles 
+
+            var total = parseInt(subtotal) + parseInt(propina);
+
+
+            $('#total_pedido').html("Total: " + total.toLocaleString('es-CO'))
+
+        }
+    </script>
+
+
+
+
+
     <script>
         function calcular_propina_final(propina) {
 
@@ -232,8 +632,6 @@
                 temp_propina = propina
             }
 
-
-
             if (criterio_propina == 1) {
 
                 if (temp_propina >= 0 && temp_propina < 100) {
@@ -243,9 +641,6 @@
 
                     //console.log(valor_propina)
                     total = parseInt(valor_propina) + parseInt(subtotal)
-
-
-
 
                     //$('#valor_total_a_pagar').val(total)
                     $('#total_propina').val(propinaFormateada)
@@ -542,7 +937,7 @@
             }
 
             //if (sub_total > valor_venta) {
-                $('#pago').html('Valor pago: $' + sub_total.toLocaleString('es-CO'))
+            $('#pago').html('Valor pago: $' + sub_total.toLocaleString('es-CO'))
             //}
 
         }
@@ -640,6 +1035,9 @@
                             $('#valor_total_a_pagar').val(resultado.valor_total)
                             $('#requiere_factura_electronica').val(resultado.requiere_factura_electronica)
                             $('#total_propina').val(0)
+                            let total = resultado.valor_total
+                            $('#efectivo').val(total.toLocaleString('es-CO'))
+                            $('#efectivo').select()
 
                         } else if (resultado.valor_total === null) {
                             sweet_alert('warning', ' ! No hay productos para efectuar pagos parciales ¡')

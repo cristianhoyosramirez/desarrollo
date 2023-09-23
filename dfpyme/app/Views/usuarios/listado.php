@@ -73,6 +73,9 @@ LISTADO DE USUARIOS
                                     <?php if ($detalle['idtipo'] == 1) { ?>
                                         <td><?php echo "General" ?></td>
                                     <?php } ?>
+                                    <?php if ($detalle['idtipo'] == 2) { ?>
+                                        <td><?php echo "Mesero" ?></td>
+                                    <?php } ?>
 
                                     <td><?php echo $detalle['pinusuario_sistema'] ?></td>
                                     <td><?php if ($detalle['pinusuario_sistema'] != null) { ?>

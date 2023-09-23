@@ -32,7 +32,7 @@ class CerrarVenta extends BaseController
         $propina = 0;
         $numero_pedid = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $numero_pedid['id'];
-        $tipo_pago = 1; */
+        $tipo_pago = 1;
         //$total_pagado = 300000;
 
         /**
@@ -67,6 +67,8 @@ class CerrarVenta extends BaseController
         $prefijo_factura = model('dianModel')->select('inicialestatica')->where('iddian', $id_dian['numeroconsecutivo'])->first();
         $serie = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', '14')->first();
 
+
+        $id_apertura = model('aperturaRegistroModel')->select('numero')->first();
         /**
          * Calcular la vigencia de la resolucion por fechas 
          */
@@ -140,12 +142,23 @@ class CerrarVenta extends BaseController
                 $numero_pedido,
                 $fecha_y_hora,
                 $descuento,
-                $propina
+                $propina,
+                $id_apertura['numero']
 
             );
 
 
             $apertura = model('aperturaRegistroModel')->select('numero')->where('idcaja', 1)->first();
+            $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
+
+            $mesero = "";
+
+            if (empty($id_mesero)) {
+                $mesero = 0;
+            }
+            if (!empty($id_mesero)) {
+                $mesero = $id_mesero['id_mesero'];
+            }
 
             //Guardar la propina 
             $data = [
@@ -155,7 +168,8 @@ class CerrarVenta extends BaseController
                 'id_apertura' => $apertura['numero'],
                 'fecha_y_hora_factura_venta' => $fecha_y_hora,
                 'fecha' => $fecha,
-                'hora' => $hora
+                'hora' => $hora,
+                'id_mesero' => $mesero
             ];
 
             $propina_factura = model('FacturaPropinaModel')->insert($data);
@@ -189,7 +203,8 @@ class CerrarVenta extends BaseController
                     $valor_venta,
                     $efectivo, // con cuanto pagan en efectivo la factura 
                     $factura_venta, // id de la factura 
-                    $fecha_y_hora
+                    $fecha_y_hora,
+                    $propina
                 );
             }
 
@@ -203,9 +218,53 @@ class CerrarVenta extends BaseController
                     $valor_venta,
                     $transaccion, // con cuanto pagan en efectivo la factura 
                     $factura_venta, // id de la factura 
-                    $fecha_y_hora
+                    $fecha_y_hora,
+                    $propina
                 );
             }
+
+
+            $valor_pago_efectivo = 0; // Inicializa el valor de pago en efectivo en 0
+            $valor_pago_transferencia = 0; // Inicializa el valor de pago en transferencia en 0
+
+            if ($valor_venta <= $efectivo) {
+                // Si el valor de venta es menor o igual al efectivo, asigna el valor del efectivo
+                $valor_pago_efectivo = $efectivo;
+            } elseif ($efectivo > 0 && $valor_venta > $efectivo) {
+                // Si el efectivo es mayor que cero y el valor de venta es mayor que el efectivo,
+                // asigna el valor de venta al efectivo
+                $valor_pago_efectivo = $efectivo;
+            } elseif ($efectivo > 0 && $transaccion > 0) {
+                // Si el efectivo es mayor que cero y la transacción es mayor que cero,
+                // asigna el valor del efectivo al efectivo
+                $valor_pago_efectivo = $efectivo;
+            }
+
+            // Calcula el valor de pago en transferencia restando el valor del efectivo
+            $valor_pago_transferencia = $valor_venta - $valor_pago_efectivo;
+
+
+
+
+            $pagos = [
+
+                'fecha' => date('Y-m-d'),
+                'hora' => date("H:i:s"),
+                'documento' => $numero_factura,
+                'valor' => $valor_venta - $propina,
+                'propina' => $propina,
+                'total_documento' => $valor_venta,
+                'efectivo' => $valor_pago_efectivo,
+                'transferencia' => $valor_pago_transferencia,
+                'total_pago' => $efectivo + $transaccion,
+                'id_usuario_facturacion' => $id_usuario,
+                'id_mesero' => $id_usuario,
+                'id_estado' => $estado,
+                'id_apertura' => $id_apertura['numero']
+            ];
+
+            $pagos = model('pagosModel')->insert($pagos);
+
             if ($tipo_pago == 1) {  // si el tipo de pago es 1 quiere decir que se factura el pedido completo 
                 // borrar productos del pedido 
                 $borrar_producto_pedido = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido);
@@ -353,22 +412,38 @@ class CerrarVenta extends BaseController
 
         $propina = $valor_pedido['valor_total'] * 0.1;
 
-               // Redondear la propina al valor más cercano a mil
-               $Propina_redondeada = round($propina / 1000) * 1000;
+        // Redondear la propina al valor más cercano a mil
+        $Propina_redondeada = round($propina / 1000) * 1000;
 
 
 
 
-         $model = model('pedidoModel');
-         $actualizar = $model->set('propina',$Propina_redondeada);
-         $actualizar = $model->where('fk_mesa', $id_mesa);
-         $actualizar = $model->update();
+        $model = model('pedidoModel');
+        $actualizar = $model->set('propina', $Propina_redondeada);
+        $actualizar = $model->where('fk_mesa', $id_mesa);
+        $actualizar = $model->update();
 
         $returnData = array(
             "resultado" => 1,
-            "propina"=>number_format($Propina_redondeada, 0, ",", "."),
-            "total_pedido"=>number_format($Propina_redondeada+$valor_pedido['valor_total'], 0, ",", ".")
+            "propina" => number_format($Propina_redondeada, 0, ",", "."),
+            "total_pedido" => number_format($Propina_redondeada + $valor_pedido['valor_total'], 0, ",", ".")
         );
         echo  json_encode($returnData);
+    }
+
+    function actualizar_mesero()
+    {
+
+        $model = model('mesasModel');
+        $actualizar = $model->set('id_mesero', $this->request->getPost('id_mesero'));
+        $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
+        $actualizar = $model->update();
+        if ($actualizar) {
+            $returnData = array(
+                "resultado" => 1,
+
+            );
+            echo  json_encode($returnData);
+        }
     }
 }

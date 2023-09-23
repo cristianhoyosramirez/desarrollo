@@ -146,21 +146,25 @@ $mes_final = $meses[(date('m', strtotime($fecha_final))) - 1];
         ?>
 
             <tr>
-                <td style="text-align:left; font:    80% ; border:none;  " ><?php echo $detalle['codigo'] ?></td>
-                <td style="text-align:left; font:    80% ; border:none;  " ><?php echo $detalle_devolucion[0]['nombreproducto'] ?></td>
-                <td style="text-align:left; font:    80% ; border:none;  " ><?php echo $detalle['cantidad'] ?></td>
-                <td style="text-align:left; font:    80% ; border:none;  " ><?php echo  "$ " . number_format($detalle['valor_total_producto'] / $detalle['cantidad'], 0, ",", "."); ?></td>
-                <td style="text-align:left; font:    80% ; border:none;  " ><?php echo "$ " . number_format($detalle['valor_total_producto'], 0, ",", ".") ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo $detalle['codigo'] ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo $detalle_devolucion[0]['nombreproducto'] ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo $detalle['cantidad'] ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo  "$ " . number_format($detalle['valor_total_producto'] / $detalle['cantidad'], 0, ",", "."); ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo "$ " . number_format($detalle['valor_total_producto'], 0, ",", ".") ?></td>
             </tr>
 
         <?php } ?>
 
-        <?php $total_devoluciones = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $id_apertura)->findAll(); ?>
+        <?php $total_devoluciones = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $id_apertura)->findAll(); ?>  
+</div>
+<div class="row">
 
-
-        <p class="text-end text-dark h1" style="text-align:right; font:    100% nomal; border:none; ">
+    <div class="col-10"></div>
+    <div class="col-2">
+        <p style="text-align:right; font:    100% nomal; border:none; ">
 
             TOTAL DEVOLUCIONES :<?php echo "$" . number_format($total_devoluciones[0]['valor_total_producto'], 0, ",", "."); ?>
             <?php model('reporteProductoModel')->truncate(); ?>
         </p>
-        < </div>
+    </div>
+</div>

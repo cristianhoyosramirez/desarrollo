@@ -436,13 +436,34 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('valor_pago_parcial', 'PartirFactura::valor_pago_parcial');
     $routes->post('propinas', 'CerrarVenta::propinas');
     $routes->post('reporte_propinas', 'Mesas::reporte_propinas');
+    $routes->post('todas_las_mesas', 'Mesas::todas_las_mesas');
+    $routes->post('actualizar_mesero', 'CerrarVenta::actualizar_mesero');
+    $routes->post('buscar_mesas', 'Mesas::buscar_mesas');
+    $routes->post('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
+    $routes->post('crear_mesero', 'Mesas::crear_mesero');
 });
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->get('ingreso', 'Inventarios::ingreso');
     $routes->post('ingreso_inventario', 'Inventarios::ingreso_inventario');
-  
+});
 
+$routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' => \App\Filters\Auth::class], function ($routes) {
+    $routes->get('boletas', 'Boletas::boletas');
+    $routes->post('set_boletas', 'Boletas::set_boletas');
+    $routes->get('consultar_boleta', 'Boletas::consultar_boleta');
+    $routes->post('cliente', 'Boletas::cliente');
+});
+$routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
+    $routes->post('ventas', 'Ventas::ventas');
+    $routes->post('consolidado_ventas', 'Ventas::consolidado_ventas');
+    $routes->post('retiros', 'Ventas::retiros');
+    $routes->post('devoluciones', 'Ventas::devoluciones');
+});
+
+$routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
+    $routes->get('mesero', 'Configuracion::mesero');
+    $routes->post('actualizar_mesero', 'Configuracion::actualizar_mesero');
 });
 
 /*

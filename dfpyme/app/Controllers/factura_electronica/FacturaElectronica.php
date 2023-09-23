@@ -79,8 +79,10 @@ class FacturaElectronica extends BaseController
             'version_dian' => 'DIAN 2.1',
             'transaccion_id' => '',
             'id_caja' => 1,
-            'cancelled' => false,
-            'fecha_y_hora_factura_venta' => $fecha_y_hora
+            'cancelled' => true,
+            'fecha_y_hora_factura_venta' => $fecha_y_hora,
+            'id_apertura'=>$apertura['numero'],
+            'propina'=>$propina
         ];
 
 
@@ -91,6 +93,18 @@ class FacturaElectronica extends BaseController
         $id_factura = $id_fact['id'];
 
 
+        $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
+
+        $mesero = "";
+
+        if (empty($id_mesero)) {
+            $mesero = 0;
+        }
+        if (!empty($id_mesero)) {
+            $mesero = $id_mesero['id_mesero'];
+        }
+
+
         $data = [
             'estado' => $estado,
             'valor_propina' => $propina,
@@ -99,6 +113,7 @@ class FacturaElectronica extends BaseController
             'fecha_y_hora_factura_venta' => $fecha_y_hora,
             'fecha' => date('Y-m-d'),
             'hora' => date("H:i:s"),
+            'id_mesero'=>$mesero
 
         ];
 
@@ -180,9 +195,9 @@ class FacturaElectronica extends BaseController
                         'valor' => $detalle['valor_unitario'],
                         'total' => $detalle['valor_total'],
                         'fecha_y_hora_factura_venta' => $fecha_y_hora,
-                        'id_categoria'=>$codigo_categoria['codigocategoria'],
+                        'id_categoria' => $codigo_categoria['codigocategoria'],
                         'id_apertura' => $apertura['numero'],
-                        'valor_unitario'=>$detalle['valor_unitario']
+                        'valor_unitario' => $detalle['valor_unitario']
                     ];
 
                     $insertar = model('kardexModel')->insert($data);
@@ -216,7 +231,7 @@ class FacturaElectronica extends BaseController
                     'fecha_y_hora_factura_venta' => $fecha_y_hora,
                     'id_categoria' => $codigo_categoria['codigocategoria'],
                     'id_apertura' => $apertura['numero'],
-                    'valor_unitario'=>$detalle['valor_unitario']
+                    'valor_unitario' => $detalle['valor_unitario']
                 ];
 
 
@@ -227,6 +242,51 @@ class FacturaElectronica extends BaseController
             /**
              * Borrar los productos del pedido 
              */
+
+
+            $id_apertura = model('aperturaRegistroModel')->select('numero')->first();
+
+
+            $valor_pago_efectivo = 0; // Inicializa el valor de pago en efectivo en 0
+            $valor_pago_transferencia = 0; // Inicializa el valor de pago en transferencia en 0
+
+            if ($valor_venta <= $efectivo) {
+                // Si el valor de venta es menor o igual al efectivo, asigna el valor del efectivo
+                $valor_pago_efectivo = $efectivo;
+            } elseif ($efectivo > 0 && $valor_venta > $efectivo) {
+                // Si el efectivo es mayor que cero y el valor de venta es mayor que el efectivo,
+                // asigna el valor de venta al efectivo
+                $valor_pago_efectivo = $efectivo;
+            } elseif ($efectivo > 0 && $transaccion > 0) {
+                // Si el efectivo es mayor que cero y la transacción es mayor que cero,
+                // asigna el valor del efectivo al efectivo
+                $valor_pago_efectivo = $efectivo;
+            }
+
+            // Calcula el valor de pago en transferencia restando el valor del efectivo
+            $valor_pago_transferencia = $valor_venta - $valor_pago_efectivo;
+
+
+            $pagos = [
+
+                'fecha' => date('Y-m-d'),
+                'hora' => date("H:i:s"),
+                'documento' => $id_factura,
+                'valor' => $valor_venta-$propina,
+                'propina' => $propina,
+                'total_documento' => $valor_venta,
+                'efectivo' => $valor_pago_efectivo,
+                'transferencia' => $valor_pago_transferencia,
+                'total_pago' => $valor_venta ,
+                'id_usuario_facturacion' => $id_usuario,
+                'id_mesero' => $id_usuario,
+                'id_estado' => $estado,
+                'id_apertura' => $id_apertura['numero']
+            ];
+
+            $pagos = model('pagosModel')->insert($pagos);
+
+
             if ($tipo_pago == 1) {
 
                 $forma_pago_efectivo = [
@@ -366,8 +426,8 @@ class FacturaElectronica extends BaseController
                 $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
 
 
-                $valor_pedido = model('pedidoModel')->select('valor_total')->where('id',$numero_pedido['id'])->first();
-                $nombre_mesa=model('mesasModel')->select('nombre')->where('id',$id_mesa)->first();
+                $valor_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
+                $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
 
 
                 $returnData = array(
@@ -385,10 +445,10 @@ class FacturaElectronica extends BaseController
                         "pedido" => $numero_pedido
                     ]),
                     "tipo_pago" => 0,
-                    "valor_pedio"=>"$ " . number_format($valor_pedido['valor_total'], 0, ",", "."),
-                    "id_mesa"=>$id_mesa,
-                    "pedido"=>$numero_pedido['id'],
-                    "nombre_mesa"=>$nombre_mesa['nombre']
+                    "valor_pedio" => "$ " . number_format($valor_pedido['valor_total'], 0, ",", "."),
+                    "id_mesa" => $id_mesa,
+                    "pedido" => $numero_pedido['id'],
+                    "nombre_mesa" => $nombre_mesa['nombre']
                 );
                 echo  json_encode($returnData);
             }

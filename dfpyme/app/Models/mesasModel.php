@@ -9,7 +9,7 @@ class mesasModel extends Model
     protected $table      = 'mesas';
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['fk_salon', 'nombre', 'estado', 'valor_pedido', 'fk_usuario'];
+    protected $allowedFields = ['fk_salon', 'nombre', 'estado', 'valor_pedido', 'fk_usuario', 'id_mesero'];
 
     public function salonMesas()
     {
@@ -59,11 +59,23 @@ class mesasModel extends Model
         ");
         return $datos->getResultArray();
     }
-   public function todas_las_mesas()
+    public function todas_las_mesas()
     {
         $datos = $this->db->query("
             select * from mesas where nombre!='SISTEMA'
         ");
         return $datos->getResultArray();
-    } 
+    }
+    public function buscar_mesa($valor)
+    {
+        $datos = $this->db->query("
+        SELECT
+        *
+    FROM
+        mesas
+    WHERE
+        nombre ILIKE '%$valor%';
+        ");
+        return $datos->getResultArray();
+    }
 }

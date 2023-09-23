@@ -176,7 +176,7 @@ class facturaFormaPagoModel extends Model
     }
 
 
-    function factura_forma_pago($numero_factura, $id_usuario, $id_forma_pago, $fecha, $hora, $valor_pago, $efectivo, $id_factura, $fecha_y_hora)
+    function factura_forma_pago($numero_factura, $id_usuario, $id_forma_pago, $fecha, $hora, $valor_pago, $efectivo, $id_factura, $fecha_y_hora,$propina)
     {
         $data = [
 
@@ -195,6 +195,8 @@ class facturaFormaPagoModel extends Model
 
         $factura_forma_pago = $this->db->table('factura_forma_pago');
         $factura_forma_pago->insert($data);
+
+
         return $this->db->insertID();
     }
 }

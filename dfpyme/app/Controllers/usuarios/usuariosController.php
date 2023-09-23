@@ -86,8 +86,8 @@ class usuariosController extends BaseController
 
             $data = [
                 'cedulausuario_sistema' => $this->request->getVar('identificacion_usuario'),
-                'nombresusuario_sistema'=>$this->request->getVar('nombre_usuario'),
-                'usuariousuario_sistema'=>$this->request->getVar('usuario_usuario'),
+                'nombresusuario_sistema' => $this->request->getVar('nombre_usuario'),
+                'usuariousuario_sistema' => $this->request->getVar('usuario_usuario'),
                 'pinusuario_sistema' => $pin_usuario['pinusuario_sistema'],
                 'idtipo' => $this->request->getVar('tipo_usuario')
             ];
@@ -106,8 +106,8 @@ class usuariosController extends BaseController
 
             $data = [
                 'cedulausuario_sistema' => $this->request->getVar('identificacion_usuario'),
-                'nombresusuario_sistema'=>$this->request->getVar('nombre_usuario'),
-                'usuariousuario_sistema'=>$this->request->getVar('usuario_usuario'),
+                'nombresusuario_sistema' => $this->request->getVar('nombre_usuario'),
+                'usuariousuario_sistema' => $this->request->getVar('usuario_usuario'),
                 'pinusuario_sistema' => $this->request->getVar('pin'),
                 'idtipo' => $this->request->getVar('tipo_usuario')
             ];
@@ -157,14 +157,7 @@ class usuariosController extends BaseController
     function crear()
     {
         if (!$this->validate([
-            'documento_usuario' => [
-                'rules' => 'required|is_unique[usuario_sistema.cedulausuario_sistema]',
-                'errors' => [
-                    'required' => 'Dato necesario',
-                    'is_unique' => 'Documento ya existe'
 
-                ]
-            ],
             'nombre_usuario' => [
                 'rules' => 'required|is_unique[usuario_sistema.nombresusuario_sistema]',
                 'errors' => [
@@ -204,17 +197,17 @@ class usuariosController extends BaseController
         } else {
             $data = [
                 'idtipo' => $this->request->getPost('id_rol'),
-                'cedulausuario_sistema' => $this->request->getPost('documento_usuario'),
+                'cedulausuario_sistema' => '1234',
                 'nombresusuario_sistema' => $this->request->getPost('nombre_usuario'),
                 'usuariousuario_sistema' => $this->request->getPost('usuario'),
-                'contraseniausuario_sistema' => $this->request->getPost('pass'),
+                'contraseniausuario_sistema' => $this->request->getPost('pin'),
                 'estadousuario_sistema' => true,
                 'telefonousuario_sistema' => '',
                 'direccion_sistema' => '',
                 'pinusuario_sistema' => $this->request->getPost('pin'),
             ];
 
-
+           
             $insert = model('UsuariosModel')->insert($data);
             if ($insert) {
                 echo json_encode(['code' => 1, 'msg' => 'Usuario creado']);

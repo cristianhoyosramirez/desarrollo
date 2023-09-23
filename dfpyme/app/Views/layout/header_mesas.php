@@ -203,7 +203,7 @@
                     <line x1="9" y1="13" x2="15" y2="13" />
                     <line x1="13" y1="17" x2="15" y2="17" />
                   </svg>
-                  Resolucion de facturación
+                  Resolución de facturación
                 </a>
                 <a class="dropdown-item" href="<?= base_url() ?>/empresa/consecutivos">
                   <!-- Download SVG icon from http://tabler-icons.io/i/arrow-narrow-right -->
@@ -231,7 +231,22 @@
                     <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                     <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
                   </svg>
-                  Configuracion de toma pedido
+                  Configuración de toma pedido
+                </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/mesero">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/hand-click -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5" />
+                    <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5" />
+                    <path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5" />
+                    <path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" />
+                    <path d="M5 3l-1 -1" />
+                    <path d="M4 7h-1" />
+                    <path d="M14 3l1 -1" />
+                    <path d="M15 6h1" />
+                  </svg>
+                  Asignación de mesero a pedido
                 </a>
               </div>
           </li>
@@ -644,6 +659,53 @@
           </li>
         <?php } ?>
 
+        <?php if ($user_session->tipo == 0) { ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+              <span class="text-blue">
+                <!-- Download SVG icon from http://tabler-icons.io/i/pencil -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+                  <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+                </svg>
+              </span>
+              <span class="nav-link-title">
+                Eventos
+              </span>
+            </a>
+            <div class="dropdown-menu">
+
+              <input type="hidden" value="<?php echo $user_session->id_usuario; ?>" id="id_usuario" name="id_usuario">
+
+              <a class="dropdown-item" href="<?= base_url() ?>/eventos/boletas">
+                <!-- Download SVG icon from http://tabler-icons.io/i/ticket -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <line x1="15" y1="5" x2="15" y2="7" />
+                  <line x1="15" y1="11" x2="15" y2="13" />
+                  <line x1="15" y1="17" x2="15" y2="19" />
+                  <path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2" />
+                </svg> Boleteria
+              </a>
+
+              <a class="dropdown-item" href="<?= base_url() ?>/eventos/consultar_boleta">
+                <!-- Download SVG icon from http://tabler-icons.io/i/ticket -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <line x1="15" y1="5" x2="15" y2="7" />
+                  <line x1="15" y1="11" x2="15" y2="13" />
+                  <line x1="15" y1="17" x2="15" y2="19" />
+                  <path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2" />
+                </svg> Cover
+              </a>
+
+
+
+
+            </div>
+          </li>
+        <?php } ?>
         </ul>
       </div>
     </div>
