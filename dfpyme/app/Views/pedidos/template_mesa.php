@@ -187,7 +187,11 @@
         }
     </script>
 
-
+<script>
+    function cambiar_mesero(){
+        
+    }
+</script>
 
 
 
@@ -539,6 +543,7 @@
                     if (resultado.resultado == 1) {
 
                         $('#modal_meseros').modal('hide')
+                        $('#nombre_mesero').html('Mesero: '+resultado.nombre_mesero)
                         sweet_alert('success', 'Mesero asignado')
 
 

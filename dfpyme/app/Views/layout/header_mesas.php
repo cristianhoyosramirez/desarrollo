@@ -659,11 +659,11 @@
           </li>
         <?php } ?>
 
-        <?php if ($user_session->tipo == 0) { ?>
+<!--         <?php if ($user_session->tipo == 0) { ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="text-blue">
-                <!-- Download SVG icon from http://tabler-icons.io/i/pencil -->
+
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -679,7 +679,7 @@
               <input type="hidden" value="<?php echo $user_session->id_usuario; ?>" id="id_usuario" name="id_usuario">
 
               <a class="dropdown-item" href="<?= base_url() ?>/eventos/boletas">
-                <!-- Download SVG icon from http://tabler-icons.io/i/ticket -->
+
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <line x1="15" y1="5" x2="15" y2="7" />
@@ -690,7 +690,7 @@
               </a>
 
               <a class="dropdown-item" href="<?= base_url() ?>/eventos/consultar_boleta">
-                <!-- Download SVG icon from http://tabler-icons.io/i/ticket -->
+
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <line x1="15" y1="5" x2="15" y2="7" />
@@ -705,7 +705,7 @@
 
             </div>
           </li>
-        <?php } ?>
+        <?php } ?> -->
         </ul>
       </div>
     </div>

@@ -250,21 +250,42 @@ class FacturaElectronica extends BaseController
             $valor_pago_efectivo = 0; // Inicializa el valor de pago en efectivo en 0
             $valor_pago_transferencia = 0; // Inicializa el valor de pago en transferencia en 0
 
-            if ($valor_venta <= $efectivo) {
-                // Si el valor de venta es menor o igual al efectivo, asigna el valor del efectivo
-                $valor_pago_efectivo = $efectivo;
-            } elseif ($efectivo > 0 && $valor_venta > $efectivo) {
-                // Si el efectivo es mayor que cero y el valor de venta es mayor que el efectivo,
-                // asigna el valor de venta al efectivo
-                $valor_pago_efectivo = $efectivo;
-            } elseif ($efectivo > 0 && $transaccion > 0) {
-                // Si el efectivo es mayor que cero y la transacción es mayor que cero,
-                // asigna el valor del efectivo al efectivo
-                $valor_pago_efectivo = $efectivo;
+            $suma_pagos = $efectivo + $transaccion;
+
+            if ($suma_pagos == $valor_venta) {
+
+                if ($efectivo == $transaccion) {
+                    $valor_pago_efectivo = $efectivo;
+                    $valor_pago_transferencia = $transaccion;
+                } else if ($transaccion == $valor_venta) {
+                    $valor_pago_efectivo = 0;
+                    $valor_pago_transferencia = $transaccion;
+                } else {
+                    $valor_pago_efectivo = $efectivo;
+                    $valor_pago_transferencia = $transaccion;
+                }
             }
 
-            // Calcula el valor de pago en transferencia restando el valor del efectivo
-            $valor_pago_transferencia = $valor_venta - $valor_pago_efectivo;
+            if ($suma_pagos > $valor_venta) {
+
+                if ($transaccion > $efectivo) {
+
+                    if ($transaccion < $valor_venta) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = $valor_venta - $transaccion;
+                    }
+                    if ($transaccion == $valor_venta) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = 0;
+                    } else {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = 0;
+                    }
+                } else {
+                    $valor_pago_efectivo = $valor_venta - $transaccion;
+                    $valor_pago_transferencia = $transaccion;
+                }
+            }
 
 
             $pagos = [

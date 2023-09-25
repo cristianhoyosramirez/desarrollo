@@ -26,7 +26,7 @@ function pedido(id_mesa, nombre_mesa) {
 
 
     $('#id_mesa_pedido').val(id_mesa)
-    $('#mesa_pedido').html(nombre_mesa)
+    $('#mesa_pedido').html('Mesa: '+nombre_mesa)
     //$('#id_mesa_pedido').val(id_mesa)
 
     $("#producto").attr("readonly", false);

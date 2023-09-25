@@ -224,7 +224,7 @@ class CerrarVenta extends BaseController
             }
 
 
-            $valor_pago_efectivo = 0; // Inicializa el valor de pago en efectivo en 0
+            /*    $valor_pago_efectivo = 0; // Inicializa el valor de pago en efectivo en 0
             $valor_pago_transferencia = 0; // Inicializa el valor de pago en transferencia en 0
 
             if ($valor_venta <= $efectivo) {
@@ -240,10 +240,58 @@ class CerrarVenta extends BaseController
                 $valor_pago_efectivo = $efectivo;
             }
 
-            // Calcula el valor de pago en transferencia restando el valor del efectivo
-            $valor_pago_transferencia = $valor_venta - $valor_pago_efectivo;
+            if ($efectivo > $valor_venta) {
+                $valor_pago_efectivo = $valor_venta;
+            }
+
+            if ($valor_pago_transferencia > 0) {
+                // Calcula el valor de pago en transferencia restando el valor del efectivo
+                $valor_pago_transferencia = $valor_venta - $valor_pago_efectivo;
+            }
+
+            if ($efectivo > $valor_venta  && $transaccion > $valor_venta) {
+
+                $valor_pago_efectivo = $efectivo;
+            } */
 
 
+
+            $suma_pagos = $efectivo + $transaccion;
+
+            if ($suma_pagos == $valor_venta) {
+
+                if ($efectivo == $transaccion) {
+                    $valor_pago_efectivo = $efectivo;
+                    $valor_pago_transferencia = $transaccion;
+                } else if ($transaccion == $valor_venta) {
+                    $valor_pago_efectivo = 0;
+                    $valor_pago_transferencia = $transaccion;
+                } else {
+                    $valor_pago_efectivo = $efectivo;
+                    $valor_pago_transferencia = $transaccion;
+                }
+            }
+
+            if ($suma_pagos > $valor_venta) {
+
+                if ($transaccion > $efectivo) {
+
+                    if ($transaccion < $valor_venta) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = $valor_venta - $transaccion;
+                    }
+                    if ($transaccion == $valor_venta) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = 0;
+                    } else {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = 0;
+                    }
+                } else {
+                    $valor_pago_efectivo = $valor_venta - $transaccion;
+                    $valor_pago_transferencia = $transaccion;
+                }
+            }
 
 
             $pagos = [
@@ -256,7 +304,7 @@ class CerrarVenta extends BaseController
                 'total_documento' => $valor_venta,
                 'efectivo' => $valor_pago_efectivo,
                 'transferencia' => $valor_pago_transferencia,
-                'total_pago' => $efectivo + $transaccion,
+                'total_pago' => $valor_pago_efectivo + $valor_pago_transferencia,
                 'id_usuario_facturacion' => $id_usuario,
                 'id_mesero' => $id_usuario,
                 'id_estado' => $estado,
@@ -434,13 +482,17 @@ class CerrarVenta extends BaseController
     function actualizar_mesero()
     {
 
+        
+        $id_mesero= $this->request->getPost('id_mesero');
         $model = model('mesasModel');
-        $actualizar = $model->set('id_mesero', $this->request->getPost('id_mesero'));
+        $actualizar = $model->set('id_mesero', $id_mesero );
         $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
+        $nombre_mesero=model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema',$id_mesero)->first();
         $actualizar = $model->update();
         if ($actualizar) {
             $returnData = array(
                 "resultado" => 1,
+                "nombre_mesero"=>$nombre_mesero['nombresusuario_sistema']
 
             );
             echo  json_encode($returnData);

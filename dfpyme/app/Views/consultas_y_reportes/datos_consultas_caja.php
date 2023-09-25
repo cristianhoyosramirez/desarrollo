@@ -88,7 +88,7 @@ MOVIMIENTO DE CAJA
                     <div class="col-xs-12 col-md-3">
                         <div class="card ">
                             <div class="card-body">
-                                <div class="row align-items-center">
+                                <div class="row align-items-center cursor-pointer"  >
                                     <div class="col-auto">
                                         <span class="bg-blue text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-desktop-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -101,7 +101,7 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col ">
                                         <div class="font-weight-mediu">
                                             Apertura
                                         </div>
@@ -450,6 +450,7 @@ MOVIMIENTO DE CAJA
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
 
 
+
 <script>
     function retiros() {
         let url = document.getElementById("url").value;
@@ -470,7 +471,7 @@ MOVIMIENTO DE CAJA
                     $("#modal_retiros").modal("show");
                     $("#datos_retiro").html(resultado.retiros);
 
-                    sweet_alert('success', 'Registros encontrados  ');
+                    //sweet_alert('success', 'Registros encontrados  ');
                 }
             },
         });
@@ -499,7 +500,7 @@ MOVIMIENTO DE CAJA
                     $("#modal_devoluciones").modal("show");
                     $("#datos_devoluciones").html(resultado.devoluciones);
 
-                    sweet_alert('success', 'Registros encontrados  ');
+                    //sweet_alert('success', 'Registros encontrados  ');
                 }
             },
         });
@@ -537,7 +538,7 @@ MOVIMIENTO DE CAJA
                     $('#total_ventas').html(resultado.valor)
                     $("#modal_propinas").modal("show");
 
-                    sweet_alert('success', 'Registros encontrados  ');
+                    //sweet_alert('success', 'Registros encontrados  ');
                 }
             },
         });
@@ -568,7 +569,7 @@ MOVIMIENTO DE CAJA
                     $('#total_propinas').html(resultado.total_propinas)
                     $("#propinas").modal("show");
 
-                    sweet_alert('success', 'Registros encontrados  ');
+                    //sweet_alert('success', 'Registros encontrados  ');
                 }
             },
         });

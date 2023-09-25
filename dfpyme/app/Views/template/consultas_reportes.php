@@ -818,7 +818,8 @@
 
 
     <script>
-      function editar_apertura(id_apertura) {
+      function editar_apertura() {
+        let id_apertura = document.getElementById("id_apertura").value;
         var url = document.getElementById("url").value;
         $.ajax({
           data: {
@@ -1420,7 +1421,7 @@
 
               Toast.fire({
                 icon: 'success',
-                title: 'Movimientos de caja encontrados' 
+                title: 'Movimientos de caja encontrados'
               })
 
             }
@@ -1462,7 +1463,7 @@
         var id_apertura = document.getElementById("id_apertura").value;
         var tipo_reporte = document.getElementById("tipo_reporte").value;
 
-       
+
         $.ajax({
           data: {
             id_apertura,
