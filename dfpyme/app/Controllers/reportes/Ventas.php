@@ -20,8 +20,6 @@ class Ventas extends BaseController
         $valor = model('pagosModel')->selectSum('valor')->where('id_apertura', $id_apertura)->findAll();
         $total_documento = model('pagosModel')->selectSum('total_documento')->where('id_apertura', $id_apertura)->findAll();
 
-
-
         $returnData = array(
             "movimientos" => view('reportes/ventas', [
                 'movimientos' => $movimientos

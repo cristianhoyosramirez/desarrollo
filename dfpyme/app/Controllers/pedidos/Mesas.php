@@ -305,7 +305,14 @@ class Mesas extends BaseController
         $total_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
         $nota_pedido = model('pedidoModel')->select('nota_pedido')->where('fk_mesa', $id_mesa)->first();
         $propina = model('pedidoModel')->select('propina')->where('fk_mesa', $id_mesa)->first();
-
+        $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
+        if (!empty($id_mesero)) {
+            $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['id_mesero'])->first();
+        }
+        if (empty($id_mesero)) {
+            $id_meser=model('facturaVentaModel')->select('fk_usuario')->where('fk_mesa',$id_mesa)->first();
+            $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_meser['fk_usuario'])->first();
+        }
         $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
         $returnData = array(
             "resultado" => 1,
@@ -319,6 +326,7 @@ class Mesas extends BaseController
             //"cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
             "nota_pedido" => $nota_pedido['nota_pedido'],
             "total_propina" => number_format($propina['propina'] + $total_pedido['valor_total'], 0, ',', '.'),
+            "nombre_mesero" => $nombre_mesero['nombresusuario_sistema']
 
         );
         echo  json_encode($returnData);
@@ -927,11 +935,12 @@ class Mesas extends BaseController
     function reporte_propinas()
     {
 
-        //$id_apertura = 26;
+        //$id_apertura = 44;
         $id_apertura = $_REQUEST['id_apertura'];
 
+
         $meseros  = model('facturaPropinaModel')->get_meseros($id_apertura);
-        $total_propinas = model('facturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
+        $total_propinas = model('FacturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
 
 
         $returnData = array(
@@ -1008,7 +1017,7 @@ class Mesas extends BaseController
 
         $returnData = array(
             "resultado" => 1,
-            "nombre"=>$nombre
+            "nombre" => $nombre
         );
         echo  json_encode($returnData);
     }

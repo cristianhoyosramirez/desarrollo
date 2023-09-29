@@ -389,13 +389,17 @@ class reporteDeVentasController extends BaseController
             if (empty($tiene_cierre)) {
                 $estado = "ABIERTA";
                 $cierre = 'Sin cierre';
+              
 
-
-                $ingresos = model('pagosModel')->selectSum('valor')->where('id_apertura', $ultimo_apertura['id'])->findAll();
-                $ingresos_efectivo = $ingresos[0]['valor'];
+                $ingresos = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $ultimo_apertura['id'])->findAll();
+                $ingresos_efectivo = $ingresos[0]['efectivo'];
 
                 $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 $propinas = $temp_propinas[0]['propina'];
+
+
+                $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_apertura['id'])->findAll();
+                $ingresos_transaccion = $transaccion[0]['transferencia'];
 
                 /*    $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
 
@@ -435,6 +439,7 @@ class reporteDeVentasController extends BaseController
                 $saldo = 0;
 
                 //$diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
+                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'] + $propinas) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
             }
             if (!empty($tiene_cierre)) {
 
@@ -491,18 +496,21 @@ class reporteDeVentasController extends BaseController
                     $retiros = $total_retiros[0]['total_retiros'];
                 }
 
-                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
-                $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $id_cierre['id'])->findAll();
+
+                $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_id)->findAll();
                 $propinas = $temp_propinas[0]['propina'];
+                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'] + $propinas) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
             }
-            
+
+    
+
             return view('consultas_y_reportes/datos_consultas_caja', [
                 'estado' => $estado,
                 'fecha_apertura' => $fecha_apertura['fecha'],
                 'fecha_cierre' => $cierre,
                 'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-                'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo, 0, ",", "."),
-                //'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
+                'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo+$ingresos_transaccion, 0, ",", "."),
+                'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
                 'total_ingresos' =>  "$" . number_format($propinas + $ingresos_efectivo, 0, ",", "."),
                 'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
                 'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
@@ -512,7 +520,7 @@ class reporteDeVentasController extends BaseController
                 'propinas' => "$" . number_format($propinas, 0, ",", "."),
                 'retirosmasdevoluciones' => "$" . number_format($retiros + $devoluciones, 0, ",", "."),
                 'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_efectivo + $propinas) - ($retiros + $devoluciones), 0, ",", "."),
-                //'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
+                'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
                 'id_apertura' => $ultimo_id,
             ]);
         } else if (empty($aperturas)) {

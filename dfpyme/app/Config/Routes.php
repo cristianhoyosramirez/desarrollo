@@ -441,6 +441,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('buscar_mesas', 'Mesas::buscar_mesas');
     $routes->post('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
     $routes->post('crear_mesero', 'Mesas::crear_mesero');
+    $routes->get('gestion_pedidos', 'TomaPedidosController::index');
 });
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {

@@ -1,4 +1,4 @@
-<?php $user_session = session(); ?>
+<?php $user_session = session();   ?>
 <?= $this->extend('pedidos/template_mesa') ?>
 <?= $this->section('title') ?>
 Bienvenido DFpyme
@@ -150,15 +150,11 @@ Bienvenido DFpyme
                                             <td yle="width: 25%;" >
                                                 <p id="pedido_mesa">Pedio: </p>
                                             </td>
-                                            <td tyle="width: 25%;">
-                                                <p id="nombre_mesero">Mesero </p>
+                                            <td tyle="width: 50%;">
+                                                <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
+
                                             </td>
-                                            <td ><a href="#" class="btn btn-facebook  btn-icon" onclick="cambiar_mesero()">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-clockwise" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5"></path>
-                                                    </svg>
-                                                </a></td>
+                                          
                                         </tr>
                                     </table>
                                 </div>

@@ -33,10 +33,12 @@ class loginController extends BaseController
         $pin = $this->request->getVar('pin');
         $usuario = model('usuariosModel')->usuario_valido($pin);
         #$usuario = model('usuariosModel')->select('*')->where('pinusuario_sistema', $pin)->first();
-        
-    
+
+
         if (!empty($usuario)) {
             $tipo_permiso = model('tipoPermisoModel')->select('*')->where('idusuario_sistema', $usuario[0]['idusuario_sistema'])->find();
+
+
 
             if ($usuario) {
                 $datosSesion = [
@@ -49,7 +51,13 @@ class loginController extends BaseController
                 ];
                 $sesion = session();
                 $sesion->set($datosSesion);
-                return redirect()->to(base_url('pedidos/mesas'));
+                if ($usuario[0]['idtipo'] == 0 or $usuario[0]['idtipo'] == 1) {
+                    return redirect()->to(base_url('pedidos/mesas'));
+                }
+
+                if ($usuario[0]['idtipo'] == 2 ){
+                    return redirect()->to(base_url('pedidos/gestion_pedidos'));
+                }
             } else {
                 $datosSesion = [
                     'id_usuario' => $usuario['idusuario_sistema'],

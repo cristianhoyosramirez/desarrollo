@@ -25,6 +25,7 @@ function pedido_mesa(id_mesa, nombre_mesa) {
             if (resultado.resultado == 1) {
 
                 $('#mesa_productos').html(resultado.productos_pedido)
+                $('#nombre_mesero').html('Mesero: '+resultado.nombre_mesero)
                 $('#id_mesa_pedido').val(resultado.id_mesa)
                 $('#pedido_mesa').html('Pedido: ' + resultado.numero_pedido)
                 $('#valor_pedido').html(resultado.total_propina)

@@ -42,8 +42,9 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     $('#subtotal_pedido').val(resultado.valor_pedio)
 
                     $('#id_mesa_pedido').val(resultado.id_mesa)
-                    $('#pedido_mesa').html("Pedido: "+resultado.pedido)
-                    $('#mesa_pedido').html("Mesa: "+resultado.nombre_mesa)
+                    $('#pedido_mesa').html("Pedido: ")
+                    $('#mesa_pedido').html("Mesa: ")
+                    $('#nombre_mesero').html("Mesero: ")
                     $('#tipo_pago').val(1)
                     
 

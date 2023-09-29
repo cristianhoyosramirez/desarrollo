@@ -513,7 +513,7 @@
                 e.preventDefault();
                 var form = this;
                 let button = document.querySelector("#btn_crear_producto");
-                button.disabled = true;
+                button.disabled = false;
                 $.ajax({
                     url: $(form).attr('action'),
                     method: $(form).attr('method'),
@@ -587,7 +587,7 @@
         </script>
 
 
-        <script>
+ <!--        <script>
             $(document).ready(function() {
                 document.getElementById('btn_crear_producto').disabled = true;
             })
@@ -598,7 +598,7 @@
                     document.getElementById('btn_crear_producto').disabled = false;
                 }
             }
-        </script>
+        </script> -->
 
 
 

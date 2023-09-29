@@ -115,7 +115,11 @@ class Imprimir extends BaseController
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->setTextSize(2, 1);
             $printer->text($productos['nombreproducto'] . "\n");
-            $printer->text("Cant. " . $cantidad_productos['cantidad_producto'] - $cantidad_productos_impresos['numero_productos_impresos_en_comanda'] . "\n");
+
+
+            if (($cantidad_productos['cantidad_producto'] - $cantidad_productos_impresos['numero_productos_impresos_en_comanda']) > 0) {
+                $printer->text("Cant. " . $cantidad_productos['cantidad_producto'] - $cantidad_productos_impresos['numero_productos_impresos_en_comanda'] . "\n");
+            }
             if (!empty($productos['nota_producto'])) {
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("NOTAS:\n");
@@ -170,6 +174,8 @@ class Imprimir extends BaseController
         $id_mesa = model('pedidoModel')->select('fk_mesa')->where('id', $numero_pedido)->first();
         $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa['fk_mesa'])->first();
         $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario)->first();
+        $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
+        $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['id_mesero'])->first();
 
         $id_impresora = model('precuentaModel')->select('id_impresora')->first();
         if (!empty($id_impresora)) {
@@ -187,7 +193,13 @@ class Imprimir extends BaseController
             $printer->setTextSize(1, 1);
             $printer->text("Pedido N°" . $numero_pedido . "\n");
             $printer->text("Mesa N°" . $nombre_mesa['nombre'] . "\n");
-            $printer->text("Mesero: " . $nombre_usuario['nombresusuario_sistema'] . "\n");
+            if (!empty($nombre_mesero)) {
+                $printer->text("Mesero: " . $nombre_mesero['nombresusuario_sistema'] . "\n");
+            }
+            if (empty($nombre_mesero)) {
+                $printer->text("Mesero: " . $nombre_usuario['nombresusuario_sistema'] . "\n");
+            }
+
 
             $printer->text("Fecha :" . "   " . date('d/m/Y ') . "\n");
             $printer->text("Hora  :" . "   " . date('h:i:s a', time()) . "\n");
@@ -623,6 +635,20 @@ class Imprimir extends BaseController
         $printer->text("**CUADRE DE CAJA** \n");
 
         $printer->text("Fecha apertura:  " . $fecha_apertura['fecha'] . " " . date("g:i a", strtotime($hora_apertura['hora'])) . "\n");
+
+
+        $cierre = model('cierreModel')->select('fecha')->where('idapertura', $id_apertura)->first();
+
+        if (!empty($cierre)) {
+            $printer->text("Fecha cierre:    " . $cierre['fecha'] . " " . date("g:i a", strtotime($hora_apertura['hora'])) . "\n");
+        }
+        if (empty($cierre)) {
+            $printer->text("Fecha cierre:    Sin cierre " . "\n");
+        }
+
+
+
+
         $printer->text("Caja N° : 1 \n");
 
         $printer->text("\n");
@@ -646,12 +672,8 @@ class Imprimir extends BaseController
 
         $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
         $printer->text("Ingresos transacción: " . "$" . number_format($ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
-        $printer->text("Propinas: " . "$" . number_format($propinas[0]['propina'], 0, ",", ".") . "\n");
-
         //$total_ingresos = model('facturaFormaPagoModel')->total_ingresos($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
-
-
-        $printer->text("Total ingresos          " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $ingresos_transaccion[0]['transferencia'] + $propinas[0]['propina'], 0, ",", ".") . "\n");
+        $printer->text("Total ingresos          " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
 
 
         $printer->text("\n");
@@ -718,12 +740,12 @@ class Imprimir extends BaseController
         $printer->text("Ingresos-retiros-devoluciones \n");
         $printer->text("------------------------------------------------\n");
 
-        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia']+$propinas[0]['propina'], 0, ",", ".") . "\n");
+        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
 
         $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
         $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
-        $temp = $ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor']+ $ingresos_transaccion[0]['transferencia']+$propinas[0]['propina'];
+        $temp = $ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia'];
         $total_caja = $total_retiros + $total_devoluciones;
         $total_en_caja = $temp - $total_caja;
 

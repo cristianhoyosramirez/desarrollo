@@ -123,10 +123,17 @@ PIN USUARIOS
                             <?php if ($id_tipo == 0) { ?>
                                 <option value="0" selected>Administrador</option>
                                 <option value="1">General</option>
+                                <option value="2" >Mesero</option>
                             <?php } ?>
                             <?php if ($id_tipo == 1) { ?>
                                 <option value="0">Administrador</option>
                                 <option value="1" selected>General</option>
+                                <option value="2" >Mesero</option>
+                            <?php } ?>
+                            <?php if ($id_tipo == 2) { ?>
+                                <option value="0">Administrador</option>
+                                <option value="1" selected>General</option>
+                                <option value="2" selected>Mesero</option>
                             <?php } ?>
 
                         </select>

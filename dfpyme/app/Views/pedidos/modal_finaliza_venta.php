@@ -212,7 +212,7 @@
                           </div>
                           <div>
                             <span class="payment payment-provider-visa payment-xs me-2"></span>
-                            Efectivo
+                            Efectivo 
                           </div>
                         </div>
                       </label>

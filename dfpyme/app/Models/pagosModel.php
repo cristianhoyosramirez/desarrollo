@@ -22,8 +22,10 @@ class pagosModel extends Model
     'id_usuario_facturacion',
     'id_mesero',
     'id_estado',
-    'id_apertura'
-    
+    'id_apertura',
+    'recibido_efectivo',
+    'recibido_transferencia',
+    'cambio'  
 ];
 
 public function set_ventas_pos($id_apertura)

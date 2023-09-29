@@ -54,11 +54,11 @@
             <label for="">Categoria</label>
             <select class="form-select" id="categoria_product" name="categoria_producto" onclick="categorias_productos()" onkeyup="saltar_creacion_producto(event,'marca_producto')">
 
-            <?php foreach ($categorias as $valor) { ?>
+              <?php foreach ($categorias as $valor) { ?>
 
-              <option value="<?php  echo $valor['codigocategoria']?>"><?php  echo $valor['nombrecategoria']?>  </option>
+                <option value="<?php echo $valor['codigocategoria'] ?>"><?php echo $valor['nombrecategoria'] ?> </option>
 
-            <?php } ?>
+              <?php } ?>
 
             </select>
 
@@ -79,12 +79,12 @@
             <label for="">Marca</label>
             <select class="form-select" id="marca_product" name="marca_producto">
 
-            <?php foreach($marcas as $valor ): ?>
+              <?php foreach ($marcas as $valor) : ?>
 
-              <option value="<?php echo $valor['idmarca']?>"> <?php echo $valor['nombremarca'] ?>  </option>
+                <option value="<?php echo $valor['idmarca'] ?>"> <?php echo $valor['nombremarca'] ?> </option>
 
               <?php endforeach ?>
-              
+
 
             </select>
             <span class="text-danger error-text marca_producto_error"></span>
@@ -132,7 +132,7 @@
                     ?>
                 <option value="<?php #echo $detalle['idiva'] 
                                 ?>"><?php #echo $detalle['valoriva'] 
-                                                                  ?></option>
+                                    ?></option>
               <?php #} 
               ?> -->
               <option value="1">0%</option>
@@ -143,12 +143,16 @@
           <div class="col-md-4" style="display: block" id="informacion_tributaria_ico">
             <label for="inputPassword4" class="form-label">Valor ICO</label>
             <select class="form-select" id="valor_icd" name="valor_ico">
-             <!--  <?php #foreach ($ico as $detalle) { ?>
-                <option value="<?php #echo $detalle['id_ico'] ?>"><?php #echo $detalle['valor_ico'] ?></option>
-              <?php #} ?> -->
+              <!--  <?php #foreach ($ico as $detalle) { 
+                    ?>
+                <option value="<?php #echo $detalle['id_ico'] 
+                                ?>"><?php #echo $detalle['valor_ico'] 
+                                    ?></option>
+              <?php #} 
+              ?> -->
               <option value="1">0%</option>
               <option value="2">8%</option>
-              
+
 
             </select>
           </div>
@@ -208,7 +212,7 @@
           <div class="col-8">
           </div>
           <div class="col-4">
-            <button type="submit" class="btn btn-success" id="btn_crear_producto">Guardar </button>
+            <button type="button" class="btn btn-success" id="btn_crear_producto" onclick="mandar()">Guardar </button>
             <button type="button" class="btn btn-danger" onclick="cancelar_creacion_producto()">Cancelar</button>
           </div>
         </form>
@@ -218,7 +222,14 @@
   </div>
 </div>
 
-
+<script>
+  function mandar() {
+    // Obtén el elemento <button> que deseas cambiar
+    var buttonElement = document.getElementById("btn_crear_producto");
+    // Cambia el tipo del botón a "submit"
+    buttonElement.type = "submit";
+  }
+</script>
 <script>
   function mostrar_informacion_tributaria() {
     var informacion_tribuitaria = document.getElementById("informacion_tributaria").value;
@@ -237,4 +248,21 @@
     }
 
   }
+</script>
+
+<script>
+  const precio_2 = document.querySelector("#precio_2");
+
+  function formatNumber(n) {
+    // Elimina cualquier carácter que no sea un número
+    n = n.replace(/\D/g, "");
+    // Formatea el número
+    return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+  }
+
+  precio_2.addEventListener("input", (e) => {
+    const element = e.target;
+    const value = element.value;
+    element.value = formatNumber(value);
+  });
 </script>

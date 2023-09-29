@@ -408,7 +408,7 @@ MOVIMIENTO DE CAJA
                                             Diferencia
                                         </div>
                                         <div class="text-muted">
-                                            <p id="diferencia"> <?php #echo $diferencia 
+                                            <p id="diferencia"> <?php echo $diferencia 
                                                                 ?></p>
                                         </div>
                                     </div>
@@ -568,6 +568,10 @@ MOVIMIENTO DE CAJA
                     $('#reporte_propinas').html(resultado.propinas)
                     $('#total_propinas').html(resultado.total_propinas)
                     $("#propinas").modal("show");
+
+                if (resultado.total_propinas=="Total: $ 0"){
+                    $('#total_propinas').html('')
+                }
 
                     //sweet_alert('success', 'Registros encontrados  ');
                 }

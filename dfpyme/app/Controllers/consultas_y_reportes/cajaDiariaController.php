@@ -1055,19 +1055,27 @@ class cajaDiariaController extends BaseController
             $fecha_cierre = $fecha_cierr['fecha'];
 
             $fecha_y_hora_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $ultimo_apertura)->first();
-            $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            //$efectivo = model('pagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            //$efectivo = model('pagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            
+            $efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura',$ultimo_apertura)->findAll();
+            
             if (empty($efectivo)) {
                 $ingresos_efectivo = 0;
             } else if (!empty($efectivo)) {
-                $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
+                $ingresos_efectivo = $efectivo[0]['efectivo'];
             }
 
-            $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            //$transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            
+            $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura',$ultimo_apertura)->findAll();
+    
             if (empty($transaccion)) {
                 $ingresos_transaccion = 0;
             } else if (!empty($transaccion)) {
-                $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
+                $ingresos_transaccion = $transaccion[0]['transferencia'];
             }
+        
             $valor_cierre = 0;
             $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
 
@@ -1109,34 +1117,16 @@ class cajaDiariaController extends BaseController
             $saldo_caja = $ingresos - $egresos;
             $diferencia = $cierre - $saldo_caja;
         }
-        /*  return view('consultas_y_reportes/datos_consultas_caja', [
-            'estado' => $estado,
-            'fecha_apertura' => $fecha_apertura['fecha'],
-            'fecha_cierre' => $cierre,
-            'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-            'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo, 0, ",", "."),
-            'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
-            'total_ingresos' =>  "$" . number_format($ingresos_transaccion + $ingresos_efectivo, 0, ",", "."),
-            'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
-            'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
-            'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
-            'devoluciones' => "$" . number_format($devoluciones, 0, ",", "."),
-            'retiros' => "$" . number_format($retiros, 0, ",", "."),
-            'retirosmasdevoluciones' => "$" . number_format($retiros + $devoluciones, 0, ",", "."),
-            'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_transaccion + $ingresos_efectivo) - ($retiros + $devoluciones), 0, ",", "."),
-            'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
-            // 'diferencia' => "$" . number_format(($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo) - ($retiros + $devoluciones)), 0, ",", "."),
-            'id_apertura' => $ultimo_apertura
-        ]); */
-
+        $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_apertura)->findAll();
+        $propinas = $temp_propinas[0]['propina'];
         $returnData = array(
             "resultado" => 1,
             'estado' => $fecha_cierre,
             'fecha_apertura' => "Fecha apertura: " . $fecha_apertura['fecha'],
             'fecha_cierre' => "Fecha cierre: " . $fecha_cierre,
             'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-            'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo, 0, ",", "."),
-            'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
+            'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo+$ingresos_transaccion, 0, ",", "."),
+            'ingresos_transaccion' =>  "$" . number_format($propinas, 0, ",", "."),
             'total_ingresos' =>  "$" . number_format($ingresos_transaccion + $ingresos_efectivo, 0, ",", "."),
             'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
             'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),

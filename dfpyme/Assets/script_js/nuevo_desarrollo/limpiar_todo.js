@@ -25,4 +25,6 @@ function limpiar_todo() {
     $('#mesa_pedido').html('');
     $('#sub_total_pedido').html('Sub total: 0');
 
+    $('#efectivo').select()
+
 }

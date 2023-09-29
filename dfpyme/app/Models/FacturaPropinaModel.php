@@ -9,7 +9,7 @@ class FacturaPropinaModel extends Model
     protected $table      = 'factura_propina';
     // Uncomment below if you want add primary key
    // protected $primaryKey = 'id';
-    protected $allowedFields = ['estado','valor_propina','id_factura','id_apertura','fecha_y_hora_factura_venta','fecha','hora','id_mesero'];
+    protected $allowedFields = ['estado','valor_propina','id_factura','id_apertura','fecha_y_hora_factura_venta','fecha','hora','id_mesero','id_mesa'];
    
   
     function get_meseros($id_apertura)
@@ -33,7 +33,7 @@ class FacturaPropinaModel extends Model
         FROM
             factura_propina
         WHERE
-            id_apertura = $id_apertura AND id_mesero = $id_mesero ");
+            id_apertura = $id_apertura AND id_mesero = $id_mesero and valor_propina > 0 ");
         return $datos->getResultArray();
     }
 

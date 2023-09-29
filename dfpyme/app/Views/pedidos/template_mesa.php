@@ -19,6 +19,9 @@
     <link href="<?php echo base_url() ?>/Assets/plugin/jquery-ui/jquery-ui.css" rel="stylesheet">
     <!-- App favicon -->
     <link rel="shortcut icon" href="<?php echo base_url(); ?>/Assets/img/favicon.png">
+    <!-- Select 2 -->
+    <link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.css" rel="stylesheet" />
+    <link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <style>
         /* CSS para desactivar el resaltado de selección de texto */
         body {
@@ -112,10 +115,7 @@
     <script src="<?= base_url() ?>/public/js/demo-theme.min.js?1684106062"></script>
     <?= $this->renderSection('content') ?>
 
-    <!-- Libs JS -->
-    <!-- Tabler Core -->
-    <script src="<?= base_url() ?>/public/js/tabler.min.js?1684106062" defer></script>
-    <script src="<?= base_url() ?>/public/js/demo.min.js?1684106062" defer></script>
+
 
     <?= $this->include('pedidos/modal_meseros') ?>
     <?= $this->include('pedidos/modal_todas_las_mesas') ?>
@@ -128,8 +128,16 @@
     <?= $this->include('ventanas_modal_retiro_de_dinero/devolucion') ?>
     <?= $this->include('pedidos/crear_cliente') ?>
 
+
+    <!-- Libs JS -->
+    <!-- Tabler Core -->
+    <script src="<?= base_url() ?>/public/js/tabler.min.js?1684106062" defer></script>
+    <script src="<?= base_url() ?>/public/js/demo.min.js?1684106062" defer></script>
     <!--jQuery -->
     <script src="<?= base_url() ?>/Assets/js/jquery-3.5.1.js"></script>
+    <!--select2 -->
+    <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
+
     <!-- jQuery-ui -->
     <script src="<?php echo base_url() ?>/Assets/plugin/jquery-ui/jquery-ui.js"></script>
     <!-- Sweet alert -->
@@ -181,17 +189,71 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_producto_cantidad.js"></script>
 
     <script>
+        $("#tipo_persona").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+        });
+
+        $("#tipo_documento").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+        });
+
+        $("#regimen").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+        });
+        $("#tipo_ventas").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+        });
+        $("#departamento").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+        });
+        $("#codigo_postal").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+        });
+    </script>
+
+
+    <script>
         function nuevo_cliente() {
             $("#crear_cliente").modal("show");
             $("#finalizar_venta").modal("hide");
         }
     </script>
 
-<script>
-    function cambiar_mesero(){
-        
-    }
-</script>
+    <script>
+        function cambiar_mesero() {
+            $("#modal_meseros").modal("show");
+        }
+    </script>
 
 
 
@@ -337,22 +399,22 @@
                 let suma_efectivo_transaccion = parseInt(efectivo) - parseInt(transaccion)
 
                 let faltante = parseInt(total_venta) + parseInt(propina_parcial) - parseInt(efectivo) - parseInt(transaccion);
-               
+
                 faltante = Math.max(faltante, 0); // Asegura que faltante no sea negativo
 
                 $('#faltante').html('Faltante: $' + faltante.toLocaleString('es-CO'))
                 //$('#fpago').html('Faltante: $' + faltante.toLocaleString('es-CO'))
-                if (faltante == 0 ){
-                    $('#cambio').html("Cambio: $0 " ) 
+                if (faltante == 0) {
+                    $('#cambio').html("Cambio: $0 ")
                 }
                 let cambio = (parseInt(total_venta) + parseInt(propina_parcial)) - parseInt(efectivo) - parseInt(transaccion);
-          
 
-      
-                    if (cambio > 1) {
-                        $('#cambio').html("Cambio: $ " + cambio.toLocaleString('es-CO'))
-                    }
-            
+
+
+                if (cambio > 1) {
+                    $('#cambio').html("Cambio: $ " + cambio.toLocaleString('es-CO'))
+                }
+
 
 
                 $('#pago').html('Valor pago: $ ' + suma_efectivo_transaccion.toLocaleString('es-CO'))
@@ -527,30 +589,64 @@
     <script>
         function meseros(id_mesero) {
             var url = document.getElementById("url").value;
-            var id_mesa = document.getElementById("id_mesa_actualizar").value;
-
-            $.ajax({
-                data: {
-                    id_mesero,
-                    id_mesa
-                },
-                url: url +
-                    "/" +
-                    "pedidos/actualizar_mesero",
-                type: "POST",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 1) {
-
-                        $('#modal_meseros').modal('hide')
-                        $('#nombre_mesero').html('Mesero: '+resultado.nombre_mesero)
-                        sweet_alert('success', 'Mesero asignado')
 
 
+            var mesa = document.getElementById("id_mesa_actualizar").value;
 
-                    }
-                },
-            });
+            if (mesa == "") {
+                let id_mesa = document.getElementById("id_mesa_pedido").value;
+                $.ajax({
+                    data: {
+                        id_mesero,
+                        id_mesa
+                    },
+                    url: url +
+                        "/" +
+                        "pedidos/actualizar_mesero",
+                    type: "POST",
+                    success: function(resultado) {
+                        var resultado = JSON.parse(resultado);
+                        if (resultado.resultado == 1) {
+
+                            $('#modal_meseros').modal('hide')
+                            $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
+                            sweet_alert('success', 'Mesero asignado')
+
+
+
+                        }
+                    },
+                });
+
+            }
+
+            if (mesa != "") {
+                id_mesa = mesa
+
+
+                $.ajax({
+                    data: {
+                        id_mesero,
+                        id_mesa
+                    },
+                    url: url +
+                        "/" +
+                        "pedidos/actualizar_mesero",
+                    type: "POST",
+                    success: function(resultado) {
+                        var resultado = JSON.parse(resultado);
+                        if (resultado.resultado == 1) {
+
+                            $('#modal_meseros').modal('hide')
+                            $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
+                            sweet_alert('success', 'Mesero asignado')
+
+
+
+                        }
+                    },
+                });
+            }
         }
     </script>
 

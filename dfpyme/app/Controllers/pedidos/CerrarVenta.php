@@ -153,10 +153,10 @@ class CerrarVenta extends BaseController
 
             $mesero = "";
 
-            if (empty($id_mesero)) {
+            if (empty($id_mesero['id_mesero'])) {
                 $mesero = 0;
             }
-            if (!empty($id_mesero)) {
+            if (!empty($id_mesero['id_mesero'])) {
                 $mesero = $id_mesero['id_mesero'];
             }
 
@@ -169,7 +169,8 @@ class CerrarVenta extends BaseController
                 'fecha_y_hora_factura_venta' => $fecha_y_hora,
                 'fecha' => $fecha,
                 'hora' => $hora,
-                'id_mesero' => $mesero
+                'id_mesero' => $mesero,
+                'id_mesa' => $id_mesa
             ];
 
             $propina_factura = model('FacturaPropinaModel')->insert($data);
@@ -263,33 +264,105 @@ class CerrarVenta extends BaseController
                 if ($efectivo == $transaccion) {
                     $valor_pago_efectivo = $efectivo;
                     $valor_pago_transferencia = $transaccion;
+                    $cambio = 0;
+                    $recibido_efectivo = $efectivo;
+                    $recibido_transaccion = $transaccion;
                 } else if ($transaccion == $valor_venta) {
                     $valor_pago_efectivo = 0;
+                    $recibido_efectivo = 0;
+                    $recibido_transaccion = $transaccion;
                     $valor_pago_transferencia = $transaccion;
+                    $cambio = 0;
                 } else {
+
                     $valor_pago_efectivo = $efectivo;
+                    $recibido_efectivo = $efectivo;
+                    $recibido_transaccion = $transaccion;
                     $valor_pago_transferencia = $transaccion;
+                    $cambio = 0;
                 }
             }
 
             if ($suma_pagos > $valor_venta) {
 
+                if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion > $efectivo) {
+
+                    $valor_pago_transferencia = $valor_venta;
+                    $valor_pago_efectivo = $efectivo;
+                    $cambio = $transaccion - $valor_venta;
+                    $recibido_transaccion = $transaccion;
+                    $recibido_efectivo = $efectivo;
+                }
+
+                /*   if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion < $efectivo) {
+
+                    $valor_pago_transferencia = $valor_venta;
+                    $valor_pago_efectivo = 0;
+                    $cambio = $efectivo - $valor_venta;
+                    $recibido_transaccion = $transaccion;
+                    $recibido_efectivo = $efectivo;
+                } */
+
+
+
                 if ($transaccion > $efectivo) {
 
+                    if ($transaccion > $efectivo) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = 0;
+                        $cambio = $transaccion - $valor_venta;
+
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
+                    }
+
                     if ($transaccion < $valor_venta) {
+
                         $valor_pago_transferencia = $transaccion;
                         $valor_pago_efectivo = $valor_venta - $transaccion;
+
+                        $cambio = $suma_pagos - $valor_venta;
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
                     }
                     if ($transaccion == $valor_venta) {
                         $valor_pago_transferencia = $transaccion;
                         $valor_pago_efectivo = 0;
-                    } else {
-                        $valor_pago_transferencia = $transaccion;
+                        $recibido_transaccion = $transaccion;
+                    } else if ($efectivo > $transaccion) {
+
+                        $valor_pago_transferencia = $valor_venta;
                         $valor_pago_efectivo = 0;
+                        $cambio = $transaccion - $valor_venta;
+
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = 0;
                     }
                 } else {
-                    $valor_pago_efectivo = $valor_venta - $transaccion;
-                    $valor_pago_transferencia = $transaccion;
+
+                    if ($efectivo > $transaccion) {
+                        $valor_pago_efectivo = 0;
+                        $valor_pago_transferencia = $valor_venta;
+                    }
+                    if ($efectivo < $transaccion) {
+                        $valor_pago_efectivo = $valor_venta - $transaccion;
+                        $valor_pago_transferencia = $transaccion;
+                    }
+                    if ($suma_pagos >= $valor_venta) {
+                        //$cambio = $suma_pagos - $valor_venta;
+                        $cambio = $suma_pagos - $valor_venta;
+                    }
+                    if ($suma_pagos < $valor_venta) {
+                        $cambio = $valor_venta - $suma_pagos;
+                    }
+
+                    $recibido_efectivo = $efectivo;
+                    if ($transaccion == 0) {
+                        $recibido_transaccion = 0;
+                    }
+                    if ($transaccion != 0) {
+                        $recibido_transaccion = $transaccion;
+                    }
                 }
             }
 
@@ -308,7 +381,10 @@ class CerrarVenta extends BaseController
                 'id_usuario_facturacion' => $id_usuario,
                 'id_mesero' => $id_usuario,
                 'id_estado' => $estado,
-                'id_apertura' => $id_apertura['numero']
+                'id_apertura' => $id_apertura['numero'],
+                'cambio' => $cambio,
+                'recibido_efectivo' => $recibido_efectivo,
+                'recibido_transferencia' => $recibido_transaccion
             ];
 
             $pagos = model('pagosModel')->insert($pagos);
@@ -482,17 +558,18 @@ class CerrarVenta extends BaseController
     function actualizar_mesero()
     {
 
-        
-        $id_mesero= $this->request->getPost('id_mesero');
+
+        // $id_mesero = $this->request->getPost('id_mesero');
+        $id_mesero = $this->request->getPost('id_mesero');
         $model = model('mesasModel');
-        $actualizar = $model->set('id_mesero', $id_mesero );
+        $actualizar = $model->set('id_mesero', $id_mesero);
         $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
-        $nombre_mesero=model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema',$id_mesero)->first();
+        $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero)->first();
         $actualizar = $model->update();
         if ($actualizar) {
             $returnData = array(
                 "resultado" => 1,
-                "nombre_mesero"=>$nombre_mesero['nombresusuario_sistema']
+                "nombre_mesero" => $nombre_mesero['nombresusuario_sistema']
 
             );
             echo  json_encode($returnData);

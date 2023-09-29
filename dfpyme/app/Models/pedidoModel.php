@@ -76,6 +76,7 @@ class pedidoModel extends Model
         SELECT
             valor_total,
             id,
+            propina,
             usuario_sistema.nombresusuario_sistema
         FROM
             pedido

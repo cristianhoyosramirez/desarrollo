@@ -55,6 +55,7 @@ class usuariosController extends BaseController
                     'is_not_unique' => 'Usuario no existe'
                 ]
             ],
+           
         ])) {
             $id_usuario = $_POST['id_usuario'];
             $pin_usuario = model('usuariosModel')->select('pinusuario_sistema')->where('idusuario_sistema', $id_usuario)->first();
@@ -100,7 +101,7 @@ class usuariosController extends BaseController
             if ($actualizar) {
                 $session = session();
                 $session->setFlashdata('iconoMensaje', 'success');
-                return redirect()->to(base_url('usuarios/list'))->with('mensaje', 'actualizacion correcta');
+                return redirect()->to(base_url('usuarios/list'))->with('mensaje', 'Actualización correcta');
             }
         } else {
 
