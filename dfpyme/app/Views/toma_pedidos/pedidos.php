@@ -5,6 +5,7 @@ Bienvenido DFpyme
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
+
 <div class="page">
     <!-- Navbar -->
     <div id="header">
@@ -34,6 +35,7 @@ Bienvenido DFpyme
         <input type="hidden" value="<?php echo base_url() ?>" id="url">
         <input type="hidden" value="<?php echo $user_session->id_usuario ?>" id="id_usuario">
         <input type="hidden" value="<?php echo $requiere_mesero ?>" id="requiere_mesero" name="requiere_mesero">
+        <input type="hidden" value="<?php echo $user_session->tipo ?>" id="tipo_usuario" name="tipo_usuario">
         <div class="container-fluid">
             <div class="row row-deck row-cards">
                 <div class="col-md-12 col-xl-12">
@@ -151,9 +153,10 @@ Bienvenido DFpyme
                                                 <p id="pedido_mesa">Pedio: </p>
                                             </td>
                                             <td tyle="width: 50%;">
-                                                <p id="nombre_mesero" class="text-primary cursor-pointer" onclick="cambiar_mesero()">Mesero </p>
+                                                <p id="nombre_mesero" class="cursor-pointer text-primary"   data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
+
                                             </td>
-                                           
+
                                         </tr>
                                     </table>
                                 </div>
@@ -194,7 +197,7 @@ Bienvenido DFpyme
                 <!--valor Pedido-->
                 <div class="col-md-3">
 
-                    <div class="card" style="height: calc(<?php echo $alturaCalc; ?>)">
+                    <div class="card" style="height: calc(20rem + 10px)">
                         <div class="card-header border-1" style="margin-bottom: -10px; padding-bottom: 0;">
                             <div class="card-title">
                                 <div class="row align-items-start">
@@ -267,7 +270,7 @@ Bienvenido DFpyme
                                         Rerirar dinero</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <a href="#" class="btn btn-outline-yellow w-100" onclick="alerta()">
+                                    <a href="#" class="btn btn-outline-yellow w-100"  onclick="alerta()">
                                         Devolución
                                     </a>
                                 </div>
@@ -287,6 +290,9 @@ Bienvenido DFpyme
         </div>
     </div>
 </div>
+
+
+
 
 <script>
     function alerta() {
@@ -312,5 +318,3 @@ Bienvenido DFpyme
 </script>
 
 <?= $this->endSection('content') ?>
-
-

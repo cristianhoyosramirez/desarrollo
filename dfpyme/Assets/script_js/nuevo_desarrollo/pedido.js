@@ -1,8 +1,11 @@
 function pedido(id_mesa, nombre_mesa) {
 
     let requiere_mesero = document.getElementById("requiere_mesero").value;
+    let tipo_usuario = document.getElementById("tipo_usuario").value;
 
-    if(requiere_mesero=="t"){
+    console.log(tipo_usuario)
+
+    if(requiere_mesero=="t" && tipo_usuario==1 || tipo_usuario==0 ){
         $('#id_mesa_actualizar').val(id_mesa)
         $("#modal_meseros").modal("show");
     }

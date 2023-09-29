@@ -6,7 +6,7 @@
             <?php foreach ($productos as $detalle) { ?>
 
                 <tr onclick="agregar_nota(<?php echo $detalle['id'] ?>)">
-                    <td style="width: 200px;" >
+                    <td style="width: 150px;" >
                         <?php echo $detalle['nombreproducto']; ?>
                         <?php if (!empty($detalle['nota_producto'])) { ?>
                             <p class="text-primary fw-bold"><?php echo $detalle['nota_producto'] ?></p>

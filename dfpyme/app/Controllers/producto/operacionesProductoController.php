@@ -349,7 +349,7 @@ class operacionesProductoController extends BaseController
                     'inicial' => true,
                     'impoconsumo' => 0,
                     'id_tipo_inventario' => 1,
-                    'id_ico_producto' => 1,
+                    'id_ico_producto' => 2,
                     'aplica_ico' => false,
                     'se_imprime' => $impresion_comanda,
                     'aplica_descuento' => $aplica_descuento,

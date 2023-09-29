@@ -83,14 +83,14 @@ class Imprimir extends BaseController
 
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->setTextSize(1, 1);
-        $printer->text("**" . $nombre_categoria['nombrecategoria'] . "**" . "\n");
+        $printer->text("**" . $nombre_categoria['nombrecategoria'] . "**" . "\n\n");
 
 
 
         $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->setTextSize(1, 2);
+        $printer->text("Pedido: " . $numero_pedido . "       Mesa: " . $nombre_mesa . "\n\n");
         $printer->setTextSize(1, 1);
-        $printer->text("Pedido N°" . $numero_pedido . "       Mesa N°" . $nombre_mesa . "\n");
-
         $printer->text("Mesero: " . $nombre_usuario['nombresusuario_sistema'] . "\n");
 
         $printer->text("Fecha :" . "   " . date('d/m/Y ') . "Hora  :" . "   " . date('h:i:s a', time()) . "\n\n");

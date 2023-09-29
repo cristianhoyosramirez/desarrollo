@@ -40,12 +40,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: box-shadow 0.2s ease; /* Agregamos una transición para el efecto de realce */
+    transition: box-shadow 0.2s ease;
+    /* Agregamos una transición para el efecto de realce */
   }
 
   .teclado-button:hover {
     background-color: #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Efecto de realce al pasar el mouse */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    /* Efecto de realce al pasar el mouse */
   }
 </style>
 
@@ -212,7 +214,7 @@
                           </div>
                           <div>
                             <span class="payment payment-provider-visa payment-xs me-2"></span>
-                            Efectivo 
+                            Efectivo
                           </div>
                         </div>
                       </label>
@@ -303,7 +305,7 @@
 
           </div>
 
-          <div class="col-md-3 col-lg-3">
+      <!--   <div class="col-md-3 col-lg-3">
             <div class="card">
               <div class="card-header card-header-light">
                 <h3 class="card-title"></h3>
@@ -312,9 +314,9 @@
 
                 <div class="row mb-3">
 
-                  <div class="col">
+                    <div class="col">
 
-                    <table>
+                 <table>
                       <tr>
                         <td><button type="button" class="teclado-button" onclick="agregarNumero('1');cambio_teclado()">1</button></td>
                         <td><button class="teclado-button" onclick="agregarNumero('2');cambio_teclado()">2</button></td>
@@ -335,7 +337,7 @@
                         <td><button class="teclado-button" onclick="agregarNumero('00');cambio_teclado()">00</button></td>
                         <td><button class="teclado-button" onclick="agregarNumero('000');cambio_teclado()">000</button></td>
                       </tr>
-                    </table>
+                    </table> 
                   </div>
                 </div>
 
@@ -346,7 +348,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

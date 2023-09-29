@@ -539,9 +539,6 @@ class CerrarVenta extends BaseController
         // Redondear la propina al valor más cercano a mil
         $Propina_redondeada = round($propina / 1000) * 1000;
 
-
-
-
         $model = model('pedidoModel');
         $actualizar = $model->set('propina', $Propina_redondeada);
         $actualizar = $model->where('fk_mesa', $id_mesa);

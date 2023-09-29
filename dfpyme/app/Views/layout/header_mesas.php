@@ -254,7 +254,7 @@
 
         <?php if ($user_session->tipo == 0 || $user_session->tipo == 1) { ?>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+            <a class="nav-link " href="<?= base_url() ?>/pedidos/mesas"    >
               <span class="text-blue">
                 <!-- Download SVG icon from http://tabler-icons.io/i/coffee -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

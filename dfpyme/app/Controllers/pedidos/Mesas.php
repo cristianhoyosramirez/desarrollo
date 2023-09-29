@@ -20,11 +20,6 @@ class Mesas extends BaseController
         $meseros = model('usuariosModel')->where('idtipo', 2)->orderBy('nombresusuario_sistema', 'asc')->find();
 
 
-
-
-
-
-
         return view('pedidos/mesas', [
             'categorias' => $categorias,
             'salones' => $salones,
@@ -449,7 +444,7 @@ class Mesas extends BaseController
         //$puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda = model('tipoPermisoModel')->puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda($id_usuario);
         $tipo_usuario = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_usuario)->first();
 
-        if ($tipo_usuario['idtipo'] == 0) {
+        if ($tipo_usuario['idtipo'] == 0 or $tipo_usuario['idtipo'] == 2 ) {
             $item = model('productoPedidoModel')->where('id', $id_tabla_producto)->first();
 
             $producto = [
