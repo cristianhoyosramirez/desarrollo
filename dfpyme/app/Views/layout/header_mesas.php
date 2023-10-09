@@ -4,11 +4,15 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-      <a href="<?php echo base_url(); ?>/pedidos/mesas">
+    <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3 d-none d-sm-block">
+      <a href="<?php echo base_url(); ?>/pedidos/mesas" class="d-none d-sm-block">
         <img src="<?php echo base_url(); ?>/Assets/img/logo.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
       </a>
+
     </h1>
+    <div class="d-block d-sm-none">
+      <?php echo $user_session->usuario; ?>
+    </div>
     <div class="navbar-nav flex-row order-md-last">
       <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" title="Habilitar modo oscuro " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
         <!-- Download SVG icon from http://tabler-icons.io/i/moon -->
@@ -254,7 +258,7 @@
 
         <?php if ($user_session->tipo == 0 || $user_session->tipo == 1) { ?>
           <li class="nav-item dropdown">
-            <a class="nav-link " href="<?= base_url() ?>/pedidos/mesas"    >
+            <a class="nav-link " href="<?= base_url() ?>/pedidos/mesas">
               <span class="text-blue">
                 <!-- Download SVG icon from http://tabler-icons.io/i/coffee -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -413,17 +417,46 @@
                       <path d="M12 3v3m0 12v3" />
                     </svg> Facturación
                   </a> -->
-                  <div class="dropdown-menu">
 
-                    <a class="dropdown-item" href="<?= base_url() ?>/consultas_y_reportes/duplicado_factura">
-                      <!-- Download SVG icon from http://tabler-icons.io/i/box-multiple -->
+
+                  <div class="dropend">
+                    <a class="dropdown-item dropdown-toggle" href="#sidebar-error" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <rect x="7" y="3" width="14" height="14" rx="2" />
                         <path d="M17 17v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h2" />
-                      </svg> Copia de factura
+                      </svg>
+                      Copia de factura
                     </a>
+                    <div class="dropdown-menu">
+                      <a href="<?= base_url() ?>/consultas_y_reportes/duplicado_factura" class="dropdown-item">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/file-invoice -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                          <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                          <line x1="9" y1="7" x2="10" y2="7" />
+                          <line x1="9" y1="13" x2="15" y2="13" />
+                          <line x1="13" y1="17" x2="15" y2="17" />
+                        </svg>
+                        Pos </a>
+                      <a href="<?= base_url() ?>/pedidos/lista_electronicas" class="dropdown-item">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/file-invoice -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                          <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                          <line x1="9" y1="7" x2="10" y2="7" />
+                          <line x1="9" y1="13" x2="15" y2="13" />
+                          <line x1="13" y1="17" x2="15" y2="17" />
+                        </svg>
+                        Electrónica</a>
+
+                    </div>
                   </div>
+
+
                 </div>
               <?php } ?>
 
@@ -659,7 +692,7 @@
           </li>
         <?php } ?>
 
-<!--         <?php if ($user_session->tipo == 0) { ?>
+        <!--         <?php if ($user_session->tipo == 0) { ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="text-blue">

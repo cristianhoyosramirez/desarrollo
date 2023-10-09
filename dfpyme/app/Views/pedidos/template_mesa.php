@@ -127,6 +127,8 @@
     <?= $this->include('ventanas_modal_retiro_de_dinero/imprimir_retiro') ?>
     <?= $this->include('ventanas_modal_retiro_de_dinero/devolucion') ?>
     <?= $this->include('pedidos/crear_cliente') ?>
+    <?= $this->include('toma_pedidos/offcanva_mesas') ?>
+    <?= $this->include('toma_pedidos/offcanva_productos') ?>
 
 
     <!-- Libs JS -->
@@ -187,6 +189,63 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/criterio_propina.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/buscar_por_codigo_de_barras_devolucion.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_producto_cantidad.js"></script>
+    <script>
+        function mesas_actualizadas() {
+
+            var url = document.getElementById("url").value;
+            $.ajax({
+
+                url: url +
+                    "/" +
+                    "pedidos/tiempo_real",
+                type: "get",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#lista_completa_mesas').html(resultado.mesas)
+
+
+                    }
+                },
+            });
+
+        }
+    </script>
+
+    <script>
+        function buscar_productos(valor) {
+
+            var url = document.getElementById("url").value;
+
+
+            $.ajax({
+                data: {
+                    valor
+                },
+                url: url +
+                    "/" +
+                    "inventario/buscar",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#canva_producto').html(resultado.productos)
+
+                        var categoria = document.getElementById("productos_categoria");
+                        categoria.style.display = "none";
+
+                        var productos = document.getElementById("canva_producto");
+                        productos.style.display = "block";
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
 
     <script>
         $("#tipo_persona").select2({
@@ -547,9 +606,61 @@
                 success: function(resultado) {
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
+                        let tipo_pedido = document.getElementById("tipo_pedido").value;
 
-                        $('#listado_de_mesas').html(resultado.mesas)
-                        //$("#lista_todas_las_mesas").modal("show");
+                        if (tipo_pedido == "movil") {
+                            $('#mesas_all').html(resultado.mesas)
+                            //$("#lista_todas_las_mesas").modal("show");
+                        }
+                        if (tipo_pedido == "computador") {
+
+                            $("#lista_todas_las_mesas").modal("show");
+                        }
+
+
+
+
+
+
+
+
+                    }
+                },
+            });
+
+        }
+    </script>
+    <script>
+        function buscar_meseros(valor) {
+            var url = document.getElementById("url").value;
+
+
+            $.ajax({
+                data: {
+                    valor
+                },
+                url: url +
+                    "/" +
+                    "pedidos/buscar_mesero",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+                        let tipo_pedido = document.getElementById("tipo_pedido").value;
+
+                        if (tipo_pedido == "movil") {
+                            $('#mesas_all').html(resultado.meseros)
+                            //$("#lista_todas_las_mesas").modal("show");
+                        }
+                        if (tipo_pedido == "computador") {
+
+                            $("#lista_todas_las_mesas").modal("show");
+                        }
+
+
+
+
+
 
 
 
@@ -591,62 +702,64 @@
             var url = document.getElementById("url").value;
 
 
-            var mesa = document.getElementById("id_mesa_actualizar").value;
+            $('#mesero').val(id_mesero)
+            $("#modal_meseros").modal("hide");
+            sweet_alert('success', 'Mesero asignado ')
 
-            if (mesa == "") {
-                let id_mesa = document.getElementById("id_mesa_pedido").value;
-                $.ajax({
-                    data: {
-                        id_mesero,
-                        id_mesa
-                    },
-                    url: url +
-                        "/" +
-                        "pedidos/actualizar_mesero",
-                    type: "POST",
-                    success: function(resultado) {
-                        var resultado = JSON.parse(resultado);
-                        if (resultado.resultado == 1) {
+            /*      if (mesa == "") {
+                     let id_mesa = document.getElementById("id_mesa_pedido").value;
+                     $.ajax({
+                         data: {
+                             id_mesero,
+                             id_mesa
+                         },
+                         url: url +
+                             "/" +
+                             "pedidos/actualizar_mesero",
+                         type: "POST",
+                         success: function(resultado) {
+                             var resultado = JSON.parse(resultado);
+                             if (resultado.resultado == 1) {
 
-                            $('#modal_meseros').modal('hide')
-                            $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
-                            sweet_alert('success', 'Mesero asignado')
-
-
-
-                        }
-                    },
-                });
-
-            }
-
-            if (mesa != "") {
-                id_mesa = mesa
-
-
-                $.ajax({
-                    data: {
-                        id_mesero,
-                        id_mesa
-                    },
-                    url: url +
-                        "/" +
-                        "pedidos/actualizar_mesero",
-                    type: "POST",
-                    success: function(resultado) {
-                        var resultado = JSON.parse(resultado);
-                        if (resultado.resultado == 1) {
-
-                            $('#modal_meseros').modal('hide')
-                            $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
-                            sweet_alert('success', 'Mesero asignado')
+                                 $('#modal_meseros').modal('hide')
+                                 $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
+                                 sweet_alert('success', 'Mesero asignado')
 
 
 
-                        }
-                    },
-                });
-            }
+                             }
+                         },
+                     });
+
+                 }
+
+                 if (mesa != "") {
+                     id_mesa = mesa
+
+
+                     $.ajax({
+                         data: {
+                             id_mesero,
+                             id_mesa
+                         },
+                         url: url +
+                             "/" +
+                             "pedidos/actualizar_mesero",
+                         type: "POST",
+                         success: function(resultado) {
+                             var resultado = JSON.parse(resultado);
+                             if (resultado.resultado == 1) {
+
+                                 $('#modal_meseros').modal('hide')
+                                 $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
+                                 sweet_alert('success', 'Mesero asignado')
+
+
+
+                             }
+                         },
+                     });
+                 } */
         }
     </script>
 

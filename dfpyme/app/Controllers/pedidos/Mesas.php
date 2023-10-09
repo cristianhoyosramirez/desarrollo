@@ -36,18 +36,31 @@ class Mesas extends BaseController
 
     public function productos_categoria()
     {
-        $id_categoria = $_POST['id_categoria'];
         //$id_categoria = 2;
+        $id_categoria = $_POST['id_categoria'];
+        $tipo_pedido = $_POST['tipo_pedido'];
+
+
 
         $productos = model('productoModel')->tipoInventario($id_categoria);
 
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
+        if ($tipo_pedido == "movil") {
+            $items = view('pedido/productos', [
+                'productos' => $productos,
+            ]);
+        }
+        if ($tipo_pedido == "computador") {
+            $items = view('pedidos/productos_categoria', [
+                'productos' => $productos,
+            ]);
+        }
+
+
         $returnData = array(
             "resultado" => 1,
-            "productos" => view('pedidos/productos_categoria', [
-                'productos' => $productos
-            ]),
+            "productos" => $items,
             "lista_categoria" => view('pedidos/lista_categoria', [
                 'categorias' => $categorias,
                 'id_categoria' => $id_categoria
@@ -62,19 +75,31 @@ class Mesas extends BaseController
         /**
          * Datos recibidos por ajax desde la vista de mesas 
          */
+        //$id_mesa = 16;
         $id_mesa = $this->request->getPost('id_mesa');
-        //$id_mesa = 6;
-        $id_usuario = $this->request->getPost('id_usuario');
-        //$id_usuario = 8;
-        //$id_producto = 2;
-        $id_producto = $this->request->getPost('id_producto');
+        $id_mesero = $this->request->getPost('mesero');
 
+        //$id_usuario = "";
+
+        if (!empty($id_mesero)) {
+            $id_usuario = $this->request->getPost('mesero');
+        }
+
+        if (empty($id_mesero)) {
+            $id_usuario = $this->request->getPost('id_usuario');
+        }
+
+        //$id_usuario = 15;
+        //$id_producto = 2;
+        //$id_producto = '207';
+        $id_producto = $this->request->getPost('id_producto');
 
         /**
          * Datos del producto
          */
 
         $se_imprime_en_comanda = model('productoModel')->select('se_imprime')->where('codigointernoproducto', $id_producto)->first();
+
         $codigo_categoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $id_producto)->first();
         $codigo_interno_producto = model('productoModel')->select('codigointernoproducto')->where('codigointernoproducto', $id_producto)->first();
         $valor_unitario = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto', $id_producto)->first();
@@ -88,15 +113,17 @@ class Mesas extends BaseController
             /**
              * Insercion en la tabla de pedido
              */
+
+
             $data = [
                 'fk_mesa' => $id_mesa,
                 'fk_usuario' => $id_usuario,
-                'valor_total' => $valor_unitario['valorventaproducto'],
+                //'valor_total' => $valor_unitario['valorventaproducto'],
                 'cantidad_de_productos' => 1,
 
             ];
             $insert = model('pedidoModel')->insert($data);
-
+            exit('popular');
             /**
              * Insertar en la tabla producto pedido 
              */
@@ -295,19 +322,24 @@ class Mesas extends BaseController
 
     function pedido()
     {
+        //$id_mesa = 424;
         $id_mesa = $this->request->getPost('id_mesa');
+
         $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $total_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
         $nota_pedido = model('pedidoModel')->select('nota_pedido')->where('fk_mesa', $id_mesa)->first();
         $propina = model('pedidoModel')->select('propina')->where('fk_mesa', $id_mesa)->first();
-        $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
-        if (!empty($id_mesero)) {
+        $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $id_mesa)->first();
+
+        if (!empty($id_mesero['id_mesero'])) {
             $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['id_mesero'])->first();
         }
-        if (empty($id_mesero)) {
-            $id_meser=model('facturaVentaModel')->select('fk_usuario')->where('fk_mesa',$id_mesa)->first();
+        if (empty($id_mesero['id_mesero'])) {
+
+            $id_meser = model('pedidoModel')->select('fk_usuario')->where('fk_mesa', $id_mesa)->first();
             $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_meser['fk_usuario'])->first();
         }
+
         $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
         $returnData = array(
             "resultado" => 1,
@@ -444,7 +476,7 @@ class Mesas extends BaseController
         //$puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda = model('tipoPermisoModel')->puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda($id_usuario);
         $tipo_usuario = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_usuario)->first();
 
-        if ($tipo_usuario['idtipo'] == 0 or $tipo_usuario['idtipo'] == 2 ) {
+        if ($tipo_usuario['idtipo'] == 0 or $tipo_usuario['idtipo'] == 2) {
             $item = model('productoPedidoModel')->where('id', $id_tabla_producto)->first();
 
             $producto = [
@@ -979,6 +1011,39 @@ class Mesas extends BaseController
 
         );
         echo  json_encode($returnData);
+    }
+
+    function buscar_mesero()
+    {
+
+        
+
+
+        $meseros = model('mesasModel')->buscar_meseros($this->request->getPost('valor'));
+        if (!empty($this->request->getPost('valor'))) {
+            $returnData = array(
+                "resultado" => 1,
+                "meseros" => view('pedidos/lista_meseros', [
+                    "meseros" => $meseros
+                ])
+
+            );
+            echo  json_encode($returnData);
+        }
+
+       
+        if (empty($this->request->getPost('valor'))) {
+         
+            $mesas = model('mesasModel')->buscar_mesa($this->request->getPost('valor'));
+            $returnData = array(
+                "resultado" => 1,
+                "meseros" => view('pedidos/lista_mesas', [
+                    "mesas" => $mesas
+                ])
+
+            );
+            echo  json_encode($returnData);
+        }
     }
 
 

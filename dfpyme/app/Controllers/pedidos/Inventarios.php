@@ -27,4 +27,20 @@ class Inventarios extends BaseController
             return redirect()->to(base_url('producto/lista_de_productos'))->with('mensaje', 'Ingreso de producto éxitoso');
         }
     }
+
+    function buscar(){
+        $producto = $this->request->getPost('valor');
+
+   
+        $productos = model('inventarioModel')->producto($producto);
+
+        $returnData = array(
+            "resultado" => 1,
+            'productos'=>view('pedido/productos',[
+                'productos'=>$productos
+            ])
+        );
+        echo  json_encode($returnData);
+
+    }
 }

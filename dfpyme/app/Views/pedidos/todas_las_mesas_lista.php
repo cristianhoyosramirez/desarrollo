@@ -24,7 +24,7 @@
 
         <?php if (!empty($tiene_pedido)) : ?>
 
-            <?php $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $detalle['id'])->first(); ?>
+
 
             <li>
                 <div class="cursor-pointer card card_mesas text-white bg-red-lt" onclick="pedido_mesa('<?php echo $detalle['id'] ?>','<?php echo $detalle['nombre'] ?>')" style="height: auto;">
@@ -39,14 +39,7 @@
                                 <strong style="font-size: 12px;"><?php echo $detalle['nombre'] ?></strong>
                             </div>
                             <div class="text-center"><strong style="font-size: 12px;"><?php echo "$" . number_format($tiene_pedido[0]['valor_total'] + $tiene_pedido[0]['propina'], 0, ",", ".") ?></strong></div>
-                            <?php if (empty($id_mesero['id_mesero'])) { ?>
-                                <div class="text-center"><strong style="font-size: 12px; height: 1em; overflow: hidden;"><?php echo substr($tiene_pedido[0]['nombresusuario_sistema'], 0, 10) ?>...</strong></div>
-                            <?php } ?>
-                            <?php if (!empty($id_mesero['id_mesero'])) {
-                                $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['id_mesero'])->first(); ?>
-
-                                <div class="text-center"><strong style="font-size: 12px; height: 1em; overflow: hidden;"><?php echo substr($nombre_mesero['nombresusuario_sistema'], 0, 10) ?>...</strong></div>
-                            <?php } ?>
+                            <div class="text-center"><strong style="font-size: 12px; height: 1em; overflow: hidden;"><?php echo substr($tiene_pedido[0]['nombresusuario_sistema'], 0, 10) ?>...</strong></div>
                         </div>
                     </div>
                 </div>

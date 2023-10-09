@@ -29,6 +29,8 @@ function eliminar_producto(event, id_tabla_producto) {
                         sweet_alert('success', 'Producto eliminado')
                         $("#mesa_productos").html(resultado.productos);
                         $("#valor_pedido").html(resultado.total_pedido);
+                        $("#val_pedido").html(resultado.total_pedido);
+                        $("#subtotal_pedido").val(resultado.total_pedido);
 
 
 

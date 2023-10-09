@@ -30,6 +30,56 @@ class Imprimir extends BaseController
 
         $productos = array();
         if (!empty($pedido)) {
+            //$codigo_categoria = model('productoPedidoModel')->id_categoria($pedido['id']);
+
+
+            #foreach ($codigo_categoria as $valor) {
+            $items = model('productoPedidoModel')->productos_pedido($pedido['id']);
+
+            if (!empty($items)) {
+                foreach ($items as $detalle) {
+                    $data['id'] = $detalle['id'];
+                    $data['nombreproducto'] = $detalle['nombreproducto'];
+                    $data['valor_venta'] = $detalle['valorventaproducto'];
+                    $data['valor_total'] = $detalle['valor_total'];
+                    $data['cantidad'] = $detalle['cantidad_producto'];
+                    $data['nota_producto'] = $detalle['nota_producto'];
+                    $data['valor_unitario'] = $detalle['valor_unitario'];
+                    $data['codigo_interno'] = $detalle['codigointernoproducto'];
+                    $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
+                    array_push($productos, $data);
+                }
+                $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre']);
+            }
+            #}
+            if (empty($items)) {
+                $returnData = array(
+                    "resultado" => 0
+                );
+                echo  json_encode($returnData);
+            }
+            if (!empty($items)) {
+                $returnData = array(
+                    "resultado" => 1
+                );
+                echo  json_encode($returnData);
+            }
+        }
+    }
+
+    // Funcion donde 
+
+    /*   function imprimirComanda()
+    {
+
+        //$id_mesa = 3; 
+        $id_mesa = $this->request->getPost('id_mesa');
+
+        $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
+        $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
+
+        $productos = array();
+        if (!empty($pedido)) {
             $codigo_categoria = model('productoPedidoModel')->id_categoria($pedido['id']);
 
 
@@ -65,25 +115,25 @@ class Imprimir extends BaseController
                 echo  json_encode($returnData);
             }
         }
-    }
+    } */
 
-    function generar_comanda($codigo_categoria, $productos, $numero_pedido, $nombre_mesa)
+    function generar_comanda($productos, $numero_pedido, $nombre_mesa)
     {
-        $nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('codigocategoria', $codigo_categoria)->first();
+        //$nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('codigocategoria', $codigo_categoria)->first();
 
-        $impresora = model('categoriasModel')->select('impresora')->where('codigocategoria', $codigo_categoria)->first();
-        $id_impresora = model('categoriasModel')->select('impresora')->where('codigocategoria', $codigo_categoria)->first();
-        $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora)->first();
+        //$impresora = model('categoriasModel')->select('impresora')->where('codigocategoria', $codigo_categoria)->first();
+        //$id_impresora = model('categoriasModel')->select('impresora')->where('codigocategoria', $codigo_categoria)->first();
+        //$nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora)->first();
         $id_usuario = model('pedidoModel')->select('fk_usuario')->where('id', $numero_pedido)->first();
         $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario['fk_usuario'])->first();
 
-        $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
+        $connector = new WindowsPrintConnector('FACTURACION');
         $printer = new Printer($connector);
 
 
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->setTextSize(1, 1);
-        $printer->text("**" . $nombre_categoria['nombrecategoria'] . "**" . "\n\n");
+        $printer->text("**" ." PEDIDO " . "**" . "\n\n");
 
 
 
@@ -166,6 +216,7 @@ class Imprimir extends BaseController
     {
 
         $id_mesa = $this->request->getPost('id_mesa');
+        //$id_mesa = 418;
         $propina = $this->request->getPost('propina');
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
@@ -173,9 +224,10 @@ class Imprimir extends BaseController
         $id_usuario = model('pedidoModel')->select('fk_usuario')->where('id', $numero_pedido)->first();
         $id_mesa = model('pedidoModel')->select('fk_mesa')->where('id', $numero_pedido)->first();
         $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa['fk_mesa'])->first();
-        $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario)->first();
-        $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
-        $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['id_mesero'])->first();
+        $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario['fk_usuario'])->first();
+        $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $id_mesa['fk_mesa'])->first();
+    
+        //$nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['fk_usuario'])->first();
 
         $id_impresora = model('precuentaModel')->select('id_impresora')->first();
         if (!empty($id_impresora)) {
@@ -786,5 +838,10 @@ class Imprimir extends BaseController
             "resultado" => 1
         );
         echo  json_encode($returnData);
+    }
+
+    function lista_electronicas(){
+        
+        return view('duplicado_de_factura/factura_electronica');
     }
 }

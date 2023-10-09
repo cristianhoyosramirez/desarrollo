@@ -78,4 +78,16 @@ class mesasModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function buscar_meseros($valor)
+    {
+        $datos = $this->db->query("
+        SELECT
+        idusuario_sistema,nombresusuario_sistema
+    FROM
+        usuario_sistema
+    WHERE
+        nombresusuario_sistema ILIKE '%$valor%';
+        ");
+        return $datos->getResultArray();
+    }
 }

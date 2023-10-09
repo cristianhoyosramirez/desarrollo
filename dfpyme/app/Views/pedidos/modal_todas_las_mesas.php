@@ -36,12 +36,18 @@
     </div>
 </div> -->
 
-
+<style>
+    /* Add this to your CSS */
+    .modal.full-height {
+        height: 100vh;
+        margin: 0;
+    }
+</style>
 
 
 
 <!-- Modal -->
-<div class="modal fade" id="lista_todas_las_mesas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="lista_todas_las_mesas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%; height: 100vh;">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -72,8 +78,21 @@
                 <div id="listado_de_mesas"></div>
             </div>
             <div class="modal-footer">
-                
+
             </div>
         </div>
     </div>
 </div>
+
+<!-- Add this script after including Bootstrap and jQuery -->
+<script>
+    $(document).ready(function() {
+        $('#lista_todas_las_mesas').on('show.bs.modal', function() {
+            $(this).addClass('full-height');
+        });
+
+        $('#lista_todas_las_mesas').on('hidden.bs.modal', function() {
+            $(this).removeClass('full-height');
+        });
+    });
+</script>

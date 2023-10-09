@@ -149,7 +149,8 @@ class CerrarVenta extends BaseController
 
 
             $apertura = model('aperturaRegistroModel')->select('numero')->where('idcaja', 1)->first();
-            $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
+            //$id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
+            $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $id_mesa)->first();
 
             $mesero = "";
 

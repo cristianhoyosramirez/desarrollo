@@ -442,11 +442,14 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
     $routes->post('crear_mesero', 'Mesas::crear_mesero');
     $routes->get('gestion_pedidos', 'TomaPedidosController::index');
+    $routes->post('buscar_mesero', 'Mesas::buscar_mesero');
+    $routes->get('lista_electronicas', 'Imprimir::lista_electronicas');
 });
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->get('ingreso', 'Inventarios::ingreso');
     $routes->post('ingreso_inventario', 'Inventarios::ingreso_inventario');
+    $routes->post('buscar', 'Inventarios::buscar');
 });
 
 $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' => \App\Filters\Auth::class], function ($routes) {

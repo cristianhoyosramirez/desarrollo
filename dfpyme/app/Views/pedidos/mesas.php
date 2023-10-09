@@ -35,6 +35,8 @@ Bienvenido DFpyme
         <input type="hidden" value="<?php echo $user_session->id_usuario ?>" id="id_usuario">
         <input type="hidden" value="<?php echo $requiere_mesero ?>" id="requiere_mesero" name="requiere_mesero">
         <input type="hidden" value="<?php echo $user_session->tipo ?>" id="tipo_usuario" name="tipo_usuario">
+        <input type="hidden"  id="mesero" name="mesero">
+        <input type="hidden" id="tipo_pedido" name="tipo_pedido" value="computador">
         <div class="container-fluid">
             <div class="row row-deck row-cards">
                 <div class="col-md-12 col-xl-12">

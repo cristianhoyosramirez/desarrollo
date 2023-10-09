@@ -19,6 +19,7 @@ function actualizar_cantidades(event, id_tabla_producto) {
 
                 $("#mesa_productos").html(resultado.productos);
                 $("#valor_pedido").html(resultado.total);
+                $("#val_pedido").html(resultado.total);
                 $("#subtotal_pedido").val(resultado.total);
 
 

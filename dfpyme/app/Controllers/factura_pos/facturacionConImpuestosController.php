@@ -21,7 +21,7 @@ class facturacionConImpuestosController extends BaseController
     {
 
         $productos = "";
-        $id_usuario = $_POST['id_usuario'];
+        $id_usuario = 8;
         $id_fact = model('facturaVentaModel')->selectMax('id')->where('idusuario_sistema', $id_usuario)->first();
         $id_factura = $id_fact['id'];
         if ($id_factura != NULL) {

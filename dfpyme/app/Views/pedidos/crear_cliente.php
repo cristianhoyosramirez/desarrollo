@@ -103,10 +103,10 @@
             <label for="inputCity" class="form-label">Departamento
             </label>
             <?php $departamento = model('departamentoModel')->where('idpais', 49)->findAll(); ?>
-            <select class="form-select" aria-label="Default select example" name="departamento" id="departamento">
+            <select class="form-select"  name="departamento" id="departamento">
               <?php foreach ($departamento as $detalle) : ?>
 
-                <option value="<?php $detalle['iddepartamento'] ?>"><?php echo $detalle['nombredepartamento'] ?></option>
+                <option value="<?php $detalle['iddepartamento'] ?>"><?php echo $detalle['nombredepartamento'] . "-" . $detalle['code'] ?></option>
 
               <?php endforeach  ?>
             </select>
@@ -114,17 +114,22 @@
           <div class="col-md-3">
             <label for="inputCity" class="form-label">Ciudad
             </label>
-            <input type="text" class="form-control" id="inputCity">
+           
+
+            <select class="form-select" name="ciudad" id="ciudad">
+              
+           
+            </select>
           </div>
           <div class="col-md-3">
             <label for="inputCity" class="form-label">Codigo postal
             </label>
             <?php $postal = model('CodigoPostalModel')->findAll();  ?>
-          
+
             <select class="form-select" aria-label="Default select example" id="codigo_postal" name="codigo_postal">
               <?php foreach ($postal as $detalle) : ?>
 
-                <option value="<?php $detalle['id'] ?>"> <?php echo $detalle['departamento']."-".$detalle['ciudad']."-".$detalle['c_postal'] ?> </option>
+                <option value="<?php $detalle['id'] ?>"> <?php echo $detalle['departamento'] . "-" . $detalle['ciudad'] . "-" . $detalle['c_postal'] ?> </option>
 
               <?php endforeach  ?>
             </select>
@@ -160,5 +165,3 @@
     </div>
   </div>
 </div>
-
-

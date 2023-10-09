@@ -1,8 +1,9 @@
-function sweet_alert(icono , mensaje){
+function sweet_alert(icono, mensaje) {
 
-    const Toast= Swal.mixin({
+    const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
+        //position: 'bottom-end',
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,

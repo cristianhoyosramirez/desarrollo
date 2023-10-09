@@ -93,7 +93,7 @@ class FacturaElectronica extends BaseController
         $id_factura = $id_fact['id'];
 
 
-        $id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
+        $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $id_mesa)->first();
 
         $mesero = "";
 

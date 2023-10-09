@@ -6,6 +6,47 @@ Bienvenido DFpyme
 
 <?= $this->section('content') ?>
 
+<style>
+    /* Estilo para ocultar el texto en dispositivos móviles */
+    .mobile-hidden {
+        display: none;
+    }
+
+    /* Estilo para mostrar el icono en dispositivos móviles */
+    .mobile-visible {
+        display: inline-block;
+    }
+
+    /* Estilo para ocultar el icono en dispositivos de escritorio */
+    @media (min-width: 768px) {
+        .mobile-hidden {
+            display: inline-block;
+        }
+
+        .mobile-visible {
+            display: none;
+        }
+    }
+</style>
+
+<style>
+    /* Estilo para la fila de botones en dispositivos móviles */
+    @media (max-width: 767px) {
+        .row.mb-2 {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .col-md-4 {
+            flex: 0 0 33.33%;
+            /* Hace que los botones ocupen el 33.33% del ancho en dispositivos móviles */
+            max-width: 33.33%;
+        }
+    }
+</style>
+
+
+
 <div class="page">
     <!-- Navbar -->
     <div id="header">
@@ -36,6 +77,8 @@ Bienvenido DFpyme
         <input type="hidden" value="<?php echo $user_session->id_usuario ?>" id="id_usuario">
         <input type="hidden" value="<?php echo $requiere_mesero ?>" id="requiere_mesero" name="requiere_mesero">
         <input type="hidden" value="<?php echo $user_session->tipo ?>" id="tipo_usuario" name="tipo_usuario">
+        <input type="hidden" id="mesero" name="mesero">
+        <input type="hidden" id="tipo_pedido" name="tipo_pedido" value="movil">
         <div class="container-fluid">
             <div class="row row-deck row-cards">
                 <div class="col-md-12 col-xl-12">
@@ -43,7 +86,7 @@ Bienvenido DFpyme
                         <ul class="nav nav-tabs" data-bs-toggle="tabs">
 
                             <li class="nav-item">
-                                <a href="#" class="nav-link" onclick="todas_las_mesas()"><!-- Download SVG icon from http://tabler-icons.io/i/arrows-maximize -->
+                                <a href="#" class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#mesasOffcanvas"><!-- Download SVG icon from http://tabler-icons.io/i/arrows-maximize -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <polyline points="16 4 20 4 20 8" />
@@ -87,17 +130,7 @@ Bienvenido DFpyme
                                         </div>
                                     </div>
 
-                                    <div class="table-responsive">
-                                        <div id="lista_categorias" style="display: none">
-                                            <ul class="horizontal-list">
-                                                <?php foreach ($categorias as $detalle) : ?>
-
-                                                    <li><button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php echo $detalle['codigocategoria'] ?>" onclick="productos_categoria(<?php echo $detalle['codigocategoria'] ?>)"><?php echo $detalle['nombrecategoria'] ?></button></li>
-
-                                                <?php endforeach ?>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -107,38 +140,8 @@ Bienvenido DFpyme
                 <?php $alturaCalc = "37rem + 10px"; // Calcula la altura 
                 ?>
 
-                <!--Productos-->
-                <div class="col-md-3" id="pedido" style="display: block">
-                    <div class="card" style="height: calc(<?php echo $alturaCalc; ?>)">
-                        <div class="card-header border-0" style="margin-bottom: -10px; padding-bottom: 0;">
-                            <div class="card-title">
-                                <div class="mb-3">
-                                    <div class="input-group input-group-flat">
-                                        <input type="text" readonly class="form-control " autocomplete="off" placeholder="Buscar por nombre o código" id="producto">
-                                        <span class="input-group-text">
-                                            <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiarCampo()"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M18 6l-12 12" />
-                                                    <path d="M6 6l12 12" />
-                                                </svg>
-                                            </a>
-                                        </span>
-                                    </div>
-                                </div>
-                                <span id="error_producto" style="color: red;"></span>
-                            </div>
-                        </div>
-                        <div class="card-body card-body-scrollable card-body-scrollable-shadow">
-                            <div id="productos_categoria"></div>
-                            <p id="bogota"></p>
 
-                        </div>
-                    </div>
-                </div>
-
-                <!--Pedido-->
-                <div class="col-md-6" id="productos" style="display: block">
+                <div class="col-12 col-sm-12 col-md-8 col-xl-8" id="productos" style="display: block">
                     <input type="hidden" id="id_mesa_pedido">
                     <div class="card" style="height: calc(<?php echo $alturaCalc; ?>)">
                         <div class="card-header border-1" style="margin-bottom: -10px; padding-bottom: 0;">
@@ -146,15 +149,27 @@ Bienvenido DFpyme
                                 <div class="row align-items-start">
                                     <table>
                                         <tr>
-                                            <td tyle="width: 25%;">
+                                            <td style="width: 25%;">
                                                 <p id="mesa_pedido" class="text-warning "> Mesa:</p>
                                             </td>
-                                            <td yle="width: 25%;">
+                                            <td syle="width: 25%;">
                                                 <p id="pedido_mesa">Pedio: </p>
                                             </td>
-                                            <td tyle="width: 50%;">
-                                                <p id="nombre_mesero" class="cursor-pointer text-primary"   data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
 
+                                            <td>
+                                                <!--<a class="btn btn-outline-indigo  btn-icon" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">-->
+
+                                                <a class="btn btn-outline-indigo btn-icon" href="#" onclick="validarInputYAbrirOffcanvas()" role="button">
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M3 14c.83 .642 2.077 1.017 3.5 1c1.423 .017 2.67 -.358 3.5 -1c.83 -.642 2.077 -1.017 3.5 -1c1.423 -.017 2.67 .358 3.5 1" />
+                                                    <path d="M8 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
+                                                    <path d="M12 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
+                                                    <path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5z" />
+                                                    <path d="M16.746 16.726a3 3 0 1 0 .252 -5.555" />
+                                                </svg>
+                                                </a>
                                             </td>
 
                                         </tr>
@@ -169,35 +184,75 @@ Bienvenido DFpyme
                         </div>
 
                         <div class="container">
-                            <div class="row mb-2"> <!-- Fila para los botones -->
-                                <div class="col-md-4">
-                                    <a href="#" class="btn btn-outline-indigo w-100" onclick="cambiar_mesas()">
-                                        Cambio de mesa
-                                    </a>
-                                </div>
-                                <div class="col-md-4">
-                                    <a href="#" class="btn btn-outline-purple w-100" onclick="imprimir_comanda()">
-                                        Comanda
-                                    </a>
-                                </div>
-                                <div class="col-md-4">
-                                    <a href="#" class="btn btn-outline-red w-100" onclick="alerta()">
-                                        Eliminar pedido
-                                    </a>
-                                </div>
-                            </div>
+
                             <div class="row"> <!-- Fila para el textarea -->
                                 <div class="col-md-12 mb-2">
                                     <textarea class="form-control" rows="1" id="nota_pedido" onkeyup="insertarDatos(this.value)" placeholder="Nota general del pedido "></textarea>
                                 </div>
                             </div>
+
+
+                            <div class="row gy-2"> <!-- Fila para los botones -->
+                                <div class="col-md col-sm col-6 ">
+                                    <a href="#" class="btn btn-outline-indigo w-100" onclick="cambiar_mesas()">
+                                        <span class="mobile-hidden">Cambio de mesa</span>
+                                        <span class="mobile-visible"><!-- Download SVG icon from http://tabler-icons.io/i/refresh 
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                                                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                                            </svg>--> Cambio mesa </span>
+                                    </a>
+                                </div>
+                                <div class="col-md col-sm col-6">
+                                    <a href="#" class="btn btn-outline-purple w-100" onclick="imprimir_comanda()">
+                                        <span class="mobile-hidden">Comanda</span>
+                                        <span class="mobile-visible"><!-- Download SVG icon from http://tabler-icons.io/i/file-invoice 
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                                <line x1="9" y1="7" x2="10" y2="7" />
+                                                <line x1="9" y1="13" x2="15" y2="13" />
+                                                <line x1="13" y1="17" x2="15" y2="17" />
+                                            </svg> --> Comanda </span>
+                                    </a>
+                                </div>
+                                <div class="col-md col-sm col-6">
+                                    <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
+                                        <span class="mobile-hidden">Eliminar pedido</span>
+                                        <span class="mobile-visible"><!-- Download SVG icon from http://tabler-icons.io/i/trash 
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <line x1="4" y1="7" x2="20" y2="7" />
+                                                <line x1="10" y1="11" x2="10" y2="17" />
+                                                <line x1="14" y1="11" x2="14" y2="17" />
+                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                            </svg> --> Eliminar pedido </span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-3 d-md-none d-sm-block col-6">
+
+                                    <button class="btn btn-outline-azure w-100" type="button" id="valor_pedido" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                        $ 0
+                                    </button>
+                                </div>
+
+
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
-                <!--valor Pedido-->
-                <div class="col-md-3">
 
-                    <div class="card" style="height: calc(20rem + 10px)">
+
+
+                <!--valor Pedido-->
+                <div class="col-12 d-sm-none d-md-block col-md-4 col-xl-4 d-none ">
+
+                    <div class="card " style="height: calc(20rem + 10px)">
                         <div class="card-header border-1" style="margin-bottom: -10px; padding-bottom: 0;">
                             <div class="card-title">
                                 <div class="row align-items-start">
@@ -221,11 +276,11 @@ Bienvenido DFpyme
                                     <div class="col-sm-12">
                                         <div class="input-group">
                                             <!-- 
-                                            <select class="form-select" aria-label="Default select example" id="criterio_propina" style="width: 90px;">
-                                                <option value="1">Propina %</option>
-                                                <option value="2">Propina $</option>
+                        <select class="form-select" aria-label="Default select example" id="criterio_propina" style="width: 90px;">
+                            <option value="1">Propina %</option>
+                            <option value="2">Propina $</option>
 
-                                            </select> -->
+                        </select> -->
 
 
 
@@ -245,76 +300,131 @@ Bienvenido DFpyme
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Total</label>
+                                    <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Prefactura</label>
                                     <div class="col-sm-8">
-                                        <a href="#" class="btn btn-outline-azure w-100 h2" id="valor_pedido" onclick="alerta()" title="Pagar" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        <a href="#" class="btn btn-outline-azure w-100 h2" id="val_pedido" onclick="prefactura()" title="Imprimir prefactura" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                             $ 0
                                         </a>
+
                                     </div>
                                 </div>
 
                             </form>
 
                         </div>
-                        <div class="container">
-                            <div class="row mb-2 gy-2"> <!-- Fila para los botones -->
-                                <div class="col-md-6">
 
-
-                                    <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
-                                        Prefactura
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a class="btn btn-outline-muted w-100" onclick="alerta()">
-                                        Rerirar dinero</a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a href="#" class="btn btn-outline-yellow w-100"  onclick="alerta()">
-                                        Devolución
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a href="#" class="btn btn-outline-azure w-100" onclick="alerta()">
-                                        Pago parcial
-                                    </a>
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
                 </div>
+
 
                 <!--partida-->
             </div>
         </div>
+
+
+
+
+
+
+
+
+
+        <!-- Gestion pedido  -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasRightLabel">Valor pedido </h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+            </div>
+            <div class="offcanvas-body">
+                <!-- Contenido del offcanvas -->
+                <div class="car " style="height: calc(20rem + 10px)">
+                    <div class="card-heade border-1" style="margin-bottom: -10px; padding-bottom: 0;">
+                        <div class="card-title">
+                            <div class="row align-items-start">
+                                <div class="col">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body ">
+
+                        <form>
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Subtotal</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="subtotal_pedido" disabled="">
+                                </div>
+                            </div>
+
+                            <div class="row mb-2 gy-2">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <!-- 
+                        <select class="form-select" aria-label="Default select example" id="criterio_propina" style="width: 90px;">
+                            <option value="1">Propina %</option>
+                            <option value="2">Propina $</option>
+
+                        </select> -->
+
+
+
+                                        <a href="#" class="btn btn-outline-green  col-sm-4" onclick="calculo_propina()" title="Propina" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <circle cx="12" cy="12" r="9" />
+                                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                                                <path d="M8 13a4 4 0 1 0 8 0m0 0h-8" />
+                                            </svg></a>
+
+
+                                        <input type="text" aria-label="Last name" class="form-control w-1" style="width: 50px;" value=0 onkeyup="calcular_propina(this.value)" id="propina_pesos" placeholder="%">
+                                        <input type="text" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Total</label>
+                                <div class="col-sm-8">
+                                    <a href="#" class="btn btn-outline-azure w-100 h2" id="valor_pedido" onclick="prefactura()" title="Pagar" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        $ 0
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
     </div>
 </div>
 
 
-
-
 <script>
-    function alerta() {
+    function validarInputYAbrirOffcanvas() {
+        var inputValue = document.getElementById("id_mesa_pedido").value;
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-
-        Toast.fire({
-            icon: 'warning',
-            title: '!Acción requiere permisos!'
-        })
-
+        if (inputValue.trim() !== "") {
+            // El input tiene un valor válido, entonces abre el offcanvas
+            var offcanvas = new bootstrap.Offcanvas(document.getElementById("offcanvasExample"));
+            offcanvas.show();
+        } else {
+            // El input no tiene un valor válido, puedes mostrar un mensaje de error o realizar alguna otra acción
+            sweet_alert('warning','No hay mesa seleccionada')
+        }
     }
 </script>
+
+
 
 <?= $this->endSection('content') ?>
