@@ -35,7 +35,7 @@ Bienvenido DFpyme
         <input type="hidden" value="<?php echo $user_session->id_usuario ?>" id="id_usuario">
         <input type="hidden" value="<?php echo $requiere_mesero ?>" id="requiere_mesero" name="requiere_mesero">
         <input type="hidden" value="<?php echo $user_session->tipo ?>" id="tipo_usuario" name="tipo_usuario">
-        <input type="hidden"  id="mesero" name="mesero">
+        <input type="hidden" id="mesero" name="mesero">
         <input type="hidden" id="tipo_pedido" name="tipo_pedido" value="computador">
         <div class="container-fluid">
             <div class="row row-deck row-cards">
@@ -150,14 +150,14 @@ Bienvenido DFpyme
                                             <td tyle="width: 25%;">
                                                 <p id="mesa_pedido" class="text-warning "> Mesa:</p>
                                             </td>
-                                            <td yle="width: 25%;" >
+                                            <td yle="width: 25%;">
                                                 <p id="pedido_mesa">Pedio: </p>
                                             </td>
                                             <td tyle="width: 50%;">
                                                 <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
 
                                             </td>
-                                          
+
                                         </tr>
                                     </table>
                                 </div>
@@ -251,6 +251,7 @@ Bienvenido DFpyme
                                         <a href="#" class="btn btn-outline-azure w-100 h2" id="valor_pedido" onclick="finalizar_venta()" title="Pagar" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                             $ 0
                                         </a>
+                                        <p id="val_pedido" style="display: none"></p>
                                     </div>
                                 </div>
 
@@ -287,6 +288,26 @@ Bienvenido DFpyme
                 </div>
 
                 <!--partida-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_cortesia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Productos en cortesia </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="mensaje_cortesia"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success " onclick="generar_cortesia()">Aceptar</button>
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>

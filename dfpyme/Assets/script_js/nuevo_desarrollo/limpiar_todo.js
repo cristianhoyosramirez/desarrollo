@@ -1,4 +1,14 @@
 function limpiar_todo() {
+
+    var radio_transaccion = document.getElementById("radio_transaccion");
+    // Desmarca el elemento
+    radio_transaccion.checked = false;
+
+    var radio_efectivo = document.getElementById("radio_efectivo");
+    // Desmarca el elemento
+    radio_efectivo.checked = true;
+
+
     $('#nit_cliente').val('22222222')
     $('#nombre_cliente').val('22222222 CUANTIAS MENORES')
     $('#id_mesa_pedido').val('')
@@ -9,6 +19,7 @@ function limpiar_todo() {
     $('#mesa_pedido').html('Mesa')
     $('#mesa_productos').html('')
     $('#sub_total').html(0)
+    $('#nombre_mesero').html('Mesero')
     $('#valor_pedido').html('$0')
     $('#productos_categoria').html('')
     $('#subtotal_pedido').val('$0')

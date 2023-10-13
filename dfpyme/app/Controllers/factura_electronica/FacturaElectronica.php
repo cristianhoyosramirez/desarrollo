@@ -81,8 +81,8 @@ class FacturaElectronica extends BaseController
             'id_caja' => 1,
             'cancelled' => true,
             'fecha_y_hora_factura_venta' => $fecha_y_hora,
-            'id_apertura'=>$apertura['numero'],
-            'propina'=>$propina
+            'id_apertura' => $apertura['numero'],
+            'propina' => $propina
         ];
 
 
@@ -113,8 +113,8 @@ class FacturaElectronica extends BaseController
             'fecha_y_hora_factura_venta' => $fecha_y_hora,
             'fecha' => date('Y-m-d'),
             'hora' => date("H:i:s"),
-            'id_mesero'=>$mesero,
-            'id_mesa'=>$id_mesa
+            'id_mesero' => $mesero,
+            'id_mesa' => $id_mesa
 
         ];
 
@@ -253,40 +253,7 @@ class FacturaElectronica extends BaseController
 
             $suma_pagos = $efectivo + $transaccion;
 
-           /*  if ($suma_pagos == $valor_venta) {
 
-                if ($efectivo == $transaccion) {
-                    $valor_pago_efectivo = $efectivo;
-                    $valor_pago_transferencia = $transaccion;
-                } else if ($transaccion == $valor_venta) {
-                    $valor_pago_efectivo = 0;
-                    $valor_pago_transferencia = $transaccion;
-                } else {
-                    $valor_pago_efectivo = $efectivo;
-                    $valor_pago_transferencia = $transaccion;
-                }
-            }
-
-            if ($suma_pagos > $valor_venta) {
-
-                if ($transaccion > $efectivo) {
-
-                    if ($transaccion < $valor_venta) {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = $valor_venta - $transaccion;
-                    }
-                    if ($transaccion == $valor_venta) {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = 0;
-                    } else {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = 0;
-                    }
-                } else {
-                    $valor_pago_efectivo = $valor_venta - $transaccion;
-                    $valor_pago_transferencia = $transaccion;
-                }
-            } */
 
             if ($suma_pagos == $valor_venta) {
 
@@ -312,7 +279,7 @@ class FacturaElectronica extends BaseController
                 }
             }
 
-            if ($suma_pagos > $valor_venta) {
+            /*     if ($suma_pagos > $valor_venta) {
 
                 if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion > $efectivo) {
 
@@ -323,17 +290,7 @@ class FacturaElectronica extends BaseController
                     $recibido_efectivo = $efectivo;
                 }
 
-                /*   if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion < $efectivo) {
-
-                    $valor_pago_transferencia = $valor_venta;
-                    $valor_pago_efectivo = 0;
-                    $cambio = $efectivo - $valor_venta;
-                    $recibido_transaccion = $transaccion;
-                    $recibido_efectivo = $efectivo;
-                } */
-
-
-
+             
                 if ($transaccion > $efectivo) {
 
                     if ($transaccion > $efectivo) {
@@ -393,25 +350,45 @@ class FacturaElectronica extends BaseController
                         $recibido_transaccion = $transaccion;
                     }
                 }
+            } */
+
+            if ($suma_pagos > $valor_venta) {
+                // Caso 1: Pago en efectivo sin transacción
+                if ($efectivo > 0 && $transaccion == 0) {
+                    $valor_pago_transferencia = 0;
+                    $valor_pago_efectivo = $valor_venta;
+                    $cambio = $efectivo - $valor_venta;
+                    $recibido_transaccion = 0;
+                    $recibido_efectivo = $efectivo;
+                }
+                // Caso 2: Pago mediante transacción sin efectivo
+                elseif ($efectivo == 0 && $transaccion > 0) {
+                    $valor_pago_transferencia = $valor_venta;
+                    $valor_pago_efectivo = 0;
+                    $cambio = $transaccion - $valor_venta;
+                    $recibido_transaccion = $transaccion;
+                    $recibido_efectivo = 0;
+                }
+                // Caso 3: Ambos efectivo y transacción están involucrados
+                elseif ($efectivo > 0 && $transaccion > 0) {
+                    // Caso 3.1: Mayor transacción que efectivo
+                    if ($transaccion > $efectivo) {
+                        $valor_pago_transferencia = $valor_venta;
+                        $valor_pago_efectivo = 0;
+                        $cambio = $transaccion + $efectivo - $valor_venta;
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
+                    }
+                    // Caso 3.2: Mayor efectivo que transacción
+                    elseif ($efectivo > $transaccion) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = $valor_venta - $transaccion;
+                        $cambio = $transaccion + $efectivo - $valor_venta;
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
+                    }
+                }
             }
-
-/* 
-            $pagos = [
-
-                'fecha' => date('Y-m-d'),
-                'hora' => date("H:i:s"),
-                'documento' => $id_factura,
-                'valor' => $valor_venta-$propina,
-                'propina' => $propina,
-                'total_documento' => $valor_venta,
-                'efectivo' => $valor_pago_efectivo,
-                'transferencia' => $valor_pago_transferencia,
-                'total_pago' => $valor_venta ,
-                'id_usuario_facturacion' => $id_usuario,
-                'id_mesero' => $id_usuario,
-                'id_estado' => $estado,
-                'id_apertura' => $id_apertura['numero']
-            ]; */
 
             $pagos = [
 
@@ -423,7 +400,7 @@ class FacturaElectronica extends BaseController
                 'total_documento' => $valor_venta,
                 'efectivo' => $valor_pago_efectivo,
                 'transferencia' => $valor_pago_transferencia,
-                'total_pago' => $valor_pago_efectivo + $valor_pago_transferencia,
+                'total_pago' => $efectivo + $transaccion,
                 'id_usuario_facturacion' => $id_usuario,
                 'id_mesero' => $id_usuario,
                 'id_estado' => $estado,
@@ -445,8 +422,8 @@ class FacturaElectronica extends BaseController
                     'code_payment' => 10,
                     'fecha' => date('Y-m-d'),
                     'hora' => date('H:i:s'),
-                    'valor' => $valor_venta,
-                    'pago' => $efectivo
+                    'valor' =>  $efectivo,
+                    'pago' => $valor_venta
                 ];
 
                 $forma_pago_transaccion = [
@@ -456,8 +433,8 @@ class FacturaElectronica extends BaseController
                     'code_payment' => 31,
                     'fecha' => date('Y-m-d'),
                     'hora' => date('H:i:s'),
-                    'valor' => $valor_venta,
-                    'pago' => $transaccion
+                    'valor' => $transaccion,
+                    'pago' => $valor_venta
                 ];
 
                 if ($efectivo > 0) {

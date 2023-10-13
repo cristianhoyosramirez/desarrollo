@@ -8,7 +8,9 @@
         <label for="">Mesa destino </label>
         <select class="form-select select2" name="mesa_destino" id="mesa_destino">
             <?php foreach ($mesas as $detalle) { ?>
-                <option value="<?php echo $detalle['id'] ?>"><?php echo $detalle['nombre'] ?> </option>
+                <?php if ($detalle['id'] != $id_mesa_origen) {  ?>
+                    <option value="<?php echo $detalle['id'] ?>"><?php echo $detalle['nombre'] ?> </option>
+                <?php } ?>
             <?php }
             ?>
         </select>

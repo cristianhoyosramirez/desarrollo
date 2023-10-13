@@ -29,7 +29,8 @@ function finalizar_venta() {
                     totales = parseInt(resultado.valor_total) + parseInt(propina_pedido_limpio)
                     $('#valor_total_a_pagar').val(totales)
 
-                    $('#total_pedido').html('Total: ' + totales.toLocaleString('es-ES'))
+                    $('#total_pedido').html('Valor pago: ' + totales.toLocaleString('es-ES'))
+                    $('#pago').html('Valor pago: ' + totales.toLocaleString('es-ES'))
                     $('#total_propina').val(propina_pedido)
                     $('#efectivo').val(totales.toLocaleString('es-ES'))
                     $('#efectivo').select()

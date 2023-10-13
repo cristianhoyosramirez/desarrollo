@@ -1,3 +1,9 @@
+<style>
+    .mesero-item {
+        margin-bottom: 20px;
+        /* Agrega un espacio de 20 píxeles entre los elementos */
+    }
+</style>
 <!-- Modal -->
 <div class="modal fade" id="modal_meseros" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -27,7 +33,7 @@
                     <div class="row container">
                         <?php $count = 0; ?>
                         <?php foreach ($meseros as $detalle) : ?>
-                            <div class="col-6 col-md-4 col-lg-3 col-xl-2" onclick="meseros(<?php echo $detalle['idusuario_sistema']  ?>)" class="cursor-pointer">
+                            <div class="col-6 col-md-4 col-lg-3 col-xl-2 mesero-item" onclick="meseros(<?php echo $detalle['idusuario_sistema'] ?>)" class="cursor-pointer">
                                 <a href="#" class="card card-link card-link-pop bg-primary-lt">
                                     <div class="card-body text-center"><?php echo $detalle['nombresusuario_sistema']; ?></div>
                                 </a>
@@ -104,6 +110,12 @@
 
 
                     }
+                    if (resultado.resultado == 0) {
+
+                        $('#error_nombre').html('Nombre ya existe ')
+
+                    }
+
                 },
             });
         }

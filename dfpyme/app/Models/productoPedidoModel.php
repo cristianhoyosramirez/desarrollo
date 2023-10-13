@@ -49,7 +49,7 @@ class productoPedidoModel extends Model
         return $datos->getResultArray();
     }
 
-  
+
 
     public function id_categoria_2($numero_pedido)
     {
@@ -63,7 +63,7 @@ class productoPedidoModel extends Model
     }
 
 
-   public function productos_pedido($numero_pedido)
+    public function productos_pedido($numero_pedido)
     {
         $datos = $this->db->query("
         SELECT
@@ -82,28 +82,8 @@ class productoPedidoModel extends Model
         where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto  order by id asc;
         ");
         return $datos->getResultArray();
-    } 
+    }
 
- /*    public function productos_pedido($numero_pedido, $id_categoria)
-    {
-        $datos = $this->db->query("
-        SELECT
-             producto_pedido.id as id,
-             producto.nombreproducto,
-             producto.valorventaproducto,
-             valor_total,
-             cantidad_producto,
-             nota_producto,
-             valor_unitario,
-             producto_pedido.codigointernoproducto,
-             numero_productos_impresos_en_comanda
-        FROM
-             producto_pedido
-        INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
-        where numero_de_pedido='$numero_pedido' and codigo_categoria='$id_categoria' and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto  order by id asc;
-        ");
-        return $datos->getResultArray();
-    } */
 
     public function productos_pedido_pos($numero_pedido, $id_categoria)
     {
@@ -404,9 +384,22 @@ class productoPedidoModel extends Model
         return $datos->getResultArray();
     }
 
+    public function set_producto_pedido($id_producto)
+    {
+        $datos = $this->db->query("
+        SELECT nombreproducto,cantidad_producto,nota_producto,valor_unitario,valor_total
+        FROM   producto_pedido
+        INNER JOIN producto
+        ON producto.codigointernoproducto = producto_pedido.codigointernoproducto
+        WHERE  producto_pedido.id = $id_producto 
+        ");
+        return $datos->getResultArray();
+    }
 
 
-    public function insertar($ultimo_id_pedido,$valor_unitario,$se_imprime_en_comanda,$codigo_categoria,$codigo_interno_producto) {
+
+    public function insertar($ultimo_id_pedido, $valor_unitario, $se_imprime_en_comanda, $codigo_categoria, $codigo_interno_producto)
+    {
 
         $data = [
             'numero_de_pedido' => $ultimo_id_pedido,
@@ -424,8 +417,6 @@ class productoPedidoModel extends Model
         $productos = $this->db->table('producto_pedido');
         $productos->insert($data);
 
-        return $this->db->insertID(); 
+        return $this->db->insertID();
     }
-
-
 }

@@ -130,7 +130,7 @@ Bienvenido DFpyme
                                         </div>
                                     </div>
 
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -147,33 +147,27 @@ Bienvenido DFpyme
                         <div class="card-header border-1" style="margin-bottom: -10px; padding-bottom: 0;">
                             <div class="card-title">
                                 <div class="row align-items-start">
-                                    <table>
-                                        <tr>
-                                            <td style="width: 25%;">
-                                                <p id="mesa_pedido" class="text-warning "> Mesa:</p>
-                                            </td>
-                                            <td syle="width: 25%;">
-                                                <p id="pedido_mesa">Pedio: </p>
-                                            </td>
+                                    <div class="col-4">
+                                        <p id="mesa_pedido" class="text-warning "> Mesa:</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p id="pedido_mesa">Pedio: </p>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <a class="btn btn-outline-indigo btn-icon" href="#" onclick="validarInputYAbrirOffcanvas()" role="button">
 
-                                            <td>
-                                                <!--<a class="btn btn-outline-indigo  btn-icon" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">-->
-
-                                                <a class="btn btn-outline-indigo btn-icon" href="#" onclick="validarInputYAbrirOffcanvas()" role="button">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M3 14c.83 .642 2.077 1.017 3.5 1c1.423 .017 2.67 -.358 3.5 -1c.83 -.642 2.077 -1.017 3.5 -1c1.423 -.017 2.67 .358 3.5 1" />
-                                                    <path d="M8 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
-                                                    <path d="M12 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
-                                                    <path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5z" />
-                                                    <path d="M16.746 16.726a3 3 0 1 0 .252 -5.555" />
-                                                </svg>
-                                                </a>
-                                            </td>
-
-                                        </tr>
-                                    </table>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M3 14c.83 .642 2.077 1.017 3.5 1c1.423 .017 2.67 -.358 3.5 -1c.83 -.642 2.077 -1.017 3.5 -1c1.423 -.017 2.67 .358 3.5 1" />
+                                                <path d="M8 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
+                                                <path d="M12 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
+                                                <path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5z" />
+                                                <path d="M16.746 16.726a3 3 0 1 0 .252 -5.555" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                  
+                                  
                                 </div>
                             </div>
                         </div>
@@ -266,8 +260,8 @@ Bienvenido DFpyme
 
                             <form>
                                 <div class="row mb-3">
-                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Subtotal</label>
-                                    <div class="col-sm-8">
+                                    
+                                    <div class="col-sm-12">
                                         <input type="text" class="form-control" id="subtotal_pedido" disabled="">
                                     </div>
                                 </div>
@@ -300,8 +294,8 @@ Bienvenido DFpyme
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Prefactura</label>
-                                    <div class="col-sm-8">
+                                    
+                                    <div class="col-sm-12">
                                         <a href="#" class="btn btn-outline-azure w-100 h2" id="val_pedido" onclick="prefactura()" title="Imprimir prefactura" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                             $ 0
                                         </a>
@@ -420,7 +414,7 @@ Bienvenido DFpyme
             offcanvas.show();
         } else {
             // El input no tiene un valor válido, puedes mostrar un mensaje de error o realizar alguna otra acción
-            sweet_alert('warning','No hay mesa seleccionada')
+            sweet_alert('warning', 'No hay mesa seleccionada')
         }
     }
 </script>

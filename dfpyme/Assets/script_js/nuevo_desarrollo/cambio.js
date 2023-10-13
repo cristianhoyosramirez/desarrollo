@@ -63,7 +63,9 @@ function cambio(valor) {
 
     // Obtiene el valor de la venta y la transacción
     const valorVenta = parseInt(document.getElementById("valor_total_a_pagar").value);
-    const valorTransaccion = parseInt(document.getElementById("transaccion").value) || 0;
+    const valorTransaccion = parseInt(document.getElementById("transaccion").value.replace(/[.]/g, "")) || 0;
+
+
 
     // Calcula el subtotal y el cambio
     const subTotal = efectivo + valorTransaccion;
@@ -80,5 +82,13 @@ function cambio(valor) {
 
     // Calcula y muestra el faltante
     const faltante = valorVenta - subTotal;
-    $('#faltante').html(`Faltante: $${Math.max(faltante, 0).toLocaleString('es-CO')}`);
+    
+
+    if (faltante>=0){
+        $('#faltante').html('Faltante:' + faltante.toLocaleString('es-CO'));
+    }
+    if (faltante< 0){
+        $('#faltante').html('Faltante:' + 0);
+    }
 }
+

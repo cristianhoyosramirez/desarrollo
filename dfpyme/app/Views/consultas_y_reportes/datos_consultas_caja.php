@@ -88,7 +88,7 @@ MOVIMIENTO DE CAJA
                     <div class="col-xs-12 col-md-3">
                         <div class="card ">
                             <div class="card-body">
-                                <div class="row align-items-center cursor-pointer"  >
+                                <div class="row align-items-center cursor-pointer">
                                     <div class="col-auto">
                                         <span class="bg-blue text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-desktop-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -219,7 +219,7 @@ MOVIMIENTO DE CAJA
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-3 cursor-pointer"  onclick="devoluciones()">
+                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="devoluciones()">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -408,7 +408,7 @@ MOVIMIENTO DE CAJA
                                             Diferencia
                                         </div>
                                         <div class="text-muted">
-                                            <p id="diferencia"> <?php echo $diferencia 
+                                            <p id="diferencia"> <?php echo $diferencia
                                                                 ?></p>
                                         </div>
                                     </div>
@@ -536,6 +536,7 @@ MOVIMIENTO DE CAJA
                     $('#transferencia').html(resultado.transferencia)
                     $('#total_de_ingresos').html(resultado.total_ingresos)
                     $('#total_ventas').html(resultado.valor)
+                    $('#cambio').html(resultado.cambio)
                     $("#modal_propinas").modal("show");
 
                     //sweet_alert('success', 'Registros encontrados  ');
@@ -569,9 +570,9 @@ MOVIMIENTO DE CAJA
                     $('#total_propinas').html(resultado.total_propinas)
                     $("#propinas").modal("show");
 
-                if (resultado.total_propinas=="Total: $ 0"){
-                    $('#total_propinas').html('')
-                }
+                    if (resultado.total_propinas == "Total: $ 0") {
+                        $('#total_propinas').html('')
+                    }
 
                     //sweet_alert('success', 'Registros encontrados  ');
                 }

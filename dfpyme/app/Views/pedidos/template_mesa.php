@@ -189,6 +189,427 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/criterio_propina.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/buscar_por_codigo_de_barras_devolucion.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_producto_cantidad.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/calculo_propina.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/pagar_parcial.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cancelar_pago_parcial.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/restar_partir_factura.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/pago_efectivo.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_transaccion.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_cantidad_partir_factura.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/meseros.js"></script>
+
+    <script>
+        function asignar_p1() {
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+            $.ajax({
+                data: {
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/asignar_p1",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        sweet_alert('success', +resultado.nombre_producto + " dado en cortesia ")
+                        $("#modal_cortesia").modal("hide");
+                        $('#mesa_productos').html(resultado.productos);
+                        $("#valor_pedido").html(resultado.total_pedido);
+                        $("#subtotal_pedido").val(resultado.total_pedido);
+                        $("#operaciones").show();
+                        $("#nota").hide();
+                        $("#descuento").hide();
+                        $("#descuento_porcentaje").hide();
+                        $("#edicion_precio").hide();
+                        $("#descuentos_manuales").hide();
+                        $("#lista_precios").hide();
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
+    <script>
+        function asignar_p2() {
+            $.ajax({
+                data: {
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/generar_cortesia",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        sweet_alert('success', +resultado.nombre_producto + " dado en cortesia ")
+                        $("#modal_cortesia").modal("hide");
+                        $('#mesa_productos').html(resultado.productos);
+                        $("#valor_pedido").html(resultado.total_pedido);
+                        $("#subtotal_pedido").val(resultado.total_pedido);
+                        $("#operaciones").show();
+                        $("#nota").hide();
+                        $("#descuento").hide();
+                        $("#descuento_porcentaje").hide();
+                        $("#edicion_precio").hide();
+                        $("#descuentos_manuales").hide();
+                        $("#lista_precios").hide();
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
+
+    <script>
+        function generar_cortesia() {
+
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+
+            $.ajax({
+                data: {
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/generar_cortesia",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        sweet_alert('success', +resultado.nombre_producto + " dado en cortesia ")
+                        $("#modal_cortesia").modal("hide");
+                        $('#mesa_productos').html(resultado.productos);
+                        $("#valor_pedido").html(resultado.total_pedido);
+                        $("#subtotal_pedido").val(resultado.total_pedido);
+                        $("#operaciones").show();
+                        $("#nota").hide();
+                        $("#descuento").hide();
+                        $("#descuento_porcentaje").hide();
+                        $("#edicion_precio").hide();
+                        $("#descuentos_manuales").hide();
+                        $("#lista_precios").hide();
+
+
+                    }
+                },
+            });
+
+        }
+    </script>
+
+
+
+    <script>
+        function editar_precio() {
+            var operaciones = document.getElementById("operaciones");
+            operaciones.style.display = "none";
+
+            var descuento = document.getElementById("descuento");
+            descuento.style.display = "none";
+
+
+            var edicion_precio = document.getElementById("edicion_precio");
+            edicion_precio.style.display = "block";
+        }
+    </script>
+
+    <script>
+        function abrir_descuento_manual() {
+            var operaciones = document.getElementById("operaciones");
+            operaciones.style.display = "none";
+
+            var descuento = document.getElementById("descuento");
+            descuento.style.display = "none";
+
+
+            var manual = document.getElementById("descuentos_manuales");
+            manual.style.display = "block";
+        }
+    </script>
+    <script>
+        function mostrar_lista_precios() {
+            var operaciones = document.getElementById("operaciones");
+            operaciones.style.display = "none";
+
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+
+
+            $.ajax({
+                data: {
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/lista_precios",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        var lista_precios = document.getElementById("lista_precios");
+                        lista_precios.style.display = "block";
+                        $('#precio_1').html(resultado.precio_1)
+                        $('#precio_2').html(resultado.precio_2)
+
+
+                    }
+                },
+            });
+
+
+            var manual = document.getElementById("lista_precios");
+            manual.style.display = "block";
+        }
+    </script>
+
+    <script>
+        function cortesia() {
+            /*  var operaciones = document.getElementById("operaciones");
+             operaciones.style.display = "none";
+
+             var url = document.getElementById("url").value;
+             var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+
+
+             $.ajax({
+                 data: {
+                     id_producto_pedido
+                 },
+                 url: url +
+                     "/" +
+                     "eventos/cortesia",
+                 type: "post",
+                 success: function(resultado) {
+                     var resultado = JSON.parse(resultado);
+                     if (resultado.resultado == 1) {
+
+                         var lista_precios = document.getElementById("lista_precios");
+                         lista_precios.style.display = "block";
+
+
+                     }
+                 },
+             });
+
+
+             var manual = document.getElementById("lista_precios");
+             manual.style.display = "block"; */
+
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+
+            $.ajax({
+                data: {
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/nombre_producto",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+
+                        $('#mensaje_cortesia').html(resultado.nombre_producto)
+                        $("#agregar_nota").modal("hide");
+                        $("#modal_cortesia").modal("show");
+
+
+                    }
+                },
+            });
+
+
+
+
+        }
+    </script>
+
+    <script>
+        function cerrar_modal() {
+            var url = document.getElementById("url").value;
+            let id_mesa = document.getElementById("id_mesa_pedido").value;
+
+            $.ajax({
+                data: {
+                    id_mesa,
+                },
+                url: url + "/" + "eventos/cerrar_modal",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $("#agregar_nota").modal("hide");
+                        $('#mesa_productos').html(resultado.productos);
+                        $("#valor_pedido").html(resultado.total_pedido);
+                        $("#subtotal_pedido").val(resultado.total_pedido);
+                        $("#operaciones").show();
+                        $("#nota").hide();
+                        $("#descuento").hide();
+                        $("#descuento_porcentaje").hide();
+                        $("#edicion_precio").hide();
+                        $("#descuentos_manuales").hide();
+                        $("#lista_precios").hide();
+
+
+                    }
+                },
+            });
+
+        }
+    </script>
+
+    <script>
+        function descontar_dinero(valor) {
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+
+            valor = valor.trim() === '' ? 0 : parseInt(valor.replace(/\./g, ''));
+
+
+            $.ajax({
+                data: {
+                    valor,
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/descontar_dinero",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+
+                        $('#restar_plata').val(resultado.precio_producto)
+
+
+                    }
+                },
+            });
+        }
+    </script>
+    <script>
+        function cambio_manual_precio(valor) {
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+
+            valor = valor.trim() === '' ? 0 : parseInt(valor.replace(/\./g, ''));
+
+
+            $.ajax({
+                data: {
+                    valor,
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/editar_precio_producto",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        var precioConSeparador = resultado.precio_producto.toLocaleString();
+
+                        // Asigna el valor con separador de miles al elemento con id "descuento_manual"
+                        $('#descuento_manual').val(precioConSeparador);
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
+
+
+    <script>
+        function adicionar_nota() {
+
+            var nota = document.getElementById("nota");
+            nota.style.display = "block";
+
+            var nota = document.getElementById("descuento");
+            nota.style.display = "none";
+
+            var operaciones = document.getElementById("operaciones");
+            operaciones.style.display = "none";
+
+
+        }
+    </script>
+
+
+    <script>
+        function descuento() {
+            var nota = document.getElementById("nota");
+            nota.style.display = "none";
+
+            var nota = document.getElementById("descuento");
+            nota.style.display = "block";
+
+
+            var operaciones = document.getElementById("operaciones");
+            operaciones.style.display = "none";
+
+        }
+    </script>
+
+    <script>
+        function calcular_porcentaje(valor) {
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+
+            $.ajax({
+                data: {
+                    valor,
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/actualizar_producto_porcentaje",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#lista_completa_mesas').html(resultado.mesas)
+                        $('#precio_producto').val(resultado.total)
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
+    <script>
+        function descuento_porcentaje() {
+            var descuento = document.getElementById("descuento");
+            descuento.style.display = "none";
+
+            var descuento_porcentaje = document.getElementById("descuento_porcentaje");
+            descuento_porcentaje.style.display = "block";
+        }
+    </script>
+
+
+
     <script>
         function mesas_actualizadas() {
 
@@ -298,6 +719,15 @@
             allowClear: true,
             dropdownParent: $("#crear_cliente"),
         });
+
+        $("#tipo_descuento").select2({
+            width: "100%",
+            placeholder: "Tipo de descuento ",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#agregar_nota"),
+        });
     </script>
 
 
@@ -313,100 +743,6 @@
             $("#modal_meseros").modal("show");
         }
     </script>
-
-
-
-    <!--  <script>
-        function cambio_teclado() {
-            var tipo_pago = document.getElementById("tipo_pago").value;
-            var efectivo = document.getElementById("efectivo").value;
-            var transaccion = document.getElementById("transaccion").value;
-
-            // Utiliza el operador ternario para asignar 0 si las variables son null
-            efectivo = efectivo === null ? 0 : efectivo;
-            transaccion = transaccion === null ? 0 : transaccion;
-
-            // Elimina los puntos de los valores y convierte a números enteros
-            efectivo = parseInt(efectivo.replace(/\./g, ''));
-            transaccion = parseInt(transaccion.replace(/\./g, ''));
-
-            // Ahora las variables efectivo y transaccion son enteros o 0 si eran null
-
-            
-            total_venta = parseInt(total_venta.replace(/\./g, ''));
-
-            // Suma efectivo y transaccion
-            let suma_efectivo_transaccion = efectivo + transaccion;
-
-
-            
-              cambio ="";
-            if (tipo_pago == 1) {
-                // Calcula el cambio
-                let cambio = suma_efectivo_transaccion - total_venta;
-
-                // Muestra el cambio en el campo de transacción (o donde desees)
-                //document.getElementById("transaccion").value = cambio.toLocaleString('es-CO');
-
-                $('#pago').html('Valor pago: $ '+suma_efectivo_transaccion.toLocaleString('es-CO'))
-
-
-                if (cambio > 1){
-                    $('#cambio').html("Cambio: $ "+cambio.toLocaleString('es-CO'))
-                }
-            }
-
-            
-        }
-    </script> -->
-
-
-
-    <!--    <script>
-        function cambio_teclado() {
-            var tipo_pago = document.getElementById("tipo_pago").value;
-            var efectivo = document.getElementById("efectivo").value;
-            var transaccion = document.getElementById("transaccion").value;
-
-            // Utiliza el operador ternario para asignar 0 si las variables son null
-            efectivo = efectivo === null ? 0 : efectivo;
-            transaccion = transaccion === null ? 0 : transaccion;
-
-            // Elimina los puntos de los valores y convierte a números enteros
-            efectivo = parseInt(efectivo.replace(/\./g, ''));
-            transaccion = parseInt(transaccion.replace(/\./g, ''));
-
-            // Ahora las variables efectivo y transaccion son enteros o 0 si eran null
-
-            let total_venta = document.getElementById("valor_total_a_pagar").value;
-            total_venta = parseInt(total_venta.replace(/\./g, ''));
-
-            // Suma efectivo y transaccion
-            let suma_efectivo_transaccion = efectivo + transaccion;
-
-            if (tipo_pago == 1) {
-                // Calcula el cambio
-                let cambio = suma_efectivo_transaccion - total_venta;
-
-                // Muestra el cambio en el campo de transacción (o donde desees)
-                //document.getElementById("transaccion").value = cambio.toLocaleString('es-CO');
-
-                $('#pago').html('Valor pago: $ ' + suma_efectivo_transaccion.toLocaleString('es-CO'))
-
-
-                if (cambio > 1) {
-                    $('#cambio').html("Cambio: $ " + cambio.toLocaleString('es-CO'))
-                }
-            }
-
-            faltante = parseInt(total_venta) - parseInt(efectivo) + parseInt(transaccion);
-
-            $('#faltante').html('Faltante: $' + faltante.toLocaleString('es-CO'))
-
-
-
-        }
-    </script> -->
 
     <script>
         function cambio_teclado() {
@@ -484,37 +820,6 @@
     </script>
 
 
-
-
-    <script>
-        function pago_efectivo() {
-            var tipo_pago = document.getElementById("tipo_pago").value;
-            let total_venta = parseFloat(document.getElementById("valor_total_a_pagar").value);
-            let propina_parcial = document.getElementById("total_propina").value;
-            // Reemplaza todos los puntos en la propina
-            let total_propina = propina_parcial.replace(/\./g, '');
-
-            if (tipo_pago == 1) {
-                $('#efectivo').val(total_venta.toLocaleString('es-CO'))
-                $('#pago').html('Pago: ' + total_venta.toLocaleString('es-CO'))
-                $('#faltante').html('Faltante: 0')
-                $('#cambio').html('Cambio: 0')
-                $('#transaccion').val(0)
-            }
-
-            if (tipo_pago == 0) {
-                // Asegúrate de convertir total_propina a número antes de sumarlo
-                let total = total_venta + parseFloat(total_propina);
-                $('#efectivo').val(total.toLocaleString('es-CO'))
-                $('#pago').html('Pago: ' + total.toLocaleString('es-CO'))
-                $('#faltante').html('Faltante: 0')
-                $('#cambio').html('Cambio: 0')
-                $('#transaccion').val(0)
-            }
-        }
-    </script>
-
-
     <script>
         function pago_transaccion() {
             var tipo_pago = document.getElementById("tipo_pago").value;
@@ -536,7 +841,7 @@
             if (tipo_pago == 0) {
                 let total = total_venta + parseFloat(total_propina);
                 $('#transaccion').val(total.toLocaleString('es-CO'))
-                $('#pago').html('Pago: ' + total.toLocaleString('es-CO'))
+                $('#pago').html('Valor pago: ' + total.toLocaleString('es-CO'))
                 $('#faltante').html('Faltante: 0')
                 $('#cambio').html('Cambio: 0')
                 $('#efectivo').val(0)
@@ -585,11 +890,6 @@
         }
     </script>
 
-
-
-
-
-
     <script>
         function buscar_mesas(valor) {
             var url = document.getElementById("url").value;
@@ -616,13 +916,6 @@
 
                             $("#lista_todas_las_mesas").modal("show");
                         }
-
-
-
-
-
-
-
 
                     }
                 },
@@ -656,14 +949,6 @@
 
                             $("#lista_todas_las_mesas").modal("show");
                         }
-
-
-
-
-
-
-
-
                     }
                 },
             });
@@ -696,76 +981,6 @@
         }
     </script>
 
-
-    <script>
-        function meseros(id_mesero) {
-            var url = document.getElementById("url").value;
-
-
-            $('#mesero').val(id_mesero)
-            $("#modal_meseros").modal("hide");
-            sweet_alert('success', 'Mesero asignado ')
-
-            /*      if (mesa == "") {
-                     let id_mesa = document.getElementById("id_mesa_pedido").value;
-                     $.ajax({
-                         data: {
-                             id_mesero,
-                             id_mesa
-                         },
-                         url: url +
-                             "/" +
-                             "pedidos/actualizar_mesero",
-                         type: "POST",
-                         success: function(resultado) {
-                             var resultado = JSON.parse(resultado);
-                             if (resultado.resultado == 1) {
-
-                                 $('#modal_meseros').modal('hide')
-                                 $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
-                                 sweet_alert('success', 'Mesero asignado')
-
-
-
-                             }
-                         },
-                     });
-
-                 }
-
-                 if (mesa != "") {
-                     id_mesa = mesa
-
-
-                     $.ajax({
-                         data: {
-                             id_mesero,
-                             id_mesa
-                         },
-                         url: url +
-                             "/" +
-                             "pedidos/actualizar_mesero",
-                         type: "POST",
-                         success: function(resultado) {
-                             var resultado = JSON.parse(resultado);
-                             if (resultado.resultado == 1) {
-
-                                 $('#modal_meseros').modal('hide')
-                                 $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
-                                 sweet_alert('success', 'Mesero asignado')
-
-
-
-                             }
-                         },
-                     });
-                 } */
-        }
-    </script>
-
-
-
-
     <script>
         const total_propina = document.querySelector("#total_propina");
 
@@ -777,6 +992,23 @@
         }
 
         total_propina.addEventListener("input", (e) => {
+            const element = e.target;
+            const value = element.value;
+            element.value = formatNumber(value);
+        });
+    </script>
+
+    <script>
+        const edicion_manual = document.querySelector("#descontar_dinero");
+
+        function formatNumber(n) {
+            // Elimina cualquier carácter que no sea un número
+            n = n.replace(/\D/g, "");
+            // Formatea el número
+            return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+        }
+
+        edicion_manual.addEventListener("input", (e) => {
             const element = e.target;
             const value = element.value;
             element.value = formatNumber(value);
@@ -807,7 +1039,6 @@
         }
     </script>
 
-
     <script>
         function calculo_propina_parcial() {
             var subtotal = document.getElementById("valor_total_a_pagar").value;
@@ -823,13 +1054,11 @@
 
 
             $('#total_pedido').html("Total: " + total.toLocaleString('es-CO'))
+            $('#pago').html("Valor pago : " + total.toLocaleString('es-CO'))
+            $('#efectivo').val(total.toLocaleString('es-CO'))
 
         }
     </script>
-
-
-
-
 
     <script>
         function calcular_propina_final(propina) {
@@ -899,9 +1128,6 @@
         }
     </script>
 
-
-
-
     <script>
         const propina_pedido = document.querySelector("#propina_del_pedido");
 
@@ -913,6 +1139,23 @@
         }
 
         propina_pedido.addEventListener("input", (e) => {
+            const element = e.target;
+            const value = element.value;
+            element.value = formatNumber(value);
+        });
+    </script>
+
+    <script>
+        const descuento = document.querySelector("#descontar_dinero");
+
+        function formatNumber(n) {
+            // Elimina cualquier carácter que no sea un número
+            n = n.replace(/\D/g, "");
+            // Formatea el número
+            return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+        }
+
+        descuento.addEventListener("input", (e) => {
             const element = e.target;
             const value = element.value;
             element.value = formatNumber(value);
@@ -961,60 +1204,7 @@
 
 
 
-    <script>
-        function actualizar_cantidad_partir_factura(cantidad, id, cantidad_producto) {
-            var url = document.getElementById("url").value;
-            let id_mesa = document.getElementById("id_mesa_pedido").value;
-            let id_tabla = id
 
-            $.ajax({
-                data: {
-                    cantidad,
-                    id,
-                    cantidad_producto,
-                    id_mesa
-                },
-                url: url +
-                    "/" +
-                    "pedidos/partir_factura",
-                type: "POST",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 0) {
-                        Swal.fire({
-                            icon: "success",
-                            confirmButtonText: "Aceptar",
-                            confirmButtonColor: "#2AA13D",
-                            title: "Operacion cancelada",
-                        });
-                    } else if (resultado.resultado == 1) {
-                        /*$("#valor_producto_partir_factura").html(
-                          resultado.valor_total_producto
-                        );*/
-                        $("#total_factura_mostrar").html(
-                            resultado.valor_total_pedido
-                        );
-                        $("#items_facturar_partir").html(resultado.productos);
-                        Swal.fire({
-                            icon: "success",
-                            confirmButtonText: "Aceptar",
-                            confirmButtonColor: "#2AA13D",
-                            title: "Operación exitosa",
-                        }).then((result) => {
-                            /* Read more about isConfirmed, isDenied below */
-                            if (result.isConfirmed) {
-                                myModal = new bootstrap.Modal(
-                                    document.getElementById("items_partir_factura"), {}
-                                );
-                                myModal.show();
-                            }
-                        });
-                    }
-                },
-            });
-
-        }
-    </script>
 
 
     <script type="text/javascript">
@@ -1111,186 +1301,6 @@
             const value = element.value;
             element.value = formatNumber(value);
         });
-    </script>
-
-
-    <script>
-        function cambio_transaccion(valor) { //Se recibe un un valor desde el formulario de pagos 
-            var res = 0;
-            let pago = 0;
-
-            transaccionFormat = valor.replace(/[.]/g, ""); //Se quita el punto del valor recibido 
-
-            let valorAsignado = transaccionFormat === "" ? 0 : parseInt(transaccionFormat); // Validamos que si valor esta vacio le asigne un cero 
-
-            var valor_venta = document.getElementById("valor_total_a_pagar").value; // El valor de la venta 
-            var transaccion = valorAsignado; // Valor sin punto o en caso de haber llegado vacio cero 
-
-
-
-            let valor_efectivo = document.getElementById("efectivo").value;
-            let efectivoFormat = valor_efectivo.replace(/[.]/g, "");
-            let valor_e = efectivoFormat;
-
-            // Asigna un valor predeterminado de cero si "valor" está vacío
-            let efectivo = valor_e === "" ? 0 : parseInt(valor_e);
-
-
-            sub_total = parseInt(efectivo) + parseInt(transaccion);
-            res = parseInt(sub_total) - parseInt(valor_venta);
-
-
-
-            resultado = res.toLocaleString('es-CO');
-            if (res > 0) {
-                $('#cambio').html('Cambio: $' + resultado)
-            }
-            if (res < 0) {
-                $('#cambio').html('Cambio: $ 0')
-                $('#pago').html('Valor pago: $ 0')
-            }
-
-            //if (sub_total > valor_venta) {
-            $('#pago').html('Valor pago: $' + sub_total.toLocaleString('es-CO'))
-            //}
-
-        }
-    </script>
-
-
-    <script>
-        function restar_partir_factura(event, cantidad, id_tabla_producto) {
-            event.stopPropagation()
-
-            let url = document.getElementById("url").value;
-
-
-            $.ajax({
-                data: {
-                    id_tabla_producto,
-                    cantidad
-                },
-                url: url + "/" + "pedidos/restar_partir_factura",
-                type: "POST",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 1) {
-
-                        $('#total_pago_parcial').html(resultado.total)
-                        $("#productos_pago_parcial").html(resultado.productos);
-
-
-
-                    }
-                },
-            });
-
-        }
-    </script>
-
-    <script>
-        function cancelar_pago_parcial() {
-
-            let id_mesa = document.getElementById("id_mesa_pedido").value;
-            let url = document.getElementById("url").value;
-
-            $.ajax({
-                type: 'post',
-                url: url + "/" + "pedidos/cancelar_pago_parcial ", // Cambia esto a tu script PHP para insertar en la base de datos
-                data: {
-                    id_mesa,
-
-                }, // Pasar los datos al script PHP
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 1) {
-
-                        sweet_alert('warning', 'Cancelación de pagos parciales')
-                        $("#partir_factura").modal("hide");
-
-
-
-                    }
-                },
-            });
-
-        }
-    </script>
-
-
-
-    <script>
-        function pagar_parcial() {
-
-
-
-            let url = document.getElementById("url").value;
-            let id_mesa = document.getElementById("id_mesa_pedido").value;
-
-            $.ajax({
-                data: {
-                    id_mesa,
-                },
-                url: url + "/" + "pedidos/valor_pago_parcial",
-                type: "POST",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 1) {
-
-
-                        if (resultado.valor_total !== null && resultado.valor_total > 0) {
-                            $('#partir_factura').modal('hide');
-                            $('#finalizar_venta').modal('show');
-                            $('#sub_total_pedido').html("Sub total: " + resultado.total)
-                            $('#mensaje_factura').html(resultado.total)
-                            $('#mensaje_factura').html(resultado.factura_electronica)
-                            $('#total_pedido').html(resultado.total)
-                            $('#tipo_pago').val(0)
-                            $('#valor_total_a_pagar').val(resultado.valor_total)
-                            $('#requiere_factura_electronica').val(resultado.requiere_factura_electronica)
-                            $('#total_propina').val(0)
-                            let total = resultado.valor_total
-                            $('#efectivo').val(total.toLocaleString('es-CO'))
-                            $('#efectivo').select()
-
-                        } else if (resultado.valor_total === null) {
-                            sweet_alert('warning', ' ! No hay productos para efectuar pagos parciales ¡')
-                        }
-
-                    }
-                },
-            });
-        }
-    </script>
-
-
-    <script>
-        function calculo_propina() {
-            let url = document.getElementById("url").value;
-            let id_mesa = document.getElementById("id_mesa_pedido").value;
-
-            if (id_mesa == "") {
-                sweet_alert('warning', 'No hay pedido')
-            } else if (id_mesa != "") {
-
-                $.ajax({
-                    data: {
-                        id_mesa,
-                    },
-                    url: url + "/" + "pedidos/propinas",
-                    type: "POST",
-                    success: function(resultado) {
-                        var resultado = JSON.parse(resultado);
-                        if (resultado.resultado == 1) {
-
-                            $('#propina_del_pedido').val(resultado.propina)
-                            $('#valor_pedido').html(resultado.total_pedido)
-
-                        }
-                    },
-                });
-            }
-        }
     </script>
 
 </body>

@@ -24,7 +24,8 @@ function pagar() {
     let valor_venta = "";
 
     if (tipo_pago == 1) {
-        var propina = document.getElementById("propina_del_pedido").value;
+        //var propina = document.getElementById("propina_del_pedido").value;
+        var propina = document.getElementById("total_propina").value;
         let val_venta = document.getElementById("valor_total_a_pagar").value; // El valor de la venta 
         valor_venta = parseInt(val_venta)
     }

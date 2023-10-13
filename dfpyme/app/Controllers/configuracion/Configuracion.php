@@ -31,4 +31,20 @@ class Configuracion extends BaseController
             echo  json_encode($returnData);
         }
     }
+
+    function propina(){
+        return view('configuracion/propina');
+    }
+
+    function configuracion_propina(){
+        $valor = $this->request->getPost('propina');
+
+        $model = model('configuracionPedidoModel');
+        $configuracion = $model->set('propina', $valor);
+        $configuracion = $model->update();
+
+        $session = session();
+        $session->setFlashdata('iconoMensaje', 'success');
+        return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Configuración de propina correcta ');
+    }
 }

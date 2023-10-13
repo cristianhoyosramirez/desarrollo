@@ -51,7 +51,7 @@ function cierre_caja() {
       var efectivoFormat = efectivo_de_cierre.replace(/[.]/g, "");
       var transaccionFormat = transaccion_de_cierre.replace(/[.]/g, "");
       var numero_caja = document.getElementById("numero_caja").value;
-      
+
       $("#error_apertura_caja").html("");
       $.ajax({
         data: {
@@ -92,8 +92,8 @@ function cierre_caja() {
                     var resultado = JSON.parse(resultado);
 
                     if (resultado.resultado == 1) {
-                      id_cierre=resultado.id_cierre
-                     
+                      let id_cierre = resultado.id_cierre
+                    
                       Swal.fire({
                         icon: "question",
                         title: "¿Desea imprimir el movimiento de caja ? ",
@@ -108,7 +108,7 @@ function cierre_caja() {
                         reverseButtons: true,
                       }).then((result) => {
                         /* Read more about isConfirmed, isDenied below */
-                        
+
                         if (result.isConfirmed) {
                           $.ajax({
                             data: {
@@ -167,8 +167,8 @@ function cierre_caja() {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    id_apertura=resultado.id_apertura
-                    console.log(id_apertura)
+                    id_apertura = resultado.id_apertura
+                    
                     $.ajax({
                       data: {
                         id_apertura,
@@ -265,7 +265,7 @@ function cierre_caja() {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    id_apertura=resultado.id_apertura
+                    id_apertura = resultado.id_apertura
                     console.log(id_apertura)
                     $.ajax({
                       data: {

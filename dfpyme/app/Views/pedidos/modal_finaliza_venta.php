@@ -207,7 +207,7 @@
                     </div> -->
                     <div class="col-7">
                       <label class="form-selectgroup-item flex-fill">
-                        <input type="radio" name="form-payment" id="radio2" value="mastercard" class="form-selectgroup-input" />
+                        <input type="radio" name="form-payment" id="radio_efectivo" value="mastercard" class="form-selectgroup-input" checked/>
                         <div class="form-selectgroup-label d-flex align-items-center p-3" onclick="pago_efectivo()">
                           <div class="me-2">
                             <span class="form-selectgroup-check"></span>
@@ -235,7 +235,7 @@
                     </div> -->
                     <div class="col-7">
                       <label class="form-selectgroup-item flex-fill">
-                        <input type="radio" name="form-payment" id="radio2" value="mastercard" class="form-selectgroup-input" />
+                        <input type="radio" name="form-payment" id="radio_transaccion" value="mastercard" class="form-selectgroup-input" />
                         <div class="form-selectgroup-label d-flex align-items-center p-3" onclick="pago_transaccion()">
                           <div class="me-1">
                             <span class="form-selectgroup-check"></span>

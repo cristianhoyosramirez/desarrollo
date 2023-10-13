@@ -150,16 +150,7 @@ class CerrarVenta extends BaseController
 
             $apertura = model('aperturaRegistroModel')->select('numero')->where('idcaja', 1)->first();
             //$id_mesero = model('mesasModel')->select('id_mesero')->where('id', $id_mesa)->first();
-            $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $id_mesa)->first();
-
-            $mesero = "";
-
-            if (empty($id_mesero['id_mesero'])) {
-                $mesero = 0;
-            }
-            if (!empty($id_mesero['id_mesero'])) {
-                $mesero = $id_mesero['id_mesero'];
-            }
+            $id_mesero = model('pedidoModel')->select('fk_usuario')->where('fk_mesa', $id_mesa)->first();
 
             //Guardar la propina 
             $data = [
@@ -170,7 +161,7 @@ class CerrarVenta extends BaseController
                 'fecha_y_hora_factura_venta' => $fecha_y_hora,
                 'fecha' => $fecha,
                 'hora' => $hora,
-                'id_mesero' => $mesero,
+                'id_mesero' => $id_mesero['fk_usuario'],
                 'id_mesa' => $id_mesa
             ];
 
@@ -226,38 +217,6 @@ class CerrarVenta extends BaseController
             }
 
 
-            /*    $valor_pago_efectivo = 0; // Inicializa el valor de pago en efectivo en 0
-            $valor_pago_transferencia = 0; // Inicializa el valor de pago en transferencia en 0
-
-            if ($valor_venta <= $efectivo) {
-                // Si el valor de venta es menor o igual al efectivo, asigna el valor del efectivo
-                $valor_pago_efectivo = $efectivo;
-            } elseif ($efectivo > 0 && $valor_venta > $efectivo) {
-                // Si el efectivo es mayor que cero y el valor de venta es mayor que el efectivo,
-                // asigna el valor de venta al efectivo
-                $valor_pago_efectivo = $efectivo;
-            } elseif ($efectivo > 0 && $transaccion > 0) {
-                // Si el efectivo es mayor que cero y la transacción es mayor que cero,
-                // asigna el valor del efectivo al efectivo
-                $valor_pago_efectivo = $efectivo;
-            }
-
-            if ($efectivo > $valor_venta) {
-                $valor_pago_efectivo = $valor_venta;
-            }
-
-            if ($valor_pago_transferencia > 0) {
-                // Calcula el valor de pago en transferencia restando el valor del efectivo
-                $valor_pago_transferencia = $valor_venta - $valor_pago_efectivo;
-            }
-
-            if ($efectivo > $valor_venta  && $transaccion > $valor_venta) {
-
-                $valor_pago_efectivo = $efectivo;
-            } */
-
-
-
             $suma_pagos = $efectivo + $transaccion;
 
             if ($suma_pagos == $valor_venta) {
@@ -284,6 +243,97 @@ class CerrarVenta extends BaseController
                 }
             }
 
+
+            if ($suma_pagos > $valor_venta) {
+                // Caso 1: Pago en efectivo sin transacción
+                if ($efectivo > 0 && $transaccion == 0) {
+                    $valor_pago_transferencia = 0;
+                    $valor_pago_efectivo = $valor_venta;
+                    $cambio = $efectivo - $valor_venta;
+                    $recibido_transaccion = 0;
+                    $recibido_efectivo = $efectivo;
+                }
+                // Caso 2: Pago mediante transacción sin efectivo
+                elseif ($efectivo == 0 && $transaccion > 0) {
+                    $valor_pago_transferencia = $valor_venta;
+                    $valor_pago_efectivo = 0;
+                    $cambio = $transaccion - $valor_venta;
+                    $recibido_transaccion = $transaccion;
+                    $recibido_efectivo = 0;
+                }
+                // Caso 3: Ambos efectivo y transacción están involucrados
+                elseif ($efectivo > 0 && $transaccion > 0) {
+                    // Caso 3.1: Mayor transacción que efectivo
+                    if ($transaccion > $efectivo) {
+                        $valor_pago_transferencia = $valor_venta;
+                        $valor_pago_efectivo = 0;
+                        $cambio = $transaccion + $efectivo - $valor_venta;
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
+                    }
+                    // Caso 3.2: Mayor efectivo que transacción
+                    elseif ($efectivo > $transaccion) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = $valor_venta-$transaccion;
+                        $cambio = $transaccion + $efectivo - $valor_venta;
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
+                    }
+                }
+            }
+
+
+
+
+
+
+
+            /* 
+           2. Versión 
+           if ($suma_pagos > $valor_venta) {
+
+
+                if ($efectivo > 0 and $transaccion == 0) {
+                    $valor_pago_transferencia = 0;
+                    $valor_pago_efectivo = $valor_venta;
+                    $cambio =  $efectivo - $valor_venta;
+                    $recibido_transaccion = 0;
+                    $recibido_efectivo = $efectivo;
+                }
+
+                if ($efectivo == 0 and $transaccion > 0) {
+                    $valor_pago_transferencia = $valor_venta;
+                    $valor_pago_efectivo = 0;
+                    $cambio =  $transaccion - $valor_venta;
+                    $recibido_transaccion = $transaccion;
+                    $recibido_efectivo = 0;
+                }
+
+                if ($efectivo > 0 and $transaccion > 0) {
+
+
+                    if ($transaccion > $efectivo) {
+                        $valor_pago_transferencia = $valor_venta;
+                        $valor_pago_efectivo = $efectivo;
+                        $cambio =  ($transaccion+$efectivo) - $valor_venta;
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
+                    }
+                    if ($efectivo  > $transaccion) {
+                        $valor_pago_transferencia = $transaccion;
+                        $valor_pago_efectivo = $efectivo;
+                        $cambio =  ($transaccion+$efectivo) - $valor_venta;
+                        $recibido_transaccion = $transaccion;
+                        $recibido_efectivo = $efectivo;
+                    }
+
+
+                }
+            } */
+
+
+            /* 
+           // 1.Versión 
             if ($suma_pagos > $valor_venta) {
 
                 if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion > $efectivo) {
@@ -294,16 +344,6 @@ class CerrarVenta extends BaseController
                     $recibido_transaccion = $transaccion;
                     $recibido_efectivo = $efectivo;
                 }
-
-                /*   if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion < $efectivo) {
-
-                    $valor_pago_transferencia = $valor_venta;
-                    $valor_pago_efectivo = 0;
-                    $cambio = $efectivo - $valor_venta;
-                    $recibido_transaccion = $transaccion;
-                    $recibido_efectivo = $efectivo;
-                } */
-
 
 
                 if ($transaccion > $efectivo) {
@@ -341,13 +381,23 @@ class CerrarVenta extends BaseController
                     }
                 } else {
 
-                    if ($efectivo > $transaccion) {
+                    if ($efectivo > $valor_venta && $transaccion == 0) {
+
+                        //$valor_pago_efectivo = $efectivo;
+                        $valor_pago_efectivo = $efectivo;
+                        $valor_pago_transferencia = 0;
+                        $cambio = $efectivo - $valor_venta;
+                    }
+
+                    if ($efectivo > $transaccion && $transaccion > 0) {
                         $valor_pago_efectivo = 0;
                         $valor_pago_transferencia = $valor_venta;
                     }
                     if ($efectivo < $transaccion) {
                         $valor_pago_efectivo = $valor_venta - $transaccion;
                         $valor_pago_transferencia = $transaccion;
+
+                        
                     }
                     if ($suma_pagos >= $valor_venta) {
                         //$cambio = $suma_pagos - $valor_venta;
@@ -365,7 +415,7 @@ class CerrarVenta extends BaseController
                         $recibido_transaccion = $transaccion;
                     }
                 }
-            }
+            } */
 
 
             $pagos = [
@@ -378,7 +428,7 @@ class CerrarVenta extends BaseController
                 'total_documento' => $valor_venta,
                 'efectivo' => $valor_pago_efectivo,
                 'transferencia' => $valor_pago_transferencia,
-                'total_pago' => $valor_pago_efectivo + $valor_pago_transferencia,
+                'total_pago' => $efectivo + $transaccion,
                 'id_usuario_facturacion' => $id_usuario,
                 'id_mesero' => $id_usuario,
                 'id_estado' => $estado,
@@ -533,22 +583,32 @@ class CerrarVenta extends BaseController
 
         $id_mesa = $this->request->getPost('id_mesa');
 
+        //$id_mesa = 301;
+
         $valor_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
 
-        $propina = $valor_pedido['valor_total'] * 0.1;
+        $tipo_propina = model('configuracionPedidoModel')->select('propina')->first();
 
-        // Redondear la propina al valor más cercano a mil
-        $Propina_redondeada = round($propina / 1000) * 1000;
+        if ($tipo_propina['propina'] == 1) {
+            $temp_propina = $valor_pedido['valor_total'] * 0.1;
+            // Redondear la propina al valor más cercano a mil
+            $propina = round($temp_propina / 1000) * 1000;
+        }
+        if ($tipo_propina['propina'] == 0) {
+            $propina = $valor_pedido['valor_total'] * 0.1;
+        }
+
+
 
         $model = model('pedidoModel');
-        $actualizar = $model->set('propina', $Propina_redondeada);
+        $actualizar = $model->set('propina', $propina);
         $actualizar = $model->where('fk_mesa', $id_mesa);
         $actualizar = $model->update();
 
         $returnData = array(
             "resultado" => 1,
-            "propina" => number_format($Propina_redondeada, 0, ",", "."),
-            "total_pedido" => number_format($Propina_redondeada + $valor_pedido['valor_total'], 0, ",", ".")
+            "propina" => number_format($propina, 0, ",", "."),
+            "total_pedido" => number_format($propina + $valor_pedido['valor_total'], 0, ",", ".")
         );
         echo  json_encode($returnData);
     }
@@ -559,9 +619,9 @@ class CerrarVenta extends BaseController
 
         // $id_mesero = $this->request->getPost('id_mesero');
         $id_mesero = $this->request->getPost('id_mesero');
-        $model = model('mesasModel');
-        $actualizar = $model->set('id_mesero', $id_mesero);
-        $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
+        $model = model('pedidoModel');
+        $actualizar = $model->set('fk_usuario', $id_mesero);
+        $actualizar = $model->where('fk_mesa', $this->request->getPost('id_mesa'));
         $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero)->first();
         $actualizar = $model->update();
         if ($actualizar) {

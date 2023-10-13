@@ -41,11 +41,12 @@
                 <td scope="col">DOCUMENTO</th>
                 <td scope="col">VALOR</th>
                 <td scope="col">PROPINA</th>
-                <td scope="col">TOTAL DOCUMENTO</th>
+                <td scope="col">TOTAL</th>
                 <td scope="col">EFECTIVO</th>
                 <td scope="col">TRANSFERENCIA</th>
                 <td scope="col">TOTAL PAGO</th>
-                <td scope="col">ATENDIDO POR</th>
+                <td scope="col">CAMBIO </th>
+                <td scope="col">USUARIO </th>
             </tr>
         </thead>
         <tbody class="table-scroll">
@@ -64,9 +65,10 @@
                     <td><?php echo "$ " . number_format($valor['valor'], 0, ",", ".") ?></td>
                     <td><?php echo "$ " . number_format($valor['propina'], 0, ",", ".") ?></td>
                     <td><?php echo "$ " . number_format($valor['total_documento'], 0, ",", ".") ?></td>
-                    <td><?php echo "$ " . number_format($valor['efectivo'], 0, ",", ".") ?></td>
-                    <td><?php echo "$ " . number_format($valor['transferencia'], 0, ",", ".") ?></td>
-                    <td><?php echo "$ " . number_format($valor['efectivo']+$valor['transferencia'], 0, ",", ".") ?></td>
+                    <td><?php echo "$ " . number_format($valor['recibido_efectivo'], 0, ",", ".") ?></td>
+                    <td><?php echo "$ " . number_format($valor['recibido_transferencia'], 0, ",", ".") ?></td>
+                    <td><?php echo "$ " . number_format($valor['total_pago'], 0, ",", ".") ?></td>
+                    <td><?php echo "$ " . number_format($valor['cambio'], 0, ",", ".") ?></td>
                     <td><?php echo $nombre_usuario['nombresusuario_sistema'] ?></td>
                 </tr>
             <?php endforeach ?>

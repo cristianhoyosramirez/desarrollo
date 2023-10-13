@@ -26,7 +26,7 @@
 
             <?php foreach ($productos as $detalle) { ?>
 
-                <tr onclick="agregar_nota(<?php echo $detalle['id'] ?>)">
+                <tr onclick="agregar_nota(<?php echo $detalle['id'] ?>,event)">
                     <td>
                         <?php echo $detalle['nombreproducto']; ?>
                         <?php if (!empty($detalle['nota_producto'])) { ?>

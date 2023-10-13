@@ -457,6 +457,14 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('set_boletas', 'Boletas::set_boletas');
     $routes->get('consultar_boleta', 'Boletas::consultar_boleta');
     $routes->post('cliente', 'Boletas::cliente');
+    $routes->post('actualizar_producto_porcentaje', 'Boletas::actualizar_producto_porcentaje');
+    $routes->post('editar_precio_producto', 'Boletas::editar_precio_producto');
+    $routes->post('lista_precios', 'Boletas::lista_precios');
+    $routes->post('cortesia', 'Boletas::cortesia');
+    $routes->post('cerrar_modal', 'Boletas::cerrar_modal');
+    $routes->post('descontar_dinero', 'Boletas::descontar_dinero');
+    $routes->post('nombre_producto', 'Boletas::nombre_producto');
+    $routes->post('generar_cortesia', 'Boletas::generar_cortesia');
 });
 $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->post('ventas', 'Ventas::ventas');
@@ -468,6 +476,8 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->get('mesero', 'Configuracion::mesero');
     $routes->post('actualizar_mesero', 'Configuracion::actualizar_mesero');
+    $routes->get('propina', 'Configuracion::propina');
+    $routes->post('configuracion_propina', 'Configuracion::configuracion_propina');
 });
 
 /*

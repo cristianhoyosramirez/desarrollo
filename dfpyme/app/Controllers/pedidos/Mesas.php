@@ -92,7 +92,8 @@ class Mesas extends BaseController
         //$id_usuario = 15;
         //$id_producto = 2;
         //$id_producto = '207';
-        $id_producto = $this->request->getPost('id_producto');
+        // $id_producto = $this->request->getPost('id_producto');
+        $id_producto = (string) $this->request->getPost('id_producto');
 
         /**
          * Datos del producto
@@ -118,12 +119,12 @@ class Mesas extends BaseController
             $data = [
                 'fk_mesa' => $id_mesa,
                 'fk_usuario' => $id_usuario,
-                //'valor_total' => $valor_unitario['valorventaproducto'],
+                'valor_total' => $valor_unitario['valorventaproducto'],
                 'cantidad_de_productos' => 1,
 
             ];
             $insert = model('pedidoModel')->insert($data);
-            exit('popular');
+
             /**
              * Insertar en la tabla producto pedido 
              */
@@ -455,10 +456,17 @@ class Mesas extends BaseController
     {
         $id_producto = $this->request->getPost('id_producto');
         $nota = model('productoPedidoModel')->select('nota_producto')->where('id', $id_producto)->first();
+        $producto = model('productoPedidoModel')->set_producto_pedido($id_producto);
+
+
 
         $returnData = array(
             "resultado" => 1,
             "nota" => $nota['nota_producto'],
+            "producto" => view('consultas/producto', [
+                'producto' => $producto
+            ]),
+            'valor_total' => number_format($producto[0]['valor_total'], 0, ',', '.')
         );
         echo  json_encode($returnData);
     }
@@ -962,11 +970,12 @@ class Mesas extends BaseController
     function reporte_propinas()
     {
 
-        //$id_apertura = 44;
+        //$id_apertura = 59;
         $id_apertura = $_REQUEST['id_apertura'];
 
 
         $meseros  = model('facturaPropinaModel')->get_meseros($id_apertura);
+
         $total_propinas = model('FacturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
 
 
@@ -1016,7 +1025,7 @@ class Mesas extends BaseController
     function buscar_mesero()
     {
 
-        
+
 
 
         $meseros = model('mesasModel')->buscar_meseros($this->request->getPost('valor'));
@@ -1031,9 +1040,9 @@ class Mesas extends BaseController
             echo  json_encode($returnData);
         }
 
-       
+
         if (empty($this->request->getPost('valor'))) {
-         
+
             $mesas = model('mesasModel')->buscar_mesa($this->request->getPost('valor'));
             $returnData = array(
                 "resultado" => 1,
@@ -1052,6 +1061,8 @@ class Mesas extends BaseController
         $nombre = $this->request->getPost('nombre');
         $id_mesa = $this->request->getPost('id_mesa');
 
+        $nombre_mesero = model('usuariosModel')->where('nombresusuario_sistema', $nombre)->first();
+
         $data = [
             'idtipo' => 2,
             'cedulausuario_sistema' => 123456,
@@ -1064,21 +1075,30 @@ class Mesas extends BaseController
             'pinusuario_sistema' => "",
         ];
 
-        $insert = model('usuariosModel')->insert($data);
+        if (empty($nombre_mesero)) {
+            $insert = model('usuariosModel')->insert($data);
 
-        // Obtener el último ID insertado
-        $ultimo_id = model('usuariosModel')->insertID();
+            // Obtener el último ID insertado
+            $ultimo_id = model('usuariosModel')->insertID();
 
 
-        $model = model('mesasModel');
-        $actualizar = $model->set('id_mesero', $ultimo_id);
-        $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
-        $actualizar = $model->update();
+            $model = model('mesasModel');
+            $actualizar = $model->set('id_mesero', $ultimo_id);
+            $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
+            $actualizar = $model->update();
 
-        $returnData = array(
-            "resultado" => 1,
-            "nombre" => $nombre
-        );
-        echo  json_encode($returnData);
+            $returnData = array(
+                "resultado" => 1,
+                "nombre" => $nombre
+            );
+            echo  json_encode($returnData);
+        }
+
+        if (!empty($nombre_mesero)) {
+            $returnData = array(
+                "resultado" => 0,
+            );
+            echo  json_encode($returnData);
+        }
     }
 }

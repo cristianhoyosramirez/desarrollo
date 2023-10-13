@@ -980,7 +980,7 @@ class cajaController extends BaseController
 
 
         $id_cierre = $this->request->getPost('id_cierre');
-        //$id_cierre = 1552;
+        //$id_cierre = 34;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -1019,7 +1019,14 @@ class cajaController extends BaseController
         $printer->text("\n");
 
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $id_apertura['idapertura'])->first();
-        $printer->text("VALOR APERTURA   : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("VALOR apertura   : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n\n");
+
+        $ventas_pos=model('pagosModel')->set_ventas_pos($id_apertura['idapertura']);
+        $ventas_electronicas=model('pagosModel')->set_ventas_electronicas($id_apertura['idapertura']);
+
+        
+        $printer->text("Ventas pos          : " . "$" . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
+        $printer->text("Ventas electronicas : " . "$" . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
 
         $printer->text("\n");
         $printer->text("-----------------------------------------------\n ");
@@ -1117,10 +1124,10 @@ class cajaController extends BaseController
         $printer->text("------------------------------------------------\n");
 
 
-        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("(+)Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
 
-        $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
-        $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
+        $printer->text("(-)Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
+        $printer->text("(-)Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
         $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
         $tot_en_caja = $temp - $total_retiros;

@@ -31,6 +31,7 @@ function eliminar_pedido() {
                             sweet_alert('success', 'Pedido eliminado')
 
                             $("#todas_las_mesas").html(resultado.mesas);
+                            $("#val_pedido").html(0);
                             let mesas = document.getElementById("todas_las_mesas");
                             mesas.style.display = "block";
 

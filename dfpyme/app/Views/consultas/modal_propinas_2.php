@@ -17,12 +17,13 @@
                         <tr>
                             <td class="table-dark">VENTAS POS </td>
                             <td class="table-dark">ELECTRÓNICA </td>
-                            <td class="table-dark"></td>
-                            <td class="table-dark">VALOR </td>
+                           
+                            <td class="table-dark">VALOR NETO </td>
                             <td class="table-dark">PROPINA</td>
                             <td class="table-dark">TOTAL DOCUMENTO </td>
                             <td class="table-dark">EFECTIVO </td>
                             <td class="table-dark">TRANSFERENCIA </td>
+                            <td class="table-dark">CAMBIO </td>
                             <td class="table-dark">TOTAL INGRESOS</td>
                             <td></td>
                         </tr>
@@ -33,10 +34,8 @@
                             <td>
                                 <p id="ventas_electronicas"></p>
                             </td>
-                            <td>
-                                <p class=" text-primary"> TOTALES </p>
-                            </td>
-                            <td><p id="total_ventas" ></p> </td>
+                            
+                            <td><p class="text-primary h3" id="total_ventas" ></p> </td>
                             <td>
                                 <p id="valor_total_propinas"> </p>
                             </td>
@@ -48,6 +47,9 @@
                             </td>
                             <td>
                                 <p id="transferencia">
+                            </td>
+                            <td>
+                                <p id="cambio">
                             </td>
                             <td>
                                 <p id="total_de_ingresos"></p>

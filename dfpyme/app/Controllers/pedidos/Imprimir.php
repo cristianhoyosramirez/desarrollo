@@ -706,7 +706,11 @@ class Imprimir extends BaseController
         $printer->text("\n");
 
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $id_apertura)->first();
-        $printer->text("VALOR APERTURA   : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("Valor apertura    : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
+        $ventas_pos =model('pagosModel')->set_ventas_pos($id_apertura);
+        $ventas_electronicas =model('pagosModel')->set_ventas_electronicas($id_apertura);
+        $printer->text("Ventas pos     : " . "$" . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
+        $printer->text("Valor electrónicas    : " . "$" . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
 
         $printer->text("\n");
 

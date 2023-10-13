@@ -15,7 +15,7 @@ class Boletas extends BaseController
     public function boletas()
     {
 
-        $localidad = model('localidadModel')->where('estado',true)->findAll();
+        $localidad = model('localidadModel')->where('estado', true)->findAll();
         return view('boletas/boletas', [
             'localidad' => $localidad
         ]);
@@ -134,6 +134,226 @@ class Boletas extends BaseController
             "resultado" => 1, //Falta plata 
             "nit_cliente" => $this->request->getPost('cedula'),
             "nombre_cliente" => $this->request->getPost('nombre')
+        );
+        echo  json_encode($returnData);
+    }
+
+
+    function actualizar_producto_porcentaje()
+    {
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $porcentaje_producto = $this->request->getPost('valor');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+
+        $valor_unitario = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto',  $codigo_interno['codigointernoproducto'])->first();
+        $cantidad = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto)->first();
+
+        // Calcula el valor total usando la fórmula
+        $valor_total = $valor_unitario['valorventaproducto'] * (1 - ($porcentaje_producto / 100));
+        $total =  $valor_total * $cantidad['cantidad_producto'];
+
+        $model = model('productoPedidoModel');
+        $actualizar = $model->set('valor_unitario', $total);
+        $actualizar = $model->set('valor_total', $total * $cantidad['cantidad_producto']);
+        $actualizar = $model->where('id', $id_producto);
+        $actualizar = $model->update();
+
+
+        $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_producto)->first();
+
+        $total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->findAll();
+
+        $model = model('pedidoModel');
+        $actualizar = $model->set('valor_total', $total_pedido[0]['valor_total']);
+        $actualizar = $model->where('id',  $numero_pedido['numero_de_pedido']);
+        $actualizar = $model->update();
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+            "total" => number_format($total, 0, ',', '.')
+        );
+        echo  json_encode($returnData);
+    }
+
+    function editar_precio_producto()
+    {
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $precio  = $this->request->getPost('valor');
+
+
+
+
+
+        if ($precio >= 0) {
+
+
+            $cantidad = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto)->first();
+
+
+            $model = model('productoPedidoModel');
+            $actualizar = $model->set('valor_unitario', $precio);
+            $actualizar = $model->set('valor_total', $precio * $cantidad['cantidad_producto']);
+            $actualizar = $model->where('id', $id_producto);
+            $actualizar = $model->update();
+
+            $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_producto)->first();
+
+            $total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->findAll();
+
+            $model = model('pedidoModel');
+            $actualizar = $model->set('valor_total', $total_pedido[0]['valor_total']);
+            $actualizar = $model->where('id',  $numero_pedido['numero_de_pedido']);
+            $actualizar = $model->update();
+
+            $returnData = array(
+                "resultado" => 1, //Falta plata 
+                "precio_producto" => number_format($precio, 0, ',', '.')
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+
+    function lista_precios()
+    {
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+
+        $valor_venta = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto', $codigo_interno['codigointernoproducto'])->first();
+        $descto_mayor = model('productoModel')->select('descto_mayor')->where('codigointernoproducto', $codigo_interno['codigointernoproducto'])->first();
+
+        $temp_precio_2 = ($descto_mayor['descto_mayor'] * $valor_venta['valorventaproducto']) / 100;
+        $precio_2 = $valor_venta['valorventaproducto'] - $temp_precio_2;
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+            "precio_1" => "$ " . number_format($valor_venta['valorventaproducto'], 0, ',', '.'),
+            "precio_2" => "$ " . number_format($precio_2, 0, ',', '.')
+        );
+        echo  json_encode($returnData);
+    }
+
+    function cortesia()
+    {
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+
+        );
+        echo  json_encode($returnData);
+    }
+
+    function cerrar_modal()
+    {
+        $id_mesa = $this->request->getPost('id_mesa');
+
+        $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
+
+        $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['id']);
+        $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
+
+
+        $returnData = array(
+            "resultado" => 1,
+
+            "productos" => view('pedidos/productos_pedido', [
+                "productos" => $productos_pedido,
+            ]),
+            "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
+
+
+        );
+        echo  json_encode($returnData);
+    }
+
+
+    function descontar_dinero()
+    {
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $valor_descontar = $this->request->getPost('valor');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+        $valor_unitario = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto',  $codigo_interno['codigointernoproducto'])->first();
+        $cantidad = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto)->first();
+
+        if ($valor_descontar > 0 && $valor_descontar <= $valor_unitario['valorventaproducto']) {
+            $nuevo_precio = $valor_unitario['valorventaproducto'] - $valor_descontar;
+
+            $model = model('productoPedidoModel');
+            $actualizar = $model->set('valor_unitario', $nuevo_precio);
+            $actualizar = $model->set('valor_total', $nuevo_precio * $cantidad['cantidad_producto']);
+            $actualizar = $model->where('id',  $id_producto);
+            $actualizar = $model->update();
+
+
+            $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_producto)->first();
+
+            $total = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->findAll();
+
+
+            $model = model('pedidoModel');
+            $pedido = $model->set('valor_total', $total[0]['valor_total']);
+            $pedido = $model->where('id', $numero_pedido['numero_de_pedido']);
+            $pedido = $model->update();
+
+
+            $returnData = array(
+                "resultado" => 1, //Falta plata 
+                "precio_producto" => number_format($nuevo_precio, 0, ',', '.')
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+
+    function nombre_producto()
+    {
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+        $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto',  $codigo_interno['codigointernoproducto'])->first();
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+            "nombre_producto" => "¿Esta seguro de generar cortesia para el producto: " . $nombre_producto['nombreproducto'] . "?"
+        );
+        echo  json_encode($returnData);
+    }
+
+
+    function generar_cortesia()
+    {
+
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+        $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto',  $codigo_interno['codigointernoproducto'])->first();
+
+        $model = model('productoPedidoModel');
+        $actualizar = $model->set('valor_unitario', 0);
+        $actualizar = $model->set('valor_total', 0);
+        $actualizar = $model->where('id',  $id_producto);
+        $actualizar = $model->update();
+
+        $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_producto)->first();
+
+        $total = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->findAll();
+
+
+        $model = model('pedidoModel');
+        $pedido = $model->set('valor_total', $total[0]['valor_total']);
+        $pedido = $model->where('id', $numero_pedido['numero_de_pedido']);
+        $pedido = $model->update();
+
+        $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
+        $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['numero_de_pedido'])->first();
+
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+            "nombre_producto" => "¿Esta seguro de generar cortesia para el producto: " . $nombre_producto['nombreproducto'] . "?",
+            "productos" => view('pedidos/productos_pedido', [
+                "productos" => $productos_pedido,
+            ]),
+            "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
         );
         echo  json_encode($returnData);
     }

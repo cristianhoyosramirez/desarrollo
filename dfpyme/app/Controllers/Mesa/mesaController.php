@@ -190,43 +190,34 @@ class mesaController extends BaseController
 
     public function intercambio_mesa()
     {
-       /*  $id_mesa_origen = 54;
-        $id_mesa_destino = 55 */;
+
         $id_mesa_origen = $_POST['id_mesa_origen'];
+        //$id_mesa_origen = 300;
+        // $id_mesa_destino = 301;
         $id_mesa_destino = $_POST['id_mesa_destino'];
 
         $tiene_pedido = model('pedidoModel')->select('fk_mesa')->where('fk_mesa', $id_mesa_destino)->first();
 
         if (!empty($tiene_pedido['fk_mesa'])) {
 
-
-
             $numero_pedido_mesa_destino = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa_destino)->first();
             $valor_mesa_destino = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa_destino)->first();
             $numero_pedido_mesa_origen = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa_origen)->first();
             $valor_mesa_origen = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa_origen)->first();
 
-
-            $model = model('pedidoModel');
-            $mesas = $model->set('valor_total', $valor_mesa_destino['valor_total'] + $valor_mesa_origen['valor_total']);
-            $mesas = $model->where('fk_mesa', $id_mesa_destino);
-            $mesas = $model->update();
-
-            $model = model('pedidoModel');
-            $borrar = $model->where('fk_mesa', $id_mesa_origen);
-            $borrar = $model->delete();
-
-
             $data = [
-                'numero_de_pedido' => $id_mesa_destino,
+                'numero_de_pedido' =>  $numero_pedido_mesa_destino['id'],
 
             ];
 
             $model = model('productoPedidoModel');
             $mesas = $model->set($data);
-            $mesas = $model->where('numero_de_pedido', $id_mesa_destino);
+            $mesas = $model->where('numero_de_pedido', $numero_pedido_mesa_origen['id']);
             $mesas = $model->update();
 
+            $model = model('pedidoModel');
+            $borrar = $model->where('fk_mesa', $id_mesa_origen);
+            $borrar = $model->delete();
 
             $cantidad_de_producto = model('productoPedidoModel')->selectSum('cantidad_producto')->where('numero_de_pedido', $numero_pedido_mesa_destino['id'])->find();
 
@@ -236,8 +227,8 @@ class mesaController extends BaseController
             ];
 
 
-            $total = model('productoPedidoModel')->selectSum('valor_total')->findAll();
-
+            $total = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido_mesa_destino['id'])->findAll();
+            
             $model = model('pedidoModel');
             $mesas = $model->set('valor_total', $total[0]['valor_total']);
             $mesas = $model->where('fk_mesa', $id_mesa_destino);
