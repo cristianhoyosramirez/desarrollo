@@ -198,13 +198,30 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_cantidad_partir_factura.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/meseros.js"></script>
 
+
     <script>
-        function asignar_p1() {
+        function flecha_atras(){
+            $("#operaciones").show();
+            $("#nota").hide();
+            $("#descuento").hide();
+            $("#descuento_porcentaje").hide();
+            $("#edicion_precio").hide();
+            $("#descuentos_manuales").hide();
+            $("#lista_precios").hide();
+
+        }
+    </script>
+
+
+
+    <script>
+        function asignar_p1(valor) {
             var url = document.getElementById("url").value;
             var id_producto_pedido = document.getElementById("id_producto_pedido").value;
             $.ajax({
                 data: {
-                    id_producto_pedido
+                    id_producto_pedido,
+                    valor
                 },
                 url: url +
                     "/" +
@@ -214,18 +231,8 @@
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
 
-                        sweet_alert('success', +resultado.nombre_producto + " dado en cortesia ")
-                        $("#modal_cortesia").modal("hide");
-                        $('#mesa_productos').html(resultado.productos);
-                        $("#valor_pedido").html(resultado.total_pedido);
-                        $("#subtotal_pedido").val(resultado.total_pedido);
-                        $("#operaciones").show();
-                        $("#nota").hide();
-                        $("#descuento").hide();
-                        $("#descuento_porcentaje").hide();
-                        $("#edicion_precio").hide();
-                        $("#descuentos_manuales").hide();
-                        $("#lista_precios").hide();
+
+                        sweet_alert('success', 'Asignación de precio correcta ')
 
 
                     }
@@ -234,39 +241,7 @@
         }
     </script>
 
-    <script>
-        function asignar_p2() {
-            $.ajax({
-                data: {
-                    id_producto_pedido
-                },
-                url: url +
-                    "/" +
-                    "eventos/generar_cortesia",
-                type: "post",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 1) {
 
-                        sweet_alert('success', +resultado.nombre_producto + " dado en cortesia ")
-                        $("#modal_cortesia").modal("hide");
-                        $('#mesa_productos').html(resultado.productos);
-                        $("#valor_pedido").html(resultado.total_pedido);
-                        $("#subtotal_pedido").val(resultado.total_pedido);
-                        $("#operaciones").show();
-                        $("#nota").hide();
-                        $("#descuento").hide();
-                        $("#descuento_porcentaje").hide();
-                        $("#edicion_precio").hide();
-                        $("#descuentos_manuales").hide();
-                        $("#lista_precios").hide();
-
-
-                    }
-                },
-            });
-        }
-    </script>
 
 
     <script>
@@ -669,7 +644,25 @@
 
 
     <script>
-        $("#tipo_persona").select2({
+        $("#impuestos").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+            closeOnSelect: true
+        });
+
+        $("#responsabilidad_fiscal").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: false,
+            dropdownParent: $("#crear_cliente"),
+        });
+        $("#municipios").select2({
             width: "100%",
             //placeholder: "Filtrar productos por categoria",
             language: "es",
@@ -677,6 +670,22 @@
             allowClear: true,
             dropdownParent: $("#crear_cliente"),
         });
+        $("#ciudad").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: true,
+            dropdownParent: $("#crear_cliente"),
+        });
+        $("#tipo_persona").select2({
+            width: "100%",
+            //placeholder: "Filtrar productos por categoria",
+            language: "es",
+            theme: "bootstrap-5",
+            allowClear: false,
+            dropdownParent: $("#crear_cliente"),
+        })
 
         $("#tipo_documento").select2({
             width: "100%",
@@ -692,7 +701,7 @@
             //placeholder: "Filtrar productos por categoria",
             language: "es",
             theme: "bootstrap-5",
-            allowClear: true,
+            allowClear: false,
             dropdownParent: $("#crear_cliente"),
         });
         $("#tipo_ventas").select2({
@@ -700,7 +709,7 @@
             //placeholder: "Filtrar productos por categoria",
             language: "es",
             theme: "bootstrap-5",
-            allowClear: true,
+            allowClear: false,
             dropdownParent: $("#crear_cliente"),
         });
         $("#departamento").select2({

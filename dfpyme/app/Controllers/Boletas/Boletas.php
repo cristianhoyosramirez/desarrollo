@@ -357,4 +357,123 @@ class Boletas extends BaseController
         );
         echo  json_encode($returnData);
     }
+
+    function asignar_p1()
+    {
+
+        $valor = $this->request->getPost('valor');
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+
+        $valor_venta = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto', $codigo_interno['codigointernoproducto'])->first();
+        $descto_mayor = model('productoModel')->select('descto_mayor')->where('codigointernoproducto', $codigo_interno['codigointernoproducto'])->first();
+        $cantidad = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto)->first();
+
+
+        $temp_precio_2 = ($descto_mayor['descto_mayor'] * $valor_venta['valorventaproducto']) / 100;
+        $precio_2 = $valor_venta['valorventaproducto'] - $temp_precio_2;
+        $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_producto)->first();
+        $model = model('productoPedidoModel');
+        if ($valor == 1) {
+
+            $actualizar = $model->set('valor_unitario', $valor_venta['valorventaproducto']);
+            $actualizar = $model->set('valor_total', $valor_venta['valorventaproducto'] * $cantidad['cantidad_producto']);
+            $actualizar = $model->where('id',  $id_producto);
+            $actualizar = $model->update();
+        }
+        if ($valor == 2) {
+
+            $actualizar = $model->set('valor_unitario', $precio_2);
+            $actualizar = $model->set('valor_total', $precio_2 * $cantidad['cantidad_producto']);
+            $actualizar = $model->where('id',  $id_producto);
+            $actualizar = $model->update();
+        }
+
+        $total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->findAll();
+        $model = model('pedidoModel');
+        $actualizar = $model->set('valor_total', $total_pedido[0]['valor_total']);
+        $actualizar = $model->where('id',  $numero_pedido['numero_de_pedido']);
+        $actualizar = $model->update();
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+
+        );
+        echo  json_encode($returnData);
+    }
+
+    function municipios()
+    {
+        //$id_departamento = '749';
+        $id_departamento = $this->request->getPost('valorSelect1');
+        // $id_departamento = strval($id_departamento);
+
+
+        $code_depto = model('departamentoModel')->select('code')->where('iddepartamento', $id_departamento)->first();
+
+        //dd( $id_depto);
+
+        // Supongamos que tienes un modelo que obtiene las opciones en función del valor seleccionado.
+        $municipios = model('municipiosModel')->where('code_depto', $code_depto['code'])->orderBy('nombre', 'asc')->findAll();
+        //dd($municipios);
+        $ciudad = model('ciudadModel')->where('iddepartamento', $id_departamento)->orderBy('nombreciudad', 'asc')->findAll();
+
+
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata
+            'municipios' => view('municipios/municipios', [
+                'municipios' => $municipios
+            ]),
+            'ciudad' => view('municipios/ciudad', [
+                'ciudad' => $ciudad
+            ])
+
+        );
+        echo  json_encode($returnData);
+
+
+
+
+        /* 
+       $data = array(
+            'municipios' => view('municipios/municipios', [
+                'municipios' => $municipios
+            ]),
+            'ciudad' => view('municipios/ciudad', [
+                'ciudad' => $ciudad
+            ])
+        );  */
+
+        /*  $data = array();
+
+        foreach ($municipios as $opcion) {
+            $data[] = array(
+                'value' => $opcion['idciudad'], // Reemplaza 'id' con el campo adecuado de tu base de datos.
+                'text' => $opcion['nombreciudad'], // Reemplaza 'nombre' con el campo adecuado de tu base de datos.
+            );
+        } */
+
+        //return $this->response->setJSON($data);
+
+    }
+
+    function ciudad()
+    {
+        $code_departamento = $this->request->getPost('valorSelect1');
+
+        // Supongamos que tienes un modelo que obtiene las opciones en función del valor seleccionado.
+        $municipios = model('municipiosModel')->where('iddepartamento', $code_departamento)->findAll();
+
+        $data = array();
+
+        foreach ($municipios as $opcion) {
+            $data[] = array(
+                'value' => $opcion['idciudad'], // Reemplaza 'id' con el campo adecuado de tu base de datos.
+                'text' => $opcion['nombreciudad'], // Reemplaza 'nombre' con el campo adecuado de tu base de datos.
+            );
+        }
+
+        return $this->response->setJSON($data);
+    }
 }

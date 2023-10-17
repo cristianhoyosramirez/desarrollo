@@ -54,7 +54,7 @@
                 <form class="row g-3 align-items-center">
                     <div class="col-md-6">
                         <label for="inputEmail4" class="form-label">Nombres y apellidos</label>
-                        <input type="email" class="form-control" id="nombre" name="nombre" onkeyup="limpiar_campo()">
+                        <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="limpiar_campo()">
                         <p id="error_nombre" class="text-danger"></p>
                     </div>
                     <div class="col-md-6"><br>

@@ -465,6 +465,8 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('descontar_dinero', 'Boletas::descontar_dinero');
     $routes->post('nombre_producto', 'Boletas::nombre_producto');
     $routes->post('generar_cortesia', 'Boletas::generar_cortesia');
+    $routes->post('asignar_p1', 'Boletas::asignar_p1');
+    $routes->post('municipios', 'Boletas::municipios');
 });
 $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->post('ventas', 'Ventas::ventas');

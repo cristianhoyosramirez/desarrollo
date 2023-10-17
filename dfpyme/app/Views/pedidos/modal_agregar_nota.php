@@ -15,6 +15,25 @@
                 </div>
                 <hr>
 
+                <div>
+                    <div class="col">
+                        <p class="text-start"> </p>
+                    </div>
+                </div>
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item cursor-pointer" onclick="flecha"><a  type="button"><!-- Download SVG icon from http://tabler-icons.io/i/arrow-narrow-left -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <line x1="5" y1="12" x2="9" y2="16" />
+                                    <line x1="5" y1="12" x2="9" y2="8" />
+                                </svg></a></li>
+
+                    </ol>
+                </nav>
+
                 <div class="row" id="operaciones">
                     <div class="col-2">
 
@@ -218,7 +237,7 @@
                     <p class="text-center text-primary h3">Lista de precios </p>
                     <div class="row">
                         <div class="col-3"></div>
-                        <div class="col-3 cursor-pointer" onclick="asignar_p1()">
+                        <div class="col-3 cursor-pointer" onclick="asignar_p1(1)">
                             <div class="card card-inactive">
                                 <div class="card-body">
                                     <p class="text-center h4 text-dark">Precio 1 </p>
@@ -227,7 +246,7 @@
                             </div>
 
                         </div>
-                        <div class="col-3 cursor-pointer" onclick="asignar_p2()">
+                        <div class="col-3 cursor-pointer" onclick="asignar_p1(2)">
                             <div class="card card-inactive">
                                 <div class="card-body">
                                     <p class="text-center h4 text-dark">Precio 2 </p>

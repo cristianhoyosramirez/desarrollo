@@ -33,7 +33,194 @@ class ClienteController extends BaseController
     public function agregar()
     {
 
-        $nit = $_POST['cedula'];
+
+        if (
+            !$this->validate([
+                'tipo_persona' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'identificacion' => [
+                    'rules' => 'required|is_unique[cliente.nitcliente]',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                        'is_unique' => 'Registro ya existe',
+                    ],
+                ],
+                'dv' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'nombres' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'apellidos' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'razon_social' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesarios',
+                    ],
+                ],
+                'nombre_comercial' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'direccion' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'departamento' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'ciudad' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'municipios' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'codigo_postal' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'correo_electronico' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'telefono' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'impuestos' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+                'responsabilidad_fiscal' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Dato necesario',
+                    ],
+                ],
+            ])
+        ) {
+            $errors = $this->validator->getErrors();
+            echo json_encode(['code' => 0, 'error' => $errors]);
+        } else {
+
+            $id_ciudad = $this->request->getPost('ciudad');
+
+            $code = model('municipiosModel')->select('code')->where('id', $this->request->getPost('municipios'))->first();
+
+
+            /*  $data = [
+                'nitcliente' => '25170832',
+                'idregimen' => 1,
+                'nombrescliente' => 'liliana',
+                'telefonocliente' => '3113155025',
+                'celularcliente' => '3113155025',
+                'emailcliente' => 'cc',
+                'idciudad' =>  319,
+                'direccioncliente' => 'san clemewnte',
+                'estadocliente' => true,
+                'idtipo_cliente' => $_POST['tipo_ventas'],
+                'id_clasificacion' => $_POST['clasificacion'],
+                'name' => $_POST['nombres'],
+                'last_name' => $_POST['apellidos'],
+                'dv' => $_POST['dv'],
+                'type_person' => $_POST['tipo_persona'],
+                'type_document' => $_POST['tipo_documento'],
+                'name_comercial' => $_POST['nombre_comercial'],
+                'is_customer' => true
+            ]; */
+            $data = [
+                'nitcliente' => $_POST['identificacion'],
+                'idregimen' => $_POST['regimen'],
+                'nombrescliente' => $_POST['nombres'],
+                'telefonocliente' => $_POST['telefono'],
+                'celularcliente' => $_POST['telefono'],
+                'emailcliente' => $_POST['correo_electronico'],
+                'idciudad' =>  $id_ciudad,
+                'direccioncliente' => $_POST['direccion'],
+                'estadocliente' => true,
+                'idtipo_cliente' => $_POST['tipo_ventas'],
+                'id_clasificacion' => $_POST['clasificacion'],
+                'name' => $_POST['nombres'],
+                'last_name' => $_POST['apellidos'],
+                'dv' => $_POST['dv'],
+                'type_person' => $_POST['tipo_persona'],
+                'type_document' => $_POST['tipo_documento'],
+                'name_comercial' => $_POST['nombre_comercial'],
+                'is_customer' => true
+            ];
+
+            $insert = model('clientesModel')->insert($data);
+
+
+            $model = model('ciudadModel');
+            $ciudad = $model->set('code', $code['code']);
+            $ciudad = $model->set('code_postal', $_POST['codigo_postal']);
+            $ciudad = $model->where('idciudad', $id_ciudad);
+            $ciudad = $model->update();
+
+            $descripcion_impuesto = model('impuestosModel')->select('descripcion')->where('codigo', $_POST['impuestos'])->first();
+
+            $impuestos = [
+                'nit_cliente' => $_POST['identificacion'],
+                'codigo' => $_POST['impuestos'],
+                'nombre' => 'No aplica',
+                'descripcion' => $descripcion_impuesto['descripcion']
+            ];
+
+
+            $insertar_impuestos = model('detallesTributariosModel')->insert($impuestos);
+
+
+            
+
+            $returnData = array(
+                "code" => 1,
+                "cliente"=>$_POST['identificacion']." ".$_POST['nombres']." ".$_POST['apellidos'],
+                "nit_cliente"=>$_POST['identificacion']
+             
+            );
+            echo  json_encode($returnData);
+        }
+
+
+
+        /*  $nit = $_POST['cedula'];
         //$nit=12345678901;
         $miCadena = (string)$nit;
         $existe_cliente = model('clientesModel')->select('nitcliente')->where('nitcliente', $miCadena)->first();
@@ -61,19 +248,7 @@ class ClienteController extends BaseController
                 'idtipo_cliente' => $_POST['tipo_cliente'],
                 'id_clasificacion' => $_POST['clasificacion_cliente']
             ];
-            /*  $data = [
-                'nitcliente' => $miCadena,
-                'idregimen' => 1,
-                'nombrescliente' => 'abc',
-                'telefonocliente' => '123',
-                'celularcliente' =>'123',
-                'emailcliente' => 'ccc',
-                'idciudad' => '1043',
-                'direccioncliente' => 'abc',
-                'idtipo_cliente' => 1,
-                'id_clasificacion' => 1
-            ]; */
-
+           
             $insert = model('clientesModel')->insert($data);
             if ($insert) {
                 $ultimo_id_cliente = model('clientesModel')->insertID;
@@ -93,7 +268,7 @@ class ClienteController extends BaseController
                 "resultado" => 1, //Falta plata  
             );
             echo  json_encode($returnData);
-        }
+        } */
     }
 
     public function clientes_autocompletado()

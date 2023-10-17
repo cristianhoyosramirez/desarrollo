@@ -9,6 +9,6 @@ class departamentoModel extends Model
     protected $table      = 'departamento';
     // Uncomment below if you want add primary key
    // protected $primaryKey = 'id';
-    protected $allowedFields = [ 'nombredepartamento', 'idpais'];
+    protected $allowedFields = [ 'nombredepartamento', 'idpais','code'];
    
 }

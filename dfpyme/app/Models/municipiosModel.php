@@ -6,9 +6,13 @@ use CodeIgniter\Model;
 
 class municipiosModel extends Model
 {
-    protected $table      = 'ciudad';
+    protected $table      = 'municipio';
     // Uncomment below if you want add primary key
-   // protected $primaryKey = 'id';
-   // protected $allowedFields = ['codigocategoria','nombrecategoria', 'descripcioncategoria', 'estadocategoria','permitir_categoria','impresora'];
-   
+    // protected $primaryKey = 'id';
+    protected $allowedFields = [
+        'code_depto',
+        'code',
+        'depto',
+        'nombre'
+    ];
 }
