@@ -382,9 +382,11 @@ class reporteDeVentasController extends BaseController
 
         $aperturas = model('aperturaModel')->findAll();
 
+        
+
         if (!empty($aperturas)) {
 
-
+        
 
             if (empty($tiene_cierre)) {
                 $estado = "ABIERTA";
@@ -396,7 +398,7 @@ class reporteDeVentasController extends BaseController
 
                 $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 $propinas = $temp_propinas[0]['propina'];
-
+                
 
                 $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 $ingresos_transaccion = $transaccion[0]['transferencia'];
@@ -404,7 +406,7 @@ class reporteDeVentasController extends BaseController
               
                 $valor_cierre = 0;
                 $devolucion_venta = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $ultimo_apertura['id'])->findAll();
-
+                
                 if (empty($devolucion_venta)) {
                     $devoluciones = 0;
                 } else if (!empty($devolucion_venta)) {
@@ -412,7 +414,7 @@ class reporteDeVentasController extends BaseController
                 }
                 //$total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
                 $total_retiros = model('retiroFormaPagoModel')->selectSum('valor')->where('id_apertura', $ultimo_apertura['id'])->findAll();
-
+                
 
                 if (empty($total_retiros[0]['valor'])) {
                     $retiros = 0;
@@ -496,9 +498,9 @@ class reporteDeVentasController extends BaseController
                 'fecha_apertura' => $fecha_apertura['fecha'],
                 'fecha_cierre' => $cierre,
                 'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-                'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion)-$propinas, 0, ",", "."),
+                'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion)+$valor_apertura['valor'], 0, ",", "."),
                 'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
-                'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo)-$propinas, 0, ",", "."),
+                'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo)+$valor_apertura['valor'], 0, ",", "."),
                 'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
                 'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
                 'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
@@ -1408,7 +1410,7 @@ class reporteDeVentasController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
 

@@ -976,6 +976,7 @@ class cajaDiariaController extends BaseController
     function detalle_movimiento_de_caja()
     {
 
+        //$ultimo_apertura = 37;
         $ultimo_apertura = $this->request->getPost('id');
 
         $estado = "";
@@ -1000,26 +1001,29 @@ class cajaDiariaController extends BaseController
         if (empty($tiene_cierre)) {
             $estado = "ABIERTA";
             $fecha_cierre = 'POR DEFINIR';
-            $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+            //$efectivo = model('pagosModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+            $efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $ultimo_apertura)->findAll();
             if (empty($efectivo)) {
                 $ingresos_efectivo = 0;
             } else if (!empty($efectivo)) {
-                $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
+                $ingresos_efectivo = $efectivo[0]['efectivo'];
             }
 
-            $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+            //$transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+            $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_apertura)->findAll();
             if (empty($transaccion)) {
                 $ingresos_transaccion = 0;
             } else if (!empty($transaccion)) {
-                $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
+                $ingresos_transaccion = $transaccion[0]['transferencia'];
             }
             $valor_cierre = 0;
-            $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+           // $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+           $devolucion_venta = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $ultimo_apertura)->findAll();
 
             if (empty($devolucion_venta)) {
                 $devoluciones = 0;
             } else if (!empty($devolucion_venta)) {
-                $devoluciones = $devolucion_venta[0]['total_devoluciones'];
+                $devoluciones = $devolucion_venta[0]['valor_total_producto'];
             }
 
             /*   $retiros = model('retiroModel')->findAll();
@@ -1034,13 +1038,14 @@ class cajaDiariaController extends BaseController
                 $actualizar_retiro = $model->update();
             } */
 
-            $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+            //$total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+            $total_retiros = model('retiroFormaPagoModel')->selectSum('valor')->where('id_apertura', $ultimo_apertura)->findAll();
 
-            if (empty($total_retiros[0]['total_retiros'])) {
+            if (empty($total_retiros[0]['valor'])) {
                 $retiros = 0;
             }
-            if (!empty($total_retiros[0]['total_retiros'])) {
-                $retiros = $total_retiros[0]['total_retiros'];
+            if (!empty($total_retiros[0]['valor'])) {
+                $retiros = $total_retiros[0]['valor'];
             }
 
             $efectivo_cierre = 0;
@@ -1125,9 +1130,9 @@ class cajaDiariaController extends BaseController
             'fecha_apertura' => "Fecha apertura: " . $fecha_apertura['fecha'],
             'fecha_cierre' => "Fecha cierre: " . $fecha_cierre,
             'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-            'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion)-$propinas, 0, ",", "."),
+            'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion+$valor_apertura['valor']), 0, ",", "."),
             'ingresos_transaccion' =>  "$" . number_format($propinas, 0, ",", "."),
-            'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo)-$propinas, 0, ",", "."),
+            'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo)+$valor_apertura['valor'], 0, ",", "."),
             'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
             'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
             'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
@@ -1145,7 +1150,7 @@ class cajaDiariaController extends BaseController
     function reporte_de_ventas()
     {
 
-        //$id_apertura = 24;
+        //$id_apertura = 36;
         $id_apertura = $this->request->getPost('id_apertura');
 
 
@@ -1682,8 +1687,8 @@ class cajaDiariaController extends BaseController
     function informe_fiscal_desde_caja()
     {
 
-        $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 25;
+        $id_apertura = $this->request->getPost('id_apertura'); 
+        //$id_apertura = 36;
         $fecha_y_hora_cierre = "";
         $ventas_credito = "";
 
@@ -1694,7 +1699,7 @@ class cajaDiariaController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
         /**

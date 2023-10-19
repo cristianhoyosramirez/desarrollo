@@ -476,4 +476,26 @@ class Boletas extends BaseController
 
         return $this->response->setJSON($data);
     }
+
+
+    function cancelar_descuentos(){
+        $id_producto = $this->request->getPost('id_producto_pedido');
+        $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
+
+        $valor_venta = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto', $codigo_interno['codigointernoproducto'])->first(); 
+        $cantidad = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto)->first();
+        $model = model('productoPedidoModel');
+        $actualizar = $model->set('valor_unitario', $valor_venta['valorventaproducto']);
+        $actualizar = $model->set('valor_total', $valor_venta['valorventaproducto'] * $cantidad['cantidad_producto']);
+        $actualizar = $model->where('id',  $id_producto);
+        $actualizar = $model->update();
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+
+        );
+        echo  json_encode($returnData);
+    
+    
+    }
 }

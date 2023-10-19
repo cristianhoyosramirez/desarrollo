@@ -108,6 +108,7 @@
     <script src="<?= base_url() ?>/Assets/script_js/consultas_y_reportes/edicion_de_apertura_sin_cierre.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/consultas_y_reportes/edicion_de_apertura_sin_cierre.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/consultas_y_reportes/actualizar_efectivo_usuario.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert_start.js"></script>
     <!-- Sweet alert -->
     <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
     <!-- Calendario -->

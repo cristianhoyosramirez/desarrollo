@@ -444,6 +444,8 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->get('gestion_pedidos', 'TomaPedidosController::index');
     $routes->post('buscar_mesero', 'Mesas::buscar_mesero');
     $routes->get('lista_electronicas', 'Imprimir::lista_electronicas');
+    $routes->post('imprimir_factura_electronica', 'Imprimir::imprimir_factura_electronica');
+    $routes->post('detalle_f_e', 'Imprimir::detalle_f_e');
 });
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -467,6 +469,7 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('generar_cortesia', 'Boletas::generar_cortesia');
     $routes->post('asignar_p1', 'Boletas::asignar_p1');
     $routes->post('municipios', 'Boletas::municipios');
+    $routes->post('cancelar_descuentos', 'Boletas::cancelar_descuentos');
 });
 $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->post('ventas', 'Ventas::ventas');

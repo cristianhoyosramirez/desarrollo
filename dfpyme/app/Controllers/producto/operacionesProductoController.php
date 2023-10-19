@@ -573,7 +573,7 @@ class operacionesProductoController extends BaseController
 
     function borrar_producto_inventario()
     {
-        // echo $this->request->getPost('codigo_interno_producto'); exit();
+        $codigo_interno_producto=$this->request->getPost('codigo_interno_producto'); 
         $tiene_movimientos = model('productoFacturaVentaModel')->where('codigointernoproducto', $this->request->getPost('codigo_interno_producto'));
 
         if (!empty($tiene_movimientos)) {
@@ -584,7 +584,7 @@ class operacionesProductoController extends BaseController
             ];
             $model = model('productoModel');
             $actualizar = $model->set($data);
-            $actualizar = $model->where('codigointernoproducto', '98');
+            $actualizar = $model->where('codigointernoproducto', $codigo_interno_producto);
             $actualizar = $model->update();
 
             echo json_encode(
@@ -596,7 +596,7 @@ class operacionesProductoController extends BaseController
         }
 
         if (empty($tiene_movimientos)) {
-            $borrar_producto = model('productoModel')->where('codigointernoproducto', '98');
+            $borrar_producto = model('productoModel')->where('codigointernoproducto', $codigo_interno_producto);
             $borrar_producto->delete();
 
             if ($borrar_producto) {

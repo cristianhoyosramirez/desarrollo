@@ -15,6 +15,9 @@ function pedido_mesa(id_mesa, nombre_mesa) {
         mesas.style.display = "none";
     }
 
+    $("#lista_todas_las_mesas").modal("hide");
+    $('#mesasOffcanvas').offcanvas('hide');
+
     let url = document.getElementById("url").value;
     $.ajax({
         data: {

@@ -1,11 +1,17 @@
 <?php $user_session = session(); ?>
-<?= $this->extend('template/template') ?>
+<?= $this->extend('template/consultas_reportes') ?>
 <?= $this->section('title') ?>
 DUPLICADO DE FACTURA
 <?= $this->endSection('title') ?>
 <?= $this->section('content') ?>
 <!--Sart row-->
-
+<style>
+    /* Agregar estilos CSS para el desplazamiento */
+    .scrolling-table {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+</style>
 <div class="container">
     <div class="row text-center align-items-center flex-row-reverse">
         <div class="col-lg-auto ms-lg-auto">
@@ -18,7 +24,7 @@ DUPLICADO DE FACTURA
             </nav>
         </div>
         <div class="col-lg-auto ms-lg-auto">
-            <p class="text-primary h3">REIMPRESIÓN DE FACTURA  </p>
+            <p class="text-primary h3">Facturas electrónicas </p>
         </div>
         <div class="col-12 col-lg-auto mt-3 mt-lg-0">
             <a class="nav-link"><img style="cursor:pointer;" src="<?php echo base_url(); ?>/Assets/img/atras.png" width="20" height="20" onClick="history.go(-1);" title="Sección anterior"></a>
@@ -31,24 +37,67 @@ DUPLICADO DE FACTURA
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form class="row g-3" id="rango_de_fechas" action="<?= base_url('consultas_y_reportes/facturas_por_rango_de_fechas') ?>" method="POST">
-                    <div class="col-md-6">
-                        <label for="inputEmail4" class="form-label">Fecha inicial </label>
-                        <input type="date" class="form-control" id="fecha_inicial" name="fecha_inicial" value="<?php echo date('Y-m-d')  ?>">
-                        <input type="hidden" value="<?= base_url() ?>" id="url">
-                        <input type="hidden" value="<?php echo $user_session->id_usuario; ?>" id="id_usuario" name="id_usuario">
-                        <div class="text-danger"><?= session('errors.fecha_inicial') ?></div>
+                <div class="container">
+
+                    <div class="table-responsive scrolling-table">
+                        <input type="hidden" value="<?php echo base_url() ?>" id="url">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <td>Número </th>
+                                    <td>Cliente </th>
+                                    <td>ID cliente</th>
+                                    <td>Fecha</th>
+                                    <td>Hora</th>
+                                    <td>Estado</th>
+                                    <td>Neto</th>
+                                    <td>Accion</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($facturas as $detalle) {
+                                    $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $detalle['nit_cliente'])->first(); ?>
+                                    <tr>
+                                        <td><?php echo $detalle['numero'] ?></td>
+                                        <td><?php echo $nombre_cliente['nombrescliente'] ?></td>
+                                        <td><?php echo $detalle['nit_cliente'] ?></td>
+                                        <td><?php echo $detalle['fecha'] ?></td>
+                                        <td><?php $hora = $detalle['hora']; // Convertir la hora a un formato AM/PM
+                                            $hora_am_pm = date("h:i A", strtotime($hora));
+
+                                            echo $hora_am_pm; ?></td>
+                                        <td><?php if ($detalle['id_status'] == 1) {
+                                                echo "PENDIENTE";
+                                            } else if ($detalle['id_status'] == 2) {
+                                                echo "FIRMADO";
+                                            } ?></td>
+
+                                        <td><?php echo "$ " . number_format($detalle['total'], 0, ",", ".") ?></td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <a href="#" class="btn btn-outline-success w-100" onclick="imprimir(<?php echo $detalle['id'] ?>)">
+                                                        Imprimir
+                                                    </a>
+                                                </div>
+                                                <div class="col">
+                                                    <a href="#" class="btn btn-outline-secondary w-100" onclick="detalle_f_e(<?php echo $detalle['id'] ?>)">
+                                                        Detalle
+                                                    </a>
+                                                </div>
+
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                <?php  } ?>
+                                <!-- Repetir filas según sea necesario -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-md-6">
-                        <label for="inputPassword4" class="form-label">Fecha final </label>
-                        <input type="date" class="form-control" id="fecha_final" name="fecha_final"   value="<?php echo date('Y-m-d')  ?>" >
-                        <div class="text-danger"><?= session('errors.fecha_final') ?></div>
-                    </div>
-                    <div class="col-12">
-                        <!-- <a onclick="consultar_facturas_por_rango_de_fechas()" class="btn btn-primary">Buscar facturas</a>-->
-                        <button type="submit" class="btn btn-primary">Buscar facturas</button>
-                    </div>
-                </form>
+                </div>
 
             </div>
         </div>
@@ -56,5 +105,99 @@ DUPLICADO DE FACTURA
 
 </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="detalle_factura_electronica" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detalle de factura electrónica</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="tabla_f_e"></div>
+                <p class="text-end h3" id="total"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function imprimir(id_factura) {
+
+        let url = document.getElementById("url").value;
+
+        $.ajax({
+            data: {
+                id_factura,
+            },
+            url: url + "/" + "pedidos/imprimir_factura_electronica",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+
+
+
+
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 500,
+                        timerProgressBar: false,
+
+                    })
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Impresion de prefactura electrónica '
+                    })
+
+                    /**
+                     * Aca llamo a la funcion sweet alert y se le pasan los parametros.
+                     */
+                    sweet_alert('success', 'Nota de producto actualizada ');
+                }
+            },
+        });
+    }
+</script>
+
+<script>
+    function detalle_f_e(id_factura) {
+
+        let url = document.getElementById("url").value;
+
+        $.ajax({
+            data: {
+                id_factura,
+            },
+            url: url + "/" + "pedidos/detalle_f_e",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+
+
+                    $("#detalle_factura_electronica").modal("show");
+                    $("#tabla_f_e").html(resultado.f_e);
+                    $("#total").html(resultado.total);
+
+
+
+                }
+            },
+        });
+    }
+</script>
 <?= $this->endSection('content') ?>
 <!-- end row -->

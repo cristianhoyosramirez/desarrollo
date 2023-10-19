@@ -25,6 +25,7 @@ class Impuestos
         $id_ico = model('productoModel')->select('id_ico_producto')->where('codigointernoproducto', $codigointerno)->first();
         $valor_ico = model('icoConsumoModel')->select('valor_ico')->where('id_ico', $id_ico['id_ico_producto'])->first();
 
+
         $id_iva = model('productoModel')->select('idiva')->where('codigointernoproducto', $codigointerno)->first();
         $valor_iva = model('ivaModel')->select('valoriva')->where('idiva ', $id_iva['idiva'])->first();
 

@@ -23,7 +23,7 @@
 
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item cursor-pointer" onclick="flecha"><a  type="button"><!-- Download SVG icon from http://tabler-icons.io/i/arrow-narrow-left -->
+                        <li class="breadcrumb-item cursor-pointer" onclick="flecha()"><a type="button"><!-- Download SVG icon from http://tabler-icons.io/i/arrow-narrow-left -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <line x1="5" y1="12" x2="19" y2="12" />
@@ -185,12 +185,30 @@
                             <div class="input-group">
                                 <span class="input-group-text">Descuento en porcentaje </span>
                                 <input type="number" aria-label="First name" class="form-control" placeholder="%" onkeyup="calcular_porcentaje(this.value)">
-                                <input type="text" id="precio_producto" class="form-control" readonly>
+                                <input type="text" id="precio_producto" class="form-control" disabled>
                             </div>
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-4">
+
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-success w-100" onclick="cerrar_modal()">
+                                Confirmar
+                            </a>
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-danger w-100" onclick="cancelar_descuento()">
+                                Cancelar
+                            </a>
                         </div>
                         <div class="col-4">
 
                         </div>
+
                     </div>
 
                 </div>
@@ -210,6 +228,26 @@
                         </div>
 
                     </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-4">
+
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-success w-100" onclick="cerrar_modal()">
+                                Confirmar
+                            </a>
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-danger w-100" onclick="cancelar_descuento()">
+                                Cancelar
+                            </a>
+                        </div>
+                        <div class="col-4">
+
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="row" id="descuentos_manuales" style="display:none">
@@ -223,8 +261,28 @@
                             <div class="input-group">
                                 <span class="input-group-text">Descontar dinero </span>
                                 <input type="number" aria-label="First name" class="form-control" id="descontar_dinero" onkeyup="descontar_dinero(this.value)">
-                                <input type="text" class="form-control" id="restar_plata" readonly>
+                                <input type="text" class="form-control" id="restar_plata" disabled>
                             </div>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-4">
+
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-success w-100" onclick="cerrar_modal()">
+                                Confirmar
+                            </a>
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-danger w-100" onclick="cancelar_descuento()">
+                                Cancelar
+                            </a>
+                        </div>
+                        <div class="col-4">
+
                         </div>
 
                     </div>
@@ -253,6 +311,26 @@
                                     <p id="precio_2" class="text-center"></p>
                                 </div>
                             </div>
+
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-4">
+
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-success w-100" onclick="cerrar_modal()">
+                                Confirmar
+                            </a>
+                        </div>
+                        <div class="col-2">
+                            <a href="#" class="btn btn-outline-danger w-100" onclick="cancelar_descuento()">
+                                Cancelar
+                            </a>
+                        </div>
+                        <div class="col-4">
 
                         </div>
 

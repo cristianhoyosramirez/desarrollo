@@ -19,6 +19,7 @@ function agregar_nota(id_producto, event) {
                 $("#precio_producto").val(resultado.valor_total);
                 $("#descuento_manual").val(resultado.valor_total);
                 $("#restar_plata").val(resultado.valor_total);
+                $("#cambio_manual").val(resultado.valor_total);
 
             }
         },

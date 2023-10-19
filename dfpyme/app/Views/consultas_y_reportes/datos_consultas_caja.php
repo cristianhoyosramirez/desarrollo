@@ -35,12 +35,12 @@ MOVIMIENTO DE CAJA
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                     <span class="d-none d-sm-inline">
-                        <a href="#" class="btn btn-outline-indigo" onclick="consolidado_ventas()">
+                        <a href="#" class="btn btn-outline-indigo" onclick="consolidado_ventas()" title="Consolidado de ventas pos y electrónicas  " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             Consolidado
                         </a>
                     </span>
                     <span class="d-none d-sm-inline">
-                        <a href="#" class="btn btn-outline-green" onclick="imprimir_movimientos(<?php echo $id_apertura ?>)">
+                        <a href="#" class="btn btn-outline-green" onclick="imprimir_movimientos(<?php echo $id_apertura ?>)" title="Imprimir el reporte de caja " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             Imprimir
                         </a>
                     </span>
@@ -48,12 +48,12 @@ MOVIMIENTO DE CAJA
                         <form action="<?= base_url('consultas_y_reportes/reporte_de_ventas') ?>" method="POST" target="_blank">
                             <input type="hidden" value="pantalla" name="tipo_reporte" id="tipo_reporte">
                             <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_apertura">
-                            <button type="button" class="btn btn-outline-warning btn-icon" onclick="reporte_ventas()">Ventas</button>
+                            <button type="button" class="btn btn-outline-warning btn-icon" onclick="reporte_ventas()" title="Reporte de ventas de producto por categoria " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Ventas</button>
                         </form>
                     </span>
                     <form action="<?= base_url('consultas_y_reportes/informe_fiscal_desde_caja') ?>" method="POST">
                         <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_aperturas">
-                        <button type="button" class="btn btn-outline-dark btn-icon" target="_blank" onclick="fiscal()">Fiscal </button>
+                        <button type="button" class="btn btn-outline-dark btn-icon" target="_blank" onclick="fiscal()" title="Informe fiscal de ventas " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Fiscal </button>
                     </form>
                 </div>
             </div>
@@ -101,7 +101,7 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col ">
+                                    <div class="col " title="Valo apertura caja " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-mediu">
                                             Apertura
                                         </div>
@@ -126,7 +126,7 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col cursor-pointer" onclick="ingresos()">
+                                    <div class="col cursor-pointer" onclick="ingresos()" title="Ingresos efectivo + ingresos transacción" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
                                             Ingresos
                                         </div>
@@ -153,7 +153,7 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col cursor-pointer" onclick="reporte_propinas()" title="Detalle de propinas ">
+                                    <div class="col cursor-pointer" onclick="reporte_propinas()" title="Detalle de propinas " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
                                             Propinas
                                         </div>
@@ -166,7 +166,7 @@ MOVIMIENTO DE CAJA
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-3">
-                        <div class="card card-sm">
+                        <div class="card card-sm" title="Ingresos en efectivo + Ingresos transaccion + valor apertura " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
@@ -207,9 +207,9 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col" title="Egresos de caja  " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
-                                            Retiro
+                                            Retiros
                                         </div>
                                         <div class="text-muted">
                                             <p id="retiros"> <?php echo $retiros ?></p>
@@ -219,7 +219,7 @@ MOVIMIENTO DE CAJA
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="devoluciones()">
+                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="devoluciones()" title="Devoluciones de productos " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -288,7 +288,7 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col" title="Debe tener en caja (Apertura + efectivo + transacciones)  " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
                                             Valor caja
                                         </div>
@@ -539,7 +539,7 @@ MOVIMIENTO DE CAJA
                     $('#cambio').html(resultado.cambio)
                     $("#modal_propinas").modal("show");
 
-                    //sweet_alert('success', 'Registros encontrados  ');
+                    sweet_alert_start('success', 'Registros encontrados  ');
                 }
             },
         });
@@ -600,7 +600,7 @@ MOVIMIENTO DE CAJA
                     $('#total').html(resultado.total)
                     $("#consolidado_ventas").modal("show");
 
-                    sweet_alert('success', 'Registros encontrados  ');
+                    sweet_alert_start('success', 'Registros encontrados  ');
                 }
             },
         });

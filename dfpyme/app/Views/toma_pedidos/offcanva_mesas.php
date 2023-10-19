@@ -38,7 +38,8 @@
           </div>
 
           <div class="my-2"></div>
-          <div id="mesas_all">
+          <div id="resultado_mesa">
+        
               <div class="row gx-3 gy-2">
                   <?php foreach ($mesas as $detalle) : ?>
 

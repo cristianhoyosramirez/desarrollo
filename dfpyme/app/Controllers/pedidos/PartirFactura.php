@@ -73,7 +73,7 @@ class PartirFactura extends BaseController
             $impuestos = new Impuestos();
 
             $id_mesa = $this->request->getPost('id_mesa');
-            //$id_mesa = 99;
+            //$id_mesa = 1;
             $base = 0;
             $tributos = 0;
             $factura_electronica = "";

@@ -1,5 +1,18 @@
 <?php if (!empty($meseros)) { ?>
-  <?php foreach ($meseros as $valor) :  $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $valor['id_mesero'])->first();    ?>
+  <?php foreach ($meseros as $valor) :
+
+    $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $valor['id_mesero'])->first();
+
+    if (empty($nombre_mesero['nombresusuario_sistema'])) {
+
+      $mesero = "Mesero general";
+    }
+    if (!empty($nombre_mesero['nombresusuario_sistema'])) {
+
+      $mesero = $nombre_mesero['nombresusuario_sistema'];
+    }
+
+  ?>
 
     <?php $facturas = model('FacturaPropinaModel')->get_propinas($id_apertura, $valor['id_mesero']);   #print_r($facturas);  
     ?>
@@ -10,7 +23,7 @@
         <thead clas="thead-dark">
           <tr class="table-primary">
             <td>
-              <p class="text-dark"><?php echo $nombre_mesero['nombresusuario_sistema'];   ?></p>
+              <p class="text-dark"><?php echo $mesero;   ?></p>
             </td>
             <td></td>
             <td></td>
@@ -83,7 +96,7 @@
 <?php } ?>
 
 
-<?php if (empty($meseros)) { ?>
+<?php if (empty($meseros) or $total_propinas==0) { ?>
 
   <div class="card">
     <div class="card-header text-center">

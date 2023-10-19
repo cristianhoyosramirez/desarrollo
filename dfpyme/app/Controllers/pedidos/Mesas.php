@@ -970,20 +970,21 @@ class Mesas extends BaseController
     function reporte_propinas()
     {
 
-        //$id_apertura = 59;
+        //$id_apertura = 36;
         $id_apertura = $_REQUEST['id_apertura'];
-
 
         $meseros  = model('facturaPropinaModel')->get_meseros($id_apertura);
 
+     
+
         $total_propinas = model('FacturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
-
-
+        
         $returnData = array(
             "resultado" => 1,
             "propinas" => view('pedidos/propinas', [
                 "meseros" => $meseros,
-                "id_apertura" => $id_apertura
+                "id_apertura" => $id_apertura,
+                "total_propinas"=>$total_propinas[0]['valor_propina']
             ]),
             "total_propinas" => "Total: $ " . number_format($total_propinas[0]['valor_propina'], 0, ",", ".")
 
@@ -1059,7 +1060,9 @@ class Mesas extends BaseController
     function crear_mesero()
     {
         $nombre = $this->request->getPost('nombre');
+        //$nombre = 'Chucho';
         $id_mesa = $this->request->getPost('id_mesa');
+        //$id_mesa = 54;
 
         $nombre_mesero = model('usuariosModel')->where('nombresusuario_sistema', $nombre)->first();
 
@@ -1075,26 +1078,26 @@ class Mesas extends BaseController
             'pinusuario_sistema' => "",
         ];
 
-        if (empty($nombre_mesero)) {
+        if (empty($nombre_mesero['nombresusuario_sistema'])) {
             $insert = model('usuariosModel')->insert($data);
 
             // Obtener el último ID insertado
             $ultimo_id = model('usuariosModel')->insertID();
+            $meseros = model('usuariosModel')->where('idtipo', 2)->orderBy('nombresusuario_sistema', 'asc')->find();
 
-
-            $model = model('mesasModel');
-            $actualizar = $model->set('id_mesero', $ultimo_id);
-            $actualizar = $model->where('id', $this->request->getPost('id_mesa'));
-            $actualizar = $model->update();
 
             $returnData = array(
                 "resultado" => 1,
-                "nombre" => $nombre
+                "nombre" => $nombre,
+                "meseros" => view('mesa/meseros', [
+                    'meseros' => $meseros
+                ])
+
             );
             echo  json_encode($returnData);
         }
 
-        if (!empty($nombre_mesero)) {
+        if (!empty($nombre_mesero['nombresusuario_sistema'])) {
             $returnData = array(
                 "resultado" => 0,
             );

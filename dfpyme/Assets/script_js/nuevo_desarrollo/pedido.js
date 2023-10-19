@@ -1,4 +1,5 @@
 function pedido(id_mesa, nombre_mesa) {
+    limpiar_todo();
     let requiere_mesero = document.getElementById("requiere_mesero").value;
     let tipo_usuario = document.getElementById("tipo_usuario").value;
     let tipo_pedido = document.getElementById("tipo_pedido").value;

@@ -403,7 +403,7 @@ class ClienteController extends BaseController
         $departamento = model('departamentoModel')->select('*')->where('idpais', 49)->find();
         $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
         $id_ciudad_empresa = model('empresaModel')->select('idciudad')->first();
-        $ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
+        $ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
         $municipios = model('municipiosModel')->findAll();
 
 

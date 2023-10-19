@@ -151,7 +151,7 @@
               <?php #} 
               ?> -->
               <option value="1">0%</option>
-              <option value="2">8%</option>
+              <option value="2" selected>8%</option>
 
 
             </select>

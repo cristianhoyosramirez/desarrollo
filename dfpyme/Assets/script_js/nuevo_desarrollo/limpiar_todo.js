@@ -21,6 +21,7 @@ function limpiar_todo() {
     $('#sub_total').html(0)
     $('#nombre_mesero').html('Mesero')
     $('#valor_pedido').html('$0')
+    $('#val_pedido').html('$0')
     $('#productos_categoria').html('')
     $('#subtotal_pedido').val('$0')
 

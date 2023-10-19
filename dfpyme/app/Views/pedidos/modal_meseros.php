@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="my-3"></div>
-                    <div class="row container">
+                    <div class="row container" id="lista_meseros">
                         <?php $count = 0; ?>
                         <?php foreach ($meseros as $detalle) : ?>
                             <div class="col-6 col-md-4 col-lg-3 col-xl-2 mesero-item" onclick="meseros(<?php echo $detalle['idusuario_sistema'] ?>)" class="cursor-pointer">
@@ -101,6 +101,8 @@
 
                         $("#modal_meseros").modal("hide");
                         $("#nombre_mesero").html('Mesero: ' + resultado.nombre);
+                        $("#lista_meseros").html( resultado.meseros);
+
                         var lista_meseros = document.getElementById("meseros");
                         lista_meseros.style.display = "block";
 

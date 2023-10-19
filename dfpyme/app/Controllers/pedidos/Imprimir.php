@@ -67,55 +67,6 @@ class Imprimir extends BaseController
         }
     }
 
-    // Funcion donde 
-
-    /*   function imprimirComanda()
-    {
-
-        //$id_mesa = 3; 
-        $id_mesa = $this->request->getPost('id_mesa');
-
-        $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
-        $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
-
-        $productos = array();
-        if (!empty($pedido)) {
-            $codigo_categoria = model('productoPedidoModel')->id_categoria($pedido['id']);
-
-
-            foreach ($codigo_categoria as $valor) {
-                $items = model('productoPedidoModel')->productos_pedido($pedido['id'], $valor['codigo_categoria']);
-
-                if (!empty($items)) {
-                    foreach ($items as $detalle) {
-                        $data['id'] = $detalle['id'];
-                        $data['nombreproducto'] = $detalle['nombreproducto'];
-                        $data['valor_venta'] = $detalle['valorventaproducto'];
-                        $data['valor_total'] = $detalle['valor_total'];
-                        $data['cantidad'] = $detalle['cantidad_producto'];
-                        $data['nota_producto'] = $detalle['nota_producto'];
-                        $data['valor_unitario'] = $detalle['valor_unitario'];
-                        $data['codigo_interno'] = $detalle['codigointernoproducto'];
-                        $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
-                        array_push($productos, $data);
-                    }
-                    $this->generar_comanda($valor['codigo_categoria'], $productos, $pedido['id'], $nombre_mesa['nombre']);
-                }
-            }
-            if (empty($items)) {
-                $returnData = array(
-                    "resultado" => 0
-                );
-                echo  json_encode($returnData);
-            }
-            if (!empty($items)) {
-                $returnData = array(
-                    "resultado" => 1
-                );
-                echo  json_encode($returnData);
-            }
-        }
-    } */
 
     function generar_comanda($productos, $numero_pedido, $nombre_mesa)
     {
@@ -133,7 +84,7 @@ class Imprimir extends BaseController
 
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->setTextSize(1, 1);
-        $printer->text("**" ." PEDIDO " . "**" . "\n\n");
+        $printer->text("**" . " PEDIDO " . "**" . "\n\n");
 
 
 
@@ -226,7 +177,7 @@ class Imprimir extends BaseController
         $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa['fk_mesa'])->first();
         $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario['fk_usuario'])->first();
         $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $id_mesa['fk_mesa'])->first();
-    
+
         //$nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['fk_usuario'])->first();
 
         $id_impresora = model('precuentaModel')->select('id_impresora')->first();
@@ -707,8 +658,8 @@ class Imprimir extends BaseController
 
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $id_apertura)->first();
         $printer->text("Valor apertura    : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
-        $ventas_pos =model('pagosModel')->set_ventas_pos($id_apertura);
-        $ventas_electronicas =model('pagosModel')->set_ventas_electronicas($id_apertura);
+        $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura);
+        $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura);
         $printer->text("Ventas pos     : " . "$" . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
         $printer->text("Valor electrónicas    : " . "$" . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
 
@@ -798,14 +749,14 @@ class Imprimir extends BaseController
 
         $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
 
-        $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
-        $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
+        $printer->text("(-) Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
+        $printer->text("(-) Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
         $temp = $ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia'];
         $total_caja = $total_retiros + $total_devoluciones;
         $total_en_caja = $temp - $total_caja;
 
-        $printer->text("(-) Efectivo en caja: " . number_format($total_en_caja, 0, ",", ".") . "\n");
+        $printer->text("(=) Efectivo en caja: " . number_format($total_en_caja, 0, ",", ".") . "\n");
 
         $printer->text("\n");
         $printer->text("-----------------------------------------------\n");
@@ -820,16 +771,27 @@ class Imprimir extends BaseController
             $transaccion = 0;
         }
 
+        if (!empty($ingresos_transaccion)) {
+            $transaccion = $ingresos_transaccion[0]['transferencia'];
+        }
 
-        /* $printer->text("Transacciones: " . "$" .# number_format($transaccion, 0, ",", ".") . "\n");
-        //$valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_apertura);
-       if (empty($valor_cierre_transaccion_usuari)) {
+
+        $printer->text("Transacciones: " . "$" . number_format($transaccion, 0, ",", ".") . "\n");
+        $valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_apertura);
+        if (empty($valor_cierre_transaccion_usuari)) {
             $valor_cierre_transaccion_usuario = 0;
         }
         if (!empty($valor_cierre_transaccion_usuari)) {
             $valor_cierre_transaccion_usuario = $valor_cierre_transaccion_usuari[0]['valor'];
-        } */
+        }
 
+        $printer->text("Valor cierre transacciones  " . "$" .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n");
+        $printer->text("Diferencia en transacciones  " . "$" . number_format($valor_cierre_transaccion_usuario - $transaccion, 0, ",", ".") . "\n");
+
+        $printer->text("\n");
+
+
+        $printer->text("TOTAL DIFERENCIAS  " . "$" . number_format(($valor_cierre_efectivo_usuario[0]['valor'] - $total_en_caja) + ($valor_cierre_transaccion_usuario - $transaccion), 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -844,8 +806,86 @@ class Imprimir extends BaseController
         echo  json_encode($returnData);
     }
 
-    function lista_electronicas(){
-        
-        return view('duplicado_de_factura/factura_electronica');
+    function lista_electronicas()
+    {
+
+        $facturas_electronicas = model('facturaElectronicaModel')->findAll();
+
+        return view('duplicado_de_factura/factura_electronica', [
+            'facturas' => $facturas_electronicas
+        ]);
+    }
+
+    function imprimir_factura_electronica()
+    {
+        $id_factura = $this->request->getPost('id_factura');
+        $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
+        $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
+        $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
+        $printer = new Printer($connector);
+
+        $datos_empresa = model('empresaModel')->datosEmpresa();
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->setTextSize(1, 1);
+        $printer->text($datos_empresa[0]['nombrecomercialempresa'] . "\n");
+        $printer->text($datos_empresa[0]['nombrejuridicoempresa'] . "\n");
+        $printer->text("NIT :" . $datos_empresa[0]['nitempresa'] . "\n");
+        $printer->text($datos_empresa[0]['direccionempresa'] . "  " . $datos_empresa[0]['nombreciudad'] . " " . $datos_empresa[0]['nombredepartamento'] . "\n");
+        $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
+        $printer->text($datos_empresa[0]['nombreregimen'] . "\n");
+        $printer->text("\n");
+
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->text("TIPO DE VENTA: PREFACTURA ELECTRÓNICA " . "\n");
+        $printer->text("\n");
+        $items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
+
+        foreach ($items as $productos) {
+
+            $printer->setTextSize(1, 1);
+            $printer->text("Cod." . $productos['codigo'] . "      " . $productos['descripcion'] . "\n");
+            $printer->text("Cant. " . $productos['cantidad'] . "      " . "$" . number_format($productos['total'], 0, ',', '.') . "                   " . "$" . number_format($productos['total'] * $productos['cantidad'], 0, ',', '.') . "\n");
+            if (!empty($productos['nota_producto'])) {
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text("NOTAS:\n");
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printer->text($productos['nota_producto'] . "\n");
+            }
+            $printer->text("_______________________________________________ \n");
+            $printer->text("\n");
+        }
+        $total = model('facturaElectronicaModel')->select('total')->where('id', $id_factura)->first();
+        $printer->setJustification(Printer::JUSTIFY_RIGHT);
+        $printer->setTextSize(2, 1);
+        $printer->text("TOTAL " . "$ " . number_format($total['total'], 0, ',', '.') . "\n");
+        $printer->text("\n");
+
+        $printer->feed(1);
+        $printer->cut();
+
+        $printer->close();
+
+        $returnData = array(
+            "resultado" => 1
+        );
+        echo  json_encode($returnData);
+    }
+
+    function detalle_f_e()
+    {
+        $id_factura = $this->request->getPost('id_factura');
+        $items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
+
+        $total = model('facturaElectronicaModel')->select('total')->where('id', $id_factura)->first();
+
+
+        $returnData = array(
+            "resultado" => 1,
+            "f_e" => view('consultas/detalle_factura_electronica', [
+                'productos' => $items
+            ]),
+            "total" => "Total $ " . number_format($total['total'], 0, ',', '.')
+        );
+        echo  json_encode($returnData);
     }
 }

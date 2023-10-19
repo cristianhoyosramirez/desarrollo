@@ -10,7 +10,7 @@
       </div>
       <div class="modal-body">
         <form class="row g-3" id="creacion_cliente_electronico" method="POST" action="<?php echo base_url() ?>/clientes/agregar">
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="inputEmail4" class="form-label">Tipo de persona</label>
             <select class="form-select" id="tipo_persona" name="tipo_persona">
               <option value="2">Natural </option>
@@ -36,8 +36,8 @@
             <input type="text" class="form-control" id="identificacion" name="identificacion" onkeyup="saltar_factura_pos(event,'dv')">
             <span class="text-danger error-text identificacion_error"></span>
           </div>
-          <div class="col-3">
-            <label for="inputAddress2" class="form-label">Dv</label>
+          <div class="col-1">
+            <label for="inputAddress2" class="form-label">DV</label>
             <input type="text" class="form-control" id="dv" name="dv" onkeyup="saltar_factura_pos(event,'nombres')">
             <span class="text-danger error-text dv_error"></span>
           </div>
@@ -54,7 +54,7 @@
 
           </div>
           <div class="col-md-3">
-            <label for="inputCity" class="form-label">Tipo de ventas </label>
+            <label for="inputCity" class="form-label">Tipo de cliente </label>
 
             <?php $tipo_cliente = model('tipoClienteModel')->findALL(); ?>
             <select class="form-select" aria-label="Default select example" name="tipo_ventas" id="tipo_ventas">
@@ -172,7 +172,7 @@
             <span class="text-danger error-text telefono_error"></span>
           </div>
           <div class="col-md-3">
-            <label for="inputCity" class="form-label">Detalles tributarios del cliente
+            <label for="inputCity" class="form-label">Detalles tributarios del cliente <br>
               <?php $impuestos = model('impuestosModel')->where('estado', 'true')->findAll(); ?>
               <select name="impuestos" id="impuestos">
                 <?php foreach ($impuestos as $detalle) { ?>
@@ -198,10 +198,10 @@
           <div class="modal-footer">
             <div class="row">
               <div class="col">
-                <button type="submit" class="btn btn-success w-100" id="btn_crear_cliente">Crear </button>
+                <button type="submit" class="btn btn-outline-success w-100" id="btn_crear_cliente">Crear </button>
               </div>
               <div class="col">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
               </div>
             </div>
           </div>

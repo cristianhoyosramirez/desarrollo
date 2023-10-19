@@ -4,7 +4,7 @@ function agregar_al_pedido(id_producto) {
     let id_mesa = document.getElementById("id_mesa_pedido").value;
     let id_usuario = document.getElementById("id_usuario").value;
     let mesero = document.getElementById("mesero").value;
-
+    
 
     $.ajax({
         data: {
@@ -29,14 +29,11 @@ function agregar_al_pedido(id_producto) {
                         toast.addEventListener('mouseleave', Swal.resumeTimer);
                     }
                 });
-                
+
                 Toast.fire({
                     icon: 'success',
                     title: 'Agregado'
                 });
-                
-
-
 
                 $('#mesa_productos').html(resultado.productos_pedido)
                 $('#valor_pedido').html(resultado.total_pedido)
@@ -45,6 +42,6 @@ function agregar_al_pedido(id_producto) {
                 $('#subtotal_pedido').val(resultado.total_pedido)
             }
         },
-    });
+    }); 
 
 }

@@ -18,27 +18,23 @@ class CerrarVenta extends BaseController
     public function cerrar_venta()
     {
 
-        /* 
-        $numero_pedido = 189;
 
-        $efectivo = 200000;
-        $transaccion = 200000;
-        $valor_venta = 400000;
-        $nit_cliente = 22222222;
-        $id_usuario = 6;
+
+
+        /*    $id_mesa = 55;
+        $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
+        $numero_pedido = $pedido['id'];
+        $efectivo = 36000;
+        $transaccion = 0;
+        $valor_venta = 36000;
+        $nit_cliente = '22222222';
+        $id_usuario = 21;
         $estado = 1;
-        $descuento = 0;
-        $id_mesa = 95;
         $propina = 0;
-        $numero_pedid = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
-        $numero_pedido = $numero_pedid['id'];
-        $tipo_pago = 1;
-        //$total_pagado = 300000;
+        $descuento = 0;
+        $tipo_pago = 1; */
 
-        /**
-         * Datos de formulario cerrar venta 
-         */
-
+        // var_dump($this->request->getPost()); exit();
 
         $id_mesa = $this->request->getPost('id_mesa');
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
@@ -274,7 +270,7 @@ class CerrarVenta extends BaseController
                     // Caso 3.2: Mayor efectivo que transacción
                     elseif ($efectivo > $transaccion) {
                         $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = $valor_venta-$transaccion;
+                        $valor_pago_efectivo = $valor_venta - $transaccion;
                         $cambio = $transaccion + $efectivo - $valor_venta;
                         $recibido_transaccion = $transaccion;
                         $recibido_efectivo = $efectivo;

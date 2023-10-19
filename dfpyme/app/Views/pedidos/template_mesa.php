@@ -148,6 +148,7 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_nota.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/agregar_nota.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert_start.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/prefactura.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/pedido.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/productos_categoria.js"></script>
@@ -200,7 +201,8 @@
 
 
     <script>
-        function flecha_atras(){
+        function flecha() {
+
             $("#operaciones").show();
             $("#nota").hide();
             $("#descuento").hide();
@@ -209,6 +211,33 @@
             $("#descuentos_manuales").hide();
             $("#lista_precios").hide();
 
+        }
+    </script>
+
+    <script>
+        function cancelar_descuento() {
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+            $.ajax({
+                data: {
+                    id_producto_pedido,
+                },
+                url: url +
+                    "/" +
+                    "eventos/cancelar_descuentos",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $("#agregar_nota").modal("hide");
+                        reset_modal_agregar_nota()
+
+
+
+                    }
+                },
+            });
         }
     </script>
 
@@ -267,19 +296,25 @@
                         $('#mesa_productos').html(resultado.productos);
                         $("#valor_pedido").html(resultado.total_pedido);
                         $("#subtotal_pedido").val(resultado.total_pedido);
-                        $("#operaciones").show();
-                        $("#nota").hide();
-                        $("#descuento").hide();
-                        $("#descuento_porcentaje").hide();
-                        $("#edicion_precio").hide();
-                        $("#descuentos_manuales").hide();
-                        $("#lista_precios").hide();
+                        reset_modal_agregar_nota()
 
 
                     }
                 },
             });
 
+        }
+    </script>
+
+    <script>
+        function reset_modal_agregar_nota() {
+            $("#operaciones").show();
+            $("#nota").hide();
+            $("#descuento").hide();
+            $("#descuento_porcentaje").hide();
+            $("#edicion_precio").hide();
+            $("#descuentos_manuales").hide();
+            $("#lista_precios").hide();
         }
     </script>
 
@@ -918,11 +953,11 @@
                         let tipo_pedido = document.getElementById("tipo_pedido").value;
 
                         if (tipo_pedido == "movil") {
-                            $('#mesas_all').html(resultado.mesas)
+                            $('#resultado_mesa').html(resultado.mesas)
                             //$("#lista_todas_las_mesas").modal("show");
                         }
                         if (tipo_pedido == "computador") {
-
+                            $('#mesas_all').html(resultado.mesas)
                             $("#lista_todas_las_mesas").modal("show");
                         }
 
@@ -951,11 +986,11 @@
                         let tipo_pedido = document.getElementById("tipo_pedido").value;
 
                         if (tipo_pedido == "movil") {
-                            $('#mesas_all').html(resultado.meseros)
+                            $('#resultado_mesa').html(resultado.meseros)
                             //$("#lista_todas_las_mesas").modal("show");
                         }
                         if (tipo_pedido == "computador") {
-
+                            $('#mesas_all').html(resultado.meseros)
                             $("#lista_todas_las_mesas").modal("show");
                         }
                     }
