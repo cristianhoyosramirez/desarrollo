@@ -1,3 +1,17 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-10">
+        </div>
+        <div class="col-12 col-md-2 mt-2 mt-md-0 text-md-start">
+            <button type="button" class="btn btn-outline-yellow" onclick="agregar_mesero()">Agregar mesero</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="my-3"></div>
+
+
 <div class="row">
     <?php $count = 0; ?>
     <?php foreach ($meseros as $detalle) : ?>

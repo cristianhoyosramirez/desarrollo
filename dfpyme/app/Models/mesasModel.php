@@ -82,7 +82,7 @@ class mesasModel extends Model
     {
         $datos = $this->db->query("
         SELECT
-            idusuario_sistema,nombresusuario_sistema , valor_total,mesas.nombre
+            idusuario_sistema,nombresusuario_sistema , valor_total,mesas.nombre,fk_mesa, mesas.nombre as nombre_mesa
         FROM
             pedido
         inner join usuario_sistema on usuario_sistema.idusuario_sistema = pedido.fk_usuario

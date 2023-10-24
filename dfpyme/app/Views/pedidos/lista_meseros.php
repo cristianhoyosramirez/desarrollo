@@ -1,7 +1,7 @@
 <div class="row">
     <?php foreach ($meseros as $detalle) : ?>
     <div class="col-6 col-sm-4 col-lg-3 col-xl-2 col-xxl-3">
-        <div class="card card_mesas text-white bg-red-lt cursor-pointer">
+        <div class="card card_mesas text-white bg-red-lt cursor-pointer" onclick="pedido_mesa('<?php echo $detalle['fk_mesa'] ?>','<?php echo $detalle['nombre_mesa'] ?>')">
             <div class="row">
                 <div class="col-3">
                     <span class="avatar">

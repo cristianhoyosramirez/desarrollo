@@ -498,7 +498,7 @@ class reporteDeVentasController extends BaseController
                 'fecha_apertura' => $fecha_apertura['fecha'],
                 'fecha_cierre' => $cierre,
                 'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-                'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion)+$valor_apertura['valor'], 0, ",", "."),
+                'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion), 0, ",", "."),
                 'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
                 'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo)+$valor_apertura['valor'], 0, ",", "."),
                 'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),

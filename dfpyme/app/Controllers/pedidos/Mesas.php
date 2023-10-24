@@ -89,6 +89,8 @@ class Mesas extends BaseController
             $id_usuario = $this->request->getPost('id_usuario');
         }
 
+
+      
         //$id_usuario = 15;
         //$id_producto = 2;
         //$id_producto = '207';
@@ -975,16 +977,16 @@ class Mesas extends BaseController
 
         $meseros  = model('facturaPropinaModel')->get_meseros($id_apertura);
 
-     
+
 
         $total_propinas = model('FacturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
-        
+
         $returnData = array(
             "resultado" => 1,
             "propinas" => view('pedidos/propinas', [
                 "meseros" => $meseros,
                 "id_apertura" => $id_apertura,
-                "total_propinas"=>$total_propinas[0]['valor_propina']
+                "total_propinas" => $total_propinas[0]['valor_propina']
             ]),
             "total_propinas" => "Total: $ " . number_format($total_propinas[0]['valor_propina'], 0, ",", ".")
 
@@ -1030,6 +1032,7 @@ class Mesas extends BaseController
 
 
         $meseros = model('mesasModel')->buscar_meseros($this->request->getPost('valor'));
+        
         if (!empty($this->request->getPost('valor'))) {
             $returnData = array(
                 "resultado" => 1,

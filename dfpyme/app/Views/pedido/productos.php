@@ -1,32 +1,23 @@
-<div class="row ">
+<div class="row">
     <?php
-    foreach ($productos as $valor) : ?>
-        <div class="col-6 col-sm-4 col-lg-3 col-xl-2 col-xxl-3">
-            <div class="cursor-pointer mb-1 elemento " onclick="agregar_al_pedido(<?php echo $valor['codigointernoproducto'] ?>)">
-                <div class="row ">
-
-                    <div class="card card_mesas  bg-primary-lt  cursor-pointer" >
-                        <div class="row ">
-                            <div class="col-3">
-                                <span class="avatar">
-                                    <img src="<?php echo base_url(); ?>/images/productos/producto.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
-                                </span>
-                            </div>
-                            <div class="col-9">
-                                <div class="text-truncate text-center">
-                                    <strong class="text-truncate text-center small"><?php echo $valor['nombreproducto'] ?></strong><br>
-                                    <strong class="text-truncate text-center small"><?php echo "$ " . number_format($valor['valorventaproducto'], 0, ",", ".") ?></strong><br>
-
-                                </div>
-                            </div>
+    foreach ($productos as $valor) : 
+    ?>
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-4">
+        <div class="cursor-pointer mb-1 elemento">
+            <label class="form-selectgroup-item flex-fill" onclick="agregar_al_pedido(<?php echo $valor['codigointernoproducto'] ?>)">
+                <div class="form-selectgroup-label d-flex align-items-center p-3 bg-azure-lt text-white">
+                    <div class="me-3">
+                    </div>
+                    <div class="form-selectgroup-label-content d-flex align-items-center">
+                        <span class="avatar me-3" style="background-image: url(<?php echo base_url(); ?>/images/productos/producto.png)"></span>
+                        <div>
+                            <div class="font-weight-medium text-primary text-start"><?php echo $valor['nombreproducto'] ?></div>
+                            <div class="text-muted text-start"><?php echo "$ " . number_format($valor['valorventaproducto'], 0, ",", ".") ?></div>
                         </div>
                     </div>
-
                 </div>
-
-            </div>
+            </label>
         </div>
-
-    <?php endforeach ?>
-
+    </div>
+    <?php endforeach; ?>
 </div>

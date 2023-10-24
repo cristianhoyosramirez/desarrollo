@@ -12,7 +12,7 @@
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">
                     <p id="texto_mesero">Seleccione mesero</p>
                 </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cerrar_modal_creacion_mesero()"></button>
             </div>
             <div class="modal-body" id="meseros">
                 <input type="hidden" id="id_mesa_actualizar">
@@ -51,16 +51,25 @@
             </div>
             <div class="my-1"></div>
             <div class="container" id="crear_meseros" style="display: none;">
-                <form class="row g-3 align-items-center">
-                    <div class="col-md-6">
-                        <label for="inputEmail4" class="form-label">Nombres y apellidos</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="limpiar_campo()">
-                        <p id="error_nombre" class="text-danger"></p>
+
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">Nombres y apellidos</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="limpiar_campo()">
+                    <p id="error_nombre" class="text-danger"></p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-2">
+                        <button type="button" class="btn btn-outline-success btn-block w-100" onclick="crear_mesero()">Crear mesero</button>
                     </div>
-                    <div class="col-md-6"><br>
-                        <button type="button" class="btn btn-primary" onclick="crear_mesero()">Crear mesero</button>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-outline-danger btn-block w-100" onclick="cerrar_modal_creacion_mesero()">Cancelar</button>
                     </div>
-                </form>
+                </div>
+
+
+
+
             </div>
             <div class="my-2"></div>
 
@@ -69,6 +78,16 @@
     </div>
 </div>
 </div>
+
+<script>
+    function cerrar_modal_creacion_mesero() {
+        var lista_meseros = document.getElementById("meseros");
+        lista_meseros.style.display = "block";
+
+        var crear_meseros = document.getElementById("crear_meseros");
+        crear_meseros.style.display = "none";
+    }
+</script>
 
 
 <script>
@@ -101,7 +120,7 @@
 
                         $("#modal_meseros").modal("hide");
                         $("#nombre_mesero").html('Mesero: ' + resultado.nombre);
-                        $("#lista_meseros").html( resultado.meseros);
+                        $("#lista_meseros").html(resultado.meseros);
 
                         var lista_meseros = document.getElementById("meseros");
                         lista_meseros.style.display = "block";

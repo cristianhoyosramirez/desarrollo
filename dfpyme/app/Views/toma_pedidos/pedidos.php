@@ -147,13 +147,16 @@ Bienvenido DFpyme
                         <div class="card-header border-1" style="margin-bottom: -10px; padding-bottom: 0;">
                             <div class="card-title">
                                 <div class="row align-items-start">
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <p id="mesa_pedido" class="text-warning "> Mesa:</p>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <p id="pedido_mesa">Pedio: </p>
                                     </div>
-                                    <div class="col-4 text-end">
+                                    <div class="col-3">
+                                        <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
+                                    </div>
+                                    <div class="col-2 text-end">
                                         <a class="btn btn-outline-indigo btn-icon" href="#" onclick="validarInputYAbrirOffcanvas()" role="button">
 
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -166,8 +169,8 @@ Bienvenido DFpyme
                                             </svg>
                                         </a>
                                     </div>
-                                  
-                                  
+
+
                                 </div>
                             </div>
                         </div>
@@ -260,7 +263,7 @@ Bienvenido DFpyme
 
                             <form>
                                 <div class="row mb-3">
-                                    
+
                                     <div class="col-sm-12">
                                         <input type="text" class="form-control" id="subtotal_pedido" disabled="">
                                     </div>
@@ -294,7 +297,7 @@ Bienvenido DFpyme
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    
+
                                     <div class="col-sm-12">
                                         <a href="#" class="btn btn-outline-azure w-100 h2" id="val_pedido" onclick="prefactura()" title="Imprimir prefactura" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                             $ 0

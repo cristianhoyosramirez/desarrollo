@@ -18,6 +18,7 @@ function calculo_propina() {
 
                     $('#propina_del_pedido').val(resultado.propina)
                     $('#valor_pedido').html(resultado.total_pedido)
+                    $('#val_pedido').html(resultado.total_pedido)
 
                 }
             },
