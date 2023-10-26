@@ -12,7 +12,7 @@ class cerrarVentaModel extends Model
     // protected $primaryKey = 'id';
     protected $allowedFields = ['nombre'];
 
-    function producto_pedido($productos, $factura_venta, $numero_pedido, $numero_factura, $fecha_y_hora, $tipo_pago, $id_usuario,$id_apertura)
+    function producto_pedido($productos, $factura_venta, $numero_pedido, $numero_factura, $fecha_y_hora, $tipo_pago, $id_usuario, $id_apertura)
     {
 
         $impuestos = new Impuestos();
@@ -38,11 +38,13 @@ class cerrarVentaModel extends Model
 
                     $model = model('productoPedidoModel');
                     $actualizar = $model->set('cantidad_producto', $cantidad);
-                    $actualizar = $model->set('valor_total', $cantidad*$valor_unidad);
+                    $actualizar = $model->set('valor_total', $cantidad * $valor_unidad);
                     $actualizar = $model->where('id', $detalle['id_tabla_producto']);
                     $actualizar = $model->update();
                 }
             }
+
+            //Pago completo 
 
 
             if ($tipo_pago == 1) {
@@ -59,7 +61,7 @@ class cerrarVentaModel extends Model
             $precio_costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
             // Calcular los impuestos del producto 
-            $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total']);
+            $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total'], $detalle['valor_unitario'], $detalle['cantidad_producto']);
 
             //$id_factura = $factura_venta;
 
@@ -101,6 +103,8 @@ class cerrarVentaModel extends Model
                     $actualizar = $model->update();
                 }
             }
+            $impuesto_saludable = model('productoModel')->select('valor_impuesto_saludable')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+            $id_saludable = model('productoModel')->select('id_impuesto_saludable')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
             $producto_factura_venta = [
                 'numerofactura_venta' => $numero_factura,
@@ -120,7 +124,7 @@ class cerrarVentaModel extends Model
                 'impoconsumo' => 0,
                 'total' => $valor_unidad * $detalle['cantidad_producto'],
                 'valor_ico' => $calculo[0]['valor_ico'], //
-                'impuesto_al_consumo' => $calculo[0]['ico'] / $detalle['cantidad_producto'],
+                'impuesto_al_consumo' => $calculo[0]['ico'],
                 'iva' => $calculo[0]['iva'],
                 'id_iva' => $calculo[0]['id_iva'],
                 'aplica_ico' => $calculo[0]['aplica_ico'],
@@ -129,7 +133,9 @@ class cerrarVentaModel extends Model
                 'saldo' => 0,
                 'fecha_y_hora_venta' => $fecha_y_hora,
                 'fecha_venta' => date('Y-m-d'),
-                'id_categoria' => $codigo_categoria['codigocategoria']
+                'id_categoria' => $codigo_categoria['codigocategoria'],
+                'id_impuesto_saludable'=>$id_saludable['id_impuesto_saludable'],
+                'valor_impuesto_saludable'=>$impuesto_saludable['valor_impuesto_saludable']
             ];
 
             $insertar = model('productoFacturaVentaModel')->insert($producto_factura_venta);
@@ -147,9 +153,9 @@ class cerrarVentaModel extends Model
                 'valor' => $valor_unidad,
                 'total' => $valor_unidad * $detalle['cantidad_producto'],
                 'fecha_y_hora_factura_venta' => $fecha_y_hora,
-                'id_categoria'=>$codigo_categoria['codigocategoria'],
-                'id_apertura'=>$id_apertura,
-                'valor_unitario'=>$detalle['valor_unitario']
+                'id_categoria' => $codigo_categoria['codigocategoria'],
+                'id_apertura' => $id_apertura,
+                'valor_unitario' => $detalle['valor_unitario']
 
             ];
 

@@ -291,7 +291,7 @@
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
 
-                        sweet_alert('success', +resultado.nombre_producto + " dado en cortesia ")
+                        sweet_alert('success', " Cortesía generada exitosamente. ")
                         $("#modal_cortesia").modal("hide");
                         $('#mesa_productos').html(resultado.productos);
                         $("#valor_pedido").html(resultado.total_pedido);
@@ -622,7 +622,8 @@
 
     <script>
         function mesas_actualizadas() {
-
+            $("#canva_producto").show();
+            $("#productos_categoria").hide();
             var url = document.getElementById("url").value;
             $.ajax({
 

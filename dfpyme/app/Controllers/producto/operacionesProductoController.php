@@ -230,6 +230,17 @@ class operacionesProductoController extends BaseController
             $precio_2 = 100 - $pre_2;
 
 
+            $valorImpuestoSaludable = $this->request->getPost('valor_impuesto_saludable');
+
+            // Quitar los puntos al impuesto saludable
+            $valorImpuestoSaludable = str_replace('.', '', $valorImpuestoSaludable);
+
+            // Si el impuesto saludable está vacío, asignarle un cero
+            if (empty($valorImpuestoSaludable)) {
+                $valorImpuestoSaludable = 0;
+            }
+
+
             if ($this->request->getPost('informacion_tributaria') == 1) {
 
                 $data = [
@@ -272,6 +283,8 @@ class operacionesProductoController extends BaseController
                     'aplica_ico' => true,
                     'se_imprime' => $impresion_comanda,
                     'aplica_descuento' => $aplica_descuento,
+                    'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
+                    'valor_impuesto_saludable' => $valorImpuestoSaludable
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -353,6 +366,8 @@ class operacionesProductoController extends BaseController
                     'aplica_ico' => false,
                     'se_imprime' => $impresion_comanda,
                     'aplica_descuento' => $aplica_descuento,
+                    'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
+                    'valor_impuesto_saludable' => $valorImpuestoSaludable
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -573,7 +588,7 @@ class operacionesProductoController extends BaseController
 
     function borrar_producto_inventario()
     {
-        $codigo_interno_producto=$this->request->getPost('codigo_interno_producto'); 
+        $codigo_interno_producto = $this->request->getPost('codigo_interno_producto');
         $tiene_movimientos = model('productoFacturaVentaModel')->where('codigointernoproducto', $this->request->getPost('codigo_interno_producto'));
 
         if (!empty($tiene_movimientos)) {

@@ -398,15 +398,19 @@ class Imprimir extends BaseController
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
 
 
-            $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva), 0, ",", ".") . "\n");
+            $impuesto_saludable =model('productoFacturaVentaModel')->get_impuesto_saluidable($id_factura);
+            $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva)-$impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "\n");
 
 
             if ($total_iva != 0) {
                 $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");
             }
+            $printer->text("IMPUESTO SALUDABLE  :" . "$" . number_format($impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "\n");
+            
             if ($total_ico) {
-                $printer->text("IMPUESTO AL CONSUMO :" . "$" . number_format($total_ico, 0, ",", ".") . "\n");
+                $printer->text("IMPUESTO AL CONSUMO :" . "$" . number_format($total_ico, 0, ",", ".") . "\n"); 
             }
+            
             $descuento = model('facturaVentaModel')->select('descuento')->where('id', $id_factura)->first();
             $printer->text("DESCUENTO :" . "$" . number_format($descuento['descuento'], 0, ",", ".") . "\n");
 
@@ -444,7 +448,7 @@ class Imprimir extends BaseController
                     $printer->setTextSize(1, 1);
                     $printer->text("**DISCRIMINACION TARIFAS DE IVA** \n");
                     $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->text("TARIFA    COMPRA       BASE/IMP         IVA" . "\n");
+                    $printer->text("TARIFA    VENTA       BASE/IMP         IVA" . "\n");
                     foreach ($tarifa_iva as $iva) {
                         $datos_iva = model('productoFacturaVentaModel')->base_iva($iva['valor_iva'], $id_factura);
                         if (!empty($datos_iva)) {
@@ -463,7 +467,7 @@ class Imprimir extends BaseController
                     $printer->setTextSize(1, 1);
                     $printer->text("**DISCRIMINACION TARIFAS DE IPO CONSUMO** \n");
                     $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->text("TARIFA    COMPRA     BASE/IMP        IPO CONSUMO" . "\n");
+                    $printer->text("TARIFA    VENTA     BASE/IMP        IPO CONSUMO" . "\n");
 
                     foreach ($tarifa_ico as $ico) {
                         //  $printer->text($iva['valor_iva']."%". "\n");
@@ -472,10 +476,10 @@ class Imprimir extends BaseController
                         $base_ico = model('productoFacturaVentaModel')->base_ico($ico['valor_ico'], $id_factura);
 
                         if ($total_compra[0]['compra'] >= 100000) {
-                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra'], 0, ",", ".") . "   " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "\n");
+                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra']-($total_ico - $total_iva)-$impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "   " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "\n");
                         }
                         if ($total_compra[0]['compra'] < 100000) {
-                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra'], 0, ",", ".") . "    " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "\n");
+                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra']-($total_ico - $total_iva)-$impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "    " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "\n");
                         }
                     }
                 }
@@ -610,8 +614,9 @@ class Imprimir extends BaseController
     function imprimir_movimiento_caja()
     {
 
-        $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 26;
+        //$id_apertura = $this->request->getPost('id_apertura');
+        
+        $id_apertura = 65;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();

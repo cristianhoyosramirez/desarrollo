@@ -37,10 +37,25 @@ class Configuracion extends BaseController
     }
 
     function configuracion_propina(){
+
+        if (!$this->validate([
+            'porcentaje' => [
+                'rules' => 'required|numeric',
+                'errors' => [
+                    'required' => 'Dato necesario',
+                    'numeric' => 'Debe ser un registro numerico '
+
+                ]
+            ],
+          
+        ])) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
         $valor = $this->request->getPost('propina');
 
         $model = model('configuracionPedidoModel');
         $configuracion = $model->set('propina', $valor);
+        $configuracion = $model->set('valor_defecto_propina', $this->request->getPost('porcentaje'));
         $configuracion = $model->update();
 
         $session = session();

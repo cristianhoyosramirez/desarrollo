@@ -478,11 +478,12 @@ class Boletas extends BaseController
     }
 
 
-    function cancelar_descuentos(){
+    function cancelar_descuentos()
+    {
         $id_producto = $this->request->getPost('id_producto_pedido');
         $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
 
-        $valor_venta = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto', $codigo_interno['codigointernoproducto'])->first(); 
+        $valor_venta = model('productoModel')->select('valorventaproducto')->where('codigointernoproducto', $codigo_interno['codigointernoproducto'])->first();
         $cantidad = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto)->first();
         $model = model('productoPedidoModel');
         $actualizar = $model->set('valor_unitario', $valor_venta['valorventaproducto']);
@@ -495,7 +496,23 @@ class Boletas extends BaseController
 
         );
         echo  json_encode($returnData);
-    
-    
+    }
+
+    function valor()
+    {
+
+        $id_mesa = $this->request->getPost('id_mesa');
+
+        $propina = model('pedidoModel')->select('propina')->where('fk_mesa', $id_mesa)->first();
+        $total = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
+
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+            "propina" => number_format($propina['propina'], 0, ",", "."),
+            "sub_total" => number_format($total['valor_total'], 0, ",", "."),
+            "total" => number_format($total['valor_total'] + $propina['propina'], 0, ",", ".")
+        );
+        echo  json_encode($returnData);
     }
 }

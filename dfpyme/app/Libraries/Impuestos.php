@@ -9,7 +9,7 @@ class Impuestos
      * @param   $cod(igo_interno
      * 
      */
-    public function calcular_impuestos($codigointerno, $valor_total)
+    public function calcular_impuestos($codigointerno, $valor_total,$precio_unitario,$cantidad)
     {
 
 
@@ -23,6 +23,7 @@ class Impuestos
 
         $tiene_ico = model('productoModel')->select('aplica_ico')->where('codigointernoproducto', $codigointerno)->first();
         $id_ico = model('productoModel')->select('id_ico_producto')->where('codigointernoproducto', $codigointerno)->first();
+        $impuesto_saludable = model('productoModel')->select('valor_impuesto_saludable')->where('codigointernoproducto', $codigointerno)->first();
         $valor_ico = model('icoConsumoModel')->select('valor_ico')->where('id_ico', $id_ico['id_ico_producto'])->first();
 
 
@@ -32,10 +33,23 @@ class Impuestos
 
         if ($tiene_ico['aplica_ico'] == 't') {
             /* Impuesto ICO */
+
+
+            //$total_impuesto_saludable= ($precio_unitario-$impuesto_saludable['valor_impuesto_saludable'])*$cantidad;
+            $precio_final= ($precio_unitario-$impuesto_saludable['valor_impuesto_saludable']);
+
+        
+
             $porcentaje_ico = ($valor_ico['valor_ico'] / 100) + 1;
-            $base_ico = $valor_total / $porcentaje_ico;
-            $impuesto_al_consumo = $valor_total - $base_ico;
+           
+            $base_ico = $precio_final / $porcentaje_ico;
+            
+            $impuesto_al_consumo = $precio_final - $base_ico;
+    
             $id_iva = model('productoModel')->select('idiva')->where('codigointernoproducto', $codigointerno)->first();
+
+
+
 
             $data['base_ico'] = $base_ico;
             $data['ico'] = $impuesto_al_consumo;

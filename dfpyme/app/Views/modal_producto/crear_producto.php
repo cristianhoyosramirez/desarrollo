@@ -1,11 +1,11 @@
 <!-- Modal Crear producto-->
 <div class="modal fade " id="crear_producto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
 
       <div class="modal-body">
         <div class="hr-text text-primary ">
-          <p class="h3 text-primary">Crear producto</p>
+          <p class="h4 text-primary">Crear producto</p>
         </div>
         <form class="row g-1" action="<?= base_url('producto/creacion_producto'); ?>" method="post" id="producto_agregar" autocomplete="off">
           <div class="hr-text hr-text-left">
@@ -41,7 +41,7 @@
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-5">
             <label for="inputPassword4" class="form-label">Nombre producto</label>
             <input type="text" class="form-control" id="crear_producto_nombre" name="crear_producto_nombre" onkeyup="saltar_creacion_producto(event,'categoria_producto'),minusculasAmayusculas()">
             <span class="text-danger error-text crear_producto_nombre_error"></span>
@@ -115,50 +115,7 @@
           <div class="hr-text hr-text-left">
             <p class="h4 text-green">Información de precio</p>
           </div>
-
-          <div class="col-md-4">
-            <label for="inputPassword4" class="form-label">Información tributaria</label>
-            <select class="form-select" id="informacion_tributaria" name="informacion_tributaria" onchange="mostrar_informacion_tributaria()">
-              <option value="1">Impuesto Nacional al Consumo (ICO)</option>
-              <option value="2">Impuesto al Valor Agregado (IVA)</option>
-            </select>
-            <span class="text-danger error-text informacion_tributaria_error"></span>
-          </div>
-
-          <div class="col-md-4" style="display: none" id="informacion_triburaria_iva">
-            <label for="inputPassword4" class="form-label">Valor IVA </label>
-            <select class="form-select" id="valor_iv" name="valor_iva">
-              <!-- <?php #foreach ($iva as $detalle) { 
-                    ?>
-                <option value="<?php #echo $detalle['idiva'] 
-                                ?>"><?php #echo $detalle['valoriva'] 
-                                    ?></option>
-              <?php #} 
-              ?> -->
-              <option value="1">0%</option>
-              <option value="5">5%</option>
-              <option value="31">19%</option>
-            </select>
-          </div>
-          <div class="col-md-4" style="display: block" id="informacion_tributaria_ico">
-            <label for="inputPassword4" class="form-label">Valor ICO</label>
-            <select class="form-select" id="valor_icd" name="valor_ico">
-              <!--  <?php #foreach ($ico as $detalle) { 
-                    ?>
-                <option value="<?php #echo $detalle['id_ico'] 
-                                ?>"><?php #echo $detalle['valor_ico'] 
-                                    ?></option>
-              <?php #} 
-              ?> -->
-              <option value="1">0%</option>
-              <option value="2" selected>8%</option>
-
-
-            </select>
-          </div>
-
-
-          <div class="col-4">
+          <div class="col-3">
             <label for="inputAddress2" class="form-label">Valor costo</label>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1">
@@ -174,6 +131,57 @@
             </div>
             <span class="text-danger error-text valor_costo_producto_error"></span>
           </div>
+          <div class="col-md-2">
+            <label for="inputPassword4" class="form-label">Información tributaria</label>
+            <select class="form-select" id="informacion_tributaria" name="informacion_tributaria" onchange="mostrar_informacion_tributaria()">
+              <option value="1">Impuesto Nacional al Consumo (ICO)</option>
+              <option value="2">Impuesto al Valor Agregado (IVA)</option>
+            </select>
+            <span class="text-danger error-text informacion_tributaria_error"></span>
+          </div>
+
+          <div class="col-md-1" style="display: none" id="informacion_triburaria_iva">
+            <label for="inputPassword4" class="form-label">Valor IVA </label>
+            <select class="form-select" id="valor_iv" name="valor_iva">
+              <?php foreach ($iva as $detalle) { ?>
+                <option value="<?php echo $detalle['idiva'] ?>"><?php echo $detalle['valoriva'] . "-" . $detalle['conceptoiva'] ?></option>
+              <?php } ?>
+            </select>
+          </div>
+
+
+
+
+          <div class="col-md-1" style="display: block" id="informacion_tributaria_ico">
+            <label for="inputPassword4" class="form-label">Valor ICO</label>
+            <select class="form-select" id="valor_icd" name="valor_ico">
+              <?php foreach ($ico as $detalle) { ?>
+                <option value="<?php echo $detalle['id_ico'] ?>"><?php echo $detalle['valor_ico'] ?></option>
+              <?php } ?>
+            </select>
+          </div>
+
+
+
+          <div class="col-md-3">
+            <label for="inputPassword4" class="form-label">Tipo impuesto saludable </label>
+            <select class="form-select" id="impuesto_saludable" name="impuesto_saludable">
+
+              <?php foreach ($impuesto_saludable as $impuesto_saludable) { ?>
+
+                <option value="<?php echo $impuesto_saludable['id']  ?>"><?php echo $impuesto_saludable['nombre'] ?></option>
+
+              <?php } ?>
+
+            </select>
+          </div>
+
+          <div class="col-md-2">
+            <label for="inputPassword4" class="form-label">Valor impuesto saludable</label>
+            <input type="text" class="form-control" id="valor_impuesto_saludable" name="valor_impuesto_saludable">
+          </div>
+
+
 
           <div class="col-4">
             <label for="inputAddress2" class="form-label">Precio 1 </label>
@@ -261,6 +269,22 @@
   }
 
   precio_2.addEventListener("input", (e) => {
+    const element = e.target;
+    const value = element.value;
+    element.value = formatNumber(value);
+  });
+</script>
+<script>
+  const impuesto_saludable = document.querySelector("#valor_impuesto_saludable");
+
+  function formatNumber(n) {
+    // Elimina cualquier carácter que no sea un número
+    n = n.replace(/\D/g, "");
+    // Formatea el número
+    return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+  }
+
+  impuesto_saludable.addEventListener("input", (e) => {
     const element = e.target;
     const value = element.value;
     element.value = formatNumber(value);

@@ -1,3 +1,4 @@
+<?php $session = session(); ?>
 <?= $this->extend('template/template_boletas') ?>
 <?= $this->section('title') ?>
 Configuración
@@ -17,8 +18,14 @@ Configuración
                         <option value="1">Con redondeo </option>
                     </select>
                 </div>
+                <div class="col-md-4">
+                    <label for="inputState" class="form-label">Porcentaje por defecto </label>
+                    <input type="number" class="form-control" id="porcentaje" name="porcentaje">
+                    <div class="text-danger"><?= session('errors.porcentaje') ?></div>
+                </div>
 
             </div>
+            <br>
             <div class="row">
                 <div class="col">
                     <div class="row text-end">

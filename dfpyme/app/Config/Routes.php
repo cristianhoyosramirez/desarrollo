@@ -439,7 +439,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('todas_las_mesas', 'Mesas::todas_las_mesas');
     $routes->post('actualizar_mesero', 'CerrarVenta::actualizar_mesero');
     $routes->post('buscar_mesas', 'Mesas::buscar_mesas');
-    $routes->post('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
+    $routes->get('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
     $routes->post('crear_mesero', 'Mesas::crear_mesero');
     $routes->get('gestion_pedidos', 'TomaPedidosController::index');
     $routes->post('buscar_mesero', 'Mesas::buscar_mesero');
@@ -470,6 +470,7 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('asignar_p1', 'Boletas::asignar_p1');
     $routes->post('municipios', 'Boletas::municipios');
     $routes->post('cancelar_descuentos', 'Boletas::cancelar_descuentos');
+    $routes->post('valor', 'Boletas::valor');
 });
 $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->post('ventas', 'Ventas::ventas');

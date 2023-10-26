@@ -231,7 +231,7 @@ Bienvenido DFpyme
                                 </div>
                                 <div class="col-sm-3 d-md-none d-sm-block col-6">
 
-                                    <button class="btn btn-outline-azure w-100" type="button" id="valor_pedido" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                    <button class="btn btn-outline-azure w-100" type="button" id="valor_pedido" onclick="valores_pedido()">
                                         $ 0
                                     </button>
                                 </div>
@@ -350,7 +350,7 @@ Bienvenido DFpyme
                             <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Subtotal</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="subtotal_pedido" disabled="">
+                                    <input type="text" class="form-control" id="subtotal_movil" disabled="">
                                 </div>
                             </div>
 
@@ -366,7 +366,7 @@ Bienvenido DFpyme
 
 
 
-                                        <a href="#" class="btn btn-outline-green  col-sm-4" onclick="calculo_propina()" title="Propina" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
+                                        <a href="#" class="btn btn-outline-green  col-sm-4" onclick="calculo_propina_movil()" title="Propina" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                 <circle cx="12" cy="12" r="9" />
@@ -376,15 +376,15 @@ Bienvenido DFpyme
                                             </svg></a>
 
 
-                                        <input type="text" aria-label="Last name" class="form-control w-1" style="width: 50px;" value=0 onkeyup="calcular_propina(this.value)" id="propina_pesos" placeholder="%">
-                                        <input type="text" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
+                                        <input type="text" aria-label="Last name" class="form-control w-1" style="width: 50px;" value=0 onkeyup="calcular_propina_movil(this.value)" id="propina_pesos" placeholder="%">
+                                        <input type="text" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_movil" name="propina_movil" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Total</label>
+                                <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Prefactura </label>
                                 <div class="col-sm-8">
-                                    <a href="#" class="btn btn-outline-azure w-100 h2" id="valor_pedido" onclick="prefactura()" title="Pagar" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <a href="#" class="btn btn-outline-azure w-100 h2" id="total_movil" onclick="prefactura()" title="Pagar" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         $ 0
                                     </a>
 
@@ -418,6 +418,50 @@ Bienvenido DFpyme
         } else {
             // El input no tiene un valor válido, puedes mostrar un mensaje de error o realizar alguna otra acción
             sweet_alert('warning', 'No hay mesa seleccionada')
+        }
+    }
+</script>
+
+
+
+<script>
+    function valores_pedido() {
+        var url = document.getElementById("url").value;
+        let id_mesa = document.getElementById("id_mesa_pedido").value;
+
+
+        // $('#offcanvasRight').modal('hide');
+
+        if (id_mesa == "") {
+            sweet_alert('warning', 'No hay mesa seleccionada')
+        } else if (id_mesa != "") {
+
+            $.ajax({
+                data: {
+                    id_mesa
+                },
+                url: url + "/" + "eventos/valor",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#offcanvasRight').offcanvas('show');
+                        $('#propina_movil').val(resultado.propina)
+                        $('#subtotal_movil').val(resultado.sub_total)
+                        $('#total_movil').html(resultado.total)
+                        /*  $('#canva_producto').html(resultado.productos)
+
+                         var categoria = document.getElementById("productos_categoria");
+                         categoria.style.display = "none";
+
+                         var productos = document.getElementById("canva_producto");
+                         productos.style.display = "block"; */
+
+
+                    }
+                },
+            });
         }
     }
 </script>

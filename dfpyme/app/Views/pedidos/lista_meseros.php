@@ -12,7 +12,7 @@
                     <div class="text-truncate text-center">
                         <strong class="text-truncate text-center small"><?php echo $detalle['nombre'] ?></strong><br>
                         <strong class="text-truncate text-center small"><?php echo $detalle['nombresusuario_sistema'] ?></strong><br>
-                        <strong class="text-truncate text-center small"><?php echo "$ ".number_format($detalle['valor_total'], 0, ",", ".") ?></strong><br>
+                        <strong class="text-truncate text-center small"><?php echo "$ ".number_format($detalle['valor_total']+$detalle['propina'], 0, ",", ".") ?></strong><br>
                     </div>
                 </div>
             </div>

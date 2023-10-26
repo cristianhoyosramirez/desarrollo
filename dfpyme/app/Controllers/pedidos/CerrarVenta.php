@@ -584,14 +584,16 @@ class CerrarVenta extends BaseController
         $valor_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
 
         $tipo_propina = model('configuracionPedidoModel')->select('propina')->first();
+        $temp_porcentaje_propina = model('configuracionPedidoModel')->select('valor_defecto_propina')->first();
 
+        $porcentaje_propina = $temp_porcentaje_propina['valor_defecto_propina'] / 100;
         if ($tipo_propina['propina'] == 1) {
-            $temp_propina = $valor_pedido['valor_total'] * 0.1;
+            $temp_propina = $valor_pedido['valor_total'] *  $porcentaje_propina;
             // Redondear la propina al valor más cercano a mil
             $propina = round($temp_propina / 1000) * 1000;
         }
         if ($tipo_propina['propina'] == 0) {
-            $propina = $valor_pedido['valor_total'] * 0.1;
+            $propina = $valor_pedido['valor_total'] *  $porcentaje_propina;
         }
 
 

@@ -10,8 +10,8 @@
         </a>
 
       </h1>
-      <div class="d-block d-sm-none">
-        <?php echo $user_session->usuario; ?>
+      <div class="d-block d-sm-block d-md-block d-lg-none ">
+        <?php echo $user_session->usuario; ?> 
       </div>
       <div class="navbar-nav flex-row order-md-last">
         <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" title="Habilitar modo oscuro " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">

@@ -85,7 +85,7 @@ class PartirFactura extends BaseController
             $totalBase = 0;
             foreach ($productos as $detalle) {
 
-                $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total']);
+                $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total'],$detalle['valor_unitario'],$detalle['cantidad_producto']);
 
                 foreach ($calculo as $valor) {
 
@@ -261,7 +261,7 @@ class PartirFactura extends BaseController
         $totalBase = 0;
         foreach ($productos as $detalle) {
 
-            $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total']);
+            $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total'],$detalle['valor_unitario'],$detalle['cantidad_producto']);
 
             foreach ($calculo as $valor) {
 
