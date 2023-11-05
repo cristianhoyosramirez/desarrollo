@@ -31,9 +31,7 @@ CAJA
 
 <div class="card container">
     <div class="card-body">
-        <form action="<?= base_url(
-            'caja/generar_apertura'
-        ) ?>" method="POST" id="formulario_apertura">
+        <form action="<?= base_url('caja/generar_apertura') ?>" method="POST" id="formulario_apertura">
             <input type="hidden" value="<?php echo $user_session->id_usuario; ?>" name="usuario_apertura">
             <div class="row">
                 <div class="col-md-3">

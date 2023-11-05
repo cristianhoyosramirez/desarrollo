@@ -17,16 +17,19 @@ function actualizar_nota() {
                 $("#agregar_nota").modal("hide");
                 $("#agregar_nota").val('');
 
+                $('#operaciones').show();
+
+                var nota = document.getElementById("nota");
+                nota.style.display = "none";
+
+    
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
+                    timer: 500,
+                    timerProgressBar: false,
+
                 })
 
                 Toast.fire({

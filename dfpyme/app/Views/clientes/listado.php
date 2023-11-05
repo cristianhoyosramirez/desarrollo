@@ -24,7 +24,7 @@ LISTADO DE CLIENTES
   <div class="row text-center align-items-center flex-row-reverse">
     <div class="col-lg-auto ms-lg-auto">
 
-      <button type="button" class="btn btn-warning btn-pill w-100" data-bs-toggle="modal" data-bs-target="#crear_cliente">
+      <button type="button" class="btn btn-warning btn-pill w-100" onclick="nuevo_cliente()">
         Agregar cliente
       </button>
     </div>
@@ -62,8 +62,10 @@ LISTADO DE CLIENTES
   </div>
 </div>
 </div>
-<?= $this->include('clientes/modal_crear_cliente') ?>
+<?= $this->include('pedidos/crear_cliente') ?>
 <?= $this->include('clientes/modal_editar_cliente') ?>
+
+
 
 <?= $this->endSection('content') ?>
 <!-- end row -->

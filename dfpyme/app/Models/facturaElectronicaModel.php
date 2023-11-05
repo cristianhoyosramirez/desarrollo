@@ -33,7 +33,11 @@ class facturaElectronicaModel extends Model
         'version_dian',
         'transaccion_id',
         'id_caja',
-        'cancelled'
+        'cancelled',
+        'fecha_y_hora_factura_venta',
+        'id_apertura',
+        'propina',
+        'id_apertura'
     ];
 
     public function insertar($datos) {

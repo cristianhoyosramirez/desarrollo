@@ -10,7 +10,7 @@ class EmpresaController extends BaseController
     {
         $regimen = model('regimenModel')->orderBy('idregimen', 'asc')->findAll();
         $departamentos = model('departamentoModel')->select('*')->where('idpais', 49)->findAll();
-        $municipios = model('municipiosModel')->findAll();
+        $municipios = model('ciudadModel')->findAll();
         $datos_empresa = model('empresaModel')->findAll();
 
         return view('empresa/datos', [
@@ -178,7 +178,7 @@ class EmpresaController extends BaseController
                 'alerta_facturacion' => $this->request->getPost('alerta')
             ]; */
 
-var_dump($data);
+
             $insert = model('dianModel')->insert($data);
    
            
@@ -233,10 +233,12 @@ var_dump($data);
     function municipios()
     {
 
+      //$this->request->getPost('id_departamento'); exit();
+
         $returnData = array(
             "resultado" => 1, //No hay pedido 
             "municipios" => view('municipios/municipios', [
-                'municipios' => model('municipiosModel')->select('*')->where('iddepartamento', $this->request->getPost('id_departamento'))->findAll()
+                'municipios' => model('ciudadModel')->select('*')->where('iddepartamento',$this->request->getPost('id_departamento') )->findAll()
             ])
         );
         echo  json_encode($returnData);

@@ -356,8 +356,12 @@ class reporteDeVentasController extends BaseController
                 ->with('errors', $this->validator->getErrors());
         }
 
+
         $ultimo_apertura = model('aperturaModel')->selectMax('id')->first();
         $ultimo_id = $ultimo_apertura['id'];
+
+
+
 
         $estado = "";
         $movimientos = "";
@@ -369,126 +373,151 @@ class reporteDeVentasController extends BaseController
         $devoluciones = "";
         $retiros = "";
         $saldo = "";
+        $propinas = "";
 
         $tiene_cierre = model('cierreModel')->select('fecha')->where('idapertura', $ultimo_id)->first();
         $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $ultimo_id)->first();
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $ultimo_id)->first();
         $fecha_y_hora_apertura = model('aperturaModel')->select('fecha_y_hora_apertura')->where('id', $ultimo_id)->first();
 
+        $aperturas = model('aperturaModel')->findAll();
 
-        if (empty($tiene_cierre)) {
-            $estado = "ABIERTA";
-            $cierre = 'POR DEFINIR';
+        
+   
+        if (!empty($aperturas)) {
 
-            $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
-            if (empty($efectivo)) {
-                $ingresos_efectivo = 0;
-            } else if (!empty($efectivo)) {
-                $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
-            }
+        
 
-            $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
-            if (empty($transaccion)) {
-                $ingresos_transaccion = 0;
-            } else if (!empty($transaccion)) {
-                $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
-            }
-            $valor_cierre = 0;
-            $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+            if (empty($tiene_cierre)) {
+                $estado = "ABIERTA";
+                $cierre = 'Sin cierre';
+              
 
-            if (empty($devolucion_venta)) {
-                $devoluciones = 0;
-            } else if (!empty($devolucion_venta)) {
-                $devoluciones = $devolucion_venta[0]['total_devoluciones'];
-            }
-            $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
 
-            if (empty($total_retiros[0]['total_retiros'])) {
-                $retiros = 0;
-            }
-            if (!empty($total_retiros[0]['total_retiros'])) {
-                $retiros = $total_retiros[0]['total_retiros'];
-            }
+                $ingresos = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $ultimo_apertura['id'])->findAll();
+                $ingresos_efectivo = $ingresos[0]['efectivo'];
 
-            $efectivo_cierre = 0;
-            $transaccion_cierre = 0;
-            $saldo = 0;
+                $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_apertura['id'])->findAll();
+                $propinas = $temp_propinas[0]['propina'];
+                
+           
+                $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_apertura['id'])->findAll();
+                $ingresos_transaccion = $transaccion[0]['transferencia'];
 
-            $diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
-        }
-        if (!empty($tiene_cierre)) {
-            $estado = 'CERRADA';
-            $fecha_cierre = model('cierreModel')->select('fecha')->where('idapertura', $ultimo_id)->first();
-            $cierre = $fecha_cierre['fecha'];
+              
+                $valor_cierre = 0;
+                $devolucion_venta = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $ultimo_apertura['id'])->findAll();
+             
+                if (empty($devolucion_venta)) {
+                    $devoluciones = 0;
+                } else if (!empty($devolucion_venta)) {
+                    $devoluciones = $devolucion_venta[0]['valor_total_producto'];
+                }
+                //$total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
+                $total_retiros = model('retiroFormaPagoModel')->selectSum('valor')->where('id_apertura', $ultimo_apertura['id'])->findAll();
+                
+            
+                if (empty($total_retiros[0]['valor'])) {
+                    $retiros = 0;
+                }
+                if (!empty($total_retiros[0]['valor'])) {
+                    $retiros = $total_retiros[0]['valor'];
+                }
 
-            $fecha_y_hora_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $ultimo_id)->first();
-            $efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            if (empty($efectivo)) {
-                $ingresos_efectivo = 0;
-            } else if (!empty($efectivo)) {
-                $ingresos_efectivo = $efectivo[0]['ingresos_efectivo'];
-            }
-
-            $transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            if (empty($transaccion)) {
-                $ingresos_transaccion = 0;
-            } else if (!empty($transaccion)) {
-                $ingresos_transaccion = $transaccion[0]['ingresos_transaccion'];
-            }
-            $valor_cierre = 0;
-            $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-
-            if (empty($devolucion_venta)) {
-                $devoluciones = 0;
-            } else if (!empty($devolucion_venta)) {
-                $devoluciones = $devolucion_venta[0]['total_devoluciones'];
-            }
-            $id_cierre = model('cierreModel')->select('id')->where('idapertura', $ultimo_id)->first();
-            $efectivo = model('cierreFormaPagoModel')->cierre_efectivo($id_cierre['id']);
-            $transaccion = model('cierreFormaPagoModel')->cierre_transaccion($id_cierre['id']);
-
-            if (!empty($efectivo)) {
-                $efectivo_cierre = $efectivo[0]['valor'];
-            }
-            if (empty($efectivo)) {
                 $efectivo_cierre = 0;
-            }
-            if (empty($transaccion)) {
                 $transaccion_cierre = 0;
+                $saldo = 0;
+
+                //$diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
+                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'] ) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
             }
-            if (!empty($transaccion)) {
-                $transaccion_cierre = $transaccion[0]['valor'];
+            if (!empty($tiene_cierre)) {
+
+                $estado = 'CERRADA';
+                $fecha_cierre = model('cierreModel')->select('fecha')->where('idapertura', $ultimo_id)->first();
+                $cierre = $fecha_cierre['fecha'];
+
+                $fecha_y_hora_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $ultimo_id)->first();
+                $efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $ultimo_id)->findAll();
+                if (empty($efectivo)) {
+                    $ingresos_efectivo = 0;
+                } else if (!empty($efectivo)) {
+                    $ingresos_efectivo = $efectivo[0]['efectivo'];
+                }
+
+                $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_id)->findAll();
+                if (empty($transaccion)) {
+                    $ingresos_transaccion = 0;
+                } else if (!empty($transaccion)) {
+                    $ingresos_transaccion = $transaccion[0]['transferencia'];
+                }
+                $valor_cierre = 0;
+                $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+
+
+                if (empty($devolucion_venta)) {
+                    $devoluciones = 0;
+                } else if (!empty($devolucion_venta)) {
+                    $devoluciones = $devolucion_venta[0]['total_devoluciones'];
+                }
+                $id_cierre = model('cierreModel')->select('id')->where('idapertura', $ultimo_id)->first();
+                $efectivo = model('cierreFormaPagoModel')->cierre_efectivo($id_cierre['id']);
+                $transaccion = model('cierreFormaPagoModel')->cierre_transaccion($id_cierre['id']);
+
+                if (!empty($efectivo)) {
+                    $efectivo_cierre = $efectivo[0]['valor'];
+                }
+                if (empty($efectivo)) {
+                    $efectivo_cierre = 0;
+                }
+                if (empty($transaccion)) {
+                    $transaccion_cierre = 0;
+                }
+                if (!empty($transaccion)) {
+                    $transaccion_cierre = $transaccion[0]['valor'];
+                }
+
+                $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+
+                if (empty($total_retiros[0]['total_retiros'])) {
+                    $retiros = 0;
+                }
+                if (!empty($total_retiros[0]['total_retiros'])) {
+                    $retiros = $total_retiros[0]['total_retiros'];
+                }
+
+
+                $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_id)->findAll();
+                $propinas = $temp_propinas[0]['propina'];
+                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'] ) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
             }
 
-            $total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+    
 
-            if (empty($total_retiros[0]['total_retiros'])) {
-                $retiros = 0;
-            }
-            if (!empty($total_retiros[0]['total_retiros'])) {
-                $retiros = $total_retiros[0]['total_retiros'];
-            }
-
-            $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+            return view('consultas_y_reportes/datos_consultas_caja', [
+                'estado' => $estado,
+                'fecha_apertura' => $fecha_apertura['fecha'],
+                'fecha_cierre' => $cierre,
+                'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
+                'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion), 0, ",", "."),
+                'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
+                'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo)+$valor_apertura['valor'], 0, ",", "."),
+                'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
+                'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
+                'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
+                'devoluciones' => "$" . number_format($devoluciones, 0, ",", "."),
+                'retiros' => "$" . number_format($retiros, 0, ",", "."),
+                'propinas' => "$" . number_format($propinas, 0, ",", "."),
+                'retirosmasdevoluciones' => "$" . number_format($retiros + $devoluciones, 0, ",", "."),
+                'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_efectivo +$ingresos_transaccion) - ($retiros + $devoluciones), 0, ",", "."),
+                'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
+                'id_apertura' => $ultimo_id,
+            ]);
+        } else if (empty($aperturas)) {
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'success');
+            return redirect()->to(base_url('consultas_y_reportes/consultas_caja'))->with('mensaje', 'No hay registros disponibles para consultar  ');
         }
-        return view('consultas_y_reportes/datos_consultas_caja', [
-            'estado' => $estado,
-            'fecha_apertura' => $fecha_apertura['fecha'],
-            'fecha_cierre' => $cierre,
-            'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-            'ingresos_efectivo' =>  "$" . number_format($ingresos_efectivo, 0, ",", "."),
-            'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
-            'total_ingresos' =>  "$" . number_format($ingresos_transaccion + $ingresos_efectivo, 0, ",", "."),
-            'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
-            'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
-            'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
-            'devoluciones' => "$" . number_format($devoluciones, 0, ",", "."),
-            'retiros' => "$" . number_format($retiros, 0, ",", "."),
-            'retirosmasdevoluciones' => "$" . number_format($retiros + $devoluciones, 0, ",", "."),
-            'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_transaccion + $ingresos_efectivo) - ($retiros + $devoluciones), 0, ",", "."),
-            'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
-            'id_apertura' => $ultimo_id
-        ]);
     }
     function consultas_caja_por_fecha()
     {
@@ -1369,13 +1398,7 @@ class reporteDeVentasController extends BaseController
 
     function datos_consultar_producto_agrupado_pdf()
     {
-        $fecha_inicial = $_REQUEST['fecha_inicial_agrupado'];
 
-        $hora_inicial = $_REQUEST['hora_inicial_agrupado'];
-
-        $fecha_final = $_REQUEST['fecha_final_agrupado'];
-
-        $hora_final = $_REQUEST['hora_final_agrupado'];
 
 
         $dompdf = new Dompdf();
@@ -1388,216 +1411,83 @@ class reporteDeVentasController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
 
-        if (empty($hora_inicial) and empty($hora_final)) {
-            $resultado = model('productoFacturaVentaModel')->resutado_suma_entre_fechas($fecha_inicial, $fecha_final);
-
-            $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
-            if (empty($validar_tabla_reporte_producto)) {
-                foreach ($resultado as $detalle) {
-
-                    $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades($fecha_inicial, $fecha_final, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                    $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $data = [
-                        'cantidad' => $productos_suma[0]['cantidad'],
-                        'nombre_producto' => $nombre_producto['nombreproducto'],
-                        'precio_venta' => $productos_suma[0]['valor_total_producto'],
-                        'valor_total' => $productos_suma[0]['valor_total_producto'] * $productos_suma[0]['cantidad'],
-                        'id_categoria' => $codigocategoria['codigocategoria'],
-                        'codigo_interno_producto' => $detalle['codigointernoproducto']
-                    ];
-                    $insert = model('reporteProductoModel')->insert($data);
-                }
 
 
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fechas($fecha_inicial, $fecha_final);
-
-                $total_devoluciones = model('devolucionModel')->total($fecha_inicial, $fecha_final);
-
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        $id_apertura = $this->request->getGet('id_apertura'); 
 
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            } else if (!empty($validar_tabla_reporte_producto)) {
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
 
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fechas($fecha_inicial, $fecha_final);
+        $fecha_cierre = "";
+        $fecha_y_hora_cierre = "";
+        $hora_cierre = "";
+        $fecha_y_hora_apertura = model('aperturaModel')->select('fecha_y_hora_apertura')->where('id', $id_apertura)->first();
 
-                $total_devoluciones = model('devolucionModel')->total($fecha_inicial, $fecha_final);
-
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
-
-
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
+        $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
+        $hor_apertura = model('aperturaModel')->select('hora')->where('id', $id_apertura)->first();
+        $hora_apertura = $hor_apertura['hora'];
+        $fecha_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('idapertura', $id_apertura)->first();
+        $hora_cierre = model('cierreModel')->select('hora')->where('idapertura', $id_apertura)->first();
+        if (empty($fecha_cierre) and empty($hora_cierre)) {
+            $fecha_y_hora_cierre = date('Y-m-d H:i:s');
+            $hora_cierre = date('H:i:s');
+        } else if (!empty($fecha_cierre)) {
+            $fecha_y_hora_cierre = $fecha_cierre['fecha_y_hora_cierre'];
+            $hora_cierre = $hora_cierre['hora'];
         }
 
-        if (empty($hora_inicial) and !empty($hora_final)) {
 
-            $temp_fecha_inicial = $fecha_inicial;
-            $temp_fecha_final = $fecha_final . " " . $hora_final;
-            $resultado_fecha = model('productoFacturaVentaModel')->consulta_entre_fechas_sin_hora_inicial($temp_fecha_inicial, $temp_fecha_final);
-            // $total = model('productoFacturaVentaModel')->total_entre_fechas_sin_hora_inicial($fecha_inicial, $temp_fecha_final);
-
-            $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
-
-            if (empty($validar_tabla_reporte_producto)) {
-
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fecha_y_hora_final($fecha_inicial, $temp_fecha_final);
-
-                $total_devoluciones = model('devolucionModel')->total_con_hora_final($fecha_inicial, $temp_fecha_final);
-
-                foreach ($resultado as $detalle) {
-                    $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades($fecha_inicial, $fecha_final, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                    $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $data = [
-                        'cantidad' => $productos_suma[0]['cantidad'],
-                        'nombre_producto' => $nombre_producto['nombreproducto'],
-                        'precio_venta' => $productos_suma[0]['valor_total_producto'],
-                        'valor_total' => $productos_suma[0]['valor_total_producto'] * $productos_suma[0]['cantidad'],
-                        'id_categoria' => $codigocategoria['codigocategoria'],
-                        'codigo_interno_producto' => $detalle['codigointernoproducto']
-                    ];
-                    $insert = model('reporteProductoModel')->insert($data);
-                }
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        $productos_distinct = model('kardexModel')->get_productos($id_apertura);
+        $categorias = model('kardexModel')->get_categorias($id_apertura);
 
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
-            if (empty($validar_tabla_reporte_producto)) {
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
 
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        foreach ($productos_distinct as $detalle) {
 
+            $total = model('kardexModel')->get_total($id_apertura, $detalle['valor_unitario'], $detalle['codigo']);
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
+            $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigo'])->first();
+            $cantidad = $total[0]['cantidad'];
+
+            $data = [
+                'cantidad' => $cantidad,
+                'nombre_producto' => $nombre_producto['nombreproducto'],
+                'precio_venta' => $detalle['valor_unitario'],
+                'valor_total' => $detalle['valor_unitario'] * $cantidad,
+                'id_categoria' => $detalle['id_categoria'],
+                'codigo_interno_producto' => $detalle['codigo'],
+                'valor_unitario' => $detalle['valor_unitario']
+            ];
+            $insert = model('reporteProductoModel')->insert($data);
         }
-        if (!empty($hora_inicial) and !empty($hora_final)) {
 
-            $temp_fecha_inicial = $fecha_inicial;
-            $temp_fecha_final = $fecha_final;
+        $devoluciones = model('detalleDevolucionVentaModel')->where('id_apertura', $id_apertura)->find();
 
-            $resultado_fechas = model('productoFacturaVentaModel')->consulta_entre_fechas_con_hora_inicial_y_final($temp_fecha_inicial, $temp_fecha_final);
-
-
-            $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
-
-            if (empty($validar_tabla_reporte_producto)) {
-
-                $devoluciones = model('devolucionModel')->resutado_suma_entre_fecha_con_hora_final($temp_fecha_inicial, $temp_fecha_final);
-
-                $total_devoluciones = model('devolucionModel')->total_con_hora_final_y_final($temp_fecha_inicial, $temp_fecha_final);
-
-                foreach ($resultado_fechas as $detalle) {
-                    $productos_suma = model('productoFacturaVentaModel')->reporte_suma_cantidades($fecha_inicial, $fecha_final, $detalle['valor_total_producto'], $detalle['codigointernoproducto']);
-                    $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $data = [
-                        'cantidad' => $productos_suma[0]['cantidad'],
-                        'nombre_producto' => $nombre_producto['nombreproducto'],
-                        'precio_venta' => $productos_suma[0]['valor_total_producto'],
-                        'valor_total' => $productos_suma[0]['valor_total_producto'] * $productos_suma[0]['cantidad'],
-                        'id_categoria' => $codigocategoria['codigocategoria'],
-                        'codigo_interno_producto' => $detalle['codigointernoproducto']
-                    ];
-                    $insert = model('reporteProductoModel')->insert($data);
-                }
-
-                $categorias = model('productoFacturaVentaModel')->categorias($fecha_inicial, $fecha_final);
-
-                $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
-                    'datos_productos' => $resultado_fechas,
-                    'fecha_inicial' => $fecha_inicial,
-                    'fecha_final' => $fecha_final,
-                    //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
-                    'devoluciones' => $devoluciones,
-                    'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
-                    'datos_empresa' => $datos_empresa,
-                    'regimen' => $regimen['nombreregimen'],
-                    'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
-                    'nombre_departamento' => $nombre_departamento['nombredepartamento'],
-                    'categorias' => $categorias
-                ]));
+        $dompdf->loadHtml(view('producto/datos_consultar_agrupado_pdf', [
+            'datos_productos' => $productos_distinct,
+            'fecha_inicial' => $fecha_y_hora_apertura['fecha_y_hora_apertura'],
+            'fecha_final' => $fecha_y_hora_cierre,
+            //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
+            'devoluciones' => $devoluciones,
+            //'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
+            'datos_empresa' => $datos_empresa,
+            'regimen' => $regimen['nombreregimen'],
+            'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
+            'nombre_departamento' => $nombre_departamento['nombredepartamento'],
+            'categorias' => $categorias,
+            'id_apertura' => $id_apertura
+        ]));
 
 
-                $options = $dompdf->getOptions();
-                $dompdf->setPaper('letter');
-                $dompdf->render();
-                $dompdf->stream("Reporte de ventas .pdf", array("Attachment" => true));
-            }
-        }
+        $options = $dompdf->getOptions();
+        $dompdf->setPaper('letter');
+        $dompdf->render();
+        $dompdf->stream($fecha_apertura['fecha'] . ".pdf", array("Attachment" => true));
+
+
 
         //echo  $hora_consulta_inicial = $fecha_inicial . " " . $hora_inicial;
     }
@@ -1967,7 +1857,7 @@ class reporteDeVentasController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
         $dompdf->loadHtml(view('consultas_y_reportes/consulta_producto', [

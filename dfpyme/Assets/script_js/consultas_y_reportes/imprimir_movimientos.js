@@ -1,10 +1,11 @@
-function imprimir_movimientos(id_apertura) {
+function imprimir_movimientos() {
     var url = document.getElementById("url").value;
+    let id_apertura = document.getElementById("id_apertura").value;
     $.ajax({
         data: {
             id_apertura
         },
-        url: url + "/" + "caja/imprimir_movimiento_caja",
+        url: url + "/" + "pedidos/imprimir_movimiento_caja",
         type: "POST",
         success: function (resultado) {
             var resultado = JSON.parse(resultado);

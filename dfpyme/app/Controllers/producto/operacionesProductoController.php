@@ -230,6 +230,17 @@ class operacionesProductoController extends BaseController
             $precio_2 = 100 - $pre_2;
 
 
+            $valorImpuestoSaludable = $this->request->getPost('valor_impuesto_saludable');
+
+            // Quitar los puntos al impuesto saludable
+            $valorImpuestoSaludable = str_replace('.', '', $valorImpuestoSaludable);
+
+            // Si el impuesto saludable está vacío, asignarle un cero
+            if (empty($valorImpuestoSaludable)) {
+                $valorImpuestoSaludable = 0;
+            }
+
+
             if ($this->request->getPost('informacion_tributaria') == 1) {
 
                 $data = [
@@ -243,7 +254,8 @@ class operacionesProductoController extends BaseController
                     'utilidadporcentualproducto' => 1,
                     'valorventaproducto' => $valor_venta_producto,
                     'aplicaprecioporcentaje' => false,
-                    'idiva' => $this->request->getPost('valor_iva'),
+                    //'idiva' => $this->request->getPost('valor_iva'),
+                    'idiva' => 1,
                     'unidadventaproducto' => 1,
                     'cantidadminimaproducto' => 0,
                     'cantidadmaximaproducto' => 0,
@@ -271,6 +283,8 @@ class operacionesProductoController extends BaseController
                     'aplica_ico' => true,
                     'se_imprime' => $impresion_comanda,
                     'aplica_descuento' => $aplica_descuento,
+                    'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
+                    'valor_impuesto_saludable' => $valorImpuestoSaludable
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -348,10 +362,12 @@ class operacionesProductoController extends BaseController
                     'inicial' => true,
                     'impoconsumo' => 0,
                     'id_tipo_inventario' => 1,
-                    'id_ico_producto' => 1,
+                    'id_ico_producto' => 2,
                     'aplica_ico' => false,
                     'se_imprime' => $impresion_comanda,
                     'aplica_descuento' => $aplica_descuento,
+                    'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
+                    'valor_impuesto_saludable' => $valorImpuestoSaludable
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -414,6 +430,10 @@ class operacionesProductoController extends BaseController
         $descto_mayor = model('productoModel')->select('descto_mayor')->where('codigointernoproducto', $id_producto)->first();
         $temp_precio_2 = ($descto_mayor['descto_mayor'] * $valor_venta['valorventaproducto']) / 100;
         $precio_2 = $valor_venta['valorventaproducto'] - $temp_precio_2;
+        $impuesto_saludable = model('impuestoSaludableModel')->findAll();
+        $valor_impuesto_saludable = model('productoModel')->select('valor_impuesto_saludable')->where('codigointernoproducto', $id_producto)->first();
+
+
         $returnData = array(
             "resultado" => 1,
             "edicion_producto" => view('producto/editar_producto', [
@@ -431,7 +451,9 @@ class operacionesProductoController extends BaseController
                 'id_iva' => $id_iva['idiva'],
                 'id_ico' => $id_ico['id_ico_producto'],
                 'id_categoria' => $id_categoria['codigocategoria'],
-                'precio_2' => number_format($precio_2, 0, ",", ".")
+                'precio_2' => number_format($precio_2, 0, ",", "."),
+                'impuesto_saludable' => $impuesto_saludable,
+                'valor_impuesto_saludable'=>number_format($valor_impuesto_saludable['valor_impuesto_saludable'], 0, ",", ".")
             ])
         );
         echo  json_encode($returnData);
@@ -534,6 +556,7 @@ class operacionesProductoController extends BaseController
                 'id_ico_producto' => $this->request->getPost('valor_ico'),
                 'aplica_ico' => $aplica_ico,
                 'aplica_descuento' => $permite_descuento,
+                'valor_impuesto_saludable'=>$this->request->getPost('edicion_de_valor_costo_producto'),
             ];
 
             $model = model('productoModel');
@@ -572,7 +595,7 @@ class operacionesProductoController extends BaseController
 
     function borrar_producto_inventario()
     {
-        // echo $this->request->getPost('codigo_interno_producto'); exit();
+        $codigo_interno_producto = $this->request->getPost('codigo_interno_producto');
         $tiene_movimientos = model('productoFacturaVentaModel')->where('codigointernoproducto', $this->request->getPost('codigo_interno_producto'));
 
         if (!empty($tiene_movimientos)) {
@@ -583,7 +606,7 @@ class operacionesProductoController extends BaseController
             ];
             $model = model('productoModel');
             $actualizar = $model->set($data);
-            $actualizar = $model->where('codigointernoproducto', '98');
+            $actualizar = $model->where('codigointernoproducto', $codigo_interno_producto);
             $actualizar = $model->update();
 
             echo json_encode(
@@ -595,7 +618,7 @@ class operacionesProductoController extends BaseController
         }
 
         if (empty($tiene_movimientos)) {
-            $borrar_producto = model('productoModel')->where('codigointernoproducto', '98');
+            $borrar_producto = model('productoModel')->where('codigointernoproducto', $codigo_interno_producto);
             $borrar_producto->delete();
 
             if ($borrar_producto) {

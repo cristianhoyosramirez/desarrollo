@@ -62,6 +62,8 @@ class cajaController extends BaseController
         $fecha->setTimeZone(new DateTimeZone('America/Bogota'));
         $fecha_y_hora = $fecha->format('Y-m-d H:i:s.u');
 
+        $fecha_apertura=$_REQUEST['fecha_apertura_caja'];
+
         $data = [
             'fecha' => $_REQUEST['fecha_apertura_caja'],
             //'hora' => date('h:i:s-H'),
@@ -74,80 +76,36 @@ class cajaController extends BaseController
         ];
 
         $apertura = model('aperturaModel')->insert($data);
-        if ($apertura) {
-            $apertura_id = model('aperturaModel')->insertID;
-            $apertura_registro = [
+        $id_apertura = model('aperturaModel')->insertID();
+        $apertura_registro = [
+            'idcaja' => 1,
+            'numero' => $id_apertura
+
+        ];
+        $apertura_registro = model('aperturaRegistroModel')->insert($apertura_registro);
+
+        $exite_fecha = model('consecutivoInformeModel')->select('fecha')->where('fecha', $_REQUEST['fecha_apertura_caja'])->first();
+
+
+        if (empty($exite_fecha['fecha'])) {
+
+            $id = model('consecutivoInformeModel')->selectMax('id')->find();
+
+            $numero = model('consecutivoInformeModel')->select('numero')->where('id', $id[0]['id'])->first();
+
+            $data = [
+                'fecha' => $fecha_apertura,
                 'idcaja' => 1,
-                'numero' => $apertura_id
+                'numero' => $numero['numero']+1
+
             ];
-            //dd($apertura_registro);
 
-            $apertura_registro = model('aperturaRegistroModel')->insert($apertura_registro);
-            $lista_precios = model('cajaModel')->select('requiere_lista_de_precios')->first();
-            if ($apertura_registro) {
-                $clientes = model('clientesModel')->orderBy('id', 'asc')->findAll();
-                $estado = model('estadoModel')->findAll();
-                $regimen = model('regimenModel')->select('*')->find();
-                $tipo_cliente = model('tipoClienteModel')->select('*')->find();
-                $clasificacion_cliente = model('clasificacionClienteModel')->select('*')->find();
-                $departamento = model('departamentoModel')->select('*')->where('idpais', 49)->find();
-                $id_usuario = $_REQUEST['usuario_apertura'];
-                $tiene_pedido = model('pedidoPosModel')->select('fk_usuario')->where('fk_usuario', $id_usuario)->first();
-
-                $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
-                if (empty($tiene_pedido)) {
-                    $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
-                    $id_ciudad_empresa = model('empresaModel')->select('idciudad')->first();
-                    $ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
-                    //  $id_regimen_no_responsable_iva = model('regimenModel')->select('idregimen')->where('nombreregimen', 'NO RESPONSABLE DE IVA')->first();
-                    $id_regimen_no_responsable_iva = model('regimenModel')->select('idregimen')->where('idregimen', 2)->first();
-                    return view('factura_pos/factura_pos_sin_productos', [
-                        "clientes" => $clientes,
-                        "estado" => $estado,
-                        "regimen" => $regimen,
-                        "tipo_cliente" => $tipo_cliente,
-                        "clasificacion_cliente" => $clasificacion_cliente,
-                        "departamentos" => $departamento,
-                        "tiene_producto" => 0,
-                        "valor_total" => 0,
-                        "id_departamento" => $id_departamento_empresa['iddepartamento'],
-                        "id_ciudad" => $id_ciudad_empresa['idciudad'],
-                        "ciudad" => $ciudad['nombreciudad'],
-                        "id_regimen" => $id_regimen_no_responsable_iva['idregimen'],
-                        "apertura" => 1,
-                        "lista_precios" => $lista_precios['requiere_lista_de_precios'],
-                        "caja_general" => 1
-                    ]);
-                } else if (!empty($tiene_pedido)) {
-                    $numero_pedido = model('pedidoPosModel')->select('id')->where('fk_usuario', $id_usuario)->first();
-                    $productos = model('productoPedidoPosModel')->productos_pedido_pos($numero_pedido['id']);
-                    $total = model('pedidoPosModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
-
-                    $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
-                    $id_ciudad_empresa = model('empresaModel')->select('idciudad')->first();
-                    $ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
-                    $id_regimen_no_responsable_iva = model('empresaModel')->select('idregimen')->where('idregimen', 1)->first();
-
-                    return view('factura_pos/factura_pos', [
-                        "clientes" => $clientes,
-                        "estado" => $estado,
-                        "regimen" => $regimen,
-                        "tipo_cliente" => $tipo_cliente,
-                        "clasificacion_cliente" => $clasificacion_cliente,
-                        "departamentos" => $departamento,
-                        "productos" => $productos,
-                        "tiene_producto" => 1,
-                        "valor_total" => number_format($total['valor_total'], 0, ",", "."),
-                        "id_departamento" => $id_departamento_empresa['iddepartamento'],
-                        "id_ciudad" => $id_ciudad_empresa['idciudad'],
-                        "ciudad" => $ciudad['nombreciudad'],
-                        "id_regimen" => $id_regimen_no_responsable_iva['idregimen'],
-                        "apertura" => 1,
-                        "lista_precios" => $lista_precios['requiere_lista_de_precios']
-                    ]);
-                }
-            }
+            $insert = model('consecutivoInformeModel')->insert($data);
         }
+
+        $session = session();
+        $session->setFlashdata('iconoMensaje', 'success');
+        return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Apertura de caja éxitoso ');
     }
 
     function cierre()
@@ -312,6 +270,7 @@ class cajaController extends BaseController
                         $returnData = array(
                             "id_cierre" => $id_cierre,
                             "resultado" => 1,
+                            "id_apertura" => $id_apertura['numero']
 
                         );
                         echo  json_encode($returnData);
@@ -411,8 +370,10 @@ class cajaController extends BaseController
         $id_apert = model('cierreModel')->select('idapertura')->where('id', $ultimo_id_cierre['id'])->first();
 
         $id_apertura = $this->request->getPost('id_apertura');
+        //$id_apertura = 26;
 
         $tiene_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura)->first();
+
 
         if (!empty($tiene_cierre)) {
             $id_cierre = $tiene_cierre['id'];
@@ -465,12 +426,13 @@ class cajaController extends BaseController
 
             $fecha_y_hora_cierre = model('cierreModel')->select('fecha_y_hora_cierre')->where('id', $id_cierre)->first();
 
-            $ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            $ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-            if (!empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
-                $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'], 0, ",", ".") . "\n");
+            //$ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            $ingresos_efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $id_apertura)->findAll();
+            //$ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
+            if (!empty($ingresos_efectivo[0]['efectivo'])) {
+                $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
             }
-            if (empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
+            if (empty($ingresos_efectivo[0]['efectivo'])) {
                 $printer->text("Ingresos efectivo:      " . "$0" . "\n");
             }
             if (!empty($ingresos_transaccion[0]['ingresos_transaccion'])) {
@@ -554,8 +516,8 @@ class cajaController extends BaseController
 
             $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
 
-            $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
-            $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
+            $printer->text("(-) Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
+            $printer->text("(-) Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
             $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
             $tot_en_caja = $temp - $total_retiros;
@@ -661,12 +623,15 @@ class cajaController extends BaseController
         $fecha->setTimeZone(new DateTimeZone('America/Bogota'));
         $fecha_y_hora_actual = $fecha->format('Y-m-d H:i:s.u');
 
-        $ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
+        //$ingresos_efectivo = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
+        $ingresos_efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $id_apertura)->findAll();
+
+
         $ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_transaccion($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
-        if (!empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
-            $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'], 0, ",", ".") . "\n");
+        if (!empty($ingresos_efectivo[0]['efectivo'])) {
+            $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
         }
-        if (empty($ingresos_efectivo[0]['ingresos_efectivo'])) {
+        if (empty($ingresos_efectivo[0]['efectivo'])) {
             $printer->text("Ingresos efectivo: $0"  . "\n");
         }
         if (!empty($ingresos_transaccion[0]['ingresos_transaccion'])) {
@@ -745,12 +710,12 @@ class cajaController extends BaseController
         $printer->text("Ingresos-retiros-devoluciones \n");
         $printer->text("------------------------------------------------\n");
 
-        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
 
         $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
         $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
-        $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
+        $temp = $ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'];
         $total_caja = $total_retiros + $total_devoluciones;
         $total_en_caja = $temp - $total_caja;
 
@@ -882,7 +847,7 @@ class cajaController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
         $id_apertura = $this->request->getPost('id_apertura');
@@ -1036,7 +1001,7 @@ class cajaController extends BaseController
 
 
         $id_cierre = $this->request->getPost('id_cierre');
-        //$id_cierre = 1552;
+        //$id_cierre = 34;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -1075,7 +1040,14 @@ class cajaController extends BaseController
         $printer->text("\n");
 
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $id_apertura['idapertura'])->first();
-        $printer->text("VALOR APERTURA   : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("VALOR apertura   : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n\n");
+
+        $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura['idapertura']);
+        $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura['idapertura']);
+
+
+        $printer->text("Ventas pos          : " . "$" . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
+        $printer->text("Ventas electronicas : " . "$" . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
 
         $printer->text("\n");
         $printer->text("-----------------------------------------------\n ");
@@ -1173,10 +1145,10 @@ class cajaController extends BaseController
         $printer->text("------------------------------------------------\n");
 
 
-        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("(+)Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
 
-        $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
-        $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
+        $printer->text("(-)Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
+        $printer->text("(-)Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
         $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
         $tot_en_caja = $temp - $total_retiros;

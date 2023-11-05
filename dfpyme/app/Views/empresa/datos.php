@@ -95,5 +95,6 @@ PRODUCTO
 
     </div>
   </div>
+</div>
 
-  <?= $this->endSection('content') ?>
+<?= $this->endSection('content') ?>

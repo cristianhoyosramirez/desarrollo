@@ -25,8 +25,8 @@
 
 <body>
     <div class="wrapper">
-        <?= $this->include('layout/header') ?>
-        <?= $this->include('layout/navbar') ?>
+        <?= $this->include('layout/header_mesas') ?>
+        
 
         <div class="page-wrapper">
             <div class="container-xl">
@@ -264,7 +264,7 @@
                             return "Buscando..";
                         }
                     },
-                    ajax: {
+              /*       ajax: {
                         //url: "tipos_formulacion",
                         url: url + "/producto/categorias",
                         type: "post",
@@ -281,7 +281,7 @@
                             };
                         },
                         cache: true
-                    }
+                    } */
                 });
 
                 $("#marca_producto").select2({
@@ -299,7 +299,7 @@
                             return "Buscando..";
                         }
                     },
-                    ajax: {
+                   /*  ajax: {
                         //url: "tipos_formulacion",
                         url: url + "/producto/marcas",
                         type: "post",
@@ -316,7 +316,7 @@
                             };
                         },
                         cache: true
-                    }
+                    } */
 
                 });
 
@@ -513,7 +513,7 @@
                 e.preventDefault();
                 var form = this;
                 let button = document.querySelector("#btn_crear_producto");
-                button.disabled = true;
+                button.disabled = false;
                 $.ajax({
                     url: $(form).attr('action'),
                     method: $(form).attr('method'),
@@ -538,6 +538,11 @@
                                 $(".valor_venta_producto_error").html("");
                                 $('#categoria_producto').val(null).trigger('change');
                                 $('#marca_producto').val(null).trigger('change');
+                                var informacion_tribuitaria = document.getElementById("informacion_tributaria").value;
+                                if (informacion_tribuitaria == 2) {
+                                    ico.style.display = 'block';
+                                    iva.style.display = 'none';
+                                }
                                 $(form)[0].reset();
 
 
@@ -582,7 +587,7 @@
         </script>
 
 
-        <script>
+ <!--        <script>
             $(document).ready(function() {
                 document.getElementById('btn_crear_producto').disabled = true;
             })
@@ -593,7 +598,7 @@
                     document.getElementById('btn_crear_producto').disabled = false;
                 }
             }
-        </script>
+        </script> -->
 
 
 

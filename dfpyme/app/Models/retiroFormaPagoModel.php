@@ -9,7 +9,7 @@ class retiroFormaPagoModel extends Model
     protected $table      = 'retiro_forma_pago';
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['idretiro', 'idpago', 'valor', 'concepto', 'id_cuenta_retiro', 'fecha', 'fecha_y_hora_retiro_forma_pago'];
+    protected $allowedFields = ['idretiro', 'idpago', 'valor', 'concepto', 'id_cuenta_retiro', 'fecha', 'fecha_y_hora_retiro_forma_pago','id_apertura'];
 
     public function retiros_general($fecha_inicial, $fecha_final)
     {

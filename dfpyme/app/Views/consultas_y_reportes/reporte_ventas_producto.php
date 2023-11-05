@@ -11,16 +11,18 @@
 
                 $dia_final = $dias[(date('N', strtotime($fecha_cierre))) - 1];
                 $mes_final = $meses[(date('m', strtotime($fecha_cierre))) - 1];
-
+         
                 ?>
 
                <div class="col">
-                   <p class="h3">APERTURA: <?php echo $dia_inicio . ", " . date("d", strtotime($fecha_apertura)) . " " . $mes_inicio . " " . date("Y", strtotime($fecha_apertura)) . " " . $fecha_inicial_format; ?></p>
+                   <p class="h3">APERTURA: <?php echo $dia_inicio . ", " . date("d", strtotime($fecha_apertura)) . " " . $mes_inicio . " " . date("Y", strtotime($fecha_apertura)) . " " . $fecha_inicial_format;
+                                            ?></p>
                </div>
 
                <?php if ($fecha_cierre != "Sin cierre") { ?>
                    <div class="col">
-                       <p class="h3">CIERRE: <?php echo $dia_final . ", " . date("d", strtotime($fecha_cierre)) . " " . $mes_final . " " . date("Y", strtotime($fecha_cierre)) . " " . $fecha_final_format; ?></p>
+                       <p class="h3">CIERRE: <?php echo $dia_final . ", " . date("d", strtotime($fecha_cierre)) . " " . $mes_final . " " . date("Y", strtotime($fecha_cierre)) . " " . $fecha_final_format;
+                                                ?></p>
                    </div>
                <?php } ?>
                <?php if ($fecha_cierre == "Sin cierre") { ?>
@@ -91,80 +93,60 @@
                                </tr>
                            </thead>
 
-                           <?php
 
-                            $validar_categoria = model('productoFacturaVentaModel')->validar_categoria($fecha_inicial, $fecha_final);
-
-                            foreach ($validar_categoria as $detalle) {
-                                if (empty($detalle['id_categoria'])) {
-                                    $codigo_categoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                                    $data = [
-                                        'id_categoria' => $codigo_categoria['codigocategoria']
-                                    ];
-
-                                    $model = model('productoFacturaVentaModel');
-                                    $actualizar_id_categoria = $model->set($data);
-                                    $actualizar_id_categoria = $model->where('idproducto_factura_venta', $detalle['idproducto_factura_venta']);
-                                    $actualizar_id_categoria = $model->update();
-                                }
-                            }
-
-                            ?>
 
                            <tbody>
-                               <?php foreach ($categorias as $detalle) {  //echo $detalle['id_categoria']."</br>"; 
+                               <?php foreach ($categorias as $detalle) {  //echo $detalle['id_categoria']."</br>";
+                                    $nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('codigocategoria', $detalle['id_categoria'])->first();
                                 ?>
-
-                                   <?php $nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('codigocategoria', $detalle['id_categoria'])->first(); ?>
 
                                    <tr class="table-primary">
 
-                                       <td><?php echo $nombre_categoria['nombrecategoria'] ?></td>
+                                       <td><?php echo $nombre_categoria['nombrecategoria']
+                                            ?></td>
                                        <td></td>
                                        <td></td>
                                        <td></td>
                                        <td></td>
                                    </tr>
 
-                                   <?php
-                                    $productos_categoria = model('reporteProductoModel')->select('*')->where('id_categoria', $detalle['id_categoria'])->findAll();
-                                    $total_categoria = model('reporteProductoModel')->selectSum('valor_total')->where('id_categoria', $detalle['id_categoria'])->findAll();
-                                    ?>
-
-                                   <?php if ($total_categoria[0]['valor_total'] > 0) { ?>
-                                       <tr class="table-dark">
-                                           <td>CÓDIGO</td>
-                                           <td>PRODUCTO</td>
-                                           <td>CANTIDAD</td>
-                                           <td>VALOR UNIDAD</td>
-                                           <td>TOTAL</td>
-                                       </tr>
-
-                                       <?php foreach ($productos_categoria as $detalle_producto) { ?>
+                                   <tr class="table-dark">
+                                       <td>CÓDIGO</td>
+                                       <td>PRODUCTO</td>
+                                       <td>CANTIDAD</td>
+                                       <td>VALOR UNIDAD</td>
+                                       <td>TOTAL</td>
+                                   </tr>
 
 
+                                   <?php $productos = model('reporteProductoModel')->where('id_categoria', $detalle['id_categoria'])->orderBy('codigo_interno_producto', 'asc')->find();  ?>
 
-                                           <tr>
-                                               <td><?php echo $detalle_producto['codigo_interno_producto'] ?></td>
-                                               <td><?php echo $detalle_producto['nombre_producto'] ?></td>
-                                               <td><?php echo $detalle_producto['cantidad'] ?></td>
-                                               <td><?php echo "$" . number_format($detalle_producto['precio_venta'], 0, ",", ".") ?></td>
-                                               <td><?php echo "$" . number_format($detalle_producto['valor_total'], 0, ",", ".") ?></td>
-                                           </tr>
-                                       <?php } ?>
-
+                                   <?php foreach ($productos as $valor) : ?>
                                        <tr>
-                                           <td></td>
-                                           <td></td>
-                                           <td></td>
-                                           <td></td>
-                                           <td class="table-danger">
-                                               <p class="h2 text-end">TOTAL: <?php echo "$" . number_format($total_categoria[0]['valor_total'], 0, ",", ".") ?></p>
-                                           </td>
+                                           <td><?php echo $valor['codigo_interno_producto']
+                                                ?></td>
+                                           <td><?php echo $valor['nombre_producto']
+                                                ?></td>
+                                           <td><?php echo $valor['cantidad']
+                                                ?></td>
+                                           <td><?php echo "$" . number_format($valor['valor_unitario'], 0, ",", ".")
+                                                ?></td>
+                                           <td><?php echo "$" . number_format($valor['valor_total'], 0, ",", ".")
+                                                ?></td>
                                        </tr>
 
-                                   <?php } ?>
-
+                                   <?php endforeach ?>
+                                   <tr>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <?php $total_categoria = model('kardexModel')->get_total_categoria($detalle['id_categoria']) ?>
+                                       <td class="table-danger">
+                                           <p class="h2 text-end">TOTAL: <?php echo "$" . number_format($total_categoria[0]['total'], 0, ",", ".")
+                                                                            ?></p>
+                                       </td>
+                                   </tr>
                                <?php } ?>
                            </tbody>
                        </table>
@@ -178,19 +160,45 @@
                <?php model('reporteProductoModel')->truncate(); ?>
            </p>
 
-           <div class="row">
-               <p class="text-center text-primary fs-3">DEVOLUCIONES </p>
+           <?php if (!empty($devoluciones)) { ?>
 
-               <table class="table" id="consulta_producto_por_fecha_devolucion">
-                   <thead class="table-dark">
-                       <tr>
-                           <td scope="col">Código </th>
-                           <td scope="col">Nombre producto</th>
-                           <td scope="col">Cantidad</th>
-                           <td scope="col">Valor unitario</th>
-                           <td scope="col">Valor total</th>
-                       </tr>
-                   </thead>
-               </table>
-           </div>
+               <div class="row">
+                   <p class="text-primary fs-3">DEVOLUCIONES </p>
+
+                   <table class="table" id="consulta_producto_por_fecha_devolucion">
+                       <thead class="table-dark">
+                           <tr>
+                               <td scope="col">Código </th>
+                               <td scope="col">Nombre producto</th>
+                               <td scope="col">Cantidad</th>
+                               <td scope="col">Valor unitario</th>
+                               <td scope="col">Valor total</th>
+                           </tr>
+                       </thead>
+                       <?php foreach ($devoluciones as $detalle) {
+                        
+                            $detalle_devolucion = model('detalleDevolucionVentaModel')->detalle_devolucion($detalle['id_apertura']);
+
+                        ?>
+
+                           <tr>
+                               <td><?php echo $detalle['codigo'] ?></td>
+                               <td><?php echo $detalle_devolucion[0]['nombreproducto'] ?></td>
+                               <td><?php echo $detalle['cantidad'] ?></td>
+                               <td><?php echo  "$ " . number_format($detalle['valor_total_producto']/$detalle['cantidad'], 0, ",", "."); ?></td>
+                               <td><?php echo "$ " . number_format($detalle['valor_total_producto'], 0, ",", ".") ?></td>
+                           </tr>
+
+                       <?php } ?>
+                   </table>
+                   <?php $total_devoluciones = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $id_apertura)->findAll(); ?>
+
+
+                   <p class="text-end text-dark h1">
+
+                       TOTAL DEVOLUCIONES :<?php echo "$" . number_format($total_devoluciones[0]['valor_total_producto'], 0, ",", "."); ?>
+                       <?php model('reporteProductoModel')->truncate(); ?>
+                   </p>
+               </div>
+           <?php } ?>
        </div>

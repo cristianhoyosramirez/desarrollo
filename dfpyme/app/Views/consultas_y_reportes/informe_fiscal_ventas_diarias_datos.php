@@ -99,7 +99,10 @@
                     <td scope="col">Tarifa </th>
                     <td scope="col">Base grabable</th>
                     <td scope="col">Valor ICO</th>
-                    <td scope="col">Valor total</th>
+                    <td scope="col">Ims</th>
+                    <td scope="col">Ibua 1</th>
+                    <td scope="col">Ibua 2 </th>
+                    <td scope="col">Valor total </th>
                 </tr>
             </thead>
             <tbody>
@@ -108,6 +111,9 @@
                         <th><?php echo $detalle[0] ?>%</th> <!-- TARIFA ICO  -->
                         <td><?php echo "$" . number_format($detalle[1], 0, ",", ".") ?></td> <!-- BASE -->
                         <td><?php echo "$" . number_format($detalle[2], 0, ",", ".") ?></td> <!-- TOTAL ICO  -->
+                        <td></td>
+                        <td><?php  echo  $impuesto_saludable[0]['nombre']; ?></td>
+                        <td><?php  echo  $impuesto_saludable[1]['nombre']; ?></td>
                         <td><?php echo "$" . number_format($detalle[3], 0, ",", ".") ?></td> <!-- TOTAL  -->
                     </tr>
                 <?php } ?>

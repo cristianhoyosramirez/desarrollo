@@ -4,9 +4,19 @@
 MOVIMIENTO DE CAJA
 <?= $this->endSection('title') ?>
 <?= $this->section('content') ?>
+<style>
+    /* CSS personalizado para cambiar el color de fondo en hover */
+    .table-hover tbody tr:hover {
+        background-color: #ECEFFD;
+        /* Cambia este valor al color que desees en hover */
+        /* También puedes agregar estilos adicionales, como el color de texto */
+        color: #333;
+        /* Cambia este valor al color que desees para el texto en hover */
+    }
+</style>
 
 <div id="crud_apertura">
-<input type="hidden"  value="<?php echo base_url() ?>" id="url">
+    <input type="hidden" value="<?php echo base_url() ?>" id="url">
     <div class="card-body">
 
         <div class="row ">
@@ -25,36 +35,42 @@ MOVIMIENTO DE CAJA
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                     <span class="d-none d-sm-inline">
-                        <a href="#" class="btn btn-white" onclick="imprimir_movimientos(<?php echo $id_apertura ?>)">
+                        <a href="#" class="btn btn-outline-indigo" onclick="consolidado_ventas()" title="Consolidado de ventas pos y electrónicas  " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                            Consolidado
+                        </a>
+                    </span>
+                    <span class="d-none d-sm-inline">
+                        <a href="#" class="btn btn-outline-green" onclick="imprimir_movimientos(<?php echo $id_apertura ?>)" title="Imprimir el reporte de caja " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             Imprimir
                         </a>
                     </span>
                     <span class="d-none d-sm-inline">
                         <form action="<?= base_url('consultas_y_reportes/reporte_de_ventas') ?>" method="POST" target="_blank">
+                            <input type="hidden" value="pantalla" name="tipo_reporte" id="tipo_reporte">
                             <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_apertura">
-                            <button type="button" class="btn btn-white btn-icon" onclick="reporte_ventas()">Ventas</button>
+                            <button type="button" class="btn btn-outline-warning btn-icon" onclick="reporte_ventas()" title="Reporte de ventas de producto por categoria " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Ventas</button>
                         </form>
                     </span>
                     <form action="<?= base_url('consultas_y_reportes/informe_fiscal_desde_caja') ?>" method="POST">
                         <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_aperturas">
-                        <button type="button" class="btn btn-primary btn-icon" target="_blank" onclick="fiscal()" >Fiscal </button>
+                        <button type="button" class="btn btn-outline-dark btn-icon" target="_blank" onclick="fiscal()" title="Informe fiscal de ventas " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Fiscal </button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="row row-deck row-cards">
-            <div class="col-md-12 col-lg-4">
-                <div class="card">
+        <div class="row ">
+            <div class="col-md-12 col-lg-5">
+                <div class="card" style="height: calc(25rem + 12px)">
                     <div class="card-header">
                         <h3 class="card-title">Movimiento de caja</h3>
                     </div>
-                    <div class="card-table table-responsive">
-                        <table class="table table-vcenter table-striped">
-                            <thead>
+                    <div class="card card-body-scrollable card-body-scrollable-shadow">
+                        <table class="table table-vcenter table-striped table-hover">
+                            <thead class="table-dark">
                                 <tr>
-                                    <th>Apertura</th>
-                                    <th>Cierre</th>
+                                    <td>Apertura</th>
+                                    <td>Cierre</th>
                                 </tr>
                             </thead>
                             <tbody id="aperturas">
@@ -64,15 +80,15 @@ MOVIMIENTO DE CAJA
                 </div>
             </div>
 
-            <div class="col-md-8">
-                <div class="row row-cards">
+            <div class="col-md-7">
+                <div class="row">
                     <div class="card-header">
                         <h3 class="card-title">Ingresos</h3>
                     </div>
                     <div class="col-xs-12 col-md-3">
-                        <div class="card card-sm">
+                        <div class="card ">
                             <div class="card-body">
-                                <div class="row align-items-center">
+                                <div class="row align-items-center cursor-pointer">
                                     <div class="col-auto">
                                         <span class="bg-blue text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-desktop-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -85,8 +101,8 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
-                                        <div class="font-weight-medium">
+                                    <div class="col " title="Valo apertura caja " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        <div class="font-weight-mediu">
                                             Apertura
                                         </div>
                                         <div class="text-muted">
@@ -110,9 +126,9 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col cursor-pointer" onclick="ingresos()" title="Ingresos efectivo + ingresos transacción" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
-                                            Efectivo
+                                            Ingresos
                                         </div>
                                         <div class="text-muted">
                                             <p id="valor_efectivo"> <?php echo $ingresos_efectivo ?></p>
@@ -137,12 +153,12 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col cursor-pointer" onclick="reporte_propinas()" title="Detalle de propinas " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
-                                            Tranferencia
+                                            Propinas
                                         </div>
                                         <div class="text-muted">
-                                            <p id="valor_transferencia"><?php echo $ingresos_transaccion ?></p>
+                                            <p id="valor_transferencia"><?php echo $propinas ?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -150,7 +166,7 @@ MOVIMIENTO DE CAJA
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-3">
-                        <div class="card card-sm">
+                        <div class="card card-sm" title="Ingresos en efectivo + Ingresos transaccion + valor apertura " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
@@ -163,7 +179,7 @@ MOVIMIENTO DE CAJA
                                     </div>
                                     <div class="col">
                                         <div class="font-weight-medium">
-                                            Total Ingreso
+                                            Total ingresos
                                         </div>
                                         <div class="text-muted">
                                             <p id="total_ingresos"><?php echo $total_ingresos ?></p>
@@ -174,9 +190,9 @@ MOVIMIENTO DE CAJA
                         </div>
                     </div>
                     <div class="card-header">
-                        <h3 class="card-title">Salidas</h3>
+                        <h4 class="card-title">Salidas</h4>
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="retiros()">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -191,9 +207,9 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col" title="Egresos de caja  " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
-                                            Retiro
+                                            Retiros
                                         </div>
                                         <div class="text-muted">
                                             <p id="retiros"> <?php echo $retiros ?></p>
@@ -203,7 +219,7 @@ MOVIMIENTO DE CAJA
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="devoluciones()" title="Devoluciones de productos " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -272,7 +288,7 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col">
+                                    <div class="col" title="Debe tener en caja (Apertura + efectivo + transacciones)  " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                                         <div class="font-weight-medium">
                                             Valor caja
                                         </div>
@@ -392,7 +408,8 @@ MOVIMIENTO DE CAJA
                                             Diferencia
                                         </div>
                                         <div class="text-muted">
-                                            <p id="diferencia"> <?php echo $diferencia ?></p>
+                                            <p id="diferencia"> <?php echo $diferencia
+                                                                ?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -424,5 +441,171 @@ MOVIMIENTO DE CAJA
 <?= $this->include('consultas_y_reportes/modal_editar_cierre_efectivo') ?>
 <?= $this->include('consultas_y_reportes/modal_editar_cierre_transaccion') ?>
 <?= $this->include('caja/modal_edicion_retiro') ?>
+<?= $this->include('consultas/modal_propinas') ?>
+<?= $this->include('consultas/modal_propinas_2') ?>
+<?= $this->include('consultas/modal_consolidado_ventas') ?>
+<?= $this->include('consultas/modal_retiros') ?>
+<?= $this->include('consultas/modal_devoluciones') ?>
+
+<script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
+
+
+
+<script>
+    function retiros() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/retiros",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+
+                    $("#modal_retiros").modal("show");
+                    $("#datos_retiro").html(resultado.retiros);
+
+                    //sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+
+    }
+</script>
+
+<script>
+    function devoluciones() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/devoluciones",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+
+                    $("#modal_devoluciones").modal("show");
+                    $("#datos_devoluciones").html(resultado.devoluciones);
+
+                    //sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+
+    }
+</script>
+
+
+
+
+<script>
+    function ingresos() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/ventas",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+                    $('#tabla_propinas').html(resultado.movimientos)
+                    $('#ventas_pos').html(resultado.ventas_pos)
+                    $('#ventas_electronicas').html(resultado.ventas_electronicas)
+                    $('#valor_total_propinas').html(resultado.propinas)
+                    $('#total_documento').html(resultado.total_documento)
+                    $('#efectivo').html(resultado.efectivo)
+                    $('#transferencia').html(resultado.transferencia)
+                    $('#total_de_ingresos').html(resultado.total_ingresos)
+                    $('#total_ventas').html(resultado.valor)
+                    $('#cambio').html(resultado.cambio)
+                    $("#modal_propinas").modal("show");
+
+                    sweet_alert_start('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+
+
+
+    }
+</script>
+
+
+<script>
+    function reporte_propinas() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "pedidos/reporte_propinas",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+                    $('#reporte_propinas').html(resultado.propinas)
+                    $('#total_propinas').html(resultado.total_propinas)
+                    $("#propinas").modal("show");
+
+                    if (resultado.total_propinas == "Total: $ 0") {
+                        $('#total_propinas').html('')
+                    }
+
+                    //sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+    }
+</script>
+<script>
+    function consolidado_ventas() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/consolidado_ventas",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+                    $('#electronicas').html(resultado.ventas_electronicas)
+                    $('#pos').html(resultado.ventas_pos)
+                    $('#total').html(resultado.total)
+                    $("#consolidado_ventas").modal("show");
+
+                    sweet_alert_start('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+    }
+</script>
 
 <?= $this->endSection('content') ?>

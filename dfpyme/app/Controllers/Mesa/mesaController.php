@@ -49,10 +49,8 @@ class mesaController extends BaseController
         $data = [
             'fk_salon' => $this->request->getVar('salon'),
             'nombre' => $this->request->getVar('nombre'),
-            'estado'   => 0,
-            'fk_usuario' => $this->request->getVar('id_usuario')
-
         ];
+
         $insert = model('mesasModel')->insert($data);
         if ($insert) {
             $session = session();
@@ -192,23 +190,23 @@ class mesaController extends BaseController
 
     public function intercambio_mesa()
     {
-        /*   $id_mesa_origen = 54;
-        $id_mesa_destino = 55; */
+
         $id_mesa_origen = $_POST['id_mesa_origen'];
+        //$id_mesa_origen = 300;
+        // $id_mesa_destino = 301;
         $id_mesa_destino = $_POST['id_mesa_destino'];
 
         $tiene_pedido = model('pedidoModel')->select('fk_mesa')->where('fk_mesa', $id_mesa_destino)->first();
 
         if (!empty($tiene_pedido['fk_mesa'])) {
-            $valor_total_mesa_destino = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa_destino)->first();
-            $valor_total_mesa_origen = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa_origen)->first();
-            $valor_total = $valor_total_mesa_destino['valor_total'] + $valor_total_mesa_origen['valor_total'];
 
             $numero_pedido_mesa_destino = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa_destino)->first();
+            $valor_mesa_destino = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa_destino)->first();
             $numero_pedido_mesa_origen = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa_origen)->first();
-            $fk_usuario = model('pedidoModel')->select('fk_usuario')->where('fk_mesa', $id_mesa_origen)->first();
+            $valor_mesa_origen = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa_origen)->first();
+
             $data = [
-                'numero_de_pedido' => $numero_pedido_mesa_destino['id'],
+                'numero_de_pedido' =>  $numero_pedido_mesa_destino['id'],
 
             ];
 
@@ -217,38 +215,24 @@ class mesaController extends BaseController
             $mesas = $model->where('numero_de_pedido', $numero_pedido_mesa_origen['id']);
             $mesas = $model->update();
 
-            $mesa_destino = [
-                'estado' => 1,
-                'valor_pedido' => $valor_total
-            ];
-            $model = model('mesasModel');
-            $mes = $model->set($mesa_destino);
-            $mes = $model->where('id', $id_mesa_destino);
-            $mes = $model->update();
-
-            $mesa_origen = [
-                'valor_pedido' => 0,
-                'estado' => 0,
-                'fk_usuario' => $fk_usuario['fk_usuario']
-            ];
-            $model = model('mesasModel');
-            $me = $model->set($mesa_origen);
-            $me = $model->where('id', $id_mesa_origen);
-            $me = $model->update();
+            $model = model('pedidoModel');
+            $borrar = $model->where('fk_mesa', $id_mesa_origen);
+            $borrar = $model->delete();
 
             $cantidad_de_producto = model('productoPedidoModel')->selectSum('cantidad_producto')->where('numero_de_pedido', $numero_pedido_mesa_destino['id'])->find();
 
             $data_pedido = [
-                'valor_total' => $valor_total,
+                //'valor_total' => $valor_total,
                 'cantidad_de_productos' => $cantidad_de_producto[0]['cantidad_producto']
             ];
-            $model = model('pedidoModel');
-            $mesa_actualizar = $model->set($data_pedido);
-            $mesa_actualizar = $model->where('id', $numero_pedido_mesa_destino['id']);
-            $mesa_actualizar = $model->update();
 
-            $borrar_producto_pedido = model('pedidoModel')->where('id', $numero_pedido_mesa_origen['id']);
-            $borrar_producto_pedido->delete();
+
+            $total = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido_mesa_destino['id'])->findAll();
+            
+            $model = model('pedidoModel');
+            $mesas = $model->set('valor_total', $total[0]['valor_total']);
+            $mesas = $model->where('fk_mesa', $id_mesa_destino);
+            $mesas = $model->update();
 
             $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa_destino)->first();
             $observaciones_generales = model('pedidoModel')->select('nota_pedido')->where('id', $numero_pedido_mesa_destino['id'])->first();
@@ -270,7 +254,7 @@ class mesaController extends BaseController
                 "id_mesa" => $id_mesa_destino,
                 "nombre_mesa" => $nombre_mesa['nombre'],
                 "pedido" => $numero_pedido_mesa_destino['id'],
-                "valor_total" => number_format($valor_total, 0, ',', '.'),
+                "valor_total" => number_format($total[0]['valor_total'], 0, ',', '.'),
                 "cantidad_productos" => $cantidad_de_producto[0]['cantidad_producto'],
                 "observaciones_generales" => $observacion_general,
                 "productos_pedido" => $productos_del_pedido,
@@ -291,38 +275,6 @@ class mesaController extends BaseController
             $mesas = $model->set($data);
             $mesas = $model->where('id', $numero_pedido_mesa_origen['id']);
             $mesas = $model->update();
-
-            $valor_total = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido_mesa_origen['id'])->first();
-            $fk_usuario_mesa_origen = model('mesasModel')->select('fk_usuario')->where('id', $id_mesa_origen)->first();
-
-
-            $mesa_origen = [
-                'valor_pedido' => 0,
-                'estado' => 0,
-                'fk_usuario' => $fk_usuario_mesa_origen['fk_usuario']
-            ];
-
-            $model = model('mesasModel');
-            $mesas = $model->set($mesa_origen);
-            $mesas = $model->where('id', $id_mesa_origen);
-            $mesas = $model->update();
-
-
-            $mesa_destino = [
-                'valor_pedido' => $valor_total['valor_total'],
-                'estado' => 1,
-                'fk_usuario' => $fk_usuario_mesa_origen['fk_usuario']
-            ];
-
-            $model = model('mesasModel');
-            $mesas = $model->set($mesa_destino);
-            $mesas = $model->where('id', $id_mesa_destino);
-            $mesas = $model->update();
-
-
-            $borrar_datos_pedido = model('pedidoModel')->where('fk_mesa', $id_mesa_origen);
-            $borrar_datos_pedido->delete();
-
 
             $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa_destino)->first();
             $observaciones_generales = model('pedidoModel')->select('nota_pedido')->where('id', $numero_pedido_mesa_origen['id'])->first();
@@ -348,7 +300,7 @@ class mesaController extends BaseController
                 "id_mesa" => $id_mesa_destino,
                 "nombre_mesa" => $nombre_mesa['nombre'],
                 "pedido" => $numero_pedido_mesa_origen['id'],
-                "valor_total" => number_format($valor_total['valor_total'], 0, ',', '.'),
+                //"valor_total" => number_format($valor_total['valor_total'], 0, ',', '.'),
                 "cantidad_productos" => $cantidad_de_producto['cantidad_de_productos'],
                 "observaciones_generales" => $observacion_general,
                 "productos_pedido" => $productos_del_pedido,
@@ -357,7 +309,7 @@ class mesaController extends BaseController
         }
     }
 
-      public function eliminacion_de_pedido()
+    public function eliminacion_de_pedido()
     {
         $numero_pedido = $_POST['numero_pedido'];
 

@@ -35,7 +35,9 @@ class productoFacturaVentaModel extends Model
         'valor_total_producto',
         'fecha_y_hora_venta',
         'fecha_venta',
-        'id_categoria'
+        'id_categoria',
+        'id_impuesto_saludable',
+        'valor_impuesto_saludable'
 
     ];
 
@@ -122,7 +124,7 @@ class productoFacturaVentaModel extends Model
     {
         $datos = $this->db->query("
         SELECT
-             SUM(valor_venta_real*cantidadproducto_factura_venta) AS base
+             SUM(impuesto_al_consumo*cantidadproducto_factura_venta) AS base
              
         FROM
             producto_factura_venta
@@ -664,6 +666,22 @@ class productoFacturaVentaModel extends Model
 
         $datos = $this->db->query("
         select count (id)as total  from factura_venta where fecha_y_hora_venta between $fecha_inicial and $fecha_final
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_impuesto_saluidable($id_factura)
+    {
+
+        $datos = $this->db->query("
+        SELECT
+            SUM(valor_impuesto_saludable) * cantidadproducto_factura_venta AS total_impuesto_saludable
+        FROM
+            producto_factura_venta
+        WHERE
+            id_factura = $id_factura
+        GROUP BY
+            cantidadproducto_factura_venta
+
         ");
         return $datos->getResultArray();
     }

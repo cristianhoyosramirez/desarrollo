@@ -48,7 +48,9 @@ class productoModel extends Model
         'id_ico_producto',
         'aplica_ico',
         'se_imprime',
-        'aplica_descuento'
+        'aplica_descuento',
+        'id_impuesto_saludable',
+        'valor_impuesto_saludable'
     ];
 
     public function autoComplete($valor)

@@ -139,6 +139,7 @@ class devolucionController extends BaseController
                     'valor_total_producto' => $valor_total_producto,
                     'fecha_y_hora_venta' => $fecha_y_hora,
                     'fecha_venta' => date('Y-m-d'),
+                    'id_apertura'=>$id_apertura['numero']
                 ];
 
                 $insert = model('detalleDevolucionVentaModel')->insert($detalle_devolucion_venta);
@@ -261,7 +262,8 @@ class devolucionController extends BaseController
                 'concepto' => $concepto_retiro,
                 'id_cuenta_retiro' => $cuenta_retiro['id_cuenta_retiro'],
                 'fecha' => date('Y-m-d'),
-                'fecha_y_hora_retiro_forma_pago' => $fecha_y_hora
+                'fecha_y_hora_retiro_forma_pago' => $fecha_y_hora,
+                'id_apertura'=>$id_apertura['numero']
             ];
 
             $insertar = model('retiroFormaPagoModel')->insert($retiro_forma_pago);

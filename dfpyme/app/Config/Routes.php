@@ -427,10 +427,67 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('restar_producto', 'Mesas::restar_producto');
     $routes->post('productos_pedido', 'Mesas::productos_pedido');
     $routes->post('partir_factura', 'PartirFactura::partir_factura');
+    $routes->post('valor', 'PartirFactura::valor');
+    $routes->post('cerrar_venta', 'CerrarVenta::cerrar_venta');
+    $routes->post('imprimir_factura', 'Imprimir::imprimir_factura');
+    $routes->post('actualizar_cantidad_pago_parcial', 'PartirFactura::actualizar_cantidad_pago_parcial');
+    $routes->post('restar_partir_factura', 'PartirFactura::restar_partir_factura');
+    $routes->post('cancelar_pago_parcial', 'PartirFactura::cancelar_pago_parcial');
+    $routes->post('valor_pago_parcial', 'PartirFactura::valor_pago_parcial');
+    $routes->post('propinas', 'CerrarVenta::propinas');
+    $routes->post('reporte_propinas', 'Mesas::reporte_propinas');
+    $routes->post('todas_las_mesas', 'Mesas::todas_las_mesas');
+    $routes->post('actualizar_mesero', 'CerrarVenta::actualizar_mesero');
+    $routes->post('buscar_mesas', 'Mesas::buscar_mesas');
+    $routes->get('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
+    $routes->post('crear_mesero', 'Mesas::crear_mesero');
+    $routes->get('gestion_pedidos', 'TomaPedidosController::index');
+    $routes->post('buscar_mesero', 'Mesas::buscar_mesero');
+    $routes->get('lista_electronicas', 'Imprimir::lista_electronicas');
+    $routes->post('imprimir_factura_electronica', 'Imprimir::imprimir_factura_electronica');
+    $routes->post('detalle_f_e', 'Imprimir::detalle_f_e');
 });
 
+$routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
+    $routes->get('ingreso', 'Inventarios::ingreso');
+    $routes->post('ingreso_inventario', 'Inventarios::ingreso_inventario');
+    $routes->post('buscar', 'Inventarios::buscar');
+});
 
+$routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' => \App\Filters\Auth::class], function ($routes) {
+    $routes->get('boletas', 'Boletas::boletas');
+    $routes->post('set_boletas', 'Boletas::set_boletas');
+    $routes->get('consultar_boleta', 'Boletas::consultar_boleta');
+    $routes->post('cliente', 'Boletas::cliente');
+    $routes->post('actualizar_producto_porcentaje', 'Boletas::actualizar_producto_porcentaje');
+    $routes->post('editar_precio_producto', 'Boletas::editar_precio_producto');
+    $routes->post('lista_precios', 'Boletas::lista_precios');
+    $routes->post('cortesia', 'Boletas::cortesia');
+    $routes->post('cerrar_modal', 'Boletas::cerrar_modal');
+    $routes->post('descontar_dinero', 'Boletas::descontar_dinero');
+    $routes->post('nombre_producto', 'Boletas::nombre_producto');
+    $routes->post('generar_cortesia', 'Boletas::generar_cortesia');
+    $routes->post('asignar_p1', 'Boletas::asignar_p1');
+    $routes->post('municipios', 'Boletas::municipios');
+    $routes->post('cancelar_descuentos', 'Boletas::cancelar_descuentos');
+    $routes->post('valor', 'Boletas::valor');
+    $routes->post('editar_cantidades', 'Boletas::editar_cantidades');
+    $routes->post('actualizar_cantidades', 'Boletas::actualizar_cantidades');
+});
+$routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
+    $routes->post('ventas', 'Ventas::ventas');
+    $routes->post('consolidado_ventas', 'Ventas::consolidado_ventas');
+    $routes->post('retiros', 'Ventas::retiros');
+    $routes->post('devoluciones', 'Ventas::devoluciones');
+    $routes->get('productos_borrados', 'Ventas::productos_borrados');
+});
 
+$routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
+    $routes->get('mesero', 'Configuracion::mesero');
+    $routes->post('actualizar_mesero', 'Configuracion::actualizar_mesero');
+    $routes->get('propina', 'Configuracion::propina');
+    $routes->post('configuracion_propina', 'Configuracion::configuracion_propina');
+});
 
 /*
  * --------------------------------------------------------------------

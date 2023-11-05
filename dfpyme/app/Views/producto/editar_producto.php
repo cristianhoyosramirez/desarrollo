@@ -117,68 +117,7 @@
 
     </div>
 
-
-
-    <div class="col-md-4">
-        <label for="inputPassword4" class="form-label">Información tributaria</label>
-        <select class="form-select" id="editar_informacion_tributaria" name="informacion_tributaria" onchange="cambiar_informacion_tributaria()">
-            <?php if ($aplica_ico == 't') { ?>
-                <option value="1" selected>Impuesto Nacional al Consumo (ICO)</option>
-                <option value="2">Impuesto al Valor Agregado (IVA)</option>
-            <?php } ?>
-            <?php if ($aplica_ico == 'f') { ?>
-                <option value="2" selected>Impuesto al Valor Agregado (IVA)</option>
-                <option value="1">Impuesto Nacional al Consumo (ICO)</option>
-            <?php } ?>
-        </select>
-    </div>
-
-    <?php if ($aplica_ico == 'f') { ?>
-        <div class="col-md-4" id="editar_impuesto_al_valor_agregado">
-            <label for="inputPassword4" class="form-label">Valor IVA </label>
-            <select class="form-select" id="valor_iva" name="valor_iva">
-                <?php foreach ($iva as $detalle) { ?>
-                    <option value="<?php echo $detalle['idiva'] ?>" <?php if ($detalle['idiva'] == $id_iva) : ?>selected <?php endif; ?>><?php echo $detalle['valoriva'] ?> </option>
-                <?php } ?>
-            </select>
-        </div>
-
-        <div class="col-md-4" style="display: none" id="editar_impuesto_al_conusmo_nacional">
-            <label for="inputPassword4" class="form-label">Valor ICO</label>
-            <select class="form-select" id="valor_ico" name="valor_ico">
-                <?php foreach ($ico as $detalle) { ?>
-                    <option value="<?php echo $detalle['id_ico'] ?>"><?php echo $detalle['valor_ico'] ?></option>
-                <?php } ?>
-            </select>
-        </div>
-
-
-    <?php } ?>
-
-    <?php if ($aplica_ico == 't') { ?>
-
-        <div class="col-md-4" id="editar_impuesto_al_valor_agregado" style="display: none">
-            <label for="inputPassword4" class="form-label">Valor IVA </label>
-            <select class="form-select" id="valor_iva" name="valor_iva">
-                <?php foreach ($iva as $detalle) { ?>
-                    <option value="<?php echo $detalle['idiva'] ?>" selected><?php echo $detalle['valoriva'] ?></option>
-                <?php } ?>
-            </select>
-        </div>
-
-        <div class="col-md-4" style="display: block" id="editar_impuesto_al_conusmo_nacional">
-            <label for="inputPassword4" class="form-label">Valor ICO</label>
-            <select class="form-select" id="valor_ico" name="valor_ico">
-                <?php foreach ($ico as $detalle) { ?>
-                    <option value="<?php echo $detalle['id_ico'] ?>" <?php if ($detalle['id_ico'] == $id_ico) : ?>selected <?php endif; ?>><?php echo $detalle['valor_ico'] ?> </option>
-                <?php } ?>
-            </select>
-        </div>
-    <?php } ?>
-
-
-
-    <div class="col-4">
+    <div class="col-3">
         <label for="inputAddress2" class="form-label">Valor costo</label>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">
@@ -195,7 +134,85 @@
         <span class="text-danger error-text edicion_de_valor_costo_producto_error"></span>
     </div>
 
-    <div class="col-4">
+    <div class="col-md-2">
+        <label for="inputPassword4" class="form-label">Información tributaria</label>
+        <select class="form-select" id="editar_informacion_tributaria" name="informacion_tributaria" onchange="cambiar_informacion_tributaria()">
+            <?php if ($aplica_ico == 't') { ?>
+                <option value="1" selected>Impuesto Nacional al Consumo (ICO)</option>
+                <option value="2">Impuesto al Valor Agregado (IVA)</option>
+            <?php } ?>
+            <?php if ($aplica_ico == 'f') { ?>
+                <option value="2" selected>Impuesto al Valor Agregado (IVA)</option>
+                <option value="1">Impuesto Nacional al Consumo (ICO)</option>
+            <?php } ?>
+        </select>
+    </div>
+
+    <?php if ($aplica_ico == 'f') { ?>
+        <div class="col-md-1" id="editar_impuesto_al_valor_agregado">
+            <label for="inputPassword4" class="form-label">Valor IVA </label>
+            <select class="form-select" id="valor_iva" name="valor_iva">
+                <?php foreach ($iva as $detalle) { ?>
+                    <option value="<?php echo $detalle['idiva'] ?>" <?php if ($detalle['idiva'] == $id_iva) : ?>selected <?php endif; ?>><?php echo $detalle['valoriva'] ?> </option>
+                <?php } ?>
+            </select>
+        </div>
+
+        <div class="col-md-1" style="display: none" id="editar_impuesto_al_conusmo_nacional">
+            <label for="inputPassword4" class="form-label">Valor ICO</label>
+            <select class="form-select" id="valor_ico" name="valor_ico">
+                <?php foreach ($ico as $detalle) { ?>
+                    <option value="<?php echo $detalle['id_ico'] ?>"><?php echo $detalle['valor_ico'] ?></option>
+                <?php } ?>
+            </select>
+        </div>
+
+
+    <?php } ?>
+
+    <?php if ($aplica_ico == 't') { ?>
+
+        <div class="col-md-1" id="editar_impuesto_al_valor_agregado" style="display: none">
+            <label for="inputPassword4" class="form-label">Valor IVA </label>
+            <select class="form-select" id="valor_iva" name="valor_iva">
+                <?php foreach ($iva as $detalle) { ?>
+                    <option value="<?php echo $detalle['idiva'] ?>" selected><?php echo $detalle['valoriva'] ?></option>
+                <?php } ?>
+            </select>
+        </div>
+
+        <div class="col-md-1" style="display: block" id="editar_impuesto_al_conusmo_nacional">
+            <label for="inputPassword4" class="form-label">Valor ICO</label>
+            <select class="form-select" id="valor_ico" name="valor_ico">
+                <?php foreach ($ico as $detalle) { ?>
+                    <option value="<?php echo $detalle['id_ico'] ?>" <?php if ($detalle['id_ico'] == $id_ico) : ?>selected <?php endif; ?>><?php echo $detalle['valor_ico'] ?> </option>
+                <?php } ?>
+            </select>
+        </div>
+    <?php } ?>
+
+<!--     <div class="col-md-3">
+        <label for="inputPassword4" class="form-label">Tipo impuesto saludable </label>
+        <select class="form-select" id="impuesto_saludable" name="impuesto_saludable">
+
+            <?php foreach ($impuesto_saludable as $impuesto_saludable) { ?>
+
+                <option value="<?php echo $impuesto_saludable['id']  ?>"><?php echo $impuesto_saludable['nombre'] ?></option>
+
+            <?php } ?>
+
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label for="inputPassword4" class="form-label">Valor impuesto saludable</label>
+        <input type="text" class="form-control" id="valor_impuesto_saludable" name="valor_impuesto_saludable" value="<?php echo $valor_impuesto_saludable ?>">
+    </div> -->
+
+
+
+
+    <div class="col-3">
         <label for="inputAddress2" class="form-label">Precio 1 </label>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">
@@ -212,7 +229,7 @@
         <span class="text-danger error-text editar_valor_venta_producto_error"></span>
     </div>
 
-    <div class="col-4">
+    <div class="col-3">
         <label for="inputAddress2" class="form-label">Precio 2 </label>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">

@@ -10,6 +10,9 @@
     <link href="<?= base_url() ?>/Assets/css/tabler.min.css" rel="stylesheet" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="<?php echo base_url(); ?>/Assets/img/favicon.png">
+    <!-- Select 2 -->
+    <link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.css" rel="stylesheet" />
+    <link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <!-- Data tables -->
     <link href="<?= base_url() ?>/Assets/plugin/data_tables/bootstrap.min.css" />
     <link href="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.css" />
@@ -18,8 +21,8 @@
 
 <body>
     <div class="wrapper">
-        <?= $this->include('layout/header') ?>
-        <?= $this->include('layout/navbar') ?>
+        <?= $this->include('layout/header_mesas') ?>
+
 
         <div class="page-wrapper">
             <div class="container-xl">
@@ -41,6 +44,80 @@
 
         <!-- Sweet alert -->
         <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
+        <!--select2 -->
+        <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
+        
+        <script>
+            $('#creacion_cliente_electronico').submit(function(e) {
+                e.preventDefault();
+                var form = this;
+                let button = document.querySelector("#btn_crear_cliente");
+                button.disabled = false;
+                $.ajax({
+                    url: $(form).attr('action'),
+                    method: $(form).attr('method'),
+                    data: new FormData(form),
+                    processData: false,
+                    dataType: 'json',
+                    contentType: false,
+                    beforeSend: function() {
+                        $(form).find('span.error-text').text('');
+                        button.disabled = false;
+                    },
+                    success: function(data) {
+                        if ($.isEmptyObject(data.error)) {
+                            if (data.code == 1) {
+                                $("#crear_cliente").modal("hide");
+                                $("#finalizar_venta").modal("show");
+                                $("#nit_cliente").val(data.nit_cliente);
+                                $("#nombre_cliente").val(data.cliente);
+
+
+                                $(form)[0].reset();
+
+
+
+                                //$('#countries-table').DataTable().ajax.reload(null, false);
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-start',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                })
+
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Cliente agregado a la base de datos '
+                                })
+                            } else {
+                                alert(data.msg);
+                            }
+                        } else {
+                            $.each(data.error, function(prefix, val) {
+                                $(form).find('span.' + prefix + '_error').text(val);
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
+
+
+
+
+
+        <script>
+            function nuevo_cliente() {
+                $("#crear_cliente").modal("show");
+
+            }
+        </script>
 
         <!-- Data table server side listado de clientes -->
         <script>
@@ -195,7 +272,7 @@
             }
         </script>
 
-       
+
 
 
 

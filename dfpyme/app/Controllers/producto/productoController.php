@@ -61,10 +61,11 @@ class productoController extends BaseController
         //$data = $this->db->query($sql_data)->getResult();
         if (!empty($datos)) {
             foreach ($datos as $detalle) {
+                $cantidad = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
                 $sub_array = array();
                 $sub_array[] = $detalle['codigointernoproducto'];
                 $sub_array[] = $detalle['nombreproducto'];
-                $sub_array[] = $detalle['nombrecategoria'];
+                $sub_array[] = $cantidad['cantidad_inventario'];
                 $sub_array[] = "$" . number_format($detalle['valorventaproducto'], 0, ",", ".");
 
                 $sub_array[] = '<a  class="btn btn-success "  onclick="editar_producto(' . $detalle['codigointernoproducto'] . ')"  >Editar</a> <a  class="btn btn-danger "  onclick="eliminar_producto(' . $detalle['codigointernoproducto'] . ')"  >Eliminar</a>  ';
@@ -94,11 +95,18 @@ class productoController extends BaseController
 
     function lista_de_productos()
     {
-        $iva = model('ivaModel')->orderBy('idiva', 'desc')->find();
+        $iva = model('ivaModel')->orderBy('idiva', 'asc')->find();
         $ico = model('icoConsumoModel')->orderBy('id_ico', 'desc')->findAll();
+        $categorias = model('categoriasModel')->orderBy('id', 'asc')->findAll();
+        $marcas = model('marcasModel')->orderBy('idmarca', 'asc')->findAll();
+        $impuesto_saludable = model('impuestoSaludableModel')->findAll();
+
         return view('producto/listado', [
             'iva' => $iva,
-            'ico' => $ico
+            'ico' => $ico,
+            'categorias' => $categorias,
+            'marcas' => $marcas,
+            'impuesto_saludable' => $impuesto_saludable
         ]);
     }
 
@@ -458,9 +466,9 @@ class productoController extends BaseController
                         $actualizar = $model->where('id', $numero_pedido);
                         $actualizar = $model->update();
 
-                       
 
-                        if ($insertar && $actualizar ) {
+
+                        if ($insertar && $actualizar) {
 
                             $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido);
                             $productos_del_pedido = view('productos_pedido/productos_pedido', [
@@ -1348,7 +1356,7 @@ class productoController extends BaseController
                 $valor_total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
                 $cantidad_productos = model('productoPedidoModel')->selectSum('cantidad_producto')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
 
-              
+
 
                 $actualizar_total_pedido = [
                     'valor_total' => $valor_total_pedido[0]['valor_total'],
@@ -1574,7 +1582,7 @@ class productoController extends BaseController
             $valor_total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido)->find();
             $cantidad_productos = model('productoPedidoModel')->selectSum('cantidad_producto')->where('numero_de_pedido', $numero_pedido)->find();
 
-          
+
 
             $actualizar_total_pedido = [
                 'valor_total' => $valor_total_pedido[0]['valor_total'],
@@ -1691,7 +1699,7 @@ class productoController extends BaseController
                     $valor_total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
                     $cantidad_productos = model('productoPedidoModel')->selectSum('cantidad_producto')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
 
-                  
+
 
                     $actualizar_total_pedido = [
                         'valor_total' => $valor_total_pedido[0]['valor_total'],

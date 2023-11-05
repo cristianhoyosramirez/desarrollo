@@ -25,8 +25,8 @@
 
 <body>
   <div class="wrapper">
-    <?= $this->include('layout/header') ?>
-    <?= $this->include('layout/navbar') ?>
+    <?= $this->include('layout/header_mesas') ?>
+
 
     <div class="page-wrapper">
       <div class="container-xl">
@@ -108,6 +108,7 @@
     <script src="<?= base_url() ?>/Assets/script_js/consultas_y_reportes/edicion_de_apertura_sin_cierre.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/consultas_y_reportes/edicion_de_apertura_sin_cierre.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/consultas_y_reportes/actualizar_efectivo_usuario.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert_start.js"></script>
     <!-- Sweet alert -->
     <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
     <!-- Calendario -->
@@ -818,7 +819,8 @@
 
 
     <script>
-      function editar_apertura(id_apertura) {
+      function editar_apertura() {
+        let id_apertura = document.getElementById("id_apertura").value;
         var url = document.getElementById("url").value;
         $.ajax({
           data: {
@@ -933,6 +935,9 @@
             var resultado = JSON.parse(resultado);
             if (resultado.resultado == 1) {
               $("#movimientos_de_caja").html(resultado.aperturas);
+
+
+
 
             }
           },
@@ -1320,7 +1325,7 @@
     <script>
       $(document).ready(function() {
         //let url = document.getElementById("url").value;
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
 
         /*  $('#aperturas').DataTable({
              serverSide: true,
@@ -1374,7 +1379,7 @@
 
     <script>
       function movimiento(id) {
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
 
         $.ajax({
           data: {
@@ -1403,6 +1408,23 @@
               $('#id_apertura').val(resultado.id_apertura)
               $('#id_aperturas').val(resultado.id_apertura)
 
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+
+              Toast.fire({
+                icon: 'success',
+                title: 'Movimientos de caja encontrados'
+              })
+
             }
           },
         });
@@ -1414,7 +1436,7 @@
     <script>
       function fiscal() {
 
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
         var id_apertura = document.getElementById("id_aperturas").value;
         $.ajax({
           data: {
@@ -1438,11 +1460,15 @@
     <script>
       function reporte_ventas() {
 
-         var url = document.getElementById("url").value;
+        var url = document.getElementById("url").value;
         var id_apertura = document.getElementById("id_apertura").value;
+        var tipo_reporte = document.getElementById("tipo_reporte").value;
+
+
         $.ajax({
           data: {
-            id_apertura
+            id_apertura,
+            tipo_reporte
           },
           url: url + "/" + "consultas_y_reportes/reporte_de_ventas",
           type: "POST",

@@ -26,12 +26,18 @@ function eliminar_producto(event, id_tabla_producto) {
                 success: function(resultado) {
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
-                        sweet_alert('success', 'Producto eliminado')
+                        sweet_alert('success', resultado.mensaje)
                         $("#mesa_productos").html(resultado.productos);
                         $("#valor_pedido").html(resultado.total_pedido);
+                        $("#val_pedido").html(resultado.total_pedido);
+                        $("#subtotal_pedido").val(resultado.total_pedido);
 
 
 
+                    }
+
+                    if (resultado.resultado == 0){
+                        sweet_alert('error', 'Ya ha sido impreso y no se puede eliminar ')
                     }
                 },
             });

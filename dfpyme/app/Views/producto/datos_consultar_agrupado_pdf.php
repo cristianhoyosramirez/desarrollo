@@ -57,8 +57,8 @@ $mes_final = $meses[(date('m', strtotime($fecha_final))) - 1];
         <tr>
             <td style="text-align:left; font:   80% nomal; border:none; "><?php echo $datos_empresa[0]['direccionempresa'] . " " . $nombre_ciudad . " " . $nombre_departamento ?></td>
             <td style="text-align:left; font:   80% nomal; border:none; "></td>
-            
-            <td style="text-align:left; font:   80% nomal; border:none; ">DESDE: <?php echo $dia_inicio . ", " . date("d", strtotime($fecha_inicial)) . " " . $mes_inicio . " de " . date("Y", strtotime($fecha_inicial)) ?>  <?php  date("g:i a", strtotime($fecha_inicial)) ?>  Hasta <?php echo $dia_final . ", "  .  date("d", strtotime($fecha_final)) . " " . $mes_final . " de " . date("Y", strtotime($fecha_final)). date("g:i a", strtotime($fecha_final)) ?></td>
+
+            <td style="text-align:left; font:   80% nomal; border:none; ">DESDE: <?php echo $dia_inicio . ", " . date("d", strtotime($fecha_inicial)) . " " . $mes_inicio . " de " . date("Y", strtotime($fecha_inicial)) ?> <?php date("g:i a", strtotime($fecha_inicial)) ?> Hasta <?php echo $dia_final . ", "  .  date("d", strtotime($fecha_final)) . " " . $mes_final . " de " . date("Y", strtotime($fecha_final)) . date("g:i a", strtotime($fecha_final)) ?></td>
         </tr>
     </tbody>
 </table>
@@ -104,7 +104,7 @@ $mes_final = $meses[(date('m', strtotime($fecha_final))) - 1];
                 <td style="text-align:left; font:    80% ; border:none;  "></td>
                 <td style="text-align:left; font:    80% ; border:none;  "></td>
                 <td class="table-danger" style="text-align:left; font:    80% ; border:none;  ">
-                    <p style="text-align:right; font:    100% nomal; border:none; ">TOTAL: <?php echo "$" . number_format($total_categoria[0]['valor_total'], 0, ",", ".") ?></p>
+                    <p style="text-align:right; font:    100% nomal; border:none;  background-color:#E7CACB; ">TOTAL: <?php echo "$" . number_format($total_categoria[0]['valor_total'], 0, ",", ".") ?></p>
                 </td>
             </tr>
         <?php } ?>
@@ -138,19 +138,33 @@ $mes_final = $meses[(date('m', strtotime($fecha_final))) - 1];
             </tr>
         </thead>
 
-        <tbody>
-            <?php foreach ($devoluciones as $detalle) {  ?>
-                <tr>
-                    <td style="text-align:left; font:   80% nomal; border:none;  "><?php echo $detalle['codigo'] ?></td>
-                    <td style="text-align:left; font:   80% nomal; border:none;  "><?php echo $detalle['nombreproducto'] ?></td>
-                    <td style="text-align:left; font:   80% nomal; border:none;  "><?php echo $detalle['cantidad'] ?></td>
-                    <td style="text-align:left; font:   80% nomal; border:none;  "><?php echo "$" . number_format($detalle['valor_unitario'], 0, ",", ".") ?></td>
-                    <td style="text-align:left; font:   80% nomal; border:none;  "><?php echo "$" . number_format($detalle['total'], 0, ",", ".") ?></td>
-                </tr>
-            <?php } ?>
 
-        </tbody>
-    </table>
-    <p style="text-align:right; font:    100% nomal; border:none;  ">TOTAL DEVOLUCIONES: <?php echo $total_devoluciones ?> </p>
+        <?php foreach ($devoluciones as $detalle) {
 
+            $detalle_devolucion = model('detalleDevolucionVentaModel')->detalle_devolucion($detalle['id_apertura']);
+
+        ?>
+
+            <tr>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo $detalle['codigo'] ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo $detalle_devolucion[0]['nombreproducto'] ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo $detalle['cantidad'] ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo  "$ " . number_format($detalle['valor_total_producto'] / $detalle['cantidad'], 0, ",", "."); ?></td>
+                <td style="text-align:left; font:    80% ; border:none;  "><?php echo "$ " . number_format($detalle['valor_total_producto'], 0, ",", ".") ?></td>
+            </tr>
+
+        <?php } ?>
+
+        <?php $total_devoluciones = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $id_apertura)->findAll(); ?>  
+</div>
+<div class="row">
+
+    <div class="col-10"></div>
+    <div class="col-2">
+        <p style="text-align:right; font:    100% nomal; border:none; ">
+
+            TOTAL DEVOLUCIONES :<?php echo "$" . number_format($total_devoluciones[0]['valor_total_producto'], 0, ",", "."); ?>
+            <?php model('reporteProductoModel')->truncate(); ?>
+        </p>
+    </div>
 </div>

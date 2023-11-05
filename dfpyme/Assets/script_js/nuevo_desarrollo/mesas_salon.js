@@ -2,12 +2,12 @@ function mesas_salon(id_salon) {
 
     let mesas = document.getElementById("todas_las_mesas");
     mesas.style.display = "block";
+    let tipo_pedido = document.getElementById("tipo_pedido").value;
 
-
-
-    let lista_categorias = document.getElementById("lista_categorias");
-    lista_categorias.style.display = "none";
-
+    if (tipo_pedido == "computador") {
+        let lista_categorias = document.getElementById("lista_categorias");
+        lista_categorias.style.display = "none";
+    }
     let url = document.getElementById("url").value
 
     $.ajax({
@@ -16,7 +16,7 @@ function mesas_salon(id_salon) {
         data: {
             id_salon
         }, // Pasar los datos al script PHP
-        success: function(resultado) {
+        success: function (resultado) {
             var resultado = JSON.parse(resultado);
             if (resultado.resultado == 1) {
                 limpiar_todo();

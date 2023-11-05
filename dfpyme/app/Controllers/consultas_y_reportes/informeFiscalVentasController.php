@@ -25,7 +25,7 @@ class informeFiscalVentasController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
         $fecha_factura = $_POST['fecha'];
@@ -226,6 +226,9 @@ class informeFiscalVentasController extends BaseController
 
                     //dd($ico_de_devolucion);
                     $consecutivo_informe = model('consecutivoInformeModel')->select('numero')->where('fecha', $fecha_factura)->first();
+                    $impuesto_saludable=model('impuestoSaludableModel')->findAll();
+                   
+                
                     $informe = view('consultas_y_reportes/informe_fiscal_ventas_diarias_datos', [
                         "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
                         "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
@@ -244,7 +247,8 @@ class informeFiscalVentasController extends BaseController
                         "ico_devolucion" => $ico_de_devolucion,
                         //"consecutivo" => $consecutivo_caja['consecutivo'],
                         "consecutivo" => $consecutivo_informe['numero'],
-                        "fecha" => $fecha_factura
+                        "fecha" => $fecha_factura,
+                        "impuesto_saludable"=>$impuesto_saludable
 
                     ]);
 
@@ -525,7 +529,7 @@ class informeFiscalVentasController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
         /**
@@ -751,7 +755,7 @@ class informeFiscalVentasController extends BaseController
         $datos_empresa = model('empresaModel')->find();
         $id_regimen = $datos_empresa[0]['idregimen'];
         $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
         $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
 
         $array_iva = array();

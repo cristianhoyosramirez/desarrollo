@@ -20,7 +20,7 @@ class loginController extends BaseController
                 'errors' => [
                     'required' => 'El pin es requerido',
                     'is_not_unique' => 'Pin inexistente',
-                    'max_length'=>'Longitud máxima de 4 digitos'
+                    'max_length' => 'Longitud máxima de 4 digitos'
 
                 ]
             ],
@@ -31,32 +31,50 @@ class loginController extends BaseController
 
 
         $pin = $this->request->getVar('pin');
-        $usuario = model('usuariosModel')->select('*')->where('pinusuario_sistema', $pin)->first();
-        $tipo_permiso=model('tipoPermisoModel')->select('*')->where('idusuario_sistema',$usuario['idusuario_sistema'])->find();
+        $usuario = model('usuariosModel')->usuario_valido($pin);
+        #$usuario = model('usuariosModel')->select('*')->where('pinusuario_sistema', $pin)->first();
 
-        if ($usuario) {
-            $datosSesion = [
-                'id_usuario' => $usuario['idusuario_sistema'],
-                'usuario' => $usuario['usuariousuario_sistema'],
-                'nombre_usuario' => $usuario['nombresusuario_sistema'],
-                'logged_in' => TRUE,
-                'tipo'=>$usuario['idtipo'],
-                'tipo_permiso'=>$tipo_permiso
-            ];
-            $sesion = session();
-            $sesion->set($datosSesion);
-            return redirect()->to(base_url('mesas/todas_las_mesas'));
-        } else {
-            $datosSesion = [
-                'id_usuario' => $usuario['idusuario_sistema'],
-                'usuario' => $usuario['usuariousuario_sistema'],
-                'nombre_usuario' => $usuario['nombresusuario_sistema'],
-                'logged_in' => FALSE,
-                'tipo'=>$usuario['idtipo']
-            ];
-            $sesion = session();
-            $sesion->set($datosSesion);
-            return redirect()->to(base_url('/'))->withInput()->with('errors', $this->validator->getErrors());
+
+        if (!empty($usuario)) {
+            $tipo_permiso = model('tipoPermisoModel')->select('*')->where('idusuario_sistema', $usuario[0]['idusuario_sistema'])->find();
+
+
+
+            if ($usuario) {
+                $datosSesion = [
+                    'id_usuario' => $usuario[0]['idusuario_sistema'],
+                    'usuario' => $usuario[0]['usuariousuario_sistema'],
+                    'nombre_usuario' => $usuario[0]['nombresusuario_sistema'],
+                    'logged_in' => TRUE,
+                    'tipo' => $usuario[0]['idtipo'],
+                    'tipo_permiso' => $tipo_permiso
+                ];
+                $sesion = session();
+                $sesion->set($datosSesion);
+                if ($usuario[0]['idtipo'] == 0 or $usuario[0]['idtipo'] == 1) {
+                    return redirect()->to(base_url('pedidos/mesas'));
+                }
+
+                if ($usuario[0]['idtipo'] == 2 ){
+                    return redirect()->to(base_url('pedidos/gestion_pedidos'));
+                }
+            } else {
+                $datosSesion = [
+                    'id_usuario' => $usuario['idusuario_sistema'],
+                    'usuario' => $usuario['usuariousuario_sistema'],
+                    'nombre_usuario' => $usuario['nombresusuario_sistema'],
+                    'logged_in' => FALSE,
+                    'tipo' => $usuario['idtipo']
+                ];
+                $sesion = session();
+                $sesion->set($datosSesion);
+                return redirect()->to(base_url('/'))->withInput()->with('errors', $this->validator->getErrors());
+            }
+        } else if (empty($usuario)) {
+
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'Error');
+            return redirect()->to(base_url('pedido/pedidos_para_facturar'))->with('mensaje', 'Usuario inactivo o no existe');
         }
     }
     public function closeSesion()

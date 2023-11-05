@@ -9,7 +9,11 @@ class facturaVentaModel extends Model
     protected $table      = 'factura_venta';
     // Uncomment below if you want a
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['numerofactura_venta', 'nitcliente', 'idusuario_sistema', 'idcaja', 'idestado', 'fecha_factura_venta', 'horafactura_venta', 'descuentofactura_venta', 'fechalimitefactura_venta', 'aplica_descuento', 'estado', 'serie', 'id_resolucion_dian', 'observaciones_generales', 'fk_usuario_mesero', 'fk_mesa', 'valor_factura', 'numero_pedido', 'saldo', 'fecha_y_hora_factura_venta'];
+    protected $allowedFields = ['numerofactura_venta', 'nitcliente', 'idusuario_sistema',
+     'idcaja', 'idestado', 'fecha_factura_venta', 'horafactura_venta', 'descuentofactura_venta', 
+     'fechalimitefactura_venta', 'aplica_descuento', 'estado', 'serie', 'id_resolucion_dian',
+      'observaciones_generales', 'fk_usuario_mesero', 'fk_mesa', 'valor_factura', 'numero_pedido',
+       'saldo', 'fecha_y_hora_factura_venta','id_apertura'];
 
 
 
@@ -284,9 +288,11 @@ class facturaVentaModel extends Model
         $numero_pedido,
         $fecha_y_hora,
         $descuento,
-        $propina
+        $propina,
+        $id_apertura
 
     ) {
+
         $data = [
             'numerofactura_venta' =>  $numero_factura,
             'nitcliente' => $nit_cliente,
@@ -309,7 +315,8 @@ class facturaVentaModel extends Model
             'numero_pedido' => $numero_pedido,
             'fecha_y_hora_factura_venta' => $fecha_y_hora,
             'descuento' => $descuento,
-            'propina' => $propina
+            'propina' => $propina,
+            'id_apertura'=>$id_apertura
 
         ];
 
@@ -366,7 +373,7 @@ class facturaVentaModel extends Model
         return $datos->getResultArray();
     }
 
-    function consultar_por_fecha($fecha_inicial,$fecha_final,$id_estado)
+    function consultar_por_fecha($fecha_inicial, $fecha_final, $id_estado)
     {
         $datos = $this->db->query("
         SELECT
@@ -378,7 +385,7 @@ class facturaVentaModel extends Model
          ");
         return $datos->getResultArray();
     }
-    function saldo_factura($fecha_inicial,$fecha_final,$id_estado)
+    function saldo_factura($fecha_inicial, $fecha_final, $id_estado)
     {
         $datos = $this->db->query("
         SELECT
@@ -390,7 +397,7 @@ class facturaVentaModel extends Model
          ");
         return $datos->getResultArray();
     }
-    function total_saldo_factura($fecha_inicial,$fecha_final,$id_estado)
+    function total_saldo_factura($fecha_inicial, $fecha_final, $id_estado)
     {
         $datos = $this->db->query("
         SELECT
@@ -403,7 +410,8 @@ class facturaVentaModel extends Model
         return $datos->getResultArray();
     }
 
-    function busqueda_documento($documento){
+    function busqueda_documento($documento)
+    {
         $datos = $this->db->query("
         SELECT
         factura_venta.nitcliente,
@@ -424,6 +432,5 @@ class facturaVentaModel extends Model
         numerofactura_venta = '$documento'
          ");
         return $datos->getResultArray();
-
     }
 }

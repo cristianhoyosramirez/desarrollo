@@ -14,8 +14,8 @@
 <?php $session = session(); ?>
 <body>
     <div class="wrapper">
-        <?= $this->include('layout/header') ?>
-        <?= $this->include('layout/navbar') ?>
+        <?= $this->include('layout/header_mesas') ?>
+        
 
         <div class="page-wrapper">
             <div class="container-xl">
