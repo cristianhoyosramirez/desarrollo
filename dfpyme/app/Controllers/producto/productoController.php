@@ -18,10 +18,11 @@ class productoController extends BaseController
         $valor_buscado = $_POST['search']['value'];
 
         $table_map = [
-            0 => 'codigointernoproducto',
-            1 => 'nombreproducto',
-            2 => 'nombrecategoria',
-            3 => 'valorventaproducto',
+            0 => 'nombrecategoria',
+            1 => 'codigointernoproducto',
+            2 => 'nombreproducto',
+            3 => 'nombrecategoria',
+            4 => 'valorventaproducto',
         ];
 
         $sql_count = "SELECT count(codigointernoproducto) as total 
@@ -63,6 +64,7 @@ class productoController extends BaseController
             foreach ($datos as $detalle) {
                 $cantidad = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
                 $sub_array = array();
+                $sub_array[] = $detalle['nombrecategoria'];
                 $sub_array[] = $detalle['codigointernoproducto'];
                 $sub_array[] = $detalle['nombreproducto'];
                 $sub_array[] = $cantidad['cantidad_inventario'];

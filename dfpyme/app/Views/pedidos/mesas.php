@@ -264,12 +264,12 @@ Bienvenido DFpyme
 
 
                                     <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
-                                        Prefactura
+                                        Orden de pedido
                                     </a>
                                 </div>
                                 <div class="col-md-6">
                                     <a class="btn btn-outline-muted w-100" onclick="retiro_dinero()">
-                                        Rerirar dinero</a>
+                                        Retirar dinero</a>
                                 </div>
                                 <div class="col-md-6">
                                     <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">

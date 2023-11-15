@@ -1,6 +1,7 @@
 function imprimir_comanda() {
     let url = document.getElementById("url").value;
     let id_mesa = document.getElementById("id_mesa_pedido").value;
+    let id_usuario = document.getElementById("id_usuario").value;
     if (id_mesa == "") {
         sweet_alert('warning', 'No hay pedido ')
     } else if (id_mesa != "") {
@@ -8,7 +9,7 @@ function imprimir_comanda() {
         $.ajax({
             data: {
 
-                id_mesa,
+                id_mesa,id_usuario
 
             },
             url: url + "/" + "pedidos/imprimirComanda",

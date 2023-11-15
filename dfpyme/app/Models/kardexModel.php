@@ -9,7 +9,11 @@ class kardexModel extends Model
     protected $table      = 'kardex';
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['idcompra', 'codigo', 'idusuario', 'idconcepto', 'numerodocumento', 'fecha', 'hora', 'cantidad', 'valor', 'total', 'fecha_y_hora_factura_venta', 'id_categoria', 'id_apertura', 'valor_unitario'];
+    protected $allowedFields = [
+        'idcompra', 'codigo', 'idusuario', 'idconcepto', 'numerodocumento', 'fecha', 'hora',
+        'cantidad', 'valor', 'total', 'fecha_y_hora_factura_venta', 'id_categoria', 'id_apertura', 'valor_unitario', 'id_factura', 'costo',
+        'ico', 'iva', 'id_estado'
+    ];
 
     public function get_productos($id_apertura)
     {
@@ -58,6 +62,13 @@ class kardexModel extends Model
             reporte_ventas_producto_categorias
         WHERE
             id_categoria=$id_categoria
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_factutras_pos($id_factura)
+    {
+        $datos = $this->db->query("
+        SELECT * FROM kardex WHERE id_factura = $id_factura;
         ");
         return $datos->getResultArray();
     }

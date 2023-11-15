@@ -1130,7 +1130,7 @@ class cajaDiariaController extends BaseController
             'fecha_apertura' => "Fecha apertura: " . $fecha_apertura['fecha'],
             'fecha_cierre' => "Fecha cierre: " . $fecha_cierre,
             'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-            'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo + $ingresos_transaccion + $valor_apertura['valor']), 0, ",", "."),
+            'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo + $ingresos_transaccion)-$propinas, 0, ",", "."),
             'ingresos_transaccion' =>  "$" . number_format($propinas, 0, ",", "."),
             'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo) + $valor_apertura['valor'], 0, ",", "."),
             'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),

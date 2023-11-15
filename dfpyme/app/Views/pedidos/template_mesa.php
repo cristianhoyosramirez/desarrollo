@@ -218,65 +218,96 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/meseros.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
 
+
     <script>
-            $('#creacion_cliente_electronico').submit(function(e) {
-                e.preventDefault();
-                var form = this;
-                let button = document.querySelector("#btn_crear_cliente");
-                button.disabled = false;
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: $(form).attr('method'),
-                    data: new FormData(form),
-                    processData: false,
-                    dataType: 'json',
-                    contentType: false,
-                    beforeSend: function() {
-                        $(form).find('span.error-text').text('');
-                        button.disabled = false;
-                    },
-                    success: function(data) {
-                        if ($.isEmptyObject(data.error)) {
-                            if (data.code == 1) {
-                                $("#crear_cliente").modal("hide");
-                                $("#finalizar_venta").modal("show");
-                                $("#nit_cliente").val(data.nit_cliente);
-                                $("#nombre_cliente").val(data.cliente);
+        function cerrar_modal_mesas() {
+            document.getElementById("buscar_mesa").value = "";
+            document.getElementById("buscar_mesero").value = "";
 
+            var url = document.getElementById("url").value;
 
-                                $(form)[0].reset();
+            $.ajax({
+                url: url +
+                    "/" +
+                    "pedidos/todas_las_mesas",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#mesas_all').html(resultado.mesas)
+                        $("#lista_todas_las_mesas").modal("hide");
 
 
 
-                                //$('#countries-table').DataTable().ajax.reload(null, false);
-                                const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: 'top-start',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                    }
-                                })
-
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: 'Cliente agregado a la base de datos '
-                                })
-                            } else {
-                                alert(data.msg);
-                            }
-                        } else {
-                            $.each(data.error, function(prefix, val) {
-                                $(form).find('span.' + prefix + '_error').text(val);
-                            });
-                        }
                     }
-                });
+                },
             });
-        </script>
+
+
+
+        }
+    </script>
+
+    <script>
+        $('#creacion_cliente_electronico').submit(function(e) {
+            e.preventDefault();
+            var form = this;
+            let button = document.querySelector("#btn_crear_cliente");
+            button.disabled = false;
+            $.ajax({
+                url: $(form).attr('action'),
+                method: $(form).attr('method'),
+                data: new FormData(form),
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $(form).find('span.error-text').text('');
+                    button.disabled = false;
+                },
+                success: function(data) {
+                    if ($.isEmptyObject(data.error)) {
+                        if (data.code == 1) {
+                            $("#crear_cliente").modal("hide");
+                            $("#finalizar_venta").modal("show");
+                            $("#nit_cliente").val(data.nit_cliente);
+                            $("#nombre_cliente").val(data.cliente);
+
+
+                            $(form)[0].reset();
+
+
+
+                            //$('#countries-table').DataTable().ajax.reload(null, false);
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-start',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Cliente agregado a la base de datos '
+                            })
+                        } else {
+                            alert(data.msg);
+                        }
+                    } else {
+                        $.each(data.error, function(prefix, val) {
+                            $(form).find('span.' + prefix + '_error').text(val);
+                        });
+                    }
+                }
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -340,13 +371,16 @@
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
 
-                        $('#info_producto').html(resultado.producto_cantidad)
-                        $("#editar_cantidades").modal("show");
+                        $('#mesa_productos').html(resultado.productos_pedido)
+                        $('#valor_pedido').html(resultado.total_pedido)
+                        $('#val_pedido').html(resultado.total_pedido)
+                        $('#pedido_mesa').html('Pedido: ' + resultado.numero_pedido)
+                        $('#subtotal_pedido').val(resultado.total_pedido)
 
                     }
 
                     if (resultado.resultado == 0) {
-                        alert('No se puede actualizar ')
+                        sweet_alert_start('warning', 'No se puede eliminar ')
                     }
                 },
             });
@@ -771,6 +805,7 @@
         function calcular_porcentaje(valor) {
             var url = document.getElementById("url").value;
             var id_producto_pedido = document.getElementById("id_producto_pedido").value;
+            var id_usuario = document.getElementById("id_usuario").value;
 
             $.ajax({
                 data: {
@@ -1107,11 +1142,32 @@
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
 
-                        $('#listado_de_mesas').html(resultado.mesas)
+                        $('#mesas_all').html(resultado.mesas)
                         $("#lista_todas_las_mesas").modal("show");
 
 
 
+                    }
+                },
+            });
+        }
+    </script>
+
+    <script>
+        function listado_mesas() {
+            var url = document.getElementById("url").value;
+
+            $.ajax({
+                url: url +
+                    "/" +
+                    "pedidos/todas_las_mesas",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#resultado_mesa').html(resultado.mesas)
+                       
                     }
                 },
             });

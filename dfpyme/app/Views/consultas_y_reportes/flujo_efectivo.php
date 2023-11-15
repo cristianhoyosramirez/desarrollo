@@ -27,14 +27,17 @@ REPORTE DE VENTAS DIARIAS
 <div class="card container">
     <div class="card-body">
         <div class="row">
-            <div class="col-md-6">
-                <label for="inputEmail4" class="form-label">Desde</label>
+            <div class="col-md-4">
+                <label for="inputEmail4">Desde</label>
                 <input type="date" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d') ?>"> <br>
-                <button type="button" onclick="reporte_movimiento_efectivo()" class="btn btn-success">Generar reporte</button>
             </div>
-            <div class="col-md-6">
-                <label for="inputEmail4" class="form-label">Hasta </label>
+            <div class="col-md-4">
+                <label for="inputEmail4">Hasta </label>
                 <input type="date" class="form-control" id="fecha_final" value="<?php echo date('Y-m-d') ?>">
+            </div>
+
+            <div class="col-4"> <br>
+                <button type="button" onclick="reporte_movimiento_efectivo()" class="btn btn-primary">Buscar</button>
             </div>
 
         </div>

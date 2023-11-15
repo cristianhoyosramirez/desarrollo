@@ -95,6 +95,9 @@ class PartirFactura extends BaseController
             }
             $maxVenta = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', 48)->first();
 
+            
+
+
             $requiere_factura_electronica = "";
             if ($totalBase >= $maxVenta['numeroconsecutivo']) {
                 $factura_electronica = '
@@ -232,8 +235,11 @@ class PartirFactura extends BaseController
         $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
 
         $model = model('partirFacturaModel');
+        $borrar = $model->truncate();
+       
+       /*  $model = model('partirFacturaModel');
         $borrar = $model->where('numero_de_pedido', $numero_pedido['id']);
-        $borrar = $model->delete();
+        $borrar = $model->delete(); */
 
         if ($borrar) {
             $returnData = array(

@@ -171,14 +171,14 @@ class CerrarVenta extends BaseController
             if ($tipo_pago == 1) {
                 $productos = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
                 //Insertar en la tabla producto factura_venta 
-                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario, $apertura['numero']);
+                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario, $apertura['numero'], $estado);
             }
 
 
             if ($tipo_pago == 0) {
 
                 $productos = model('partirFacturaModel')->get_productos($numero_pedido);
-                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario, $apertura['numero']);
+                $insertar_productos = model('cerrarVentaModel')->producto_pedido($productos, $factura_venta, $numero_pedido, $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'], $fecha_y_hora, $tipo_pago, $id_usuario, $apertura['numero'], $estado);
             }
 
             if ($efectivo > 1) {
@@ -283,137 +283,6 @@ class CerrarVenta extends BaseController
 
 
 
-
-            /* 
-           2. Versión 
-           if ($suma_pagos > $valor_venta) {
-
-
-                if ($efectivo > 0 and $transaccion == 0) {
-                    $valor_pago_transferencia = 0;
-                    $valor_pago_efectivo = $valor_venta;
-                    $cambio =  $efectivo - $valor_venta;
-                    $recibido_transaccion = 0;
-                    $recibido_efectivo = $efectivo;
-                }
-
-                if ($efectivo == 0 and $transaccion > 0) {
-                    $valor_pago_transferencia = $valor_venta;
-                    $valor_pago_efectivo = 0;
-                    $cambio =  $transaccion - $valor_venta;
-                    $recibido_transaccion = $transaccion;
-                    $recibido_efectivo = 0;
-                }
-
-                if ($efectivo > 0 and $transaccion > 0) {
-
-
-                    if ($transaccion > $efectivo) {
-                        $valor_pago_transferencia = $valor_venta;
-                        $valor_pago_efectivo = $efectivo;
-                        $cambio =  ($transaccion+$efectivo) - $valor_venta;
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = $efectivo;
-                    }
-                    if ($efectivo  > $transaccion) {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = $efectivo;
-                        $cambio =  ($transaccion+$efectivo) - $valor_venta;
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = $efectivo;
-                    }
-
-
-                }
-            } */
-
-
-            /* 
-           // 1.Versión 
-            if ($suma_pagos > $valor_venta) {
-
-                if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion > $efectivo) {
-
-                    $valor_pago_transferencia = $valor_venta;
-                    $valor_pago_efectivo = $efectivo;
-                    $cambio = $transaccion - $valor_venta;
-                    $recibido_transaccion = $transaccion;
-                    $recibido_efectivo = $efectivo;
-                }
-
-
-                if ($transaccion > $efectivo) {
-
-                    if ($transaccion > $efectivo) {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = 0;
-                        $cambio = $transaccion - $valor_venta;
-
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = $efectivo;
-                    }
-
-                    if ($transaccion < $valor_venta) {
-
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = $valor_venta - $transaccion;
-
-                        $cambio = $suma_pagos - $valor_venta;
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = $efectivo;
-                    }
-                    if ($transaccion == $valor_venta) {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = 0;
-                        $recibido_transaccion = $transaccion;
-                    } else if ($efectivo > $transaccion) {
-
-                        $valor_pago_transferencia = $valor_venta;
-                        $valor_pago_efectivo = 0;
-                        $cambio = $transaccion - $valor_venta;
-
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = 0;
-                    }
-                } else {
-
-                    if ($efectivo > $valor_venta && $transaccion == 0) {
-
-                        //$valor_pago_efectivo = $efectivo;
-                        $valor_pago_efectivo = $efectivo;
-                        $valor_pago_transferencia = 0;
-                        $cambio = $efectivo - $valor_venta;
-                    }
-
-                    if ($efectivo > $transaccion && $transaccion > 0) {
-                        $valor_pago_efectivo = 0;
-                        $valor_pago_transferencia = $valor_venta;
-                    }
-                    if ($efectivo < $transaccion) {
-                        $valor_pago_efectivo = $valor_venta - $transaccion;
-                        $valor_pago_transferencia = $transaccion;
-
-                        
-                    }
-                    if ($suma_pagos >= $valor_venta) {
-                        //$cambio = $suma_pagos - $valor_venta;
-                        $cambio = $suma_pagos - $valor_venta;
-                    }
-                    if ($suma_pagos < $valor_venta) {
-                        $cambio = $valor_venta - $suma_pagos;
-                    }
-
-                    $recibido_efectivo = $efectivo;
-                    if ($transaccion == 0) {
-                        $recibido_transaccion = 0;
-                    }
-                    if ($transaccion != 0) {
-                        $recibido_transaccion = $transaccion;
-                    }
-                }
-            } */
-
-
             $pagos = [
 
                 'fecha' => date('Y-m-d'),
@@ -431,7 +300,8 @@ class CerrarVenta extends BaseController
                 'id_apertura' => $id_apertura['numero'],
                 'cambio' => $cambio,
                 'recibido_efectivo' => $recibido_efectivo,
-                'recibido_transferencia' => $recibido_transaccion
+                'recibido_transferencia' => $recibido_transaccion,
+                'id_factura' => $factura_venta
             ];
 
             $pagos = model('pagosModel')->insert($pagos);
@@ -446,9 +316,10 @@ class CerrarVenta extends BaseController
                 $borrar_producto_pedido->delete();
             }
             if ($tipo_pago == 0) {  // Si el tipo de pago es 0 es un pago parcial se debe borrar la tabla partir factura y actualizar la tabla pedido 
-                $borrar_partir_factura = model('partirFacturaModel')->where('numero_de_pedido', $numero_pedido);
-                $borrar_partir_factura->delete();
-
+                /*   $borrar_partir_factura = model('partirFacturaModel')->where('numero_de_pedido', $numero_pedido);
+                $borrar_partir_factura->delete(); */
+                $model = model('partirFacturaModel');
+                $borrar = $model->truncate();
 
 
                 $total = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido)->findAll();
@@ -617,16 +488,28 @@ class CerrarVenta extends BaseController
 
         // $id_mesero = $this->request->getPost('id_mesero');
         $id_mesero = $this->request->getPost('id_mesero');
-        $model = model('pedidoModel');
-        $actualizar = $model->set('fk_usuario', $id_mesero);
-        $actualizar = $model->where('fk_mesa', $this->request->getPost('id_mesa'));
-        $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero)->first();
-        $actualizar = $model->update();
-        if ($actualizar) {
-            $returnData = array(
-                "resultado" => 1,
-                "nombre_mesero" => $nombre_mesero['nombresusuario_sistema']
+        $tipo_usuario = $this->request->getPost('tipo_usuario');
 
+
+
+        if ($tipo_usuario == 1 || $tipo_usuario == 0) {
+            $model = model('pedidoModel');
+            $actualizar = $model->set('fk_usuario', $id_mesero);
+            $actualizar = $model->where('fk_mesa', $this->request->getPost('id_mesa'));
+            $nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero)->first();
+            $actualizar = $model->update();
+            if ($actualizar) {
+                $returnData = array(
+                    "resultado" => 1,
+                    "nombre_mesero" => $nombre_mesero['nombresusuario_sistema']
+
+                );
+                echo  json_encode($returnData);
+            }
+        }
+        if ($tipo_usuario == 2) {
+            $returnData = array(
+                "resultado" => 0,
             );
             echo  json_encode($returnData);
         }

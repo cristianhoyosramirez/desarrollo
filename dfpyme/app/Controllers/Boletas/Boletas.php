@@ -142,6 +142,10 @@ class Boletas extends BaseController
     function actualizar_producto_porcentaje()
     {
         $id_producto = $this->request->getPost('id_producto_pedido');
+
+        $id_usuario = $this->request->getPost('id_usuario');
+
+
         $porcentaje_producto = $this->request->getPost('valor');
         $codigo_interno = model('productoPedidoModel')->select('codigointernoproducto')->where('id', $id_producto)->first();
 
@@ -405,8 +409,8 @@ class Boletas extends BaseController
     function municipios()
     {
         //$id_departamento = '749';
-       //$id_departamento = 751; 
-       $id_departamento = $this->request->getPost('valorSelect1'); 
+        //$id_departamento = 751; 
+        $id_departamento = $this->request->getPost('valorSelect1');
         // $id_departamento = strval($id_departamento);
 
 
@@ -416,7 +420,7 @@ class Boletas extends BaseController
 
         // Supongamos que tienes un modelo que obtiene las opciones en función del valor seleccionado.
         $municipios = model('municipiosModel')->where('code_depto', $code_depto['code'])->orderBy('nombre', 'asc')->findAll();
-        
+
         $ciudad = model('ciudadModel')->where('iddepartamento', $id_departamento)->orderBy('nombreciudad', 'asc')->findAll();
 
 
@@ -541,7 +545,7 @@ class Boletas extends BaseController
         echo  json_encode($returnData);
     }
 
-    function actualizar_cantidades()
+    /*  function actualizar_cantidades()
     {
         $id_tabla_producto = $this->request->getPost('id_producto');
         $cantidad_actualizar = $this->request->getPost('cantidad_producto');
@@ -553,8 +557,8 @@ class Boletas extends BaseController
         $cantidad_impresos = model('productoPedidoModel')->select('numero_productos_impresos_en_comanda')->where('id', $id_tabla_producto)->first();
         $valor_unitario  = model('productoPedidoModel')->select('valor_unitario')->where('id', $id_tabla_producto)->first();
 
-        echo $cantidad_impresos['numero_productos_impresos_en_comanda'] . "</br>";
-        echo $cantidad_producto['cantidad_producto'] . "</br>";
+       // echo $cantidad_impresos['numero_productos_impresos_en_comanda'] . "</br>";
+        //echo $cantidad_producto['cantidad_producto'] . "</br>";
 
         if ($cantidad_actualizar > $cantidad_producto['cantidad_producto']) {
 
@@ -597,5 +601,132 @@ class Boletas extends BaseController
             "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
         );
         echo  json_encode($returnData);
+    } */
+
+
+
+    function actualizar_cantidades()
+    {
+        $id_tabla_producto = $this->request->getPost('id_producto');
+        $cantidad_actualizar = $this->request->getPost('cantidad_producto');
+        $id_usuario = $this->request->getPost('id_usuario');
+        $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_tabla_producto)->first();
+        $tipo_usuario = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_usuario)->first();
+
+        $cantidad_producto = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_tabla_producto)->first();
+        $cantidad_impresos = model('productoPedidoModel')->select('numero_productos_impresos_en_comanda')->where('id', $id_tabla_producto)->first();
+        $valor_unitario  = model('productoPedidoModel')->select('valor_unitario')->where('id', $id_tabla_producto)->first();
+
+        // echo $cantidad_impresos['numero_productos_impresos_en_comanda'] . "</br>";
+        //echo $cantidad_producto['cantidad_producto'] . "</br>";
+        $model_pedido = model('pedidoModel');
+
+        if ($cantidad_actualizar > $cantidad_producto['cantidad_producto']) {
+
+
+            $model = model('productoPedidoModel');
+            /*  $actualizar = $model->set('valor_total', $valor_unitario['valor_unitario'] * $cantidad_actualizar);
+            $actualizar = $model->set('cantidad_producto', $cantidad_actualizar);
+            $actualizar = $model->where('id', $id_tabla_producto);
+            $actualizar = $model->update(); */
+
+            $cantidades = [
+                'valor_total' => $cantidad_actualizar * $valor_unitario['valor_unitario'],
+                'cantidad_producto' => $cantidad_actualizar
+            ];
+
+            $actualizar = model('productoPedidoModel')->actualizacion_cantidad_producto($id_tabla_producto, $cantidades);
+
+
+            $total_pedido = $model->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
+
+
+            $actualizacion = $model_pedido->set('valor_total', $total_pedido[0]['valor_total']);
+
+            $actualizacion = $model_pedido->where('id', $numero_pedido['numero_de_pedido']);
+            $actualizacion = $model_pedido->update();
+
+            $resultado = 1;
+        }
+
+        if ($cantidad_actualizar < $cantidad_producto['cantidad_producto']) {
+
+        
+
+            if ($tipo_usuario['idtipo'] == 1 || $tipo_usuario['idtipo'] == 0) {
+                $cantidades = [
+                    'valor_total' => $cantidad_actualizar * $valor_unitario['valor_unitario'],
+                    'cantidad_producto' => $cantidad_actualizar
+                ];
+
+                $actualizar = model('productoPedidoModel')->actualizacion_cantidad_producto($id_tabla_producto, $cantidades);
+                $model = model('productoPedidoModel');
+                $total_pedido = $model->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
+
+                $model_pedido = model('pedidoModel');
+                $actualizacion = $model_pedido->set('valor_total', $total_pedido[0]['valor_total']);
+
+                $actualizacion = $model_pedido->where('id', $numero_pedido['numero_de_pedido']);
+                $actualizacion = $model_pedido->update();
+
+                $resultado = 1;
+            }
+
+            if ($tipo_usuario['idtipo'] == 2) {
+
+                if ($cantidad_actualizar > $cantidad_impresos['numero_productos_impresos_en_comanda']) {
+
+                    $cantidades = [
+                        'valor_total' => $cantidad_actualizar * $valor_unitario['valor_unitario'],
+                        'cantidad_producto' => $cantidad_actualizar
+                    ];
+
+                    $actualizar = model('productoPedidoModel')->actualizacion_cantidad_producto($id_tabla_producto, $cantidades);
+                    $model = model('productoPedidoModel');
+                    $total_pedido = $model->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
+
+                    $model_pedido = model('pedidoModel');
+                    $actualizacion = $model_pedido->set('valor_total', $total_pedido[0]['valor_total']);
+
+                    $actualizacion = $model_pedido->where('id', $numero_pedido['numero_de_pedido']);
+                    $actualizacion = $model_pedido->update();
+
+                    $resultado = 1;
+                }
+                if ($cantidad_actualizar < $cantidad_impresos['numero_productos_impresos_en_comanda']) {
+                    $resultado = 0;
+                }
+            }
+        }
+
+        if ($cantidad_impresos['numero_productos_impresos_en_comanda'] == $cantidad_producto['cantidad_producto']) {
+            $resultado = 0;
+        }
+
+        if ($resultado == 1) {
+            $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
+            $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['numero_de_pedido'])->first();
+            $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido['numero_de_pedido'])->first();
+            $productos_del_pedido = view('pedidos/productos_pedido', [
+                "productos" => $productos_pedido,
+                "pedido" => $numero_pedido['numero_de_pedido']
+            ]);
+
+            $returnData = array(
+                "resultado" => 1,  // Se actulizo el registro 
+                "productos_pedido" => $productos_del_pedido,
+                "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
+                "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
+                "numero_pedido" => $numero_pedido['numero_de_pedido']
+            );
+            echo  json_encode($returnData);
+        }
+        if ($resultado == 0) {
+            $returnData = array(
+                "resultado" => 0,  // Se actulizo el registro 
+
+            );
+            echo  json_encode($returnData);
+        }
     }
 }

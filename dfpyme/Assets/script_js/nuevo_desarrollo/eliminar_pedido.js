@@ -1,6 +1,8 @@
 function eliminar_pedido() {
     let url = document.getElementById("url").value
     var id_mesa = document.getElementById("id_mesa_pedido").value;
+    var id_usuario = document.getElementById("id_usuario").value;
+    
     if (id_mesa == "") {
         sweet_alert('warning', 'No hay pedido ')
     } else if (id_mesa != "") {
@@ -22,7 +24,7 @@ function eliminar_pedido() {
                     type: 'post',
                     url: url + "/" + "pedidos/eliminacion_de_pedido", // Cambia esto a tu script PHP para insertar en la base de datos
                     data: {
-                        id_mesa,
+                        id_mesa,id_usuario
                     }, // Pasar los datos al script PHP
                     success: function (resultado) {
                         var resultado = JSON.parse(resultado);
@@ -39,8 +41,11 @@ function eliminar_pedido() {
                             lista_categorias.style.display = "none";
 
                             $("#producto").attr("readonly", true);
-                            
 
+
+                        }
+                        if (resultado.resultado == 0) {
+                            sweet_alert_start('error', 'Acción requiere permisos')
                         }
                     },
                 });

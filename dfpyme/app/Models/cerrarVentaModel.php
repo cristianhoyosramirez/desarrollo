@@ -12,7 +12,7 @@ class cerrarVentaModel extends Model
     // protected $primaryKey = 'id';
     protected $allowedFields = ['nombre'];
 
-    function producto_pedido($productos, $factura_venta, $numero_pedido, $numero_factura, $fecha_y_hora, $tipo_pago, $id_usuario, $id_apertura)
+    function producto_pedido($productos, $factura_venta, $numero_pedido, $numero_factura, $fecha_y_hora, $tipo_pago, $id_usuario, $id_apertura, $estado)
     {
 
         $impuestos = new Impuestos();
@@ -124,7 +124,7 @@ class cerrarVentaModel extends Model
                 'impoconsumo' => 0,
                 'total' => $valor_unidad * $detalle['cantidad_producto'],
                 'valor_ico' => $calculo[0]['valor_ico'], //
-                'impuesto_al_consumo' => $calculo[0]['ico'],
+                'impuesto_al_consumo' => $calculo[0]['ico']/$detalle['cantidad_producto'],
                 'iva' => $calculo[0]['iva'],
                 'id_iva' => $calculo[0]['id_iva'],
                 'aplica_ico' => $calculo[0]['aplica_ico'],
@@ -134,13 +134,13 @@ class cerrarVentaModel extends Model
                 'fecha_y_hora_venta' => $fecha_y_hora,
                 'fecha_venta' => date('Y-m-d'),
                 'id_categoria' => $codigo_categoria['codigocategoria'],
-                'id_impuesto_saludable'=>$id_saludable['id_impuesto_saludable'],
-                'valor_impuesto_saludable'=>$impuesto_saludable['valor_impuesto_saludable']
+                'id_impuesto_saludable' => $id_saludable['id_impuesto_saludable'],
+                'valor_impuesto_saludable' => $impuesto_saludable['valor_impuesto_saludable']
             ];
 
             $insertar = model('productoFacturaVentaModel')->insert($producto_factura_venta);
 
-
+            $costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
             $data_kardex = [
                 'idcompra' => 0,
                 'codigo' => $detalle['codigointernoproducto'],
@@ -155,8 +155,12 @@ class cerrarVentaModel extends Model
                 'fecha_y_hora_factura_venta' => $fecha_y_hora,
                 'id_categoria' => $codigo_categoria['codigocategoria'],
                 'id_apertura' => $id_apertura,
-                'valor_unitario' => $detalle['valor_unitario']
-
+                'valor_unitario' => $detalle['valor_unitario'],
+                'id_factura' => $factura_venta,
+                'costo' => $costo['precio_costo'],
+                'ico' => $calculo[0]['ico'],
+                'iva' => $calculo[0]['iva'],
+                'id_estado' => $estado,
             ];
 
             $insertar = model('kardexModel')->insert($data_kardex);

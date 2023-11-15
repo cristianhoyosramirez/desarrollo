@@ -19,7 +19,7 @@
                     </button>
                 </form>
 
-                <button type="button" class="btn btn-outline-dark " onclick="no_imprimir_retiro_de_dinero()">
+                <button type="button" class="btn btn-outline-dark " data-bs-dismiss="modal" onclick="no_imprimir_retiro_de_dinero()">
                     Regresar
                 </button>
             </div>

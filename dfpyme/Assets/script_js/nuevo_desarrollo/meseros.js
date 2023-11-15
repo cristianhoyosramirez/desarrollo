@@ -1,6 +1,7 @@
 function meseros(id_mesero) {
     var url = document.getElementById("url").value;
     let mesa = document.getElementById("id_mesa_pedido").value;
+    let tipo_usuario = document.getElementById("tipo_usuario").value;
 
 
 
@@ -13,13 +14,14 @@ function meseros(id_mesero) {
         $.ajax({
             data: {
                 id_mesero,
-                id_mesa
+                id_mesa,
+                tipo_usuario
             },
             url: url +
                 "/" +
                 "pedidos/actualizar_mesero",
             type: "POST",
-            success: function(resultado) {
+            success: function (resultado) {
                 var resultado = JSON.parse(resultado);
                 if (resultado.resultado == 1) {
 
@@ -30,6 +32,10 @@ function meseros(id_mesero) {
 
 
                 }
+                if (resultado.resultado == 0) {
+                    sweet_alert('warning', 'Acción requiere permisos')
+                }
+
             },
         });
 
@@ -42,13 +48,14 @@ function meseros(id_mesero) {
         $.ajax({
             data: {
                 id_mesero,
-                id_mesa
+                id_mesa,
+                tipo_usuario
             },
             url: url +
                 "/" +
                 "pedidos/actualizar_mesero",
             type: "POST",
-            success: function(resultado) {
+            success: function (resultado) {
                 var resultado = JSON.parse(resultado);
                 if (resultado.resultado == 1) {
 
@@ -56,8 +63,9 @@ function meseros(id_mesero) {
                     $('#nombre_mesero').html('Mesero: ' + resultado.nombre_mesero)
                     sweet_alert('success', 'Mesero asignado')
 
-
-
+                }
+                if (resultado.resultado == 0) {
+                    sweet_alert('warning', 'Acción requiere permisos')
                 }
             },
         });

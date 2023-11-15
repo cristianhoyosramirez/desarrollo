@@ -44,6 +44,7 @@ LISTADO DE PRODUCTOS
                     <input type="hidden" id="url" value="<?php echo base_url() ?>">
                     <table id="example" class="table">
                         <thead class="table-dark">
+                            <td>Categoria </th>
                             <td>Código interno </th>
                             <td>Nombre producto</th>
                             <td>Cantidad</td>

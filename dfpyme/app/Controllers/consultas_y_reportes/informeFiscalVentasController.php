@@ -582,9 +582,10 @@ class informeFiscalVentasController extends BaseController
 
         if (!empty($ico)) {
             foreach ($ico as $detalle) {
+                $valor_ico = ($detalle['valor_ico'] / 100) + 1;
                 $datos_ico = model('productoFacturaVentaModel')->datos_ico($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_ico']);
                 $data_ico['tarifa_ico'] =  $datos_ico[0]['tarifa_ico'];
-                $data_ico['base'] = $datos_ico[0]['base'];
+                $data_ico['base'] = $datos_ico[0]['base']/ $valor_ico;
                 $data_ico['total_ico'] = $datos_ico[0]['total_ico'];
                 $data_ico['valor_venta'] = $datos_ico[0]['total'];
                 array_push($array_ico, $data_ico);

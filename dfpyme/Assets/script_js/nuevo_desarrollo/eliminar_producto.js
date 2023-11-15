@@ -37,7 +37,7 @@ function eliminar_producto(event, id_tabla_producto) {
                     }
 
                     if (resultado.resultado == 0){
-                        sweet_alert('error', 'Ya ha sido impreso y no se puede eliminar ')
+                        sweet_alert('error', 'El producto ya fue impreso en comanda, esta acción requiere permiso')
                     }
                 },
             });

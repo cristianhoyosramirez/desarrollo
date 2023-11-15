@@ -52,7 +52,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Listado completo de todas las mesas </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close"  onclick="cerrar_modal_mesas()"></button>
             </div>
             <div class="my-1"></div>
             <div class="container">
@@ -76,7 +76,7 @@
                 <div class="row">
                     <div class="col-lg-6 col-6 col-md-6">
                         <div class="input-icon">
-                            <input type="text" value="" class="form-control form-control-rounded" placeholder="Buscar mesa" onkeyup="buscar_mesas(this.value)">
+                            <input type="text" value="" class="form-control form-control-rounded" id="buscar_mesa" placeholder="Buscar mesa" onkeyup="buscar_mesas(this.value)">
                             <span class="input-icon-addon">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="col-lg-6 col-6 col-md-6">
                         <div class="input-icon">
-                            <input type="text" value="" class="form-control form-control-rounded" placeholder="Buscar mesero " onkeyup="buscar_meseros(this.value)">
+                            <input type="text" value="" class="form-control form-control-rounded" id="buscar_mesero" placeholder="Buscar mesero " onkeyup="buscar_meseros(this.value)">
                             <span class="input-icon-addon">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -105,6 +105,7 @@
             <div class="modal-body">
                 <div id="mesas_all">
                     <div id="listado_de_mesas"></div>
+                    
                 </div>
             </div>
             <div class="modal-footer">

@@ -84,6 +84,29 @@ class productoPedidoModel extends Model
         return $datos->getResultArray();
     }
 
+    public function reimprimir_comanda($numero_pedido)
+    {
+        $datos = $this->db->query("
+        SELECT
+             producto_pedido.id as id,
+             producto.nombreproducto,
+             producto.valorventaproducto,
+             valor_total,
+             cantidad_producto,
+             nota_producto,
+             valor_unitario,
+             producto_pedido.codigointernoproducto,
+             numero_productos_impresos_en_comanda
+        FROM
+             producto_pedido
+        INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
+        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true'  order by id asc;
+        ");
+        return $datos->getResultArray();
+    }
+
+  
+
 
     public function productos_pedido_pos($numero_pedido, $id_categoria)
     {
@@ -204,7 +227,7 @@ class productoPedidoModel extends Model
         return $datos;
     }
 
-    public function reimprimir_comanda($numero_pedido, $id_categoria)
+ /*    public function reimprimir_comanda($numero_pedido, $id_categoria)
     {
         $datos = $this->db->query("
         SELECT
@@ -222,7 +245,7 @@ class productoPedidoModel extends Model
         where numero_de_pedido='$numero_pedido' and codigo_categoria='$id_categoria' and se_imprime_en_comanda='true'   order by id asc;
         ");
         return $datos->getResultArray();
-    }
+    } */
 
     public function detalle_pedido($numero_pedido)
     {
@@ -418,5 +441,23 @@ class productoPedidoModel extends Model
         $productos->insert($data);
 
         return $this->db->insertID();
+    }
+
+
+    function actualizacion_cantidad_producto($id, $datos)
+    {
+
+        //$this->db->query->where();
+        // $this->db->query->update('usuarios', $datos);
+        // return $this->db->query->getResultArray();
+
+
+
+        $productos = $this->db->table('producto_pedido');
+        $productos->set('valor_total', $datos['valor_total']);
+        $productos->set('cantidad_producto', $datos['cantidad_producto']);
+        $productos->where('id', $id);
+        $productos->update();
+        return $productos;
     }
 }

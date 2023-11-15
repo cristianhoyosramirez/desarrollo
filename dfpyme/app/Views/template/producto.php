@@ -587,20 +587,6 @@
         </script>
 
 
- <!--        <script>
-            $(document).ready(function() {
-                document.getElementById('btn_crear_producto').disabled = true;
-            })
-
-            function hablilitar_boton(e) {
-                var enterKey = 13;
-                if (e.which == enterKey) {
-                    document.getElementById('btn_crear_producto').disabled = false;
-                }
-            }
-        </script> -->
-
-
 
         <!--Editar producto -->
         <script>
@@ -977,6 +963,8 @@
                     success: function(data) {
                         if ($.isEmptyObject(data.error)) {
                             if (data.code == 1) {
+
+                                $("#categoria_product").html(data.categorias)
                                 $("#agregar_categoria").modal("hide");
                                 $("#crear_producto").modal("show");
 

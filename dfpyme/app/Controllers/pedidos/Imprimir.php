@@ -24,6 +24,9 @@ class Imprimir extends BaseController
 
         //$id_mesa = 3; 
         $id_mesa = $this->request->getPost('id_mesa');
+        $id_usuario = $this->request->getPost('id_usuario');
+
+        $tipo_usuario = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_usuario)->first();
 
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
@@ -53,10 +56,29 @@ class Imprimir extends BaseController
             }
             #}
             if (empty($items)) {
-                $returnData = array(
-                    "resultado" => 0
-                );
-                echo  json_encode($returnData);
+             
+                if ($tipo_usuario['idtipo'] == 1 || $tipo_usuario['idtipo'] == 0) {
+                    $items = model('productoPedidoModel')->reimprimir_comanda($pedido['id']);
+
+                    foreach ($items as $detalle) {
+                        $data['id'] = $detalle['id'];
+                        $data['nombreproducto'] = $detalle['nombreproducto'];
+                        $data['valor_venta'] = $detalle['valorventaproducto'];
+                        $data['valor_total'] = $detalle['valor_total'];
+                        $data['cantidad'] = $detalle['cantidad_producto'];
+                        $data['nota_producto'] = $detalle['nota_producto'];
+                        $data['valor_unitario'] = $detalle['valor_unitario'];
+                        $data['codigo_interno'] = $detalle['codigointernoproducto'];
+                        $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
+                        array_push($productos, $data);
+                    }
+                    $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre']);
+                } else if ($tipo_usuario['idtipo'] == 2) {
+                    $returnData = array(
+                        "resultado" => 0
+                    );
+                    echo  json_encode($returnData);
+                }
             }
             if (!empty($items)) {
                 $returnData = array(
@@ -188,24 +210,24 @@ class Imprimir extends BaseController
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->setTextSize(2, 2);
-            $printer->text("PREFACTURA" . "\n");
+            $printer->text("Orden de pedido " . "\n");
 
 
 
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->setTextSize(1, 1);
-            $printer->text("Pedido N°" . $numero_pedido . "\n");
-            $printer->text("Mesa N°" . $nombre_mesa['nombre'] . "\n");
+            $printer->text("Pedido N°   " . $numero_pedido . "\n");
+            $printer->text("Mesa   N°   " . $nombre_mesa['nombre'] . "\n");
             if (!empty($nombre_mesero)) {
-                $printer->text("Mesero: " . $nombre_mesero['nombresusuario_sistema'] . "\n");
+                $printer->text("Mesero:     " .    $nombre_mesero['nombresusuario_sistema'] . "\n");
             }
             if (empty($nombre_mesero)) {
-                $printer->text("Mesero: " . $nombre_usuario['nombresusuario_sistema'] . "\n");
+                $printer->text("Mesero:     " .    $nombre_usuario['nombresusuario_sistema'] . "\n");
             }
 
 
-            $printer->text("Fecha :" . "   " . date('d/m/Y ') . "\n");
-            $printer->text("Hora  :" . "   " . date('h:i:s a', time()) . "\n");
+            $printer->text("Fecha :  " . "   " . date('d/m/Y ') . "\n");
+            $printer->text("Hora  :  " .  "   " .     date('h:i:s a', time()) . "\n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->text("----------------------------------------------- \n");
             $printer->text("CÓDIGO   PRODUCTO      CANTIDAD     NOTAS  \n");
@@ -291,7 +313,7 @@ class Imprimir extends BaseController
         $id_factura = $_POST['numero_de_factura'];
 
         $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
-   
+
         $regimen = model('empresaModel')->select('idregimen')->first();
 
         if (!empty($numero_factura['numerofactura_venta'])) {
@@ -402,21 +424,21 @@ class Imprimir extends BaseController
 
             $impuesto_saludable = model('productoFacturaVentaModel')->get_impuesto_saluidable($id_factura);
 
-            if($regimen['idregimen']==1){
-            $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva) - $impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "\n");
+            if ($regimen['idregimen'] == 1) {
+                $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva) - $impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "\n");
 
 
-            if ($total_iva != 0) {
-                $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");
+                if ($total_iva != 0) {
+                    $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");
+                }
+                //$printer->text("IMPUESTO SALUDABLE  :" . "$" . number_format($impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "\n");
+
+                if ($total_ico) {
+                    $printer->text("IMPUESTO AL CONSUMO :" . "$" . number_format($total_ico, 0, ",", ".") . "\n");
+                }
             }
-            //$printer->text("IMPUESTO SALUDABLE  :" . "$" . number_format($impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "\n");
 
-            if ($total_ico) {
-                $printer->text("IMPUESTO AL CONSUMO :" . "$" . number_format($total_ico, 0, ",", ".") . "\n");
-            }
-        }
 
-      
 
 
             $descuento = model('facturaVentaModel')->select('descuento')->where('id', $id_factura)->first();
@@ -475,9 +497,9 @@ class Imprimir extends BaseController
                     $printer->setTextSize(1, 1);
                     $printer->text("**DISCRIMINACION TARIFAS DE IPO CONSUMO** \n");
                     $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    // $printer->text("TARIFA    VENTA     BASE/IMP        IPO CONSUMO  IBUA" . "\n");
+                    $printer->text("TARIFA  BASE/IMP        IMPO CONSUMO    TOTAL" . "\n");
 
-                   /*  foreach ($tarifa_ico as $ico) {
+                    /*  foreach ($tarifa_ico as $ico) {
                         //  $printer->text($iva['valor_iva']."%". "\n");
                         $total_compra = model('productoFacturaVentaModel')->total_compra($ico['valor_ico'], $id_factura);
 
@@ -489,20 +511,20 @@ class Imprimir extends BaseController
                         $printer->text("VENTA:            " . "$" . number_format($total_compra[0]['compra'] , 0, ",", ".") . "\n");
                     }
                 } */
-                  foreach ($tarifa_ico as $ico) {
+                    foreach ($tarifa_ico as $ico) {
                         //  $printer->text($iva['valor_iva']."%". "\n");
                         $total_compra = model('productoFacturaVentaModel')->total_compra($ico['valor_ico'], $id_factura);
 
                         $base_ico = model('productoFacturaVentaModel')->base_ico($ico['valor_ico'], $id_factura);
 
                         if ($total_compra[0]['compra'] >= 100000) {
-                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra'] , 0, ",", ".") . "   " . "$" . number_format(($total_compra[0]['compra'] - ($base_ico[0]['base'])- $impuesto_saludable[0]['total_impuesto_saludable']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "\n");
+                            $printer->text($ico['valor_ico'] . "%      " .  "$" . number_format(($total_compra[0]['compra'] - ($base_ico[0]['base']) - $impuesto_saludable[0]['total_impuesto_saludable']), 0, ",", ".") . "        " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "       $" . number_format($total_compra[0]['compra'], 0, ",", ".") . "\n");
                         }
-                        if ($total_compra[0]['compra'] < 100000) {
-                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra'] - $impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "    " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "\n");
-                        }
+                        /*  if ($total_compra[0]['compra'] < 100000) {
+                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra'] - $impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "    " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") ."$" . number_format($total_compra[0]['compra'], 0, ",", ".") . "\n");
+                        } */
                     }
-                } 
+                }
 
 
                 // if ($estado_factura[0]['descripcionestado'] == 1 or $estado_factura[0]['descripcionestado'] == 2) {
@@ -634,9 +656,9 @@ class Imprimir extends BaseController
     function imprimir_movimiento_caja()
     {
 
-        //$id_apertura = $this->request->getPost('id_apertura');
+        $id_apertura = $this->request->getPost('id_apertura');
 
-        $id_apertura = 65;
+        // $id_apertura = 79;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -682,11 +704,11 @@ class Imprimir extends BaseController
         $printer->text("\n");
 
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $id_apertura)->first();
-        $printer->text("Valor apertura    : " . "$" . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("Valor apertura: " . "        $ " . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
         $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura);
         $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura);
-        $printer->text("Ventas pos     : " . "$" . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
-        $printer->text("Valor electrónicas    : " . "$" . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
+        $printer->text("Ventas pos: " . "            $ " . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
+        $printer->text("Valor electrónicas: "  .  "    $ " . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -702,10 +724,10 @@ class Imprimir extends BaseController
         $propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $id_apertura)->findAll();
 
 
-        $printer->text("Ingresos efectivo:      " . "$" . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
-        $printer->text("Ingresos transacción: " . "$" . number_format($ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
+        $printer->text("Ingresos efectivo:      " . "$ " . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
+        $printer->text("Ingresos transacción: " . "  $ " . number_format($ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
         //$total_ingresos = model('facturaFormaPagoModel')->total_ingresos($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
-        $printer->text("Total ingresos          " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
+        $printer->text("Total ingresos          " . "$ " . number_format(($ingresos_efectivo[0]['efectivo'] + $ingresos_transaccion[0]['transferencia']), 0, ",", ".") . "\n");
 
 
         $printer->text("\n");
@@ -735,7 +757,7 @@ class Imprimir extends BaseController
             $total_retiros = $temp_retiros;
         }
 
-        $printer->text("Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
+        $printer->text("Total retiros: " . "         $ " . number_format($total_retiros, 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -765,30 +787,37 @@ class Imprimir extends BaseController
             $total_devoluciones = $temp_devoluciones;
         }
 
-        $printer->text("Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
+        $printer->text("Total devoluciones:" . "     $ " . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
         $printer->text("\n");
         $printer->text("------------------------------------------------\n");
         $printer->text("Ingresos-retiros-devoluciones \n");
         $printer->text("------------------------------------------------\n");
 
-        $printer->text("Ingresos+apertura " . "$" . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
+        $printer->text("Ingresos+apertura " . "      $ " . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
 
-        $printer->text("(-) Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
-        $printer->text("(-) Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
+        $printer->text("(-) Total retiros: " . "     $ " . number_format($total_retiros, 0, ",", ".") . "\n");
+        $printer->text("(-) Total devoluciones:" . " $ " . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
         $temp = $ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia'];
         $total_caja = $total_retiros + $total_devoluciones;
         $total_en_caja = $temp - $total_caja;
 
-        $printer->text("(=) Efectivo en caja: " . number_format($total_en_caja, 0, ",", ".") . "\n");
+        $printer->text("(=) Efectivo en caja:   $ " . number_format($total_en_caja, 0, ",", ".") . "\n");
 
         $printer->text("\n");
         $printer->text("-----------------------------------------------\n");
         $printer->text("Cierre de caja \n");
         $printer->text("-----------------------------------------------\n");
-        $printer->text("Efectivo en caja del sistema  " . "$" . number_format($total_en_caja, 0, ",", ".") . " \n");
+        $printer->text("Efectivo en caja   " . "     $ " . number_format($total_en_caja, 0, ",", ".") . " \n");
         $valor_cierre_efectivo_usuario = model('cierreFormaPagoModel')->valor_cierre_efectivo_usuario($id_apertura);
+
+        if (empty($valor_cierre_efectivo_usuario)) {
+            $cierre_usuario = 0;
+        }
+        if (!empty($valor_cierre_efectivo_usuario)) {
+            $cierre_usuario =  $valor_cierre_efectivo_usuario[0]['valor'];
+        }
 
         $printer->text("\n");
 
@@ -801,7 +830,7 @@ class Imprimir extends BaseController
         }
 
 
-        $printer->text("Transacciones: " . "$" . number_format($transaccion, 0, ",", ".") . "\n");
+        $printer->text("Transacciones: " . "         $ " . number_format($transaccion, 0, ",", ".") . "\n");
         $valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_apertura);
         if (empty($valor_cierre_transaccion_usuari)) {
             $valor_cierre_transaccion_usuario = 0;
@@ -810,13 +839,12 @@ class Imprimir extends BaseController
             $valor_cierre_transaccion_usuario = $valor_cierre_transaccion_usuari[0]['valor'];
         }
 
-        $printer->text("Valor cierre transacciones  " . "$" .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n");
-        $printer->text("Diferencia en transacciones  " . "$" . number_format($valor_cierre_transaccion_usuario - $transaccion, 0, ",", ".") . "\n");
+        $printer->text("Cierre transacciones  " . "  $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n");
+        $printer->text("Diferencia transaccion  " . "$ " . number_format($valor_cierre_transaccion_usuario - $transaccion, 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
-
-        $printer->text("TOTAL DIFERENCIAS  " . "$" . number_format(($valor_cierre_efectivo_usuario[0]['valor'] - $total_en_caja) + ($valor_cierre_transaccion_usuario - $transaccion), 0, ",", ".") . "\n");
+        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format(($cierre_usuario - $total_en_caja) + ($valor_cierre_transaccion_usuario - $transaccion), 0, ",", ".") . "\n");
 
         $printer->text("\n");
 

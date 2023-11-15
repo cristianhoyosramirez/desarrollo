@@ -74,7 +74,7 @@ class loginController extends BaseController
 
             $session = session();
             $session->setFlashdata('iconoMensaje', 'Error');
-            return redirect()->to(base_url('pedido/pedidos_para_facturar'))->with('mensaje', 'Usuario inactivo o no existe');
+            return redirect()->to(base_url())->with('mensaje', 'Usuario inactivo o no existe');
         }
     }
     public function closeSesion()

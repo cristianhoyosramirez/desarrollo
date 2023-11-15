@@ -31,22 +31,22 @@ DUPLICADO DE FACTURA
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form class="row g-3" id="rango_de_fechas" action="<?= base_url('consultas_y_reportes/facturas_por_rango_de_fechas') ?>" method="POST">
-                    <div class="col-md-6">
-                        <label for="inputEmail4" class="form-label">Fecha inicial </label>
+                <form class="row " id="rango_de_fechas" action="<?= base_url('consultas_y_reportes/facturas_por_rango_de_fechas') ?>" method="POST">
+                    <div class="col-md-4">
+                        <label for="inputEmail4" >Fecha inicial </label>
                         <input type="date" class="form-control" id="fecha_inicial" name="fecha_inicial" value="<?php echo date('Y-m-d')  ?>">
                         <input type="hidden" value="<?= base_url() ?>" id="url">
                         <input type="hidden" value="<?php echo $user_session->id_usuario; ?>" id="id_usuario" name="id_usuario">
                         <div class="text-danger"><?= session('errors.fecha_inicial') ?></div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="inputPassword4" class="form-label">Fecha final </label>
+                    <div class="col-md-4">
+                       <label for="">Fecha final </label>
                         <input type="date" class="form-control" id="fecha_final" name="fecha_final"   value="<?php echo date('Y-m-d')  ?>" >
                         <div class="text-danger"><?= session('errors.fecha_final') ?></div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-4"> <br>
                         <!-- <a onclick="consultar_facturas_por_rango_de_fechas()" class="btn btn-primary">Buscar facturas</a>-->
-                        <button type="submit" class="btn btn-primary">Buscar facturas</button>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
                     </div>
                 </form>
 

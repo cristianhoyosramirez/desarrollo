@@ -19,7 +19,7 @@ class FacturaElectronica extends BaseController
         $impuestos = new Impuestos();
 
         //var_dump($this->request->getPost());
-         $id_mesa = $this->request->getPost('id_mesa');
+        $id_mesa = $this->request->getPost('id_mesa');
         $tipo_pago = $this->request->getPost('tipo_pago');         // Tipo de pago 1 = pago completo; 0 pago parcial
         $id_usuario = $this->request->getPost('id_usuario');      // Tipo de pago 1 = pago completo; 0 pago parcial
         $efectivo = $this->request->getPost('efectivo');         // Tipo de pago 1 = pago completo; 0 pago parcial
@@ -28,8 +28,8 @@ class FacturaElectronica extends BaseController
         $nit_cliente = $this->request->getPost('nit_cliente');
         $estado = $this->request->getPost('estado');
         $pago_total = $this->request->getPost('pago_total');
-        $propina = $this->request->getPost('propina_format'); 
-/* 
+        $propina = $this->request->getPost('propina_format');
+        /* 
         $id_mesa = 1;
         $tipo_pago = 1;         // Tipo de pago 1 = pago completo; 0 pago parcial
         $id_usuario = 6;      // Tipo de pago 1 = pago completo; 0 pago parcial
@@ -154,9 +154,7 @@ class FacturaElectronica extends BaseController
 
                     if ($aplica_ico['aplica_ico'] == 't') { // El producto tiene IMPUESTO DE BARES Y RESTAURANTES   
 
-                        /**
-                         * Calcular el ICO 
-                         */
+
                         $id_ico_producto = model('productoModel')->select('id_ico_producto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
                         $porcentaje_ico = model('icoConsumoModel')->select('valor_ico')->where('id_ico', $id_ico_producto)->first();
                         $valor_ico = ($porcentaje_ico['valor_ico'] / 100) + 1;
@@ -182,6 +180,14 @@ class FacturaElectronica extends BaseController
                         $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $valor_antes_de_iva, $detalle['valor_unitario']);
                     }
 
+
+
+                    $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total'], $detalle['valor_unitario'], $detalle['cantidad_producto']);
+
+
+
+
+
                     $codigo_categoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
                     $data = [
@@ -198,7 +204,12 @@ class FacturaElectronica extends BaseController
                         'fecha_y_hora_factura_venta' => $fecha_y_hora,
                         'id_categoria' => $codigo_categoria['codigocategoria'],
                         'id_apertura' => $apertura['numero'],
-                        'valor_unitario' => $detalle['valor_unitario']
+                        'valor_unitario' => $detalle['valor_unitario'],
+                        'id_factura' => $id_factura,
+                        'costo' => $costo['precio_costo'],
+                        'ico' => $calculo[0]['ico'],
+                        'iva' => $calculo[0]['iva'],
+                        'id_estado' => 8
                     ];
 
                     $insertar = model('kardexModel')->insert($data);
@@ -232,7 +243,11 @@ class FacturaElectronica extends BaseController
                     'fecha_y_hora_factura_venta' => $fecha_y_hora,
                     'id_categoria' => $codigo_categoria['codigocategoria'],
                     'id_apertura' => $apertura['numero'],
-                    'valor_unitario' => $detalle['valor_unitario']
+                    'valor_unitario' => $detalle['valor_unitario'],
+                    'id_factura' => $id_factura,
+                    'costo' => $costo['precio_costo'],
+                    'ico' => 0,
+                    'iva' => 0
                 ];
 
 
@@ -279,78 +294,7 @@ class FacturaElectronica extends BaseController
                 }
             }
 
-            /*     if ($suma_pagos > $valor_venta) {
 
-                if ($transaccion > $valor_venta and  $efectivo  > $valor_venta and $transaccion > $efectivo) {
-
-                    $valor_pago_transferencia = $valor_venta;
-                    $valor_pago_efectivo = $efectivo;
-                    $cambio = $transaccion - $valor_venta;
-                    $recibido_transaccion = $transaccion;
-                    $recibido_efectivo = $efectivo;
-                }
-
-             
-                if ($transaccion > $efectivo) {
-
-                    if ($transaccion > $efectivo) {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = 0;
-                        $cambio = $transaccion - $valor_venta;
-
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = $efectivo;
-                    }
-
-                    if ($transaccion < $valor_venta) {
-
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = $valor_venta - $transaccion;
-
-                        $cambio = $suma_pagos - $valor_venta;
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = $efectivo;
-                    }
-                    if ($transaccion == $valor_venta) {
-                        $valor_pago_transferencia = $transaccion;
-                        $valor_pago_efectivo = 0;
-                        $recibido_transaccion = $transaccion;
-                    } else if ($efectivo > $transaccion) {
-
-                        $valor_pago_transferencia = $valor_venta;
-                        $valor_pago_efectivo = 0;
-                        $cambio = $transaccion - $valor_venta;
-
-                        $recibido_transaccion = $transaccion;
-                        $recibido_efectivo = 0;
-                    }
-                } else {
-
-                    if ($efectivo > $transaccion) {
-                        $valor_pago_efectivo =0;
-                        $valor_pago_transferencia = $valor_venta;
-                    }
-                    if ($efectivo < $transaccion) {
-                        $valor_pago_efectivo = $valor_venta - $transaccion;
-                        $valor_pago_transferencia = $transaccion;
-                    }
-                    if ($suma_pagos >= $valor_venta) {
-                        //$cambio = $suma_pagos - $valor_venta;
-                        $cambio = $suma_pagos - $valor_venta;
-                    }
-                    if ($suma_pagos < $valor_venta) {
-                        $cambio = $valor_venta - $suma_pagos;
-                    }
-
-                    $recibido_efectivo = $efectivo;
-                    if ($transaccion == 0) {
-                        $recibido_transaccion = 0;
-                    }
-                    if ($transaccion != 0) {
-                        $recibido_transaccion = $transaccion;
-                    }
-                }
-            } */
 
             if ($suma_pagos > $valor_venta) {
                 // Caso 1: Pago en efectivo sin transacción
@@ -407,7 +351,8 @@ class FacturaElectronica extends BaseController
                 'id_apertura' => $id_apertura['numero'],
                 'cambio' => $cambio,
                 'recibido_efectivo' => $recibido_efectivo,
-                'recibido_transferencia' => $recibido_transaccion
+                'recibido_transferencia' => $recibido_transaccion,
+                'id_factura' => $id_factura
             ];
 
             $pagos = model('pagosModel')->insert($pagos);
@@ -474,14 +419,19 @@ class FacturaElectronica extends BaseController
 
             if ($tipo_pago == 0) {  //pagos parcial 
 
-
+           
 
                 foreach ($productos as $detalle) {
 
-                    $cantidad_producto_pedido = model('productoPedidoModel')->select('cantidad_producto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $cantidad_producto_pago_parcial = model('partirFacturaModel')->select('cantidad_producto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $cantidad_final = $cantidad_producto_pedido['cantidad_producto'] - $cantidad_producto_pago_parcial['cantidad_producto'];
 
+                    $cantidad_producto_pedido = model('productoPedidoModel')->select('cantidad_producto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                    $cantidad_producto_pedido = model('productoPedidoModel')->select('cantidad_producto')->where('numero_de_pedido', $numero_pedido['id'])->first();
+                    
+                    $cantidad_producto_pago_parcial = model('partirFacturaModel')->select('cantidad_producto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                    $cantidad_producto_pago_parcial = model('partirFacturaModel')->select('cantidad_producto')->where('numero_de_pedido', $numero_pedido['id'])->first();
+                    $cantidad_final = $cantidad_producto_pedido['cantidad_producto'] - $cantidad_producto_pago_parcial['cantidad_producto'];
+                    
+                  
                     if ($cantidad_final == 0) {
                         $borrar_producto_pedido = model('productoPedidoModel')->where('id', $detalle['id_tabla_producto']);
                         $borrar_producto_pedido->delete();
@@ -555,6 +505,8 @@ class FacturaElectronica extends BaseController
                 $valor_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
                 $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
 
+                $model = model('partirFacturaModel');
+                $borrar = $model->truncate();
 
                 $returnData = array(
                     "id_factura" => $id_factura,

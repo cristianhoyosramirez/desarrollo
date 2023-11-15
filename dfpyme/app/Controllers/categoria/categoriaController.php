@@ -95,7 +95,15 @@ class categoriaController extends BaseController
                 $consecutivos = $model->where('idconsecutivos', 5);
                 $consecutivos = $model->update();
 
-                echo json_encode(['code' => 1, 'msg' => 'Usuario creado']);
+                $categorias = model('categoriasModel')->findAll();
+
+                echo json_encode(['code' => 1,
+                 'msg' => 'Usuario creado',
+                 'categorias'=> view('categoria/select_categorias',[
+                    'codigo_categoria'=>$consecutivos_categoria['numeroconsecutivo'],
+                    'categorias'=>$categorias
+                 ])
+            ]);
             }
         }
     }

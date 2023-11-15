@@ -75,7 +75,7 @@
                           <?php if (!empty($tiene_pedido)) : ?>
 
 
-                              <div class="card card_mesas text-white bg-red-lt cursor-pointer" onclick="pedido('<?php echo $detalle['id'] ?>','<?php echo $detalle['nombre'] ?>')">
+                              <div class="card card_mesas text-white bg-red-lt cursor-pointer" onclick="pedido_mesa('<?php echo $detalle['id'] ?>','<?php echo $detalle['nombre'] ?>')">
 
                                   <div class="row">
 

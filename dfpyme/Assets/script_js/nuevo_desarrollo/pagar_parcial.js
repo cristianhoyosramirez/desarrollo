@@ -23,6 +23,7 @@ function pagar_parcial() {
                     $('#mensaje_factura').html(resultado.total)
                     $('#mensaje_factura').html(resultado.factura_electronica)
                     $('#total_pedido').html(resultado.total)
+                    $('#pago').html('Valor pago: '+resultado.total)
                     $('#tipo_pago').val(0)
                     $('#valor_total_a_pagar').val(resultado.valor_total)
                     $('#requiere_factura_electronica').val(resultado.requiere_factura_electronica)

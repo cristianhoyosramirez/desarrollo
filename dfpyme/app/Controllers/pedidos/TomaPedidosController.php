@@ -16,6 +16,7 @@ class TomaPedidosController extends BaseController
         $bancos = model('BancoModel')->findAll();
         $requiere_mesero = model('configuracionPedidoModel')->select('mesero_pedido')->first();
         $meseros = model('usuariosModel')->where('idtipo', 2)->orderBy('nombresusuario_sistema', 'asc')->find();
+        $meseros = model('usuariosModel')->where('estadousuario_sistema', true)->orderBy('nombresusuario_sistema', 'asc')->find();
         
         return view('toma_pedidos/pedidos',[
             'categorias' => $categorias,
