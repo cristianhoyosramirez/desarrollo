@@ -523,6 +523,19 @@ class Mesas extends BaseController
                     $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
                     $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['numero_de_pedido'])->first();
                     $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido['numero_de_pedido'])->first();
+                    
+                    $producto = [
+                        'codigointernoproducto' => $item['codigointernoproducto'],
+                        'cantidad' => $cantidad_eliminar,
+                        'fecha_eliminacion' => date('Y-m-d'),
+                        'hora_eliminacion' => date('H:i:s'),
+                        'usuario_eliminacion' => $id_usuario,
+                        'pedido' => $item['numero_de_pedido']
+                    ];
+    
+                    $insert = model('productosBorradosModel')->insert($producto);
+
+                    
                     $productos_del_pedido = view('pedidos/productos_pedido', [
                         "productos" => $productos_pedido,
                         "pedido" => $numero_pedido['numero_de_pedido']
@@ -641,7 +654,8 @@ class Mesas extends BaseController
                             "resultado" => 1,  // Se actulizo el registro 
                             "productos" => $productos_del_pedido,
                             "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
-                            "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
+                            "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
+                            "mensaje" => "Eliminación correcta" 
                         );
                         echo  json_encode($returnData);
                     }

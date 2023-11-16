@@ -118,7 +118,7 @@ class pagosModel extends Model
 
         $datos = $this->db->query("
         SELECT
-        SUM(costo) AS total_costo
+        SUM(costo*cantidad) AS total_costo
     FROM
         kardex
     WHERE

@@ -101,7 +101,7 @@ MOVIMIENTO DE CAJA
                                             </svg>
                                         </span>
                                     </div>
-                                    <div class="col " title="Valo apertura caja " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    <div class="col " title="Valor apertura caja " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom" onclick="cambiar_valor_apertura(<?php echo $id_apertura ?>)">
                                         <div class="font-weight-mediu">
                                             Apertura
                                         </div>
@@ -447,9 +447,66 @@ MOVIMIENTO DE CAJA
 <?= $this->include('consultas/modal_retiros') ?>
 <?= $this->include('consultas/modal_devoluciones') ?>
 
+<!-- Modal -->
+<div class="modal fade" id="cambiar_apertura" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar valor de apertura</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cambioForm">
+                    <div class="form-group">
+                        <p>Fecha de Apertura: <span id="fechaActual"></span></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="valorActual">Valor Actual:</label>
+                            <input type="text" class="form-control" id="valorActual" name="valorActual" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="nuevoValor">Nuevo Valor:</label>
+                            <input type="text" class="form-control" id="nuevoValor" name="nuevoValor" required>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Guardar </button>
+                <button type="button" class="btn btn-outline-danger">Cancelar </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
 
+<script>
+    function cambiar_valor_apertura(id_apertura) {
+        let url = document.getElementById("url").value;
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/editar_apertura",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
 
+
+                    $("#cambiar_apertura").modal("show");
+
+
+                    //sweet_alert('success', 'Registros encontrados  ');
+                }
+            },
+        });
+
+    }
+</script>
 
 <script>
     function retiros() {

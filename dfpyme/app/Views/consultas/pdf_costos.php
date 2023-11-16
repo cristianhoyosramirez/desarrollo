@@ -115,121 +115,103 @@
         }
         $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente)->first();
 
+        $costo = model('kardexModel')->get_costo($valor['id_factura']);
+        $ico = model('kardexModel')->get_ico($valor['id_factura']);
+        $iva = model('kardexModel')->get_iva($valor['id_factura']);
+        //$valor_factura = model('pagosModel')->select('valor')->where('id', $valor['id_factura'])->first();
+        $total_factura = model('kardexModel')->selectSum('total')->where('id_factura', $valor['id_factura'])->findAll();
 
+
+        $data['nit'] = $nit_cliente;
+        $data['nombre_cliente'] =  $nombre_cliente['nombrescliente'];
+        $data['documento'] = $estado;
+        $data['numero'] = $numero_factura;
+        $data['fecha'] = $fecha_factura['fecha'];
+        $data['costo'] =  "$ " . number_format($costo[0]['costo'], 0, ",", ".");
+        $data['base'] = "$ " . number_format($total_factura[0]['total'] - ($iva[0]['iva'] + $ico[0]['ico']), 0, ",", ".");
+        $data['iva'] = "$ " . number_format($iva[0]['iva'], 0, ",", ".");
+        $data['ico'] = "$ " . number_format($ico[0]['ico'], 0, ",", ".");
+        $data['venta'] = "$ " . number_format($total_factura[0]['total'], 0, ",", ".");
+        array_push($datos, $data);
 
         ?>
-
-        <?php foreach ($productos as $detalle) {
-
-            $costo = model('kardexModel')->select('costo')->where('id_factura', $detalle['id_factura'])->first();
-            $ico = model('kardexModel')->select('ico')->where('id_factura', $detalle['id_factura'])->first();
-            $iva = model('kardexModel')->select('iva')->where('id_factura', $detalle['id_factura'])->first();
-            //$valor_costo=$costo['precio_costo']+$valor_costo;
-            $costo_total += $costo['costo'] * $detalle['cantidad'];
-            $ico_total += $ico['ico'];
-            $iva_total += $iva['iva'];
-
-
-        ?>
-            <?php $total_productos = model('kardexModel')->selectSum('total')->where('id_factura', $valor['id_factura'])->findAll(); ?>
-            <?php $base = $total_productos[0]['total'] - $ico_total ?>
-
-            <?php
-
-            $data['nit'] = $nit_cliente;
-            $data['nombre_cliente'] =  $nombre_cliente['nombrescliente'];
-            $data['documento'] = $estado;
-            $data['numero'] = $numero_factura;
-            $data['fecha'] = $fecha_factura['fecha'];
-            $data['costo'] = "$ " . number_format($costo_total, 0, ",", ".");
-            $data['base'] = "$ " . number_format($base, 0, ",", ".");
-            $data['iva'] = "$ " . number_format($iva_total, 0, ",", ".");
-            $data['ico'] = "$ " . number_format($ico_total, 0, ",", ".");
-            $data['venta'] = "$ " . number_format($venta['valor'], 0, ",", ".");
-            array_push($datos, $data);
-
-            ?>
-
-        <?php } ?>
 
     <?php } ?>
 
-
-
-    <table class="table">
-        <thead>
-            <tr>
-                <td>Nit</th>
-                <td>Tercero</th>
-                <td>Documento</th>
-                <td>Número</th>
-                <td>Fecha</th>
-                <td>Costo</th>
-                <td>Base</th>
-                <td>IVA</th>
-                <td>ICO</th>
-                <td>Venta</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($datos as $detalle_datos) { ?>
-
-                <tr>
-                    <td>
-                        <?php echo $detalle_datos['nit']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['nombre_cliente']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['documento']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['numero']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['fecha']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['costo']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['base']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['iva']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['ico']  ?>
-                    </td>
-                    <td>
-                        <?php echo $detalle_datos['venta']  ?>
-                    </td>
-                </tr>
-
-            <?php } ?>
-        </tbody>
-    </table>
-    <table class="table">
-        <thead>
-            <tr>
-                <td>Total costo </th>
-                <td><?php echo $total_costo ?></th>
-                <td>Total base </th>
-                <td><?php echo $total_base ?></th>
-                <td>Total IVA </th>
-                <td><?php echo $total_iva ?></th>
-                <td>Total ICO</th>
-                <td><?php echo $total_ico ?></th>
-                <td>Total venta</th>
-                <td><?php echo $total_venta ?></th>
-            </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-
-
-
 <?php } ?>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Nit</th>
+            <td>Tercero</th>
+            <td>Documento</th>
+            <td>Número</th>
+            <td>Fecha</th>
+            <td>Costo</th>
+            <td>Base</th>
+            <td>IVA</th>
+            <td>ICO</th>
+            <td>Venta</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($datos as $detalle_datos) { ?>
+
+            <tr>
+                <td>
+                    <?php echo $detalle_datos['nit']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['nombre_cliente']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['documento']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['numero']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['fecha']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['costo']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['base']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['iva']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['ico']  ?>
+                </td>
+                <td>
+                    <?php echo $detalle_datos['venta']  ?>
+                </td>
+            </tr>
+
+        <?php } ?>
+    </tbody>
+</table>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Total costo: <?php echo $total_costo ?> </td>
+            <td>Base IVA: <?php echo $base_iva ?> </td>
+            <td>Total IVA: <?php echo $total_iva ?> </th>
+            <td>Base ICO: <?php echo $base_ico ?></td>
+            <td>Total ICO: <?php echo $total_ico ?></td>
+            <td>Total base: <?php echo $total_base ?> </th>
+            <td>Total impuesto : <?php echo $total_impuesto ?> </td>
+            <td>Total venta: <?php echo $total_venta ?> </td>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>

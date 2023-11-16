@@ -72,4 +72,25 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function get_costo($id_factura)
+    {
+        $datos = $this->db->query("
+        select sum (costo * cantidad) as costo from kardex where id_factura=$id_factura
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_ico($id_factura)
+    {
+        $datos = $this->db->query("
+        select sum (ico) as ico from kardex where id_factura=$id_factura
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_iva($id_factura)
+    {
+        $datos = $this->db->query("
+        select sum (iva) as iva from kardex where id_factura=$id_factura
+        ");
+        return $datos->getResultArray();
+    }
 }

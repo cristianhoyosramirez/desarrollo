@@ -104,7 +104,26 @@ class Ventas extends BaseController
     function productos_borrados()
     {
 
-        return view('consultas/productos_borrados');
+        $productos = model('productosBorradosModel')->getProductosBorrados(date('Y-m-d'), date('Y-m-d'));
+
+        return view('consultas/productos_borrados', [
+            'productos' => $productos
+        ]);
+    }
+    function datos_productos_borrados()
+    {
+
+        $productos = model('productosBorradosModel')->getProductosBorrados(date('Y-m-d'), date('Y-m-d'));
+
+
+        $returnData = [
+            'resultado' => 1, //No hay resultados
+            'productos' => view('consultas/get_productos_borrados', [
+                'productos' => $productos
+            ])
+
+        ];
+        echo json_encode($returnData);
     }
 
     function reporte_costo()
@@ -112,7 +131,54 @@ class Ventas extends BaseController
         return view('configuracion/costo');
     }
 
+    function reporte_ventas()
+    {
+        return view('configuracion/ventas');
+    }
+
     function datos_reporte_costo()
+    {
+        //$fecha_inicial = $this->request->getPost('fecha_inicial');
+        $fecha_inicial = '2023-11-16';
+        //$fecha_final = $this->request->getPost('fecha_final');
+        $fecha_final = '2023-11-16';
+
+
+
+        //$id_facturas_pos = model('pagosModel')->get_id_pos($fecha_inicial, $fecha_final);
+        $id_facturas = model('pagosModel')->get_id($fecha_inicial, $fecha_final);
+        //$id_facturas_electronicas = model('pagosModel')->get_id_electronicas($fecha_inicial, $fecha_final);
+    
+        $total_costo = model('pagosModel')->get_costo_total($fecha_inicial, $fecha_final);
+        $total_ico = model('pagosModel')->get_ico_total($fecha_inicial, $fecha_final);
+        $total_iva = model('pagosModel')->get_iva_total($fecha_inicial, $fecha_final);
+
+        $total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
+
+        if (!empty($id_facturas)) {
+            $returnData = [
+                'resultado' => 1, //No hay resultados
+                'datos' => view('consultas/tabla_costos', [
+                    'id_facturas' => $id_facturas,
+                    'total_costo' => $total_costo[0]['total_costo'],
+                    'total_ico' => $total_ico[0]['total_ico'],
+                    'total_iva' => $total_iva[0]['total_iva'],
+                    'total_venta' => $total_venta[0]['total_venta'],
+                ]),
+                'fecha_inicial' => $fecha_inicial,
+                'fecha_final' => $fecha_final
+            ];
+            echo json_encode($returnData);
+        }
+        if (empty($id_facturas)) {
+            $returnData = [
+                'resultado' => 0, //No hay resultados
+
+            ];
+            echo json_encode($returnData);
+        }
+    }
+    function datos_reporte_ventas()
     {
         $fecha_inicial = $this->request->getPost('fecha_inicial');
         //$fecha_inicial = '2023-11-01';
@@ -133,7 +199,7 @@ class Ventas extends BaseController
         if (!empty($id_facturas)) {
             $returnData = [
                 'resultado' => 1, //No hay resultados
-                'datos' => view('consultas/tabla_costos', [
+                'datos' => view('consultas/tabla_ventas', [
                     'id_facturas' => $id_facturas,
                     'total_costo' => $total_costo[0]['total_costo'],
                     'total_ico' => $total_ico[0]['total_ico'],
@@ -191,10 +257,10 @@ class Ventas extends BaseController
             // Cargar vista para el informe
             $html = view('consultas/pdf_costos', [
                 'id_facturas' => $id_facturas,
-                'total_costo' => "$ ".number_format($total_costo[0]['total_costo'], 0, ",", "."),
-                'total_ico' => "$ ".number_format($total_ico[0]['total_ico'], 0, ",", "."),
-                'total_iva' => "$ ".number_format($total_iva[0]['total_iva'], 0, ",", "."),
-                'total_venta' => "$ ".number_format($total_venta[0]['total_venta'], 0, ",", "."),
+                'total_costo' => number_format($total_costo[0]['total_costo'], 0, ",", "."),
+                'total_ico' =>  number_format($total_ico[0]['total_ico'], 0, ",", "."),
+                'total_iva' => number_format($total_iva[0]['total_iva'], 0, ",", "."),
+                'total_venta' => number_format($total_venta[0]['total_venta'], 0, ",", "."),
                 "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
                 "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
                 "nit" => $datos_empresa[0]['nitempresa'],
@@ -202,9 +268,12 @@ class Ventas extends BaseController
                 "direccion" => $datos_empresa[0]['direccionempresa'],
                 "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
                 "nombre_departamento" => $nombre_departamento['nombredepartamento'],
-                "total_base"=> "$ ".number_format($total_venta[0]['total_venta']-($total_ico[0]['total_ico']-$total_iva[0]['total_iva']), 0, ",", "."),
-                "fecha_inicial"=>$fecha_inicial,
-                "fecha_final"=>$fecha_final
+                "total_base" => number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", "."),
+                "fecha_inicial" => $fecha_inicial,
+                "fecha_final" => $fecha_final,
+                "base_ico"=>number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico']), 0, ",", "."),
+                "base_iva"=>number_format($total_venta[0]['total_venta'] - ($total_iva[0]['total_iva']), 0, ",", "."),
+                "total_impuesto"=>number_format(($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", ".")
             ]);
 
             // Cargar el HTML en Dompdf
@@ -219,5 +288,86 @@ class Ventas extends BaseController
             // Descargar el PDF
             $dompdf->stream("Reporte_de_costos.pdf", array("Attachment" => true));
         }
+    }
+    public function exportar_reporte_ventas()
+    {
+        $dompdf = new Dompdf();
+
+        // Configuración de opciones
+        $options = $dompdf->getOptions();
+        $options->set('isHtml5ParserEnabled', true);
+        $dompdf->setOptions($options);
+
+        // Obtener datos de la empresa
+        $datos_empresa = model('empresaModel')->find();
+        $id_regimen = $datos_empresa[0]['idregimen'];
+        $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
+
+        // Fecha inicial y final (puedes obtenerlas del formulario)
+        $fecha_inicial = $this->request->getPost('inicial');
+        $fecha_final = $this->request->getPost('final');
+
+        if (empty($fecha_inicial) or empty($fecha_final)) {
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'warning');
+            return redirect()->to(base_url('reportes/reporte_ventas'))->with('mensaje', 'No hay datos para el rango de fechas  ');
+        }
+
+        if (!empty($fecha_inicial) and !empty($fecha_final)) {
+            // Obtener datos para el informe
+            $id_facturas = model('pagosModel')->get_id($fecha_inicial, $fecha_final);
+            $total_costo = model('pagosModel')->get_costo_total($fecha_inicial, $fecha_final);
+            $total_ico = model('pagosModel')->get_ico_total($fecha_inicial, $fecha_final);
+            $total_iva = model('pagosModel')->get_iva_total($fecha_inicial, $fecha_final);
+            //$total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
+            $total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
+
+            // Cargar vista para el informe
+            $html = view('consultas/pdf_ventas', [
+                'id_facturas' => $id_facturas,
+                'total_costo' => "$ " . number_format($total_costo[0]['total_costo'], 0, ",", "."),
+                'total_ico' => "$ " . number_format($total_ico[0]['total_ico'], 0, ",", "."),
+                'total_iva' => "$ " . number_format($total_iva[0]['total_iva'], 0, ",", "."),
+                'total_venta' => "$ " . number_format($total_venta[0]['total_venta'], 0, ",", "."),
+                "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
+                "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
+                "nit" => $datos_empresa[0]['nitempresa'],
+                "nombre_regimen" => $regimen['nombreregimen'],
+                "direccion" => $datos_empresa[0]['direccionempresa'],
+                "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
+                "nombre_departamento" => $nombre_departamento['nombredepartamento'],
+                "total_base" => "$ " . number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico'] - $total_iva[0]['total_iva']), 0, ",", "."),
+                "fecha_inicial" => $fecha_inicial,
+                "fecha_final" => $fecha_final,
+                "base_ico"=>"$ " . number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico']), 0, ",", "."),
+                "base_iva"=>"$ " . number_format($total_venta[0]['total_venta'] - ($total_iva[0]['total_iva']), 0, ",", "."),
+                "total_impuesto"=>"$ " . number_format(($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", ".")
+            ]);
+
+            // Cargar el HTML en Dompdf
+            $dompdf->loadHtml($html);
+
+            // Establecer el tamaño del papel a 'letter'
+            $dompdf->setPaper('letter', 'portrait');
+
+            // Renderizar el PDF
+            $dompdf->render();
+
+            // Descargar el PDF
+            $dompdf->stream("Reporte_de_ventas.pdf", array("Attachment" => true));
+        }
+    }
+
+    function editar_apertura()
+    {
+
+        $id_apertura = $this->request->getPost('id_apertura');
+        $returnData = [
+            'resultado' => 1,
+
+        ];
+        echo json_encode($returnData);
     }
 }

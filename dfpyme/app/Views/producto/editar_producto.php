@@ -153,7 +153,7 @@
             <label for="inputPassword4" class="form-label">Valor IVA </label>
             <select class="form-select" id="valor_iva" name="valor_iva">
                 <?php foreach ($iva as $detalle) { ?>
-                    <option value="<?php echo $detalle['idiva'] ?>" <?php if ($detalle['idiva'] == $id_iva) : ?>selected <?php endif; ?>><?php echo $detalle['valoriva'] ?> </option>
+                    <option value="<?php echo $detalle['idiva'] ?>" <?php if ($detalle['idiva'] == $id_iva) : ?>selected <?php endif; ?>><?php echo $detalle['valoriva']. "-" . $detalle['conceptoiva']  ?> </option>
                 <?php } ?>
             </select>
         </div>
@@ -176,7 +176,7 @@
             <label for="inputPassword4" class="form-label">Valor IVA </label>
             <select class="form-select" id="valor_iva" name="valor_iva">
                 <?php foreach ($iva as $detalle) { ?>
-                    <option value="<?php echo $detalle['idiva'] ?>" selected><?php echo $detalle['valoriva'] ?></option>
+                    <option value="<?php echo $detalle['idiva'] ?>" selected><?php echo $detalle['valoriva']. "-" . $detalle['conceptoiva']  ?></option>
                 <?php } ?>
             </select>
         </div>

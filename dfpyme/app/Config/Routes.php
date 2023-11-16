@@ -483,6 +483,11 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->get('reporte_costo', 'Ventas::reporte_costo');
     $routes->post('datos_reporte_costo', 'Ventas::datos_reporte_costo');
     $routes->post('exportar_reporte_costo', 'Ventas::exportar_reporte_costo');
+    $routes->post('exportar_reporte_ventas', 'Ventas::exportar_reporte_ventas');
+    $routes->post('datos_productos_borrados', 'Ventas::datos_productos_borrados');
+    $routes->get('reportes_ventas', 'Ventas::reporte_ventas');
+    $routes->post('datos_reportes_ventas', 'Ventas::datos_reporte_ventas');
+    $routes->post('editar_apertura', 'Ventas::editar_apertura');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {

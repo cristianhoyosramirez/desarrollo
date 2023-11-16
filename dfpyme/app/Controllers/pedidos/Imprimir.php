@@ -877,6 +877,18 @@ class Imprimir extends BaseController
         $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
         $printer = new Printer($connector);
 
+        $id_estado = model('facturaElectronicaModel')->select('id_status')->where('id',$id_factura)->first();
+        $numero = model('facturaElectronicaModel')->select('numero')->where('id',$id_factura)->first();
+
+        if ($id_estado['id_status']==1) {
+            $estado ="PENDIENTE";
+        }       
+        if ($id_estado['id_status']==2) {
+            $estado ="FIRMADO";
+        }       
+    
+
+
         $datos_empresa = model('empresaModel')->datosEmpresa();
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->setTextSize(1, 1);
@@ -889,7 +901,9 @@ class Imprimir extends BaseController
         $printer->text("\n");
 
         $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->text("TIPO DE VENTA: PREFACTURA ELECTRÓNICA " . "\n");
+        $printer->text("ORDEN DE PEDIDO  " . "\n");
+        $printer->text("NÚMERO:  " .$numero['numero']. "\n");
+        $printer->text("ESTADO:  " .$estado. "\n");
         $printer->text("\n");
         $items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
 
