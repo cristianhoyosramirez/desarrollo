@@ -419,19 +419,29 @@ class FacturaElectronica extends BaseController
 
             if ($tipo_pago == 0) {  //pagos parcial 
 
-           
+
+                $borrar_producto_pedido = model('partirFacturaModel')->where('cantidad_producto', 0);
+                $borrar_producto_pedido->delete();
+
+
+
 
                 foreach ($productos as $detalle) {
 
 
-                    $cantidad_producto_pedido = model('productoPedidoModel')->select('cantidad_producto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $cantidad_producto_pedido = model('productoPedidoModel')->select('cantidad_producto')->where('numero_de_pedido', $numero_pedido['id'])->first();
-                    
-                    $cantidad_producto_pago_parcial = model('partirFacturaModel')->select('cantidad_producto')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                    $cantidad_producto_pago_parcial = model('partirFacturaModel')->select('cantidad_producto')->where('numero_de_pedido', $numero_pedido['id'])->first();
+                    $cantidad_producto_pedido = model('productoPedidoModel')->select('cantidad_producto')->where('id', $detalle['id_tabla_producto'])->first();
+
+
+                    $cantidad_producto_pago_parcial = model('partirFacturaModel')->select('cantidad_producto')->where('id_tabla_producto', $detalle['id_tabla_producto'])->first();
+
+
                     $cantidad_final = $cantidad_producto_pedido['cantidad_producto'] - $cantidad_producto_pago_parcial['cantidad_producto'];
-                    
-                  
+
+                    $cantidad_producto_pedido['cantidad_producto'] . "</br>";
+                    $cantidad_producto_pago_parcial['cantidad_producto'] . "</br>";
+
+
+
                     if ($cantidad_final == 0) {
                         $borrar_producto_pedido = model('productoPedidoModel')->where('id', $detalle['id_tabla_producto']);
                         $borrar_producto_pedido->delete();

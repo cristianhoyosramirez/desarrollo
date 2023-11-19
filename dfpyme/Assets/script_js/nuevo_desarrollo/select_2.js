@@ -34,6 +34,7 @@ $("#ciudad").select2({
     dropdownParent: $("#crear_cliente"),
 });
 $("#tipo_persona").select2({
+    minimumResultsForSearch: -1,
     width: "100%",
     //placeholder: "Filtrar productos por categoria",
     language: "es",
@@ -52,6 +53,7 @@ $("#tipo_documento").select2({
 });
 
 $("#regimen").select2({
+    minimumResultsForSearch: -1,
     width: "100%",
     //placeholder: "Filtrar productos por categoria",
     language: "es",
@@ -60,6 +62,7 @@ $("#regimen").select2({
     dropdownParent: $("#crear_cliente"),
 });
 $("#tipo_ventas").select2({
+    minimumResultsForSearch: -1,
     width: "100%",
     //placeholder: "Filtrar productos por categoria",
     language: "es",

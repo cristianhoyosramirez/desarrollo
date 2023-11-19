@@ -469,7 +469,7 @@ class Mesas extends BaseController
             "producto" => view('consultas/producto', [
                 'producto' => $producto
             ]),
-            'valor_total' => number_format($producto[0]['valor_total'], 0, ',', '.')
+            'valor_total' => number_format($producto[0]['valor_unitario'], 0, ',', '.')
         );
         echo  json_encode($returnData);
     }

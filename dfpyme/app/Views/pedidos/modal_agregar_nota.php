@@ -125,9 +125,9 @@
                                     Nota </span>
                             </label>
                         </div>
-                       
-                   
-                     
+
+
+
                         <div class="col-6 col-md-6 col-lg-2">
 
                         </div>
@@ -174,7 +174,7 @@
 
                     <p class="text-center text-primary h3">Tipo de descuento </p>
                     <div class="row" id="tipos_descuentos">
-                        <div class="col-6">
+                        <div class="col-6 col-lg-4">
                             <a href="#" class="card card-link card-link-pop" onclick="descuento_porcentaje()">
                                 <div class="card-body text-center">Descuento en porcentaje <!-- Download SVG icon from http://tabler-icons.io/i/percentage -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -187,7 +187,7 @@
                             </a>
                         </div>
 
-                        <div class="col-6" style="margin-top: 2px;">
+                        <div class="col-6  col-lg-4" style="margin-top: 2px;">
                             <a href="#" class="card card-link card-link-pop" onclick="abrir_descuento_manual()">
                                 <div class="card-body text-center">Descuento en dinero <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
                                     (<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -198,7 +198,7 @@
                             </a>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-6  col-lg-4">
                             <a href="#" class="card card-link card-link-pop" onclick="editar_precio()">
                                 <div class="card-body text-center">Editar precio <!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -230,20 +230,20 @@
 
                     </div>
                     <br>
+
                     <div class="row">
-                        <div clas="col-md-4 col-lg-4 col-md-block"></div>
-                        <div class="col-6 col-md-3 col-lg-3">
+                        <div class="col-md-4 col-d-none"></div>
+                        <div class="col-md-2 mb-2 mb-md-0 col-6">
                             <a href="#" class="btn btn-outline-success w-100" onclick="cerrar_modal()">
                                 Confirmar
                             </a>
                         </div>
-                        <div class="col-6 col-md-3 col-lg-3">
+                        <div class="col-md-2 col-6">
                             <a href="#" class="btn btn-outline-danger w-100" onclick="cancelar_descuento()">
                                 Cancelar
                             </a>
                         </div>
-
-
+                        <div class="col-md-4"></div>
                     </div>
 
                 </div>
@@ -325,8 +325,8 @@
                     <p class="text-center text-primary h3">Lista de precios </p>
                     <div class="row">
                         <div class="col-md-2"></div>
-                        <div class="col-6 col-md-4  cursor-pointer" onclick="asignar_p1(1)">
-                            <div class="card card-inactive">
+                        <div class="col-6 col-md-4  cursor-pointer" onclick="asignar_p1(1)" id="1" >
+                            <div class="card card-inactive ">
                                 <div class="card-body">
                                     <p class="text-center h4 text-dark">Precio 1 </p>
                                     <p id="precio_1" class="text-center"></p>
@@ -334,7 +334,7 @@
                             </div>
 
                         </div>
-                        <div class="col-6 col-md-4 cursor-pointer" onclick="asignar_p1(2)">
+                        <div class="col-6 col-md-4 cursor-pointer" onclick="asignar_p1(2)" id="2">
                             <div class="card card-inactive">
                                 <div class="card-body">
                                     <p class="text-center h4 text-dark">Precio 2 </p>
@@ -347,15 +347,15 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-4 col-lg-2">
 
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 col-lg-4">
                             <a href="#" class="btn btn-outline-success w-100" onclick="cerrar_modal()">
                                 Confirmar
                             </a>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 col-lg-4">
                             <a href="#" class="btn btn-outline-danger w-100" onclick="cancelar_descuento()">
                                 Cancelar
                             </a>

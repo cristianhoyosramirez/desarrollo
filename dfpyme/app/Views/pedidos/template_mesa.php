@@ -218,7 +218,6 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/meseros.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
 
-
     <script>
         function cerrar_modal_mesas() {
             document.getElementById("buscar_mesa").value = "";
@@ -243,9 +242,6 @@
                     }
                 },
             });
-
-
-
         }
     </script>
 
@@ -482,7 +478,7 @@
                     if (resultado.resultado == 1) {
 
 
-                        sweet_alert('success', 'Asignación de precio correcta ')
+                        //sweet_alert('success', 'Asignación de precio correcta ')
 
 
                     }
@@ -1167,7 +1163,7 @@
                     if (resultado.resultado == 1) {
 
                         $('#resultado_mesa').html(resultado.mesas)
-                       
+
                     }
                 },
             });

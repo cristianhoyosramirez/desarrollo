@@ -3,6 +3,19 @@ function agregar_nota(id_producto, event) {
     $('#id_producto_pedido').val(id_producto)
     let url = document.getElementById("url").value;
 
+    if (id_producto == 1) {
+        var miDiv = document.getElementById('1');
+
+        // Agregar la clase 'card-active' para activar el div
+        miDiv.classList.add('card-active');
+    }
+    if (id_producto == 2) {
+        var miDiv = document.getElementById('2');
+
+        // Agregar la clase 'card-active' para activar el div
+        miDiv.classList.add('card-active');
+    }
+
     $.ajax({
         data: {
             id_producto,

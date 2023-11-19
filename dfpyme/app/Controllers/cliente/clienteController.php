@@ -167,7 +167,8 @@ class ClienteController extends BaseController
             $data = [
                 'nitcliente' => $_POST['identificacion'],
                 'idregimen' => $_POST['regimen'],
-                'nombrescliente' => $_POST['nombres'],
+                'nombrescliente' => $_POST['razon_social'],
+                //'nombrescliente' => $_POST['razon_social'],
                 'telefonocliente' => $_POST['telefono'],
                 'celularcliente' => $_POST['telefono'],
                 'emailcliente' => $_POST['correo_electronico'],
@@ -176,6 +177,7 @@ class ClienteController extends BaseController
                 'estadocliente' => true,
                 'idtipo_cliente' => $_POST['tipo_ventas'],
                 'id_clasificacion' => $_POST['clasificacion'],
+                //'name' => $_POST['razon_social'],
                 'name' => $_POST['nombres'],
                 'last_name' => $_POST['apellidos'],
                 'dv' => $_POST['dv'],
@@ -207,13 +209,34 @@ class ClienteController extends BaseController
             $insertar_impuestos = model('detallesTributariosModel')->insert($impuestos);
 
 
-            
+            $responsabilidad_rut = $this->request->getPost('responsabilidad_fiscal');
+
+
+
+
+            foreach ($responsabilidad_rut as $detalle) {
+
+                $descripcion = model('responsabilidadFiscalModel')->select('descripcion')->where('codigo', $detalle)->find();
+
+
+                //$codigo = model('responsabilidadFiscalModel')->select('codigo')->where('id',$responsabilidad_rut)->first();
+
+                $rut = [
+                    'nit_cliente' => $_POST['identificacion'],
+                    'codigo' => $detalle,
+                    'descripcion' => $descripcion[0]['descripcion']
+                ];
+
+                $insert = model('detallesRutModel')->insert($rut);
+            }
+
+
 
             $returnData = array(
                 "code" => 1,
-                "cliente"=>$_POST['identificacion']." ".$_POST['nombres']." ".$_POST['apellidos'],
-                "nit_cliente"=>$_POST['identificacion']
-             
+                "cliente" => $_POST['identificacion'] . " " . $_POST['nombres'] . " " . $_POST['apellidos'],
+                "nit_cliente" => $_POST['identificacion']
+
             );
             echo  json_encode($returnData);
         }
