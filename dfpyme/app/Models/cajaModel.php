@@ -9,7 +9,7 @@ class cajaModel extends Model
     protected $table      = 'caja ';
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['numerocaja', 'estado', 'consecutivo','requiere_lista_de_precios','imp_comprobante_transferencia','consecutivo_factura_electronica'];
+    protected $allowedFields = ['numerocaja', 'estado', 'consecutivo','requiere_lista_de_precios','imp_comprobante_transferencia','consecutivo_factura_electronica','id_impresora'];
 
 
     public function forma_pago_cierre($id_cierre)

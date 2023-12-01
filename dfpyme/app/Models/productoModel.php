@@ -349,4 +349,40 @@ class productoModel extends Model
         ");
         return $datos->getResultArray();
     }
+
+    public function productos()
+    {
+        $datos = $this->db->query("
+        SELECT 
+        categoria.nombrecategoria,
+        producto.nombreproducto,
+        producto.codigointernoproducto,
+        inventario.cantidad_inventario,
+        producto.valorventaproducto,
+        producto.precio_costo
+    FROM 
+        producto
+    INNER JOIN 
+        categoria ON producto.codigocategoria = categoria.codigocategoria
+    INNER JOIN 
+        inventario ON producto.codigointernoproducto = inventario.codigointernoproducto
+    ORDER BY 
+        categoria.nombrecategoria ASC,
+        producto.nombreproducto ASC;
+    
+
+        ");
+        return $datos->getResultArray();
+    }
+
+    public function total_inventario()
+    {
+        $datos = $this->db->query("
+        SELECT sum(precio_costo * inventario.cantidad_inventario) AS total_inventario
+        FROM producto
+        INNER JOIN inventario ON inventario.codigointernoproducto = producto.codigointernoproducto
+   
+        ");
+        return $datos->getResultArray();
+    }
 }

@@ -180,8 +180,8 @@ class EmpresaController extends BaseController
 
 
             $insert = model('dianModel')->insert($data);
-   
-           
+
+
             if ($insert) {
 
                 $data = [
@@ -233,12 +233,13 @@ class EmpresaController extends BaseController
     function municipios()
     {
 
-      //$this->request->getPost('id_departamento'); exit();
+       $id_departamento=$this->request->getPost('id_departamento'); 
+       
 
         $returnData = array(
             "resultado" => 1, //No hay pedido 
-            "municipios" => view('municipios/municipios', [
-                'municipios' => model('ciudadModel')->select('*')->where('iddepartamento',$this->request->getPost('id_departamento') )->findAll()
+            "municipios" => view('municipios/municipios_empresa', [
+                'municipios' => model('ciudadModel')->select('*')->where('iddepartamento', $id_departamento)->findAll()
             ])
         );
         echo  json_encode($returnData);
@@ -365,12 +366,12 @@ class EmpresaController extends BaseController
 
             if ($dian) {
                 $resoluciones_dian = model('resolucionDianModel')->findAll();
-               
+
                 echo json_encode([
                     'code' => 1,
                     'resoluciones' => view('empresa/tbody_resolucion_facturacion', [
                         'resoluciones_dian' => $resoluciones_dian,
-                        'id_dian'=>$_POST['id_resolucion']
+                        'id_dian' => $_POST['id_resolucion']
                     ])
 
                 ]);

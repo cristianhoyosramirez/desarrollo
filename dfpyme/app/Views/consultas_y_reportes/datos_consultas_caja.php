@@ -14,7 +14,14 @@ MOVIMIENTO DE CAJA
         /* Cambia este valor al color que desees para el texto en hover */
     }
 </style>
-
+<?php if ($estado == 1) { ?>
+    <div class="container">
+        <div class="alert alert-success alert-dismissible fade show " role="alert">
+            <strong>Cambio correcto </strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+<?php } ?>
 <div id="crud_apertura">
     <input type="hidden" value="<?php echo base_url() ?>" id="url">
     <div class="card-body">
@@ -303,7 +310,7 @@ MOVIMIENTO DE CAJA
                     <div class="card-header">
                         <h3 class="card-title">Cierre de caja</h3>
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="editar_cierre_efectivo()">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -332,7 +339,7 @@ MOVIMIENTO DE CAJA
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-3">
+                    <div class="col-xs-12 col-md-3 cursor-pointer" onclick="editar_cierre_transaccion()">
                         <div class="card card-sm">
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -424,11 +431,6 @@ MOVIMIENTO DE CAJA
                 <!-- info-->
             </div>
         </div>
-
-
-
-
-
     </div>
 </div>
 
@@ -455,28 +457,69 @@ MOVIMIENTO DE CAJA
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar valor de apertura</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="cambioForm">
+            <form action="<?php echo base_url() ?>/reportes/cambiar_valor_apertura" method="post" id="change_val_apertura">
+                <div class="modal-body">
+
                     <div class="form-group">
                         <p>Fecha de Apertura: <span id="fechaActual"></span></p>
                     </div>
                     <div class="row">
                         <div class="col-6">
                             <label for="valorActual">Valor Actual:</label>
-                            <input type="text" class="form-control" id="valorActual" name="valorActual" required>
+                            <input type="text" class="form-control" id="valorActual" name="valorActual" disabled>
                         </div>
                         <div class="col-6">
                             <label for="nuevoValor">Nuevo Valor:</label>
                             <input type="text" class="form-control" id="nuevoValor" name="nuevoValor" required>
+                            <input type="hidden" id="id_de_apertura" name="id_de_apertura">
                         </div>
                     </div>
-                </form>
 
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-success" id="btnCambiarValorApertura">Guardar </button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cambiar_cierre_efectivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="titulo_cierre">Cambiar valor de cierre</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Guardar </button>
-                <button type="button" class="btn btn-outline-danger">Cancelar </button>
-            </div>
+            <form action="<?php echo base_url() ?>/reportes/cambiar_valor_cierre_efectivo" method="post" id="change_val_apertura">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <p>Fecha de cierre: <span id="fechaActual"></span></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="valorActual">Valor Actual:</label>
+                            <input type="text" class="form-control" id="valorCierre" name="valorCierre" disabled>
+                        </div>
+                        <div class="col-6">
+                            <label for="nuevoValor">Nuevo Valor:</label>
+                            <input type="text" class="form-control" id="nuevoCierre" name="nuevoCierre" required>
+                            <input type="hidden" id="id_cierre" name="id_cierre">
+                            <input type="hidden" id="id_forma_pago" name="id_forma_pago">
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-success" id="btnCambiarValorApertura">Guardar </button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -484,8 +527,117 @@ MOVIMIENTO DE CAJA
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
 
 <script>
-    function cambiar_valor_apertura(id_apertura) {
+    function editar_cierre_efectivo() {
         let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+        
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/editar_cierre_efectivo",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+                    $('#valorCierre').val(resultado.valor_cierre)
+                    $('#nuevoCierre').val(resultado.valor_cierre)
+                    $('#id_forma_pago').val(resultado.id_forma_pago)
+                    $('#nuevoCierre').select()
+                    $('#id_cierre').val(resultado.id_cierre)
+                    $("#cambiar_cierre_efectivo").modal("show");
+                    $('#titulo_cierre').html(resultado.titulo)
+
+
+                    //sweet_alert('success', 'Registros encontrados  ');
+                }
+                if (resultado.resultado == 0) {
+
+                    sweet_alert('warning', 'La caja no se ha cerrado ');
+
+                }
+
+            },
+        });
+    }
+</script>
+
+<script>
+    function editar_cierre_transaccion() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+        $.ajax({
+            data: {
+                id_apertura
+            },
+            url: url + "/" + "reportes/editar_cierre_transaccion",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+
+                    $('#valorCierre').val(resultado.valor_cierre)
+                    $('#nuevoCierre').val(resultado.valor_cierre)
+                    $('#id_forma_pago').val(resultado.id_forma_pago)
+                    $('#nuevoCierre').select()
+                    $('#id_cierre').val(resultado.id_cierre)
+                    $("#cambiar_cierre_efectivo").modal("show");
+                    $('#titulo_cierre').html(resultado.titulo)
+
+
+                    //sweet_alert('success', 'Registros encontrados  ');
+                }
+                if (resultado.resultado == 0) {
+
+                    sweet_alert('warning', 'La caja no se ha cerrado ');
+
+                }
+
+            },
+        });
+
+
+    }
+</script>
+
+<script>
+    const precio = document.querySelector("#nuevoValor");
+
+    function formatNumber(n) {
+        // Elimina cualquier carácter que no sea un número
+        n = n.replace(/\D/g, "");
+        // Formatea el número
+        return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+    }
+
+    precio.addEventListener("input", (e) => {
+        const element = e.target;
+        const value = element.value;
+        element.value = formatNumber(value);
+    });
+</script>
+<script>
+    const nuevoCierre = document.querySelector("#nuevoCierre");
+
+    function formatNumber(n) {
+        // Elimina cualquier carácter que no sea un número
+        n = n.replace(/\D/g, "");
+        // Formatea el número
+        return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+    }
+
+    nuevoCierre.addEventListener("input", (e) => {
+        const element = e.target;
+        const value = element.value;
+        element.value = formatNumber(value);
+    });
+</script>
+
+<script>
+    function cambiar_valor_apertura() {
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
         $.ajax({
             data: {
                 id_apertura
@@ -496,7 +648,10 @@ MOVIMIENTO DE CAJA
                 var resultado = JSON.parse(resultado);
                 if (resultado.resultado == 1) {
 
-
+                    $('#valorActual').val(resultado.valor)
+                    $('#nuevoValor').val(resultado.valor)
+                    $('#nuevoValor').select()
+                    $('#id_de_apertura').val(resultado.id_apertura)
                     $("#cambiar_apertura").modal("show");
 
 
@@ -507,6 +662,8 @@ MOVIMIENTO DE CAJA
 
     }
 </script>
+
+
 
 <script>
     function retiros() {

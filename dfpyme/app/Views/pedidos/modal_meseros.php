@@ -118,6 +118,7 @@
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
 
+                        $("#nombre").val("");
                         $("#modal_meseros").modal("hide");
                         $("#nombre_mesero").html('Mesero: ' + resultado.nombre);
                         $("#lista_meseros").html(resultado.meseros);

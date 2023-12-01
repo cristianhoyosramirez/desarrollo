@@ -54,13 +54,8 @@ CAJA
                     </select>
                     <div class="text-danger"><?= session('errors.numero_caja') ?></div>
                 </div>
-                <div class="col-md-3">
-                    <label for="inputEmail4" class="form-label">Turno</label>
-                    <input type="text" class="form-control" name="nombre" value="1" readonly>
-                    <div class="text-danger"><?= session(
-                        'errors.nombre'
-                    ) ?></div>
-                </div>
+                <input type="hidden" class="form-control" name="nombre" value="1" readonly>
+                
                 <div class="col-md-3">
                     <label for="inputEmail4" class="form-label">Apertura</label>
                     <div class="input-icon mb-3">
@@ -80,7 +75,7 @@ CAJA
                     ) ?></div>
                 </div>
             </div>
-            <div class="mt-4">
+            <div class="mt-4 text-end">
                 <button type="button" onclick="abrir_caja()" id="abrir_caja_diaria" class="btn btn-primary w-md"><i class="mdi mdi-plus"></i> Generar apertura </button>
             </div>
         </form>

@@ -450,8 +450,11 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->get('ingreso', 'Inventarios::ingreso');
+    $routes->get('salida', 'Inventarios::salida');
     $routes->post('ingreso_inventario', 'Inventarios::ingreso_inventario');
+    $routes->post('salida_inventario', 'Inventarios::salida_inventario');
     $routes->post('buscar', 'Inventarios::buscar');
+    $routes->get('exportar', 'Inventarios::exportar_inventario');
 });
 
 $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -476,6 +479,7 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
 });
 $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->post('ventas', 'Ventas::ventas');
+    $routes->post('exportar_excel', 'Ventas::exportar_excel');
     $routes->post('consolidado_ventas', 'Ventas::consolidado_ventas');
     $routes->post('retiros', 'Ventas::retiros');
     $routes->post('devoluciones', 'Ventas::devoluciones');
@@ -488,6 +492,10 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->get('reportes_ventas', 'Ventas::reporte_ventas');
     $routes->post('datos_reportes_ventas', 'Ventas::datos_reporte_ventas');
     $routes->post('editar_apertura', 'Ventas::editar_apertura');
+    $routes->post('editar_cierre_efectivo', 'Ventas::editar_cierre_efectivo');
+    $routes->post('editar_cierre_transaccion', 'Ventas::editar_cierre_transaccion');
+    $routes->post('cambiar_valor_apertura', 'Ventas::cambiar_valor_apertura');
+    $routes->post('cambiar_valor_cierre_efectivo', 'Ventas::cambiar_valor_cierre_efectivo');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -495,6 +503,8 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->post('actualizar_mesero', 'Configuracion::actualizar_mesero');
     $routes->get('propina', 'Configuracion::propina');
     $routes->post('configuracion_propina', 'Configuracion::configuracion_propina');
+    $routes->get('estacion_trabajo', 'Configuracion::estacion_trabajo');
+    $routes->post('actualizar_caja', 'Configuracion::actualizar_caja');
 });
 
 /*

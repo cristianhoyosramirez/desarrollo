@@ -114,7 +114,7 @@ Reporte de costos
                     <td>Fecha</th>
                     <td>Base</th>
                     <td>IVA</th>
-                    <td>ICO</th>
+                    <td>INC</th>
                     <td>Venta</th>
                 </tr>
             </thead>

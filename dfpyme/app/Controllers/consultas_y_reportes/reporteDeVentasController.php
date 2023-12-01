@@ -340,7 +340,7 @@ class reporteDeVentasController extends BaseController
 
     function datos_consultas_caja_por_fecha()
     {
-        if (
+        /* if (
             !$this->validate([
                 'numero_caja' => [
                     'rules' => 'required',
@@ -354,7 +354,7 @@ class reporteDeVentasController extends BaseController
                 ->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
-        }
+        } */
 
 
         $ultimo_apertura = model('aperturaModel')->selectMax('id')->first();

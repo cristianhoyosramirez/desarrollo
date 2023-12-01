@@ -49,7 +49,7 @@
                        <button type="submit" class="btn btn-danger btn-icon">Pdf</button>
                    </form>
                </div>
-               <div class="col-1 w-5">
+              <!--  <div class="col-1 w-5">
                    <form action="<?= base_url('caja/exportar_a_excel_reporte_categorias') ?>" method="POST">
                        <input type="hidden" value="<?php echo $id_apertura ?>" id="id_apertura" name="id_apertura">
                        <input type="hidden" value="<?php echo $fecha_inicial ?>" id="fecha_inicial_reporte" name="fecha_inicial_agrupado">
@@ -58,7 +58,7 @@
                        <input type="hidden" value="<?php echo $hora_final ?>" id="hora_final_reporte" name="hora_final_agrupado">
                        <button type="submit" class="btn btn-success btn-icon">Excel</button>
                    </form>
-               </div>
+               </div> -->
 
            </div>
 

@@ -653,6 +653,15 @@ class productoFacturaVentaModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function get_total_venta($fecha_inicial, $fecha_final)
+    {
+
+        $datos = $this->db->query("
+        select sum (total) as total_venta from producto_factura_venta where fecha_y_hora_venta between '$fecha_inicial' and '$fecha_final'
+
+        ");
+        return $datos->getResultArray();
+    }
     public function total_registros($id_inicial, $id_final)
     {
 

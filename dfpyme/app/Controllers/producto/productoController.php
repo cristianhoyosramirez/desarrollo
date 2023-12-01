@@ -123,10 +123,13 @@ class productoController extends BaseController
 
         if (!empty($resultado)) {
             foreach ($resultado as $row) {
+                $cantidad_producto=model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto',$row['codigointernoproducto'])->first();
                 $data['value'] =  $row['codigointernoproducto'] . " " . "/" . " " . $row['nombreproducto'];
                 $data['id_producto'] = $row['codigointernoproducto'];
                 $data['nombre_producto'] = $row['nombreproducto'];
                 $data['valor_venta'] = $row['valorventaproducto'];
+                $data['cantidad'] = $cantidad_producto['cantidad_inventario'];
+               // $data=['cantidad']=$cantidad_producto['cantidad_inventario'];
                 array_push($returnData, $data);
             }
             echo json_encode($returnData);
@@ -577,91 +580,7 @@ class productoController extends BaseController
         echo  json_encode($returnData);
     }
 
-    /*  public function editar_cantidades_de_pedido()
-    {
-        //$id_usuario = 8;
-        $id_usuario = $_POST['id_usuario'];
-        //$id_tabla_producto_pedido = 38163;
-        $id_tabla_producto_pedido = $_POST['id_tabla_producto_pedido'];
-
-
-        $impresion_en_comanda = model('productoPedidoModel')->select('impresion_en_comanda')->where('id', $id_tabla_producto_pedido)->first();
-
-        //if( $impresion_en_comanda=='t'){
-        $tiene_permiso = model('tipoPermisoModel')->puede_borrar_de_pedido($id_usuario);
-
-        if (empty($tiene_permiso)) {
-            //El usuario no  tiene permiso de editar y eliminar producto de pedido
-            $returnData = array(
-                "resultado" => 0
-            );
-            echo  json_encode($returnData);
-        }
-
-        if (!empty($tiene_permiso)) {   // 
-            //El usuario no  tiene permiso de editar y eliminar producto de pedido
-
-            $producto = model('productoPedidoModel')->editar_producto_pedido($id_tabla_producto_pedido);
-
-            //Todos los datos del producto que se va a editar 
-            $impresion_en_comanda = model('productoPedidoModel')->select('impresion_en_comanda')->where('id', $id_tabla_producto_pedido)->first();
-            // Validacion de si el producto fue impreso en comanda
-            if ($impresion_en_comanda['impresion_en_comanda'] == 'f') {
-                $returnData = array(
-                    "resultado" => 1,
-                    "codigo_interno" => $producto[0]['codigointernoproducto'],
-                    "descripcion" => $producto[0]['nombreproducto'],
-                    "valor_unitario" => $producto[0]['valor_unitario'],
-                    "valor_unitario_formato" => "$" . number_format($producto[0]['valor_unitario'], 0, ',', '.'),
-                    "cantidad" => $producto[0]['cantidad_producto'],
-                    "total" => $producto[0]['valor_total'],
-                    "notas" => $producto[0]['nota_producto'],
-                    "id_tabla_producto_pedido" => $id_tabla_producto_pedido
-                );
-                echo  json_encode($returnData);
-            }
-            if ($impresion_en_comanda['impresion_en_comanda'] == 't') {
-
-                $puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda = model('tipoPermisoModel')->puede_borrar_de_pedido_y_editar($id_usuario);
-                //Consultamos si el usuario puede editar el producto despues de impresion en comanda
-                if (empty($puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda)) {
-                    $returnData = array(
-                        "resultado" => 2, //El usuario no puede editar el registro necesita permiso 
-                        "id_tabla_producto" => $id_tabla_producto_pedido
-                    );
-                    echo  json_encode($returnData);
-                }
-                if (!empty($puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda)) {
-                    $tipo_permiso_edicion_post_impresion = model('tipoPermisoModel')->puede_borrar_de_pedido_y_editar_despues_de_impreso_comanda($id_usuario);
-
-
-                    if (!empty($tipo_permiso_edicion_post_impresion)) {
-                        $product = model('productoPedidoModel')->editar_producto_pedido($id_tabla_producto_pedido);
-
-                        $returnData = array(
-                            "resultado" => 3,
-                            "codigo_interno" => $producto[0]['codigointernoproducto'],
-                            "descripcion" => $producto[0]['nombreproducto'],
-                            "valor_unitario" => $producto[0]['valor_unitario'],
-                            "valor_unitario_formato" => "$" . number_format($producto[0]['valor_unitario'], 0, ',', '.'),
-                            "cantidad" => $producto[0]['cantidad_producto'],
-                            "total" => $producto[0]['valor_total'],
-                            "notas" => $producto[0]['nota_producto'],
-                            "id_tabla_producto_pedido" => $id_tabla_producto_pedido
-                        );
-                        echo  json_encode($returnData);
-                    } else if (empty($tipo_permiso_edicios_post_impresion)) {
-
-                        $returnData = array(
-                            "resultado" => 4,
-                            "id_tabla_producto" => $id_tabla_producto_pedido
-                        );
-                        echo  json_encode($returnData);
-                    }
-                }
-            }
-        }
-    } */
+   
     public function editar_cantidades_de_pedido()
     {
         //$id_usuario = 20;
@@ -989,85 +908,9 @@ class productoController extends BaseController
             );
             echo  json_encode($returnData);
         }
-        /*  if (($cantidad_entregada['cantidad_entregada'] + $cantidad) == $cantidad_solicitada['cantidad_producto']) {
-            $returnData = array(
-                "resultado" => 3,
-            );
-            echo  json_encode($returnData);
-        } */
+       
     }
-    /*   public function actualizar_entregar_producto()
-    {
-
-        $id_producto_pedido = $_POST['id_producto_pedido'];
-        $cantidad = $_POST['cantidad'];
-        $cantidad_solicitada = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto_pedido)->first();
-        $cantidad_entregada = model('productoPedidoModel')->select('cantidad_entregada')->where('id', $id_producto_pedido)->first();
-
-
-        if ($cantidad == 0) {
-            $returnData = array(
-                "resultado" => 2,
-            );
-            echo  json_encode($returnData);
-        } else {
-
-            if ($cantidad > $cantidad_solicitada['cantidad_producto']) {
-                $returnData = array(
-                    "resultado" => 0,
-                );
-                echo  json_encode($returnData);
-            }
-
-            $cantidad_entregada = model('productoPedidoModel')->select('cantidad_entregada')->where('id', $id_producto_pedido)->first();
-            $resultado = $cantidad_entregada['cantidad_entregada'] + $cantidad;
-            if ($resultado <= $cantidad_solicitada['cantidad_producto']) {
-
-                $actualizar_cantidad = $cantidad + $cantidad_entregada['cantidad_entregada'];
-
-                $data = [
-                    'cantidad_entregada' => $actualizar_cantidad,
-
-                ];
-
-                $model = model('productoPedidoModel');
-                $actualizar = $model->set($data);
-                $actualizar = $model->where('id', $id_producto_pedido);
-                $actualizar = $model->update();
-
-                $numero_de_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_producto_pedido)->first();
-
-                $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_de_pedido['numero_de_pedido']);
-
-                $productos_del_pedido = view('productos_pedido/productos_pedido', [
-                    "productos" => $productos_pedido,
-                    "pedido" => $numero_de_pedido['numero_de_pedido']
-                ]);
-
-                $returnData = array(
-                    "resultado" => 1,
-                    "productos" => $productos_del_pedido,
-                    "pedido" => $numero_de_pedido['numero_de_pedido']
-                );
-                echo  json_encode($returnData);
-            }
-        }
-        if ($cantidad > $cantidad_entregada['cantidad_entregada']) {
-            $returnData = array(
-                "resultado" => 0,
-            );
-            echo  json_encode($returnData);
-        }
-
-        if ($resultado > $cantidad) {
-            $returnData = array(
-                "resultado" => 0,
-            );
-            echo  json_encode($returnData);
-        }
-
-    } */
-
+ 
     public function usuario_pedido()
     {
 
@@ -1430,28 +1273,7 @@ class productoController extends BaseController
         }
     }
 
-    /*  public function eliminar_producto()
-    {
-        $id_tabla_producto = $_POST['id_tabla_producto'];
-        $id_usuario = $_POST['id_usuario'];
-        $impresion_en_comanda = model('productoPedidoModel')->select('impresion_en_comanda')->where('id', $id_tabla_producto)->first();
-        $tipo_usuario = model('usuariosModel')->select('idtipo')->where('id', $id_usuario)->first();
-
-        if ($impresion_en_comanda['impresion_en_comanda'] == 'f') {
-            //Borro la linea 
-        }
-
-        if ($impresion_en_comanda['impresion_en_comanda'] == 't' and $tipo_usuario['idtipo'] == 1) {
-
-            //Eliminacion 
-
-        }
-        if ($impresion_en_comanda['impresion_en_comanda'] == 't' and $tipo_usuario['idtipo'] == 0) {
-
-            //Pedir pin  
-
-        }
-    } */
+  
 
     public function eliminacion_de_producto()
     {

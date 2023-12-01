@@ -1,33 +1,33 @@
 <!-- <?php if (!empty($id_facturas)) { ?>
     <?php foreach ($id_facturas as $valor) {    ?>
         <?php
-        $productos = model('kardexModel')->get_factutras_pos($valor['id_factura']);
-        $costo_total = 0;
-        $ico_total = 0;
-        $iva_total = 0;
+                $productos = model('kardexModel')->get_factutras_pos($valor['id_factura']);
+                $costo_total = 0;
+                $ico_total = 0;
+                $iva_total = 0;
 
 
-        $numero_factura = model('pagosModel')->select('documento')->where('id_factura', $valor['id_factura'])->first();
-        $fecha_factura = model('pagosModel')->select('fecha')->where('id_factura', $valor['id_factura'])->first();
-        $venta = model('pagosModel')->select('valor')->where('id_factura', $valor['id_factura'])->first();
-        $id_estado = model('pagosModel')->select('id_estado')->where('id_factura', $valor['id_factura'])->first();
+                $numero_factura = model('pagosModel')->select('documento')->where('id_factura', $valor['id_factura'])->first();
+                $fecha_factura = model('pagosModel')->select('fecha')->where('id_factura', $valor['id_factura'])->first();
+                $venta = model('pagosModel')->select('valor')->where('id_factura', $valor['id_factura'])->first();
+                $id_estado = model('pagosModel')->select('id_estado')->where('id_factura', $valor['id_factura'])->first();
 
-        if ($id_estado['id_estado'] == 1) {
-            $nit = model('facturaVentaModel')->select('nitcliente')->where('id', $valor['id_factura'])->first();
-            $factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $valor['id_factura'])->first();
-            $numero_factura = $factura['numerofactura_venta'];
-            $nit_cliente = $nit['nitcliente'];
-            $estado = "POS";
-        }
+                if ($id_estado['id_estado'] == 1) {
+                    $nit = model('facturaVentaModel')->select('nitcliente')->where('id', $valor['id_factura'])->first();
+                    $factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $valor['id_factura'])->first();
+                    $numero_factura = $factura['numerofactura_venta'];
+                    $nit_cliente = $nit['nitcliente'];
+                    $estado = "POS";
+                }
 
-        if ($id_estado['id_estado'] == 8) {
-            $nit = model('facturaElectronicaModel')->select('nit_cliente')->where('id', $valor['id_factura'])->first();
-            $factura = model('facturaElectronicaModel')->select('numero')->where('id', $valor['id_factura'])->first();
-            $numero_factura = $factura['numero'];
-            $nit_cliente = $nit['nit_cliente'];
-            $estado = "ELECTRÓNICA";
-        }
-        $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente)->first();
+                if ($id_estado['id_estado'] == 8) {
+                    $nit = model('facturaElectronicaModel')->select('nit_cliente')->where('id', $valor['id_factura'])->first();
+                    $factura = model('facturaElectronicaModel')->select('numero')->where('id', $valor['id_factura'])->first();
+                    $numero_factura = $factura['numero'];
+                    $nit_cliente = $nit['nit_cliente'];
+                    $estado = "ELECTRÓNICA";
+                }
+                $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente)->first();
 
 
 
@@ -35,13 +35,13 @@
 
         <?php foreach ($productos as $detalle) {
 
-            $costo = model('kardexModel')->select('costo')->where('id_factura', $detalle['id_factura'])->first();
-            $ico = model('kardexModel')->select('ico')->where('id_factura', $detalle['id_factura'])->first();
-            $iva = model('kardexModel')->select('iva')->where('id_factura', $detalle['id_factura'])->first();
-            //$valor_costo=$costo['precio_costo']+$valor_costo;
-            $costo_total += $costo['costo'] * $detalle['cantidad'];
-            $ico_total += $ico['ico'];
-            $iva_total += $iva['iva'];
+                    $costo = model('kardexModel')->select('costo')->where('id_factura', $detalle['id_factura'])->first();
+                    $ico = model('kardexModel')->select('ico')->where('id_factura', $detalle['id_factura'])->first();
+                    $iva = model('kardexModel')->select('iva')->where('id_factura', $detalle['id_factura'])->first();
+                    //$valor_costo=$costo['precio_costo']+$valor_costo;
+                    $costo_total += $costo['costo'] * $detalle['cantidad'];
+                    $ico_total += $ico['ico'];
+                    $iva_total += $iva['iva'];
 
         ?>
             <?php $total_productos = model('kardexModel')->selectSum('total')->where('id_factura', $valor['id_factura'])->findAll(); ?>
@@ -124,7 +124,7 @@
             <td><?php echo $estado ?></td>
             <td><?php echo $numero_factura ?></td>
             <td><?php echo $fecha_factura['fecha'] ?></td>
-            
+
             <td><?php echo "$ " . number_format($total_factura[0]['total'] - ($iva[0]['iva'] + $ico[0]['ico']), 0, ",", ".") ?></td>
             <td><?php echo "$ " . number_format($iva[0]['iva'], 0, ",", ".") ?></td>
             <td><?php echo "$ " . number_format($ico[0]['ico'], 0, ",", ".") ?></td>
@@ -134,7 +134,7 @@
         </tr>
     <?php } ?>
 
-    <tr class="table-dark">
+    <!--     <tr class="table-dark">
 
         <td></td>
         
@@ -146,8 +146,40 @@
         <td><?php echo "$ " . number_format($total_ico, 0, ",", ".")  ?></td>
         <td>Total venta</td>
         <td><?php echo "$ " . number_format($total_venta, 0, ",", ".")  ?></td>
+    </tr> -->
+
+    <tr class="table-dark">
+        <td></td>
+        <td>
+            <p>Base IVA:</p>
+            <p><?php echo   "$ " . $base_iva  ?></p>
+        </td>
+        <td>
+            <p>Total IVA:</p>
+            <p><?php echo   "$ " . number_format(($total_iva), 0, ",", ".")  ?></p>
+        </td>
+        <td>
+            <p>Base INC:</p>
+            <p><?php echo   "$ " . $base_ico  ?></p>
+        </td>
+        <td>
+            <p>Total INC:</p>
+            <p><?php echo   "$ " . number_format(($total_ico), 0, ",", ".")  ?></p>
+        </td>
+        <td>
+            <p>Total base:</p>
+            <p><?php echo  "$ " . number_format($total_venta - ($total_ico + $total_iva), 0, ",", ".")  ?></p>
+        </td>
+        <td>
+            <p>Total impuesto:</p>
+            <p><?php echo  "$ " . number_format(($total_ico + $total_iva), 0, ",", ".")  ?></p>
+        </td>
+        <td>
+            <p>Total ventas:</p>
+            <p><?php echo  "$ " . number_format($total_venta, 0, ",", ".")  ?></p>
+        </td>
+        <td></td>
     </tr>
 
 
 <?php } ?>
-

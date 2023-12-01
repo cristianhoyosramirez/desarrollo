@@ -32,11 +32,16 @@ class Configuracion extends BaseController
         }
     }
 
-    function propina(){
-        return view('configuracion/propina');
+    function propina()
+    {
+        $porcentaje=model('configuracionPedidoModel')->select('valor_defecto_propina')->first();
+        return view('configuracion/propina',[
+            'porcetaje_propina'=>$porcentaje['valor_defecto_propina']
+        ]);
     }
 
-    function configuracion_propina(){
+    function configuracion_propina()
+    {
 
         if (!$this->validate([
             'porcentaje' => [
@@ -47,7 +52,7 @@ class Configuracion extends BaseController
 
                 ]
             ],
-          
+
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -61,5 +66,31 @@ class Configuracion extends BaseController
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
         return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Configuración de propina correcta ');
+    }
+
+    function estacion_trabajo()
+    {
+
+        $cajas = model('cajaModel')->findAll();
+        $impresoras = model('impresorasModel')->findAll();
+
+        return view('configuracion/estacion_trabajo', [
+            'cajas' => $cajas,
+            'impresoras' => $impresoras
+        ]);
+    }
+
+    function actualizar_caja()
+    {
+        $data = [
+            'id_impresora' => $this->request->getPost('id_impresora')
+        ];
+
+        // $num_fact = model('pedidoModel');
+        $caja =  model('cajaModel')->set($data)->where('idcaja', $this->request->getPost('id_caja'))->update();
+
+        $session = session();
+        $session->setFlashdata('iconoMensaje', 'success');
+        return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Asignación de impresora correcto  ');
     }
 }

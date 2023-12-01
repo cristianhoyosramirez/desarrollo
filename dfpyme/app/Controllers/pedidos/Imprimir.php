@@ -56,7 +56,7 @@ class Imprimir extends BaseController
             }
             #}
             if (empty($items)) {
-             
+
                 if ($tipo_usuario['idtipo'] == 1 || $tipo_usuario['idtipo'] == 0) {
                     $items = model('productoPedidoModel')->reimprimir_comanda($pedido['id']);
 
@@ -202,7 +202,7 @@ class Imprimir extends BaseController
 
         //$nombre_mesero = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_mesero['fk_usuario'])->first();
 
-        $id_impresora = model('precuentaModel')->select('id_impresora')->first();
+        $id_impresora = model('cajaModel')->select('id_impresora')->first();
         if (!empty($id_impresora)) {
             $nombre_de_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
             $connector = new WindowsPrintConnector($nombre_de_impresora['nombre']);
@@ -309,7 +309,7 @@ class Imprimir extends BaseController
     public function imprimir_factura()
     {
 
-        //$id_factura = 120877;
+        //$id_factura = 121196;
         $id_factura = $_POST['numero_de_factura'];
 
         $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
@@ -330,11 +330,12 @@ class Imprimir extends BaseController
             $nit_cliente = model('facturaVentaModel')->select('nitcliente')->where('id', $id_factura)->first();
             $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente['nitcliente'])->first();
 
-            $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
+            $id_impresora = model('cajaModel')->select('id_impresora')->first();
 
             $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
 
             $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
+
             $printer = new Printer($connector);
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -592,7 +593,7 @@ class Imprimir extends BaseController
             $printer->close();
 
             $movimientos_transaccion = model('facturaformaPagoModel')->valor_pago_transaccion($id_factura);
-            $movimientos_efectivo = model('facturaformaPagoModel')->valor_pago_transaccion($id_factura);
+            $movimientos_efectivo = model('facturaformaPagoModel')->valor_pago_efectivo($id_factura);
 
             $imprime_boucher = model('cajaModel')->select('imp_comprobante_transferencia')->where('numerocaja', 1)->first();
 
@@ -656,9 +657,9 @@ class Imprimir extends BaseController
     function imprimir_movimiento_caja()
     {
 
-        $id_apertura = $this->request->getPost('id_apertura');
+        $id_apertura = $this->request->getPost('id_apertura'); 
 
-        // $id_apertura = 79;
+        //$id_apertura = 59;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -720,6 +721,7 @@ class Imprimir extends BaseController
 
 
         $ingresos_efectivo = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $id_apertura)->findAll();
+        $efectivo = $ingresos_efectivo[0]['efectivo'];
         $ingresos_transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $id_apertura)->findAll();
         $propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $id_apertura)->findAll();
 
@@ -727,7 +729,7 @@ class Imprimir extends BaseController
         $printer->text("Ingresos efectivo:      " . "$ " . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
         $printer->text("Ingresos transacción: " . "  $ " . number_format($ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
         //$total_ingresos = model('facturaFormaPagoModel')->total_ingresos($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
-        $printer->text("Total ingresos          " . "$ " . number_format(($ingresos_efectivo[0]['efectivo'] + $ingresos_transaccion[0]['transferencia']), 0, ",", ".") . "\n");
+        $printer->text("Total ingresos          " . "$ " . number_format(($ingresos_efectivo[0]['efectivo'] + $ingresos_transaccion[0]['transferencia'] + $valor_apertura['valor']), 0, ",", ".") . "\n");
 
 
         $printer->text("\n");
@@ -810,7 +812,15 @@ class Imprimir extends BaseController
         $printer->text("Cierre de caja \n");
         $printer->text("-----------------------------------------------\n");
         $printer->text("Efectivo en caja   " . "     $ " . number_format($total_en_caja, 0, ",", ".") . " \n");
-        $valor_cierre_efectivo_usuario = model('cierreFormaPagoModel')->valor_cierre_efectivo_usuario($id_apertura);
+
+
+        $id_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura)->first();
+
+        if (!empty($id_cierre)) {
+            $valor_cierre_efectivo_usuario = model('cierreFormaPagoModel')->valor_cierre_efectivo_usuario($id_cierre['id']);
+        }
+
+
 
         if (empty($valor_cierre_efectivo_usuario)) {
             $cierre_usuario = 0;
@@ -830,8 +840,13 @@ class Imprimir extends BaseController
         }
 
 
-        $printer->text("Transacciones: " . "         $ " . number_format($transaccion, 0, ",", ".") . "\n");
-        $valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_apertura);
+        $printer->text("Efectivo: " . "              $ " . number_format($efectivo, 0, ",", ".") . "\n");
+        $printer->text("Transacciones: " . "         $ " . number_format($transaccion, 0, ",", ".") . "\n\n");
+        if (!empty($id_cierre)) {
+            $valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre['id']);
+        }
+
+
         if (empty($valor_cierre_transaccion_usuari)) {
             $valor_cierre_transaccion_usuario = 0;
         }
@@ -839,12 +854,17 @@ class Imprimir extends BaseController
             $valor_cierre_transaccion_usuario = $valor_cierre_transaccion_usuari[0]['valor'];
         }
 
-        $printer->text("Cierre transacciones  " . "  $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n");
-        $printer->text("Diferencia transaccion  " . "$ " . number_format($valor_cierre_transaccion_usuario - $transaccion, 0, ",", ".") . "\n");
+        $printer->text("Cierre efectivo  " . "       $ " .  number_format($cierre_usuario, 0, ",", ".") .  "\n");
+        $printer->text("Cierre transacciones  " . "  $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n\n");
+
+        $printer->text("Diferencia transaccion  " . "$ " . number_format($transaccion - $valor_cierre_transaccion_usuario, 0, ",", ".") . "\n");
+
+
+        $printer->text("Diferencia efectivo  " . "   $ " . number_format($efectivo - $cierre_usuario, 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
-        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format(($cierre_usuario - $total_en_caja) + ($valor_cierre_transaccion_usuario - $transaccion), 0, ",", ".") . "\n");
+        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format(($efectivo - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -872,21 +892,21 @@ class Imprimir extends BaseController
     function imprimir_factura_electronica()
     {
         $id_factura = $this->request->getPost('id_factura');
-        $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
+        $id_impresora = model('cajaModel')->select('id_impresora')->first();
         $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
         $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
         $printer = new Printer($connector);
 
-        $id_estado = model('facturaElectronicaModel')->select('id_status')->where('id',$id_factura)->first();
-        $numero = model('facturaElectronicaModel')->select('numero')->where('id',$id_factura)->first();
+        $id_estado = model('facturaElectronicaModel')->select('id_status')->where('id', $id_factura)->first();
+        $numero = model('facturaElectronicaModel')->select('numero')->where('id', $id_factura)->first();
 
-        if ($id_estado['id_status']==1) {
-            $estado ="PENDIENTE";
-        }       
-        if ($id_estado['id_status']==2) {
-            $estado ="FIRMADO";
-        }       
-    
+        if ($id_estado['id_status'] == 1) {
+            $estado = "PENDIENTE";
+        }
+        if ($id_estado['id_status'] == 2) {
+            $estado = "FIRMADO";
+        }
+
 
 
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -902,8 +922,8 @@ class Imprimir extends BaseController
 
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text("ORDEN DE PEDIDO  " . "\n");
-        $printer->text("NÚMERO:  " .$numero['numero']. "\n");
-        $printer->text("ESTADO:  " .$estado. "\n");
+        $printer->text("NÚMERO:  " . $numero['numero'] . "\n");
+        $printer->text("ESTADO:  " . $estado . "\n");
         $printer->text("\n");
         $items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
 

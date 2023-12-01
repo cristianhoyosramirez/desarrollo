@@ -80,6 +80,7 @@
                 </span>
               </a>
               <div class="dropdown-menu">
+
                 <a class="dropdown-item" href="<?= base_url() ?>/salones/list">
                   <!-- Download SVG icon from http://tabler-icons.io/i/building-pavilon -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -117,6 +118,16 @@
                     <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
                     <rect x="7" y="13" width="10" height="8" rx="2" />
                   </svg> Impresoras
+                </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/estacion_trabajo">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/receipt-tax -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <line x1="9" y1="14" x2="15" y2="8" />
+                    <circle cx="9.5" cy="8.5" r=".5" fill="currentColor" />
+                    <circle cx="14.5" cy="13.5" r=".5" fill="currentColor" />
+                    <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
+                  </svg> Estación de trabajo
                 </a>
 
                 <!--
@@ -705,15 +716,38 @@
                   <path d="M7.003 14.803a2.4 2.4 0 0 0 .997 -.803a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 1 -.805" />
                 </svg>Producto
               </a>
-              <!-- <a class="dropdown-item" href="<?= base_url() ?>/inventario/ingreso">
 
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <ellipse cx="12" cy="6" rx="8" ry="3"></ellipse>
-                  <path d="M4 6v6a8 3 0 0 0 16 0v-6" />
-                  <path d="M4 12v6a8 3 0 0 0 16 0v-6" />
-                </svg>Entradas y salidas de inventario 
-              </a> -->
+
+              <div class="dropend">
+                <a class="dropdown-item dropdown-toggle" href="#sidebar-error" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                    <rect x="9" y="3" width="6" height="4" rx="2" />
+                    <path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                    <path d="M12 17v1m0 -8v1" />
+                  </svg>
+                  Inventario
+                </a>
+                <div class="dropdown-menu">
+                  <a href="<?= base_url() ?>/inventario/ingreso" class="dropdown-item">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Entradas </a>
+                  <a href="<?= base_url() ?>/inventario/salida" class="dropdown-item">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg> Salidas</a>
+                </div>
+              </div>
+
             </div>
           </li>
         <?php } ?>

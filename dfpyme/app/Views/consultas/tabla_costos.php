@@ -137,7 +137,7 @@
         </tr>
     <?php } ?>
 
-    <tr class="table-dark">
+    <!--  <tr class="table-dark">
 
         <td>Total costo </td>
         <td><?php echo "$ " . number_format($total_costo, 0, ",", ".") ?></td>
@@ -149,6 +149,36 @@
         <td><?php echo "$ " . number_format($total_ico, 0, ",", ".")  ?></td>
         <td>Total venta</td>
         <td><?php echo "$ " . number_format($total_venta, 0, ",", ".")  ?></td>
+    </tr> -->
+
+    <tr class="table-dark">
+        <td>
+            <p>Total costo:</p>
+            <p><?php echo "$ " . number_format($total_costo, 0, ",", ".") ?></p>
+        </td>
+
+        <td>
+            <p>Base IVA:</p>
+            <p><?php echo "$ " . $base_iva   ?></p>
+        </td>
+        <td>
+            <p>Total IVA:</p>
+            <p><?php echo "$ " . number_format($total_iva, 0, ",", ".")  ?></p>
+        </td>
+
+        <td>
+            <p>Base INC:</p>
+            <p><?php echo "$ " . $base_ico  ?></p>
+        </td>
+        <td>
+            <p>Total INC:</p>
+            <p><?php echo "$ " . number_format($total_ico, 0, ",", ".")  ?></p>
+        </td>
+        <td><p>Total base:</p> <p><?php echo  $tota_ventas = "$ " . number_format($total_venta - ($total_ico + $total_iva), 0, ",", ".")  ?></p> </td>
+        <td><p>Total impuesto:</p> <p><?php echo  $tota_ventas = "$ " . number_format(($total_ico + $total_iva), 0, ",", ".")  ?></p> </td>
+        <td><p>Total venta:</p> <p><?php echo  $tota_ventas = "$ " . number_format($total_venta, 0, ",", ".")  ?></p></td>
+        <td></td>
+        <td></td>
     </tr>
 
 

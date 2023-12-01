@@ -73,12 +73,7 @@ class ClienteController extends BaseController
                         'required' => 'Dato necesarios',
                     ],
                 ],
-                'nombre_comercial' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Dato necesario',
-                    ],
-                ],
+              
                 'direccion' => [
                     'rules' => 'required',
                     'errors' => [
@@ -230,12 +225,28 @@ class ClienteController extends BaseController
                 $insert = model('detallesRutModel')->insert($rut);
             }
 
-
+            $regimen = model('regimenModel')->orderBy('idregimen', 'desc')->findAll();
+            $tipo_cliente = model('tipoClienteModel')->orderBy('id', 'asc')->findAll();
+            $clasificacion_cliente = model('clasificacionClienteModel')->orderBy('id', 'asc')->findAll();
+            $departamento = model('departamentoModel')->select('*')->where('idpais', 49)->find();
+            $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
+            $id_ciudad_empresa = model('empresaModel')->select('idciudad')->first();
+            $ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
+            $municipios = model('municipiosModel')->findAll();
 
             $returnData = array(
                 "code" => 1,
                 "cliente" => $_POST['identificacion'] . " " . $_POST['nombres'] . " " . $_POST['apellidos'],
-                "nit_cliente" => $_POST['identificacion']
+                "nit_cliente" => $_POST['identificacion'],
+                "clientes" => view('clientes/listado', [
+                    'regimen' => $regimen,
+                    'tipo_cliente' => $tipo_cliente,
+                    'clasificacion_cliente' => $clasificacion_cliente,
+                    'departamentos' => $departamento,
+                    "id_departamento" => $id_departamento_empresa['iddepartamento'],
+                    "id_ciudad" => $id_ciudad_empresa['idciudad'],
+                    "ciudad" => $ciudad['nombreciudad'],
+                ])
 
             );
             echo  json_encode($returnData);
@@ -510,8 +521,8 @@ class ClienteController extends BaseController
 
     function editar_cliente()
     {
-        //$id_cliente = 61;
-        $id_cliente = $_POST['id_cliente'];
+        //$id_cliente = 419;
+        $id_cliente = $_POST['id_cliente']; 
         $datos_cliente = model('clientesModel')->select('*')->where('id', $id_cliente)->first();
         $regimen = model('regimenModel')->orderBy('idregimen', 'desc')->findAll();
         $tipo_cliente = model('tipoClienteModel')->orderBy('id', 'asc')->findAll();
@@ -519,7 +530,7 @@ class ClienteController extends BaseController
         $departamento = model('departamentoModel')->select('*')->where('idpais', 49)->find();
         $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
         $id_ciudad_empresa = model('empresaModel')->select('idciudad')->first();
-        $ciudad = model('municipiosModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
+        $ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
         $municipios = model('municipiosModel')->findAll();
 
 

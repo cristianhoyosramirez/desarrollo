@@ -33,10 +33,8 @@ CAJA
                 <label for="inputEmail4" class="form-label">Fecha cierre</label>
                 <input type="text" value="<?php echo date('Y-m-d'); ?>" class="form-control" readonly id="inputEmail4">
             </div>
-            <div class="col-md-1">
-                <label for="inputPassword4" class="form-label">Turno</label>
-                <input type="text" class="form-control" id="inputPassword4" readonly value="1">
-            </div>
+            <input type="hidden" class="form-control" id="inputPassword4" readonly value="1">
+            
             <div class="col-1">
                 <label for="inputAddress" class="form-label">Caja</label>
                 <select name="numero_caja" class="form-select" id="numero_caja">

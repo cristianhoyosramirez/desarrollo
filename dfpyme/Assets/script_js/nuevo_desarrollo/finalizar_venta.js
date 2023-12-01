@@ -47,8 +47,17 @@ function finalizar_venta() {
 
                     $("#finalizar_venta").modal("show");
 
+                    if (resultado.estado_licencia == "f") {
+                        Swal.fire({
+                            title: "No cuenta con una licencia activa por lo que su servicio será suspendido.",
 
+                            icon: "warning",
+                            showCancelButton: false,
+                            confirmButtonColor: "#28a745", // Green color
+                            confirmButtonText: "Aceptar" // Accept in Spanish
+                        });
 
+                    }
                 }
                 if (resultado.resultado == 0) {
 

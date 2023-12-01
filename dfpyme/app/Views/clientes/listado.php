@@ -44,6 +44,7 @@ LISTADO DE CLIENTES
       <div class="card-body">
         <div class="table-responsive">
           <input type="hidden" id="url" value="<?php echo base_url() ?>">
+
           <table id="clientes" class="table">
             <thead class="table-dark">
               <td>Nit</td>
@@ -53,7 +54,7 @@ LISTADO DE CLIENTES
               <td>Régimen</td>
               <td>Acción</td>
             </thead>
-            <tbody>
+            <tbody id="listado_de_clientes">
             </tbody>
           </table>
         </div>

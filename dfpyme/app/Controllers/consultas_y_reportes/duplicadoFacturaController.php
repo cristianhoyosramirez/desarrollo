@@ -125,7 +125,7 @@ class duplicadoFacturaController extends BaseController
             $nit_cliente = model('facturaVentaModel')->select('nitcliente')->where('id', $id_factura)->first();
             $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente['nitcliente'])->first();
 
-            $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
+            $id_impresora = model('cajaModel')->select('id_impresora')->first();
 
             $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
 

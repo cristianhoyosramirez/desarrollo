@@ -20,7 +20,7 @@ Configuración
                 </div>
                 <div class="col-md-4">
                     <label for="inputState" class="form-label">Porcentaje por defecto </label>
-                    <input type="number" class="form-control" id="porcentaje" name="porcentaje">
+                    <input type="number" class="form-control" id="porcentaje" name="porcentaje" value="<?php echo $porcetaje_propina ?>">
                     <div class="text-danger"><?= session('errors.porcentaje') ?></div>
                 </div>
 

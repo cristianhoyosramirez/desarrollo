@@ -1688,8 +1688,9 @@ class cajaDiariaController extends BaseController
     {
 
 
+        
         $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 78;
+        //$id_apertura = 48;
         $fecha_y_hora_cierre = "";
         $ventas_credito = "";
 
@@ -1776,7 +1777,10 @@ class cajaDiariaController extends BaseController
          * Total de ventas crédito y de contado 
          */
 
-        $vantas_contado = model('facturaVentaModel')->venta_contado($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
+        //$vantas_contado = model('facturaVentaModel')->venta_contado($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
+        $vantas_contado = model('productoFacturaVentaModel')->get_total_venta($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
+        
+       
         $venta_credito = model('facturaVentaModel')->venta_credito($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
 
         if (empty($venta_credito[0]['total_ventas_credito'])) {
@@ -1911,7 +1915,8 @@ class cajaDiariaController extends BaseController
                     "total_registros" => $total_registros[0]['total_registros'],
                     "iva" => $array_iva,
                     "ico" => $array_ico,
-                    "vantas_contado" => $vantas_contado[0]['total_ventas_contado'],
+                    "vantas_contado" => $vantas_contado[0]['total_venta'],
+                    //"vantas_contado" => $vantas_contado[0]['total_ventas_contado'],
                     "iva_devolucion" => $array_devoluciones_iva,
                     "ico_devolucion" => $array_devoluciones_ico,
                     //"consecutivo" => $consecutivo_caja['consecutivo'],

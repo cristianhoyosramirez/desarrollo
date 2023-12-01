@@ -49,7 +49,7 @@ class facturacionConImpuestosController extends BaseController
                 if (!empty($numero_pedido)) {
                     $productos = model('productoPedidoPosModel')->productos_pedido_pos($numero_pedido['id']);
                 }
-                
+
 
                 $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
                 $id_ciudad_empresa = model('empresaModel')->select('idciudad')->first();
@@ -773,7 +773,6 @@ class facturacionConImpuestosController extends BaseController
             }
         }
         return redirect()->to(base_url('pedido/pedidos_para_facturar'))->with('mensaje', 'Impresión de factura correcto');
-     
     }
 
     public function facturacion_pos()
@@ -808,7 +807,7 @@ class facturacionConImpuestosController extends BaseController
 
     function modulo_facturacion()
     {
-        //$id_factura = 70398;
+        //$id_factura = 121206;
         $id_factura = $_REQUEST['id_factura'];
         $id_usuario = model('facturaVentaModel')->select('idusuario_sistema')->where('id', $id_factura)->first();
         $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario['idusuario_sistema'])->first();
@@ -834,7 +833,9 @@ class facturacionConImpuestosController extends BaseController
         $id_usuario = model('facturaVentaModel')->select('idusuario_sistema')->where('id', $id_factura)->first();
 
         $imprime_boucher = model('cajaModel')->select('imp_comprobante_transferencia')->where('numerocaja', 1)->first();
+
         if ($imprime_boucher['imp_comprobante_transferencia'] == 1) {
+
             $connector = new WindowsPrintConnector('FACTURACION');
             $printer = new Printer($connector);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -849,6 +850,8 @@ class facturacionConImpuestosController extends BaseController
             // $printer->text("\n");
 
             if (!empty($movimientos_transaccion[0]['valor_pago'])) {
+
+
                 $printer->text("SOPORTE TRANSACCIÓN \n");
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->setTextSize(1, 1);
@@ -895,12 +898,11 @@ class facturacionConImpuestosController extends BaseController
             } else if (empty($movimientos_transaccion[0]['valorfactura_forma_pago'])) {
                 $printer->pulse();
                 $printer->close();
-                
             }
         }
         $returnData = array(
             "resultado" => 1,
-            
+
         );
         echo  json_encode($returnData);
     }

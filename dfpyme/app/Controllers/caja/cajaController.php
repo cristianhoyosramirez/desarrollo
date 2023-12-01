@@ -93,10 +93,19 @@ class cajaController extends BaseController
 
             $numero = model('consecutivoInformeModel')->select('numero')->where('id', $id[0]['id'])->first();
 
+            if(!empty($numero)){
+                
+                $consecutivo=$numero['numero'] + 1;
+            }
+            if(empty($numero)){
+                $temp_consecutivo=model('cajaModel')->select('consecutivo')->first();
+                $consecutivo=$temp_consecutivo['consecutivo'] + 1;
+            }
+
             $data = [
                 'fecha' => $fecha_apertura,
                 'idcaja' => 1,
-                'numero' => $numero['numero'] + 1
+                'numero' => $consecutivo
 
             ];
 

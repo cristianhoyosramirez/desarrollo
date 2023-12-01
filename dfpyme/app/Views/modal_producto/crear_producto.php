@@ -154,7 +154,7 @@
 
           <div class="col-md-1" style="display: block" id="informacion_tributaria_ico">
             <label for="inputPassword4" class="form-label">Valor ICO</label>
-            <select class="form-select" id="valor_icd" name="valor_ico">
+            <select class="form-select" id="valor_ico" name="valor_ico">
               <?php foreach ($ico as $detalle) { ?>
                 <option value="<?php echo $detalle['id_ico'] ?>"><?php echo $detalle['valor_ico'] ?></option>
               <?php } ?>

@@ -1231,6 +1231,7 @@ class Mesas extends BaseController
             // Obtener el último ID insertado
             $ultimo_id = model('usuariosModel')->insertID();
             $meseros = model('usuariosModel')->where('idtipo', 2)->orderBy('nombresusuario_sistema', 'asc')->find();
+            $meseros = model('usuariosModel')->where('estadousuario_sistema', true)->orderBy('nombresusuario_sistema', 'asc')->find();
 
 
             $returnData = array(

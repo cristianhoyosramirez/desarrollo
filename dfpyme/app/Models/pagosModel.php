@@ -67,19 +67,32 @@ class pagosModel extends Model
  ");
         return $datos->getResultArray();
     }
-    /*   function get_id_pos($fecha_inicial, $fecha_final)
+    function get_base_iva($fecha_inicial, $fecha_final)
     {
 
         $datos = $this->db->query("
-    SELECT
-        id_factura
+        SELECT
+        SUM(total - iva) AS base_iva
     FROM
-        pagos
+        kardex
     WHERE
-        fecha BETWEEN '$fecha_inicial' AND '$fecha_final' and id_estado=1
+        fecha BETWEEN '$fecha_inicial' AND '$fecha_final' AND iva > 0 AND ico = 0
  ");
         return $datos->getResultArray();
-    } */
+    } 
+    function get_base_ico($fecha_inicial, $fecha_final)
+    {
+
+        $datos = $this->db->query("
+        SELECT
+        SUM(total - ico) AS base_ico
+    FROM
+        kardex
+    WHERE
+        fecha BETWEEN '$fecha_inicial' AND '$fecha_final' AND ico > 0 AND iva = 0
+ ");
+        return $datos->getResultArray();
+    } 
     function get_id_pos($fecha_inicial, $fecha_final)
     {
 
@@ -119,10 +132,10 @@ class pagosModel extends Model
         $datos = $this->db->query("
         SELECT
         SUM(costo*cantidad) AS total_costo
-    FROM
-        kardex
-    WHERE
-        fecha BETWEEN '$fecha_inicial' AND '$fecha_final'
+        FROM
+         kardex
+        WHERE
+            fecha BETWEEN '$fecha_inicial' AND '$fecha_final'
  ");
         return $datos->getResultArray();
     }

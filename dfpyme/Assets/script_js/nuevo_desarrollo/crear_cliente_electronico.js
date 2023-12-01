@@ -25,9 +25,7 @@ $('#creacion_cliente_electronico').submit(function (e) {
 
                     $(form)[0].reset();
 
-
-
-                    //$('#countries-table').DataTable().ajax.reload(null, false);
+                    //$('#listado_de_clientes').html(resultado.clientes);
                     const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-start',
@@ -42,7 +40,7 @@ $('#creacion_cliente_electronico').submit(function (e) {
 
                     Toast.fire({
                         icon: 'success',
-                        title: 'Cliente agregado a la base de datos '
+                        title: 'Cliente agregado a la base de datosdd '
                     })
                 } else {
                     alert(data.msg);

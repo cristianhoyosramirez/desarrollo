@@ -67,12 +67,12 @@ class PartirFactura extends BaseController
 
         $tiene_apertura = model('aperturaRegistroModel')->select('id')->first();
 
-
+        $estado_licencia = model('configuracionPedidoModel')->select('estado_licencia')->first();
 
         if (!empty($tiene_apertura['id'])) {
             $impuestos = new Impuestos();
 
-            
+
             $id_mesa = $this->request->getPost('id_mesa');
             //$id_mesa = 1;
             $base = 0;
@@ -95,7 +95,7 @@ class PartirFactura extends BaseController
             }
             $maxVenta = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', 48)->first();
 
-            
+
 
 
             $requiere_factura_electronica = "";
@@ -118,7 +118,8 @@ class PartirFactura extends BaseController
                 "sub_total" => "Sub total: $" . number_format($valor_pedido['valor_total'], 0, ",", "."),
                 "valor_total" => $valor_pedido['valor_total'],
                 "factura_electronica" => $factura_electronica,
-                "requiere_factura_electronica" => $requiere_factura_electronica
+                "requiere_factura_electronica" => $requiere_factura_electronica,
+                "estado_licencia"=>$estado_licencia['estado_licencia']
             );
             echo  json_encode($returnData);
         } else if (empty($tiene_apertura['id'])) {
@@ -236,8 +237,8 @@ class PartirFactura extends BaseController
 
         $model = model('partirFacturaModel');
         $borrar = $model->truncate();
-       
-       /*  $model = model('partirFacturaModel');
+
+        /*  $model = model('partirFacturaModel');
         $borrar = $model->where('numero_de_pedido', $numero_pedido['id']);
         $borrar = $model->delete(); */
 
@@ -292,6 +293,7 @@ class PartirFactura extends BaseController
 
 
         $total = model('partirFacturaModel')->get_total($numero_pedido['id']);
+        $estado_licencia = model('configuracionPedidoModel')->select('estado_licencia')->first();
         $returnData = array(
             "resultado" => 1,
 
@@ -299,7 +301,8 @@ class PartirFactura extends BaseController
             "factura_electronica" => $factura_electronica,
             "total" => "$" . number_format($total[0]['valor_total'], 0, ",", "."),
             "factura_electronica" => $factura_electronica,
-            "requiere_factura_electronica" => $requiere_factura_electronica
+            "requiere_factura_electronica" => $requiere_factura_electronica,
+            "estado_licencia"=>$estado_licencia['estado_licencia']
         );
         echo  json_encode($returnData);
     }
