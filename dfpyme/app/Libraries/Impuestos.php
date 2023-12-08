@@ -44,6 +44,7 @@ class Impuestos
             $data['id_iva'] = $id_iva['idiva'];
             $data['aplica_ico'] = 't';
             $data['valor_ico'] = $valor_ico['valor_ico'];
+            $data['valor_iva'] = 0;
             array_push($resultado, $data);
         }
 
@@ -63,6 +64,7 @@ class Impuestos
             $data['id_iva'] = $id_iva['idiva'];
             $data['aplica_ico'] = 'f';
             $data['valor_ico'] = $valor_ico['valor_ico'];
+            $data['valor_iva'] = $valor_iva['valoriva'];
             array_push($resultado, $data);
 
             /* echo "El producto es ".$codigointerno."</br>";

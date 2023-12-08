@@ -2,11 +2,12 @@ function finalizar_venta() {
 
     let id_mesa = document.getElementById("id_mesa_pedido").value;
     var url = document.getElementById("url").value;
+    var id_usuario = document.getElementById("id_usuario").value;
 
     if (id_mesa != "") {
         $.ajax({
             data: {
-                id_mesa
+                id_mesa,id_usuario
             },
             url: url + "/" + "pedidos/valor",
             type: "POST",

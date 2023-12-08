@@ -209,7 +209,10 @@ class FacturaElectronica extends BaseController
                         'costo' => $costo['precio_costo'],
                         'ico' => $calculo[0]['ico'],
                         'iva' => $calculo[0]['iva'],
-                        'id_estado' => 8
+                        'id_estado' => 8,
+                        'valor_ico' => $calculo[0]['valor_ico'],
+                        'valor_iva' => $calculo[0]['valor_iva'],
+                        'aplica_ico' => $calculo[0]['aplica_ico']
                     ];
 
                     $insertar = model('kardexModel')->insert($data);
@@ -247,7 +250,10 @@ class FacturaElectronica extends BaseController
                     'id_factura' => $id_factura,
                     'costo' => $costo['precio_costo'],
                     'ico' => 0,
-                    'iva' => 0
+                    'iva' => 0,
+                    'valor_ico' => 0,
+                    'valor_iva' => 0,
+                    'aplica_ico' => 0
                 ];
 
 

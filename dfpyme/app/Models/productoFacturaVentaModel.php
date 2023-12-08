@@ -549,7 +549,17 @@ class productoFacturaVentaModel extends Model
         return $datos->getResultArray();
     }
 
-    public function fiscal_iva($fecha_inicial, $fecha_final)
+    public function fiscal_iva($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT ( valor_iva )
+        FROM   kardex
+        WHERE  id_apertura=$id_apertura
+        AND aplica_ico = 'false' 
+        ");
+        return $datos->getResultArray();
+    }
+  /*   public function fiscal_iva($fecha_inicial, $fecha_final)
     {
         $datos = $this->db->query("
         SELECT DISTINCT ( valor_iva )
@@ -558,7 +568,7 @@ class productoFacturaVentaModel extends Model
         AND aplica_ico = 'false' 
         ");
         return $datos->getResultArray();
-    }
+    } */
     public function datos_iva($fecha_inicial, $fecha_final, $valor_iva)
     {
         $datos = $this->db->query("
@@ -577,7 +587,17 @@ class productoFacturaVentaModel extends Model
         return $datos->getResultArray();
     }
 
-    public function fiscal_ico($fecha_inicial, $fecha_final)
+    public function fiscal_ico($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT ( valor_ico )
+        FROM   kardex
+        WHERE  id_apertura=$id_apertura
+        AND aplica_ico = 'true' 
+        ");
+        return $datos->getResultArray();
+    }
+   /*  public function fiscal_ico($fecha_inicial, $fecha_final)
     {
         $datos = $this->db->query("
         SELECT DISTINCT ( valor_ico )
@@ -586,7 +606,7 @@ class productoFacturaVentaModel extends Model
         AND aplica_ico = 'true' 
         ");
         return $datos->getResultArray();
-    }
+    } */
 
     public function datos_ico($fecha_inicial, $fecha_final, $valor_ico)
     {

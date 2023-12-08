@@ -257,7 +257,7 @@ class Mesas extends BaseController
 
                     $returnData = array(
                         "resultado" => 1,  // la mesa ya tiene productos
-                        "productos_pedido" => view('productos_pedido/productos_pedido', [
+                        "productos_pedido" => view('pedidos/productos_pedido', [
                             "productos" => $productos_pedido,
                             "pedido" => $numero_pedido['id']
                         ]),

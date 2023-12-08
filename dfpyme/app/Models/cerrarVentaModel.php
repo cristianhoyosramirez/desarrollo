@@ -60,11 +60,11 @@ class cerrarVentaModel extends Model
             $id_medida = model('productoMedidaModel')->select('idvalor_unidad_medida')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
             $precio_costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
+
+
             // Calcular los impuestos del producto 
             $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total'], $detalle['valor_unitario'], $detalle['cantidad_producto']);
-
-            //$id_factura = $factura_venta;
-
+           
             $numero_factura = model('pedidoModel')->select('numero_factura')->where('id', $numero_pedido)->first();
 
             /**
@@ -124,7 +124,7 @@ class cerrarVentaModel extends Model
                 'impoconsumo' => 0,
                 'total' => $valor_unidad * $detalle['cantidad_producto'],
                 'valor_ico' => $calculo[0]['valor_ico'], //
-                'impuesto_al_consumo' => $calculo[0]['ico']/$detalle['cantidad_producto'],
+                'impuesto_al_consumo' => $calculo[0]['ico'] / $detalle['cantidad_producto'],
                 'iva' => $calculo[0]['iva'],
                 'id_iva' => $calculo[0]['id_iva'],
                 'aplica_ico' => $calculo[0]['aplica_ico'],
@@ -141,6 +141,10 @@ class cerrarVentaModel extends Model
             $insertar = model('productoFacturaVentaModel')->insert($producto_factura_venta);
 
             $costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+
+
+
+
             $data_kardex = [
                 'idcompra' => 0,
                 'codigo' => $detalle['codigointernoproducto'],
@@ -161,6 +165,9 @@ class cerrarVentaModel extends Model
                 'ico' => $calculo[0]['ico'],
                 'iva' => $calculo[0]['iva'],
                 'id_estado' => $estado,
+                'valor_ico' => $calculo[0]['valor_ico'],
+                'valor_iva' => $calculo[0]['valor_iva'],
+                'aplica_ico' => $calculo[0]['aplica_ico']
             ];
 
             $insertar = model('kardexModel')->insert($data_kardex);

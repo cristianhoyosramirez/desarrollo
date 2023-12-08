@@ -28,8 +28,10 @@ class EmpresaController extends BaseController
         $data = [
             'nitempresa' => $this->request->getPost('nit_empresa'),
             'idregimen' => $this->request->getPost('id_regimen'),
-            'nombrecomercialempresa' => $this->request->getPost('razon_social'),
-            'nombrejuridicoempresa' => $this->request->getPost('nombre_comercial'),
+            //'nombrecomercialempresa' => $this->request->getPost('razon_social'),
+            'nombrecomercialempresa' => $this->request->getPost('nombre_comercial'),
+            //'nombrejuridicoempresa' => $this->request->getPost('nombre_comercial'),
+            'nombrejuridicoempresa' => $this->request->getPost('razon_social'),
             'telefonoempresa' => $this->request->getPost('telefono'),
             'celularempresa' => '0',
             'faxempresa' => '0',

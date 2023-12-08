@@ -33,9 +33,9 @@ class pagosModel extends Model
     {
         $datos = $this->db->query("
     SELECT
-    SUM(valor) as valor
+    SUM(total) as valor
     FROM
-        pagos
+        kardex
     WHERE
         id_apertura = $id_apertura AND id_estado = 1
     ");
@@ -45,9 +45,9 @@ class pagosModel extends Model
     {
         $datos = $this->db->query("
     SELECT
-    SUM(valor) as valor
+    SUM(total) as valor
     FROM
-        pagos
+        kardex
     WHERE
         id_apertura = $id_apertura AND id_estado = 8
     ");
@@ -79,7 +79,7 @@ class pagosModel extends Model
         fecha BETWEEN '$fecha_inicial' AND '$fecha_final' AND iva > 0 AND ico = 0
  ");
         return $datos->getResultArray();
-    } 
+    }
     function get_base_ico($fecha_inicial, $fecha_final)
     {
 
@@ -92,7 +92,7 @@ class pagosModel extends Model
         fecha BETWEEN '$fecha_inicial' AND '$fecha_final' AND ico > 0 AND iva = 0
  ");
         return $datos->getResultArray();
-    } 
+    }
     function get_id_pos($fecha_inicial, $fecha_final)
     {
 
@@ -177,6 +177,30 @@ class pagosModel extends Model
         pagos
     WHERE
         fecha BETWEEN '$fecha_inicial' AND '$fecha_final'
+ ");
+        return $datos->getResultArray();
+    }
+    function get_min_id($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        select min(id) as id from pagos where id_apertura=$id_apertura and id_estado =1
+ ");
+        return $datos->getResultArray();
+    }
+    function get_max_id($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        select max(id) as id from pagos where id_apertura=$id_apertura and id_estado =1
+ ");
+        return $datos->getResultArray();
+    }
+    function get_total_registros($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        select count(id) as total_registros from pagos where id_apertura=$id_apertura and id_estado =1
  ");
         return $datos->getResultArray();
     }

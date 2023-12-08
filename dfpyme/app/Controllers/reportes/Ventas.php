@@ -38,7 +38,8 @@ class Ventas extends BaseController
             "transferencia" => "$" . number_format($transferencia[0]['recibido_transferencia'], 0, ",", "."),
             "total_ingresos" => "$" . number_format(($transferencia[0]['recibido_transferencia'] + $efectivo[0]['recibido_efectivo']) - $cambio[0]['cambio'], 0, ",", "."),
             "valor" => "$" . number_format($valor[0]['valor'], 0, ",", "."),
-            "total_documento" => "$" . number_format($total_documento[0]['total_documento'], 0, ",", "."),
+            //"total_documento" => "$" . number_format($total_documento[0]['total_documento'], 0, ",", "."),
+            "total_documento" => "$" . number_format($ventas_pos[0]['valor']+$ventas_electronicas[0]['valor'], 0, ",", "."),
             "cambio" => "$" . number_format($cambio[0]['cambio'], 0, ",", "."),
 
         );

@@ -27,16 +27,16 @@ LISTADO DE PRODUCTOS
             <div class="row">
                 <div class="col">
                     <form action="<?php echo base_url() ?>/inventario/exportar" method="get">
-                        <button class="btn  btn-outline-red btn-icon" title="Exportar a PDF" data-bs-toggle="tooltip" type="submit">Pdf</button>
+                        <button class="btn  btn-outline-red btn-icon w-100 " title="Exportar a PDF" data-bs-toggle="tooltip" type="submit">Pdf</button>
                     </form>
                 </div>
                 <div class="col">
-                    <a onclick="agregar_producto()" class="btn btn-outline-warning btn-icon" title="Agregar producto " data-bs-toggle="tooltip"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M12 5l0 14" />
-                            <path d="M5 12l14 0" />
-                        </svg></a>
+                    <a onclick="agregar_producto()" class="btn btn-outline-warning btn-icon" title="Agregar producto " data-bs-toggle="tooltip">Agregar producto</a>
                 </div>
+                <div class="col">
+                    
+                </div>
+
             </div>
 
         </div>
