@@ -68,29 +68,6 @@ class Inventarios extends BaseController
         echo  json_encode($returnData);
     }
 
-    /*  function exportar_inventario()
-    {
-        $dompdf = new Dompdf();
-
-        $options = $dompdf->getOptions();
-
-        $options->set(array('isRemoteEnable' => true));
-        $dompdf->setOptions($options);
-
-
-        $datos_empresa = model('empresaModel')->find();
-        $id_regimen = $datos_empresa[0]['idregimen'];
-        $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
-        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
-        $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
-
-        $options = $dompdf->getOptions();
-        $dompdf->setPaper('letter');
-        $dompdf->render();
-        $dompdf->loadHtml(view('producto/pdf',));
-        $dompdf->stream("Reporte de productos.pdf", array("Attachment" => true));
-    } */
-
     function  exportar_inventario()
     {
 
@@ -127,5 +104,55 @@ class Inventarios extends BaseController
         $dompdf->setPaper('letter');
         $dompdf->render();
         $dompdf->stream("Reporte de producto.pdf", array("Attachment" => true));
+    }
+
+    function productos_borrados()
+    {
+        $id_pedido = $this->request->getPost('valor');
+
+        $productos = model('productosBorradosModel')->get_productos_borrados($id_pedido);
+
+
+        $returnData = array(
+            "resultado" => 1,
+            "productos" => view('consultas/detalle_productos_borrados', [
+                'productos' => $productos
+            ]),
+
+        );
+        echo  json_encode($returnData);
+    }
+
+    function productos_subcategoria()
+    {
+
+        $productos = model('subCategoriaModel')->get_productos($this->request->getPost('id_subcategoria'));
+
+        $items = view('pedido/productos_sub_categoria', [
+            'productos' => $productos,
+        ]);
+
+        $returnData = array(
+            "resultado" => 1,
+            "productos" => $items
+
+
+        );
+        echo  json_encode($returnData);
+    }
+
+    function reporte_meseros()
+    {
+        $id_mesero = $this->request->getPost('id_mesero');
+
+        $fecha_inicial=$this->request->getPost('fecha_inicial');
+        $fecha_final=$this->request->getPost('fecha_final');
+
+        //$ventas=model('pagosModel')->
+
+        $returnData = array(
+            "resultado" => 1,
+        );
+        echo  json_encode($returnData);
     }
 }

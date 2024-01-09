@@ -12,8 +12,9 @@ class Ventas extends BaseController
 {
     public function ventas()
     {
-        $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 25;
+        
+        $id_apertura = $this->request->getPost('id_apertura'); 
+        //$id_apertura = 56;
         $movimientos = model('pagosModel')->where('id_apertura', $id_apertura)->orderBy('id', 'asc')->findAll();
         $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura);
         $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura);
@@ -357,6 +358,67 @@ class Ventas extends BaseController
             $dompdf->stream("Reporte_de_costos.pdf", array("Attachment" => true));
         }
     }
+    public function exportar_reporte_costo_excel()
+    {
+        
+       
+
+        // Obtener datos de la empresa
+        $datos_empresa = model('empresaModel')->find();
+        $id_regimen = $datos_empresa[0]['idregimen'];
+        $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
+
+        // Fecha inicial y final (puedes obtenerlas del formulario)
+        $fecha_inicial = $this->request->getPost('inicial');
+        $fecha_final = $this->request->getPost('final');
+
+        if (empty($fecha_inicial) or empty($fecha_final)) {
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'warning');
+            return redirect()->to(base_url('reportes/reporte_costo'))->with('mensaje', 'No hay datos para el rango de fechas  ');
+        }
+
+        if (!empty($fecha_inicial) and !empty($fecha_final)) {
+            // Obtener datos para el informe
+            $id_facturas = model('pagosModel')->get_id($fecha_inicial, $fecha_final);
+            $total_costo = model('pagosModel')->get_costo_total($fecha_inicial, $fecha_final);
+            $total_ico = model('pagosModel')->get_ico_total($fecha_inicial, $fecha_final);
+            $total_iva = model('pagosModel')->get_iva_total($fecha_inicial, $fecha_final);
+            //$total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
+            $total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
+            $base_iva = model('pagosModel')->get_base_iva($fecha_inicial, $fecha_final);
+            $base_ico = model('pagosModel')->get_base_ico($fecha_inicial, $fecha_final);
+
+            // Cargar vista para el informe
+            return view('consultas/excel_costos', [
+                'id_facturas' => $id_facturas,
+                'total_costo' => number_format($total_costo[0]['total_costo'], 0, ",", "."),
+                'total_ico' =>  number_format($total_ico[0]['total_ico'], 0, ",", "."),
+                'total_iva' => number_format($total_iva[0]['total_iva'], 0, ",", "."),
+                'total_venta' => number_format($total_venta[0]['total_venta'], 0, ",", "."),
+                "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
+                "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
+                "nit" => $datos_empresa[0]['nitempresa'],
+                "nombre_regimen" => $regimen['nombreregimen'],
+                "direccion" => $datos_empresa[0]['direccionempresa'],
+                "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
+                "nombre_departamento" => $nombre_departamento['nombredepartamento'],
+                "total_base" => number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", "."),
+                "fecha_inicial" => $fecha_inicial,
+                "fecha_final" => $fecha_final,
+                //"base_ico" => number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico']), 0, ",", "."),
+                //"base_iva" => number_format($total_venta[0]['total_venta'] - ($total_iva[0]['total_iva']), 0, ",", "."),
+                "base_ico" => number_format($base_ico[0]['base_ico'], 0, ",", "."),
+                "base_iva" => number_format($base_iva[0]['base_iva'], 0, ",", "."),
+                "total_impuesto" => number_format(($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", ".")
+            ]);
+
+            // Cargar el HTML en Dompdf
+           
+        }
+    }
     public function exportar_reporte_ventas()
     {
         $dompdf = new Dompdf();
@@ -380,7 +442,7 @@ class Ventas extends BaseController
         if (empty($fecha_inicial) or empty($fecha_final)) {
             $session = session();
             $session->setFlashdata('iconoMensaje', 'warning');
-            return redirect()->to(base_url('reportes/reporte_ventas'))->with('mensaje', 'No hay datos para el rango de fechas  ');
+            return redirect()->to(base_url('reportes/reportes_ventas'))->with('mensaje', 'No hay datos para el rango de fechas  ');
         }
 
         if (!empty($fecha_inicial) and !empty($fecha_final)) {
@@ -425,6 +487,63 @@ class Ventas extends BaseController
 
             // Descargar el PDF
             $dompdf->stream("Reporte_de_ventas.pdf", array("Attachment" => true));
+        }
+    }
+    public function exportar_reporte_ventas_excel()
+    {
+        
+
+       
+
+        // Obtener datos de la empresa
+        $datos_empresa = model('empresaModel')->find();
+        $id_regimen = $datos_empresa[0]['idregimen'];
+        $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
+
+        // Fecha inicial y final (puedes obtenerlas del formulario)
+        $fecha_inicial = $this->request->getPost('inicial');
+        $fecha_final = $this->request->getPost('final');
+
+        if (empty($fecha_inicial) or empty($fecha_final)) {
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'warning');
+            return redirect()->to(base_url('reportes/reportes_ventas'))->with('mensaje', 'No hay datos para el rango de fechas  ');
+        }
+
+        if (!empty($fecha_inicial) and !empty($fecha_final)) {
+            // Obtener datos para el informe
+            $id_facturas = model('pagosModel')->get_id($fecha_inicial, $fecha_final);
+            $total_costo = model('pagosModel')->get_costo_total($fecha_inicial, $fecha_final);
+            $total_ico = model('pagosModel')->get_ico_total($fecha_inicial, $fecha_final);
+            $total_iva = model('pagosModel')->get_iva_total($fecha_inicial, $fecha_final);
+            //$total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
+            $total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
+
+            // Cargar vista para el informe
+            return view('consultas/excel_ventas', [
+                'id_facturas' => $id_facturas,
+                'total_costo' => "$ " . number_format($total_costo[0]['total_costo'], 0, ",", "."),
+                'total_ico' => "$ " . number_format($total_ico[0]['total_ico'], 0, ",", "."),
+                'total_iva' => "$ " . number_format($total_iva[0]['total_iva'], 0, ",", "."),
+                'total_venta' => "$ " . number_format($total_venta[0]['total_venta'], 0, ",", "."),
+                "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
+                "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
+                "nit" => $datos_empresa[0]['nitempresa'],
+                "nombre_regimen" => $regimen['nombreregimen'],
+                "direccion" => $datos_empresa[0]['direccionempresa'],
+                "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
+                "nombre_departamento" => $nombre_departamento['nombredepartamento'],
+                "total_base" => "$ " . number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico'] - $total_iva[0]['total_iva']), 0, ",", "."),
+                "fecha_inicial" => $fecha_inicial,
+                "fecha_final" => $fecha_final,
+                "base_ico" => "$ " . number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico']), 0, ",", "."),
+                "base_iva" => "$ " . number_format($total_venta[0]['total_venta'] - ($total_iva[0]['total_iva']), 0, ",", "."),
+                "total_impuesto" => "$ " . number_format(($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", ".")
+            ]);
+
+         
         }
     }
 

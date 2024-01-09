@@ -309,7 +309,8 @@ class Imprimir extends BaseController
     public function imprimir_factura()
     {
 
-        //$id_factura = 121196;
+        // $id_factura = 57069;
+
         $id_factura = $_POST['numero_de_factura'];
 
         $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
@@ -498,7 +499,7 @@ class Imprimir extends BaseController
                     $printer->setTextSize(1, 1);
                     $printer->text("**DISCRIMINACION TARIFAS DE IPO CONSUMO** \n");
                     $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->text("TARIFA  BASE/IMP        IMPO CONSUMO    TOTAL" . "\n");
+                    $printer->text("TARIFA   BASE/IMP        INC     TOTAL" . "\n");
 
                     /*  foreach ($tarifa_ico as $ico) {
                         //  $printer->text($iva['valor_iva']."%". "\n");
@@ -514,6 +515,8 @@ class Imprimir extends BaseController
                 } */
                     foreach ($tarifa_ico as $ico) {
                         //  $printer->text($iva['valor_iva']."%". "\n");
+
+
                         $total_compra = model('productoFacturaVentaModel')->total_compra($ico['valor_ico'], $id_factura);
 
                         $base_ico = model('productoFacturaVentaModel')->base_ico($ico['valor_ico'], $id_factura);
@@ -521,9 +524,9 @@ class Imprimir extends BaseController
                         if ($total_compra[0]['compra'] >= 100000) {
                             $printer->text($ico['valor_ico'] . "%      " .  "$" . number_format(($total_compra[0]['compra'] - ($base_ico[0]['base']) - $impuesto_saludable[0]['total_impuesto_saludable']), 0, ",", ".") . "        " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") . "       $" . number_format($total_compra[0]['compra'], 0, ",", ".") . "\n");
                         }
-                        /*  if ($total_compra[0]['compra'] < 100000) {
-                            $printer->text($ico['valor_ico'] . "%" . "        " . "$" . number_format($total_compra[0]['compra'] - $impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "    " . "$" . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "         " . "$" . number_format($base_ico[0]['base'], 0, ",", ".") ."$" . number_format($total_compra[0]['compra'], 0, ",", ".") . "\n");
-                        } */
+                        if ($total_compra[0]['compra'] < 100000) {
+                            $printer->text($ico['valor_ico'] . "%" . "       " . "$ " . number_format($total_compra[0]['compra'] - ($base_ico[0]['base']), 0, ",", ".") . "      " . "   $" . number_format($base_ico[0]['base'], 0, ",", ".") . "    $" . number_format($total_compra[0]['compra'], 0, ",", ".") . "\n");
+                        }
                     }
                 }
 
@@ -657,9 +660,11 @@ class Imprimir extends BaseController
     function imprimir_movimiento_caja()
     {
 
-        $id_apertura = $this->request->getPost('id_apertura'); 
 
-        //$id_apertura = 59;
+        $id_apertura = $this->request->getPost('id_apertura');
+
+
+        //$id_apertura = 1053;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -691,7 +696,8 @@ class Imprimir extends BaseController
         $cierre = model('cierreModel')->select('fecha')->where('idapertura', $id_apertura)->first();
 
         if (!empty($cierre)) {
-            $printer->text("Fecha cierre:    " . $cierre['fecha'] . " " . date("g:i a", strtotime($hora_apertura['hora'])) . "\n");
+            $hora = model('cierreModel')->select('hora')->where('idapertura', $id_apertura)->first();
+            $printer->text("Fecha cierre:    " . $cierre['fecha'] . " " . date("g:i a", strtotime($hora['hora'])) . "\n");
         }
         if (empty($cierre)) {
             $printer->text("Fecha cierre:    Sin cierre " . "\n");
@@ -725,7 +731,7 @@ class Imprimir extends BaseController
         $ingresos_transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $id_apertura)->findAll();
         $propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $id_apertura)->findAll();
 
-
+        //dd($efectivo);
         $printer->text("Ingresos efectivo:      " . "$ " . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
         $printer->text("Ingresos transacción: " . "  $ " . number_format($ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
         //$total_ingresos = model('facturaFormaPagoModel')->total_ingresos($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
@@ -860,11 +866,11 @@ class Imprimir extends BaseController
         $printer->text("Diferencia transaccion  " . "$ " . number_format($transaccion - $valor_cierre_transaccion_usuario, 0, ",", ".") . "\n");
 
 
-        $printer->text("Diferencia efectivo  " . "   $ " . number_format($efectivo - $cierre_usuario, 0, ",", ".") . "\n");
+        $printer->text("Diferencia efectivo  " . "   $ " . number_format(($efectivo + $valor_apertura['valor']) - $cierre_usuario, 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
-        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format(($efectivo - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
+        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($efectivo + $valor_apertura['valor']) - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -882,7 +888,9 @@ class Imprimir extends BaseController
     function lista_electronicas()
     {
 
-        $facturas_electronicas = model('facturaElectronicaModel')->findAll();
+        $facturas_electronicas = model('facturaElectronicaModel')->orderBy('id', 'desc')->findAll();
+
+    
 
         return view('duplicado_de_factura/factura_electronica', [
             'facturas' => $facturas_electronicas

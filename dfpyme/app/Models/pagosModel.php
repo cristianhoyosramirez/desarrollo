@@ -204,4 +204,28 @@ class pagosModel extends Model
  ");
         return $datos->getResultArray();
     }
+    function get_ventas_mesero($fecha, $id_mesero)
+    {
+
+        $datos = $this->db->query("
+        select sum(total_documento) as total_venta from pagos where fecha between '$fecha' and '$fecha' and id_mesero = $id_mesero
+ ");
+        return $datos->getResultArray();
+    }
+    function get_total_ventas_mesero($fecha, $id_mesero)
+    {
+
+        $datos = $this->db->query("
+        select count(id) as numero_ventas from pagos where fecha between '$fecha' and '$fecha' and id_mesero = $id_mesero
+ ");
+        return $datos->getResultArray();
+    }
+    function get_id_mesero($fecha)
+    {
+
+        $datos = $this->db->query("
+        select DISTINCT(id_mesero) from pagos where fecha between '$fecha' and '$fecha'
+ ");
+        return $datos->getResultArray();
+    }
 }

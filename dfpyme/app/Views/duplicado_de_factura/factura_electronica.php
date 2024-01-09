@@ -39,9 +39,9 @@ DUPLICADO DE FACTURA
             <div class="card-body">
                 <div class="container">
 
-                    <div class="table-responsive scrolling-table">
+               
                         <input type="hidden" value="<?php echo base_url() ?>" id="url">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover" id="facturas_electronicas">
                             <thead class="table-dark">
                                 <tr>
                                     <td>Número </th>
@@ -56,6 +56,7 @@ DUPLICADO DE FACTURA
                                 </tr>
                             </thead>
                             <tbody>
+                               
                                 <?php foreach ($facturas as $detalle) {
                                     $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $detalle['nit_cliente'])->first(); ?>
                                     <tr>
@@ -96,7 +97,7 @@ DUPLICADO DE FACTURA
                                 <!-- Repetir filas según sea necesario -->
                             </tbody>
                         </table>
-                    </div>
+                    
                 </div>
 
             </div>
@@ -122,6 +123,8 @@ DUPLICADO DE FACTURA
         </div>
     </div>
 </div>
+
+
 
 
 <script>

@@ -382,7 +382,7 @@ class reporteDeVentasController extends BaseController
 
         $aperturas = model('aperturaModel')->findAll();
 
-        
+    
    
         if (!empty($aperturas)) {
 
@@ -392,7 +392,7 @@ class reporteDeVentasController extends BaseController
                 $estado = "ABIERTA";
                 $cierre = 'Sin cierre';
               
-
+     
 
                 $ingresos = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 $ingresos_efectivo = $ingresos[0]['efectivo'];
@@ -407,7 +407,7 @@ class reporteDeVentasController extends BaseController
               
                 $valor_cierre = 0;
                 $devolucion_venta = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $ultimo_apertura['id'])->findAll();
-             
+                
                 if (empty($devolucion_venta)) {
                     $devoluciones = 0;
                 } else if (!empty($devolucion_venta)) {
@@ -416,7 +416,7 @@ class reporteDeVentasController extends BaseController
                 //$total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
                 $total_retiros = model('retiroFormaPagoModel')->selectSum('valor')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 
-            
+          
                 if (empty($total_retiros[0]['valor'])) {
                     $retiros = 0;
                 }
@@ -427,12 +427,12 @@ class reporteDeVentasController extends BaseController
                 $efectivo_cierre = 0;
                 $transaccion_cierre = 0;
                 $saldo = 0;
-
+             
                 //$diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
                 $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'] ) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
             }
             if (!empty($tiene_cierre)) {
-
+           
                 $estado = 'CERRADA';
                 $fecha_cierre = model('cierreModel')->select('fecha')->where('idapertura', $ultimo_id)->first();
                 $cierre = $fecha_cierre['fecha'];
@@ -454,7 +454,7 @@ class reporteDeVentasController extends BaseController
                 $valor_cierre = 0;
                 $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
 
-
+                
                 if (empty($devolucion_venta)) {
                     $devoluciones = 0;
                 } else if (!empty($devolucion_venta)) {

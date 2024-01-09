@@ -84,33 +84,33 @@ class cajaController extends BaseController
         ];
         $apertura_registro = model('aperturaRegistroModel')->insert($apertura_registro);
 
-        $exite_fecha = model('consecutivoInformeModel')->select('fecha')->where('fecha', $_REQUEST['fecha_apertura_caja'])->first();
+        // $exite_fecha = model('consecutivoInformeModel')->select('fecha')->where('fecha', $_REQUEST['fecha_apertura_caja'])->first();
 
 
-        if (empty($exite_fecha['fecha'])) {
+        //if (empty($exite_fecha['fecha'])) {
 
-            $id = model('consecutivoInformeModel')->selectMax('id')->find();
+        //$id = model('consecutivoInformeModel')->selectMax('id')->find();
 
-            $numero = model('consecutivoInformeModel')->select('numero')->where('id', $id[0]['id'])->first();
+        //   $numero = model('consecutivoInformeModel')->select('numero')->where('id', $id[0]['id'])->first();
 
-            if(!empty($numero)){
-                
-                $consecutivo=$numero['numero'] + 1;
-            }
-            if(empty($numero)){
-                $temp_consecutivo=model('cajaModel')->select('consecutivo')->first();
-                $consecutivo=$temp_consecutivo['consecutivo'] + 1;
-            }
+        /*    if (!empty($numero)) {
 
-            $data = [
-                'fecha' => $fecha_apertura,
-                'idcaja' => 1,
-                'numero' => $consecutivo
-
-            ];
-
-            $insert = model('consecutivoInformeModel')->insert($data);
+            $consecutivo = $numero['numero'] + 1;
         }
+        if (empty($numero)) {
+            $temp_consecutivo = model('cajaModel')->select('consecutivo')->first();
+            $consecutivo = $temp_consecutivo['consecutivo'] + 1;
+        } */
+
+        $data = [
+            'fecha' => $fecha_apertura,
+            'idcaja' => 1,
+            'id_apertura' => $id_apertura
+
+        ];
+
+        $insert = model('consecutivoInformeModel')->insert($data);
+        //}
 
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
@@ -528,8 +528,9 @@ class cajaController extends BaseController
             $printer->text("(-) Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
             $printer->text("(-) Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
-            $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
-            $tot_en_caja = $temp - $total_retiros;
+           # $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
+           // $tot_en_caja = $temp - $total_retiros;
+            $tot_en_caja =  $total_retiros;
             $total_en_caja = $tot_en_caja - $total_devoluciones;
 
             $printer->text("(-) Efectivo en caja: " . number_format($total_en_caja, 0, ",", ".") . "\n");
@@ -1010,7 +1011,7 @@ class cajaController extends BaseController
 
 
         $id_cierre = $this->request->getPost('id_cierre');
-        //$id_cierre = 69;
+        //$id_cierre = 4952;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -1178,7 +1179,7 @@ class cajaController extends BaseController
         $printer->text("-----------------------------------------------\n");
         $printer->text("Cierre de caja \n");
         $printer->text("-----------------------------------------------\n");
-        $printer->text("Efectivo en caja   " . "      $ " . number_format($total_en_caja, 0, ",", ".") . " \n");
+        $printer->text("Efectivo en caja    \n");
         //$valor_cierre_efectivo_usuario = model('cierreFormaPagoModel')->valor_cierre_efectivo_usuario($id_cierre); //Este valor es que el digita el usuario 
 
 
@@ -1186,9 +1187,9 @@ class cajaController extends BaseController
 
         //dd($valor_cierre_efectivo_usuario);
 
-        $id_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura['idapertura'])->first();
+       // $id_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura['idapertura'])->first();
 
-        $valor_cierre_efectivo_usuario = model('cierreFormaPagoModel')->cierre_efectivo($id_cierre['id']);
+        $valor_cierre_efectivo_usuario = model('cierreFormaPagoModel')->cierre_efectivo($id_cierre);
 
 
         if (empty($valor_cierre_efectivo_usuario)) {
@@ -1197,12 +1198,15 @@ class cajaController extends BaseController
         if (!empty($valor_cierre_efectivo_usuario)) {
             $cierre_usuario =  $valor_cierre_efectivo_usuario[0]['valor'];
         }
-
+        
         $printer->text("Cierre efectivo:  " . "       $ " . number_format($cierre_usuario, 0, ",", ".") . "\n");
-        $printer->text("Diferencia efectivo   " . "   $ " . number_format($cierre_usuario - $total_en_caja, 0, ",", ".")   . "\n");
+        //$printer->text("Diferencia efectivo   " . "   $ " . number_format($cierre_usuario - $total_en_caja, 0, ",", ".")   . "\n");
+        $printer->text("Diferencia efectivo  " . "    $ " . number_format(($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor']) - $cierre_usuario, 0, ",", ".") . "\n");
         $printer->text("\n");
         //$ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
-        $valor_cierre_transaccion_usuario = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre['id']);
+        $valor_cierre_transaccion_usuario = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre);
+
+       
 
         if (empty($ingresos_transaccion)) {
             $transaccion = 0;
@@ -1211,16 +1215,21 @@ class cajaController extends BaseController
             $transaccion = $ingresos_transaccion[0]['transferencia'];
         }
 
-        $printer->text("Transacciones: " . "          $ " . number_format($transaccion, 0, ",", ".") . "\n");
-        //$valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre);
+        $printer->text("Transacciones: \n");
+        $valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre);
+        
         if (empty($valor_cierre_transaccion_usuari)) {
             $valor_cierre_transaccion_usuario = 0;
         }
         if (!empty($valor_cierre_transaccion_usuari)) {
             $valor_cierre_transaccion_usuario = $valor_cierre_transaccion_usuari[0]['valor'];
         }
-        $printer->text("Cierre transacciones  " . "   $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n");
-        $printer->text("Diferencia transaccion  " . " $ " . number_format($valor_cierre_transaccion_usuario - $transaccion, 0, ",", ".") . "\n");
+        $printer->text("Cierre transacciones  " . "   $ " .  number_format($transaccion, 0, ",", ".") .  "\n");
+        
+        //$printer->text("Diferencia transaccion  " . " $ " . number_format($valor_cierre_transaccion_usuario - $transaccion, 0, ",", ".") . "\n");
+
+
+        $printer->text("Diferencia transaccion  " . "$ " . number_format($transaccion - $valor_cierre_transaccion_usuario, 0, ",", ".") . "\n");
 
         $printer->text("\n");
 

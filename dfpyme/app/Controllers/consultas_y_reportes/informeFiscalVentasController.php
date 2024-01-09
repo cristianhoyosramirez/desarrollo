@@ -554,11 +554,16 @@ class informeFiscalVentasController extends BaseController
         $total_registros = model('facturaVentaModel')->total_registros($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre); */
 
         
-        $registro_inicial = model('pagosModel')->get_min_id($id_apertura);
-        $registro_final = model('pagosModel')->get_max_id($id_apertura);
+        //$registro_inicial = model('pagosModel')->get_min_id($id_apertura);
+        //$registro_final = model('pagosModel')->get_max_id($id_apertura);
+
+        $id_inicial = model('pagosModel')->get_min_id($id_apertura);
+        $id_final = model('pagosModel')->get_max_id($id_apertura);
+
         $total_registros = model('pagosModel')->get_total_registros($id_apertura);
 
-        
+        $registro_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
+        $registro_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
 
         /**
          * Discriminación de las bases tributarias tanto iva como impuesto al consumo 
@@ -570,19 +575,30 @@ class informeFiscalVentasController extends BaseController
         
         if (!empty($iva)) {
             foreach ($iva as $detalle) {
-                /*   $datos_iva = model('productoFacturaVentaModel')->datos_iva($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_iva']);
-                $data_iva['tarifa_iva'] =  $datos_iva[0]['tarifa_iva'];
-                $data_iva['base'] = $datos_iva[0]['base'];
-                $data_iva['total_iva'] = $datos_iva[0]['total_iva'];
-                $data_iva['valor_venta'] = $datos_iva[0]['total']; */
-                $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
+               
+               /*  $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
+                $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
+
                 $total = model('kardexModel')->selectSum('total')->where('id_apertura', $id_apertura)->find();
                 $total = model('kardexModel')->selectSum('total')->where('id_estado', 1)->find();
                 $data_iva['tarifa_iva'] =  $detalle['valor_iva'];
                 $data_iva['base'] = $total[0]['total'] - $iva[0]['iva'];
                 $data_iva['total_iva'] = $iva[0]['iva'];
+                $data_iva['valor_venta'] = $total[0]['total']; */
+                
+                $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
+                $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
+                $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
+
+                $total = model('kardexModel')->get_iva_fiscal($id_apertura, $detalle['valor_iva']);
+
+                $data_iva['tarifa_iva'] =  $detalle['valor_iva'];
+                $data_iva['base'] = $total[0]['total'] - $iva[0]['iva'];
+                $data_iva['total_iva'] = $iva[0]['iva'];
                 $data_iva['valor_venta'] = $total[0]['total'];
+
+
                 array_push($array_iva, $data_iva);
             }
         } else {
@@ -703,7 +719,7 @@ class informeFiscalVentasController extends BaseController
         $consecutivo_caja = model('cajaModel')->select('consecutivo')->where('numerocaja', 1)->first();
         $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
         $existe_fecha_informe = model('consecutivoInformeModel')->select('fecha')->where('fecha', $fecha_apertura['fecha'])->first();
-        $consecutivo_fiscal = model('consecutivoInformeModel')->select('numero')->where('fecha', $fecha_apertura['fecha'])->first();
+        $consecutivo_fiscal = model('consecutivoInformeModel')->select('numero')->where('id_apertura', $id_apertura)->first();
         $dompdf->loadHtml(view('consultas_y_reportes/informe_fiscal_ventas_pdf', [
             "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
             "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
@@ -712,10 +728,10 @@ class informeFiscalVentasController extends BaseController
             "direccion" => $datos_empresa[0]['direccionempresa'],
             "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
             "nombre_departamento" => $nombre_departamento['nombredepartamento'],
-            // "registro_inicial" => $registro_inicial[0]['regitro_inicial'],
-            "registro_inicial" => $registro_inicial[0]['id'],
-            //"registro_final" => $registro_final[0]['regitro_final'],
-            "registro_final" => $registro_final[0]['id'],
+            "registro_inicial" => $registro_inicial['documento'],
+            //"registro_inicial" => $registro_inicial[0]['id'],
+            "registro_final" => $registro_final['documento'],
+            //"registro_final" => $registro_final[0]['id'],
             //"total_registros" => $total_registros[0]['total_registros'],
             "total_registros" => $total_registros[0]['total_registros'],
             "iva" => $array_iva,

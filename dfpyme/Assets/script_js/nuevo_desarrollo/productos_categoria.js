@@ -25,6 +25,7 @@ function productos_categoria(id_categoria) {
                
 
                 $('#productos_categoria').html(resultado.productos)
+                $('#sub_categorias').html(resultado.sub_categorias)
                 $('#lista_categorias').html(resultado.lista_categoria)
             }
         },

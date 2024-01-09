@@ -34,9 +34,9 @@ class Configuracion extends BaseController
 
     function propina()
     {
-        $porcentaje=model('configuracionPedidoModel')->select('valor_defecto_propina')->first();
-        return view('configuracion/propina',[
-            'porcetaje_propina'=>$porcentaje['valor_defecto_propina']
+        $porcentaje = model('configuracionPedidoModel')->select('valor_defecto_propina')->first();
+        return view('configuracion/propina', [
+            'porcetaje_propina' => $porcentaje['valor_defecto_propina']
         ]);
     }
 
@@ -92,5 +92,99 @@ class Configuracion extends BaseController
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
         return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Asignación de impresora correcto  ');
+    }
+
+    function sub_categoria()
+    {
+        $subcategoria = model('configuracionPedidoModel')->select('sub_categoria')->first();
+        return view('configuracion/subcategoria', [
+            'sub_categoria' => $subcategoria['sub_categoria']
+        ]);
+    }
+
+    /*   function actualizar_sub_categoria()
+    {
+
+
+        $valor = $this->request->getPost('valor');
+
+        $model = model('configuracionPedidoModel');
+        $configuracion = $model->set('sub_categoria', $valor);
+        $configuracion = $model->update();
+
+        if ($configuracion) {
+            $returnData = array(
+                "resultado" => 1,
+
+            );
+            echo  json_encode($returnData);
+        }
+    } */
+
+    function crear_sub_categoria()
+    {
+        $sub_categorias = model('subCategoriaModel')->find();
+        return view('configuracion/sub_categoria', [
+            'sub_categorias' => $sub_categorias
+        ]);
+    }
+
+    function editar_sub_categoria()
+    {
+        $id_categoria = $this->request->getPost('valor');
+
+        $subcategoria = model('subCategoriaModel')->where('id', $id_categoria)->first();
+
+        $returnData = array(
+            "resultado" => 1,
+            "subcategoria" => view('configuracion/editar_sub_categoria', [
+                'subcategoria' => $subcategoria
+            ])
+
+        );
+        echo  json_encode($returnData);
+    }
+
+
+    function actualizar_sub_categoria()
+    {
+        $id_categoria = $this->request->getPost('valor');
+        $nombre = $this->request->getPost('nombre');
+
+        $model = model('subCategoriaModel');
+        $actualizar = $model->set('nombre', $nombre);
+        $actualizar = $model->where('id', $id_categoria);
+        $actualizar = $model->update();
+
+
+        $subcategoria = model('subCategoriaModel')->find();
+
+        $returnData = array(
+            "resultado" => 1,
+            "subcategorias" => view('configuracion/lista_sub_categorias', [
+                'sub_categorias' => $subcategoria
+            ])
+
+        );
+        echo  json_encode($returnData);
+    }
+    function eliminar_sub_categoria()
+    {
+        $id_categoria = $this->request->getPost('valor');
+
+        $model = model('subCategoriaModel');
+        $actualizar = $model->where('id', $id_categoria);
+        $actualizar = $model->delete();
+
+        $subcategoria = model('subCategoriaModel')->find();
+
+        $returnData = array(
+            "resultado" => 1,
+            "subcategorias" => view('configuracion/lista_sub_categorias', [
+                'sub_categorias' => $subcategoria
+            ])
+
+        );
+        echo  json_encode($returnData);
     }
 }

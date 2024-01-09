@@ -19,6 +19,7 @@ $("#producto").autocomplete({
         let url = document.getElementById("url").value;
         let id_mesa = document.getElementById("id_mesa_pedido").value;
         let id_usuario = document.getElementById("id_usuario").value;
+        let mesero = document.getElementById("mesero").value;
         let id_producto = ui.item.id_producto;
 
         if (id_mesa == "") {
@@ -31,7 +32,8 @@ $("#producto").autocomplete({
                 data: {
                     id_producto,
                     id_mesa,
-                    id_usuario
+                    id_usuario,
+                    mesero
                 },
                 url: url + "/" + "pedidos/agregar_producto",
                 type: "POST",

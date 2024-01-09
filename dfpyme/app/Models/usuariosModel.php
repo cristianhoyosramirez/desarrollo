@@ -57,4 +57,17 @@ class usuariosModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function get_usuarios()
+    {
+        $datos = $this->db->query("
+        SELECT
+            idusuario_sistema,
+            nombresusuario_sistema
+        FROM
+            usuario_sistema
+        WHERE
+            idtipo = 2 AND estadousuario_sistema = 'true'
+        ");
+        return $datos->getResultArray();
+    }
 }

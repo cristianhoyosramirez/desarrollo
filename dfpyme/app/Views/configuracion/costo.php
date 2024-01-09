@@ -78,11 +78,11 @@ Reporte de costos
                     <p class="text-red" id="error_fecha"></p>
                 </div>
                 <div class="col-md-2 text-end"><br>
-                    <!--  <form action="<?= base_url('reportes/exportar_reporte_costo') ?>" method="POST">
+                    <form action="<?= base_url('reportes/exportar_reporte_costo_excel') ?>" method="POST">
                         <input type="hidden" id="inicial" name="inicial">
                         <input type="hidden" id="final" name="final">
-                        <button class="btn btn-outline-danger" type="submit" title="Exportar a PDF" data-bs-toggle="tooltip">PDF</button>
-                    </form> -->
+                        <button class="btn btn-outline-success" type="submit" title="Exportar a Excel" data-bs-toggle="tooltip">Excel </button>
+                    </form> 
                 </div>
                 <div class="col-md-1 text-start"><br>
 

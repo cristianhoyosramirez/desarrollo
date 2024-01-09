@@ -1150,8 +1150,9 @@ class cajaDiariaController extends BaseController
     function reporte_de_ventas()
     {
 
-        //$id_apertura = 36;
-        $id_apertura = $this->request->getPost('id_apertura');
+        //$id_apertura = 56;
+        $id_apertura = $this->request->getPost('id_apertura'); 
+
 
 
         $fecha_cierre = "";
@@ -1178,6 +1179,7 @@ class cajaDiariaController extends BaseController
 
 
         $productos_distinct = model('kardexModel')->get_productos($id_apertura);
+
         $categorias = model('kardexModel')->get_categorias($id_apertura);
 
 
@@ -1203,7 +1205,7 @@ class cajaDiariaController extends BaseController
 
         $devoluciones = model('detalleDevolucionVentaModel')->where('id_apertura', $id_apertura)->find();
 
-
+        
 
         $returnData = [
             'resultado' => 1,
@@ -1673,11 +1675,7 @@ class cajaDiariaController extends BaseController
         $pedidos_borrados = model('eliminacionPedidosModel')->where('fecha_eliminacion', $fecha_inicial)->findAll();
         $pedidos_borrados = model('eliminacionPedidosModel')->where('fecha_eliminacion', $fecha_final)->findAll();
 
-        /*  foreach($pedidos_borrados as $detalle){
-        echo $detalle['numero_pedido']."</br>";
-        echo $detalle['valor_pedido']."</br>";
-        echo $detalle['usuario_eliminacion']."</br>";
-       } */
+
 
         return view('consultas_y_reportes/pedidos_borrados', [
             'pedidos_borrados' => $pedidos_borrados
@@ -1690,6 +1688,7 @@ class cajaDiariaController extends BaseController
 
 
         $id_apertura = $this->request->getPost('id_apertura');
+        //$id_apertura = 828;
 
         //$id_apertura = 41;
         $fecha_y_hora_cierre = "";
@@ -1722,12 +1721,15 @@ class cajaDiariaController extends BaseController
          * Registro final es la primer factura que se realiza de esa aperturta  
          */
 
-        //$registro_inicial = model('facturaVentaModel')->registro_inicial($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-        $registro_inicial = model('pagosModel')->get_min_id($id_apertura);
-        //$registro_final = model('facturaVentaModel')->registro_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
-        $registro_final = model('pagosModel')->get_max_id($id_apertura);
-        //$total_registros = model('facturaVentaModel')->total_registros($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
+
+        // $registro_inicial = model('pagosModel')->get_min_id($id_apertura);
+        $id_inicial = model('pagosModel')->get_min_id($id_apertura);
+        // $registro_final = model('pagosModel')->get_max_id($id_apertura);
+        $id_final = model('pagosModel')->get_max_id($id_apertura);
         $total_registros = model('pagosModel')->get_total_registros($id_apertura);
+
+        $registro_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
+        $registro_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
 
         /**
          * Discriminación de las bases tributarias tanto iva como impuesto al consumo 
@@ -1738,29 +1740,19 @@ class cajaDiariaController extends BaseController
 
         if (!empty($iva)) {
             foreach ($iva as $detalle) {
-                /* $datos_iva = model('productoFacturaVentaModel')->datos_iva($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_iva']);
-                $data_iva['tarifa_iva'] =  $datos_iva[0]['tarifa_iva'];
-                $data_iva['base'] = $datos_iva[0]['base'];
-                $data_iva['total_iva'] = $datos_iva[0]['total_iva'];
-                $data_iva['valor_venta'] = $datos_iva[0]['total']; */
+
                 $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
-                $total = model('kardexModel')->selectSum('total')->where('id_apertura', $id_apertura)->find();
-                $total = model('kardexModel')->selectSum('total')->where('id_estado', 1)->find();
+                $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
+
+                $total = model('kardexModel')->get_iva_fiscal($id_apertura, $detalle['valor_iva']);
+
                 $data_iva['tarifa_iva'] =  $detalle['valor_iva'];
                 $data_iva['base'] = $total[0]['total'] - $iva[0]['iva'];
                 $data_iva['total_iva'] = $iva[0]['iva'];
                 $data_iva['valor_venta'] = $total[0]['total'];
                 array_push($array_iva, $data_iva);
             }
-            /* foreach ($iva as $detalle) {
-                $datos_iva = model('productoFacturaVentaModel')->datos_iva($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_iva']);
-                $data_iva['tarifa_iva'] =  $datos_iva[0]['tarifa_iva'];
-                $data_iva['base'] = $datos_iva[0]['base'];
-                $data_iva['total_iva'] = $datos_iva[0]['total_iva'];
-                $data_iva['valor_venta'] = $datos_iva[0]['total'];
-                array_push($array_iva, $data_iva);
-            } */
         } else {
             $data_iva['tarifa_iva'] =  0;
             $data_iva['base'] = 0;
@@ -1769,28 +1761,18 @@ class cajaDiariaController extends BaseController
             array_push($array_iva, $data_iva);
         }
 
-        //$ico = model('productoFacturaVentaModel')->fiscal_ico($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
         $ico = model('productoFacturaVentaModel')->fiscal_ico($id_apertura);
         $array_ico = array();
 
         if (!empty($ico)) {
-            /* foreach ($ico as $detalle) {
-                $valor_ico = ($detalle['valor_ico'] / 100) + 1;
-                $datos_ico = model('productoFacturaVentaModel')->datos_ico($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre, $detalle['valor_ico']);
 
-                $data_ico['tarifa_ico'] =  $datos_ico[0]['tarifa_ico'];
-                $data_ico['base'] = $datos_ico[0]['base'] / $valor_ico;
-                $data_ico['total_ico'] = $datos_ico[0]['total_ico'];
-                $data_ico['valor_venta'] = $datos_ico[0]['total'];
-                array_push($array_ico, $data_ico);
-            } */
 
             foreach ($ico as $detalle) {
                 $inc = model('kardexModel')->get_inc($id_apertura);
-               
+
                 $total = model('kardexModel')->total_inc($id_apertura);
-               
-                $data_ico['tarifa_ico'] =  $detalle['valor_ico'];
+
+                $data_ico['tarifa_ico'] =  $detalle['valor_ico'];          //ok
                 $data_ico['base'] = $total[0]['total'] - $inc[0]['total'];
                 $data_ico['total_ico'] = $inc[0]['total'];
                 $data_ico['valor_venta'] = $total[0]['total'];
@@ -1804,7 +1786,6 @@ class cajaDiariaController extends BaseController
             array_push($array_ico, $data_ico);
         }
 
-    
 
         /**
          * Total de ventas crédito y de contado 
@@ -1813,7 +1794,7 @@ class cajaDiariaController extends BaseController
         //$vantas_contado = model('facturaVentaModel')->venta_contado($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
         // $vantas_contado = model('productoFacturaVentaModel')->get_total_venta($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
         $vantas_contado = model('kardexModel')->ventas_contado($id_apertura);
-        
+
 
 
 
@@ -1886,89 +1867,40 @@ class cajaDiariaController extends BaseController
             array_push($array_devoluciones_ico, $data_devo_ico);
         }
 
-        $consecutivo_caja = model('cajaModel')->select('consecutivo')->where('numerocaja', 1)->first();
+        //$consecutivo_caja = model('cajaModel')->select('consecutivo')->where('numerocaja', 1)->first();
         $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
-        $existe_fecha_informe = model('consecutivoInformeModel')->select('fecha')->where('fecha', $fecha_apertura['fecha'])->first();
-        if (empty($existe_fecha_informe['fecha'])) { // la fecha no esta en la tabla consecutivo_informe entonces inserto los datos e incremento 
-            //  El consecutivo de la caja 
-            $consecutivo_informe = [
-                'fecha' => $fecha_apertura['fecha'],
-                'idcaja' => 1,
-                'numero' => $consecutivo_caja['consecutivo']
-            ];
-            $insertar = model('consecutivoInformeModel')->insert($consecutivo_informe);
-            if ($insertar) {
-                $consecutivo_caja = [
-                    'consecutivo' => $consecutivo_caja['consecutivo'] + 1
-                ];
-                $model = model('cajaModel');
-                $actualizar = $model->set($consecutivo_caja);
-                $actualizar = $model->where('numerocaja', 1);
-                $actualizar = $model->update();
-            }
-            $consecutivo_fiscal = model('consecutivoInformeModel')->select('numero')->where('fecha', $fecha_apertura['fecha'])->first();
-            $returnData = array(
-                "resultado" => 1, //Falta plata 
-                "datos" => view('consultas_y_reportes/informe_fiscal_ventas', [
-                    "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
-                    "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
-                    "nit" => $datos_empresa[0]['nitempresa'],
-                    "nombre_regimen" => $regimen['nombreregimen'],
-                    "direccion" => $datos_empresa[0]['direccionempresa'],
-                    "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
-                    "nombre_departamento" => $nombre_departamento['nombredepartamento'],
-                    //"registro_inicial" => $registro_inicial[0]['regitro_inicial'],
-                    "registro_inicial" => $registro_inicial['id'],
-                    //"registro_final" => $registro_final[0]['regitro_final'],
-                    "registro_final" => $registro_final['id'],
+        //$existe_fecha_informe = model('consecutivoInformeModel')->select('fecha')->where('fecha', $fecha_apertura['fecha'])->first();
 
-                    //"total_registros" => $total_registros[0]['total_registros'],
-                    "total_registros" => $total_registros[0]['id'],
-                    "iva" => $array_iva,
-                    "ico" => $array_ico,
-                    "vantas_contado" => $vantas_contado[0]['total_ventas_contado'],
-                    "iva_devolucion" => $array_devoluciones_iva,
-                    "ico_devolucion" => $array_devoluciones_ico,
-                    //"consecutivo" => $consecutivo_caja['consecutivo'],
-                    "consecutivo" => $consecutivo_fiscal['numero'],
-                    "fecha_apertura" => $fecha_apertura['fecha'],
-                    "id_apertura" => $id_apertura
+        $consecutivo_fiscal = model('consecutivoInformeModel')->select('numero')->where('id_apertura', $id_apertura)->first();
 
-                ])
-            );
-            echo  json_encode($returnData);
-        } else if (!empty($existe_fecha_informe['fecha'])) {
-            $consecutivo_fiscal = model('consecutivoInformeModel')->select('numero')->where('fecha', $fecha_apertura['fecha'])->first();
+        $returnData = array(
+            "resultado" => 1, //Falta plata
+            "datos" => view('consultas_y_reportes/informe_fiscal_ventas', [
+                "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
+                "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
+                "nit" => $datos_empresa[0]['nitempresa'],
+                "nombre_regimen" => $regimen['nombreregimen'],
+                "direccion" => $datos_empresa[0]['direccionempresa'],
+                "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
+                "nombre_departamento" => $nombre_departamento['nombredepartamento'],
 
-            $returnData = array(
-                "resultado" => 1, //Falta plata
-                "datos" => view('consultas_y_reportes/informe_fiscal_ventas', [
-                    "nombre_comercial" => $datos_empresa[0]['nombrecomercialempresa'],
-                    "nombre_juridico" => $datos_empresa[0]['nombrejuridicoempresa'],
-                    "nit" => $datos_empresa[0]['nitempresa'],
-                    "nombre_regimen" => $regimen['nombreregimen'],
-                    "direccion" => $datos_empresa[0]['direccionempresa'],
-                    "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
-                    "nombre_departamento" => $nombre_departamento['nombredepartamento'],
-                    //"registro_inicial" => $registro_inicial[0]['regitro_inicial'],
-                    "registro_inicial" => $registro_inicial[0]['id'],
-                    //"registro_final" => $registro_final[0]['regitro_final'],
-                    "registro_final" => $registro_final[0]['id'],
-                    //"total_registros" => $total_registros[0]['total_registros'],
-                    "total_registros" => $total_registros[0]['total_registros'],
-                    "iva" => $array_iva,
-                    "ico" => $array_ico,
-                    "vantas_contado" => $vantas_contado[0]['total'],
-                    //"vantas_contado" => $vantas_contado[0]['total_ventas_contado'],
-                    "iva_devolucion" => $array_devoluciones_iva,
-                    "ico_devolucion" => $array_devoluciones_ico,
-                    //"consecutivo" => $consecutivo_caja['consecutivo'],
-                    "consecutivo" => $consecutivo_fiscal['numero'],
-                    "fecha_apertura" => $fecha_apertura['fecha'],
-                    "id_apertura" => $id_apertura
-                ])
-            );
-            echo  json_encode($returnData);
-        }
+                //"registro_inicial" => $registro_inicial[0]['id'],
+                "registro_inicial" => $registro_inicial['documento'],
+                // "registro_final" => $registro_final[0]['id'],
+                "registro_final" => $registro_final['documento'],
+                "total_registros" => $total_registros[0]['total_registros'],
+                "iva" => $array_iva,
+                "ico" => $array_ico,
+                "vantas_contado" => $vantas_contado[0]['total'],
+
+                "iva_devolucion" => $array_devoluciones_iva,
+                "ico_devolucion" => $array_devoluciones_ico,
+
+                "consecutivo" => $consecutivo_fiscal['numero'],
+                "fecha_apertura" => $fecha_apertura['fecha'],
+                "id_apertura" => $id_apertura
+            ])
+        );
+        echo  json_encode($returnData);
     }
 }

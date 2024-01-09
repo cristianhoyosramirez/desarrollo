@@ -15,9 +15,8 @@
          /* Cambia el color de fondo en hover */
      }
  </style>
-
  <?php foreach ($productos as $valor) : ?>
-
+    
      <div class="cursor-pointer mb-1 elemento " onclick="agregar_al_pedido(<?php echo $valor['codigointernoproducto'] ?>)">
          <div class="row">
            <!--   <div class="col-auto">

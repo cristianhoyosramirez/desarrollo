@@ -1213,4 +1213,16 @@ class Documento extends BaseController
         );
         echo  json_encode($returnData);
     }
+
+    function ventas_de_mesero()
+    {
+        //$ventas=model('pagosModel')->get_ventas_mesero(date('Y-m-d'));
+        $id_meseros=model('pagosModel')->get_id_mesero(date('Y-m-d'));
+        $meseros=model('usuariosModel')->get_usuarios();
+        
+        return view('consultas/ventas_de_mesero',[
+            'id_meseros'=>$id_meseros,
+            'meseros'=>$meseros
+        ]);
+    }
 }

@@ -37,37 +37,104 @@ class Mesas extends BaseController
 
     public function productos_categoria()
     {
-        //$id_categoria = 2;
+
+        $subcategorias = model('configuracionPedidoModel')->select('sub_categoria')->first();
         $id_categoria = $_POST['id_categoria'];
+        //$id_categoria = 8;
         $tipo_pedido = $_POST['tipo_pedido'];
-
-
-
-        $productos = model('productoModel')->tipoInventario($id_categoria);
-
+        //$tipo_pedido = "computador";
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
-        if ($tipo_pedido == "movil") {
-            $items = view('pedido/productos', [
-                'productos' => $productos,
-            ]);
-        }
-        if ($tipo_pedido == "computador") {
-            $items = view('pedidos/productos_categoria', [
-                'productos' => $productos,
-            ]);
-        }
 
+        /*  if ($subcategorias['sub_categoria'] == 'f') {
+            //$id_categoria = 2;
+            $productos = model('productoModel')->tipoInventario($id_categoria);
 
-        $returnData = array(
-            "resultado" => 1,
-            "productos" => $items,
-            "lista_categoria" => view('pedidos/lista_categoria', [
-                'categorias' => $categorias,
-                'id_categoria' => $id_categoria
-            ]),
-        );
-        echo  json_encode($returnData);
+            if ($tipo_pedido == "movil") {
+                $items = view('pedido/productos', [
+                    'productos' => $productos,
+                ]);
+            }
+            if ($tipo_pedido == "computador") {
+                $items = view('pedidos/productos_categoria', [
+                    'productos' => $productos,
+                ]);
+            }
+
+            $returnData = array(
+                "resultado" => 1,
+                "productos" => $items,
+                "lista_categoria" => view('pedidos/lista_categoria', [
+                    'categorias' => $categorias,
+                    'id_categoria' => $id_categoria
+                ]),
+            );
+            echo  json_encode($returnData);
+        } */
+        // if ($subcategorias['sub_categoria'] == 't') {
+
+        $id_subcategorias = model('productoCategoriaModel')->id_categorias($id_categoria);
+
+        if (!empty($id_subcategorias)) {
+
+            if ($tipo_pedido == "computador") {
+                $items = view('pedidos/productos_subcategoria', [
+                    'id_sub_categoria' => $id_subcategorias
+
+                ]);
+                $returnData = array(
+                    "resultado" => 1,
+                    "productos" => $items,
+                    /*  "lista_categoria" => view('pedidos/lista_categoria', [
+                        //'categorias' => $categorias,
+                        'id_categoria' => $id_categoria
+                    ]), */
+                );
+                echo  json_encode($returnData);
+            }
+
+            if ($tipo_pedido == "movil") {
+                $items = view('pedidos/productos_subcategoria_movil', [
+                    'id_sub_categoria' => $id_subcategorias
+
+                ]);
+                $returnData = array(
+                    "resultado" => 1,
+                    "productos" => $items,
+                    "lista_categoria" => view('pedidos/lista_categoria', [
+                        'categorias' => $categorias,
+                        'id_categoria' => $id_categoria
+                    ]),
+                );
+                echo  json_encode($returnData);
+            }
+        }
+        if (empty($id_subcategorias)) {
+            $productos = model('productoModel')->tipoInventario($id_categoria);
+
+            if ($tipo_pedido == "movil") {
+                $items = view('pedido/productos', [
+                    'productos' => $productos,
+                ]);
+            }
+            if ($tipo_pedido == "computador") {
+
+                $items = view('pedidos/productos_categoria', [
+                    'productos' => $productos,
+                ]);
+
+                $returnData = array(
+                    "resultado" => 1,
+                    "productos" => $items,
+                    "lista_categoria" => view('pedidos/lista_categoria', [
+                        'categorias' => $categorias,
+                        'id_categoria' => $id_categoria
+                    ]),
+                );
+                echo  json_encode($returnData);
+            }
+        }
+        // }
     }
 
 
@@ -523,7 +590,7 @@ class Mesas extends BaseController
                     $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
                     $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['numero_de_pedido'])->first();
                     $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido['numero_de_pedido'])->first();
-                    
+
                     $producto = [
                         'codigointernoproducto' => $item['codigointernoproducto'],
                         'cantidad' => $cantidad_eliminar,
@@ -532,10 +599,10 @@ class Mesas extends BaseController
                         'usuario_eliminacion' => $id_usuario,
                         'pedido' => $item['numero_de_pedido']
                     ];
-    
+
                     $insert = model('productosBorradosModel')->insert($producto);
 
-                    
+
                     $productos_del_pedido = view('pedidos/productos_pedido', [
                         "productos" => $productos_pedido,
                         "pedido" => $numero_pedido['numero_de_pedido']
@@ -655,7 +722,7 @@ class Mesas extends BaseController
                             "productos" => $productos_del_pedido,
                             "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                             "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                            "mensaje" => "Eliminación correcta" 
+                            "mensaje" => "Eliminación correcta"
                         );
                         echo  json_encode($returnData);
                     }
@@ -673,7 +740,7 @@ class Mesas extends BaseController
             }
         }
     }
-   
+
 
     function actualizar_cantidades()
     {
@@ -770,11 +837,26 @@ class Mesas extends BaseController
                 'fecha_eliminacion' =>  date("Y-m-d"),
                 'hora_eliminacion' => date('H:i:s'),
                 'fecha_creacion' => $fecha_creacion['fecha_creacion'],
-                'usuario_eliminacion' => $id_usuario['fk_usuario'],
-                //'usuario_elimininacion' => $id_usuario['idusuario_sistema']
+                'usuario_eliminacion' => $id_de_usuario,
+                'id_mesero' => $id_usuario['fk_usuario']
             ];
 
             $insert = model('eliminacionPedidosModel')->insert($pedido_borrado);
+
+            foreach ($items as $detalle) {
+                $producto = [
+                    'codigointernoproducto' => $detalle['codigointernoproducto'],
+                    'cantidad' => $detalle['cantidad_producto'],
+                    'fecha_eliminacion' => date('Y-m-d'),
+                    'hora_eliminacion' => date('H:i:s'),
+                    'usuario_eliminacion' => $id_de_usuario,
+                    'pedido' => $numero_pedido,
+                    'id_mesero' => $id_usuario['fk_usuario']
+                ];
+
+                $insert = model('productosBorradosModel')->insert($producto);
+            }
+
 
 
             $model = model('productoPedidoModel');
@@ -1067,7 +1149,7 @@ class Mesas extends BaseController
     {
 
         $model = model('partirFacturaModel')->truncate();
-    
+
         $apertura_registro = model('aperturaRegistroModel')->first();
 
         if (!empty($apertura_registro)) {

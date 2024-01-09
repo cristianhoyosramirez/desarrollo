@@ -167,13 +167,13 @@ function cierre_caja() {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    id_apertura = resultado.id_apertura
+                   let id_cierre = resultado.id_cierre
                     
                     $.ajax({
                       data: {
-                        id_apertura,
+                        id_cierre,
                       },
-                      url: url + "/" + "pedidos/imprimir_movimiento_caja",
+                      url: url + "/" + "caja/imp_movimiento_caja",
                       type: "POST",
                       success: function (resultado) {
                         var resultado = JSON.parse(resultado);
@@ -265,13 +265,13 @@ function cierre_caja() {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    id_apertura = resultado.id_apertura
-                    console.log(id_apertura)
+                    let id_cierre = resultado.cierre
+                    console.log(id_cierre)
                     $.ajax({
                       data: {
-                        id_apertura,
+                        id_cierre,
                       },
-                      url: url + "/" + "pedidos/imprimir_movimiento_caja",
+                      url: url + "/" + "caja/imprimir_cierre",
                       type: "POST",
                       success: function (resultado) {
                         var resultado = JSON.parse(resultado);

@@ -76,8 +76,10 @@ MOVIMIENTO DE CAJA
                         <table class="table table-vcenter table-striped table-hover">
                             <thead class="table-dark">
                                 <tr>
+                                    <td>Fiscal</th>
                                     <td>Apertura</th>
                                     <td>Cierre</th>
+
                                 </tr>
                             </thead>
                             <tbody id="aperturas">
@@ -530,7 +532,7 @@ MOVIMIENTO DE CAJA
     function editar_cierre_efectivo() {
         let url = document.getElementById("url").value;
         let id_apertura = document.getElementById("id_apertura").value;
-        
+
         $.ajax({
             data: {
                 id_apertura

@@ -106,12 +106,15 @@ Reporte de costos
     <div class="table-responsive">
         <table class="table">
             <thead class="table-dark">
+                <td scope="col">Pedido</th>
                 <td scope="col">Código </th>
                 <td scope="col">Producto </th>
                 <td scope="col">Cantidad </th>
                 <td scope="col">Fecha</th>
                 <td scope="col">Hora</th>
+                <td scope="col">Usuario creacion</th>
                 <td scope="col">Usuario eliminación</th>
+
             </thead>
             <tbody id="productos_borrados">
 
@@ -120,12 +123,14 @@ Reporte de costos
 
                         <tr>
 
+                            <td><?php echo $detalle['pedido'] ?></td>
                             <td><?php echo $detalle['codigointernoproducto'] ?></td>
                             <td><?php echo $detalle['nombreproducto'] ?></td>
                             <td><?php echo $detalle['cantidad'] ?></td>
                             <td><?php echo $detalle['fecha_eliminacion'] ?></td>
                             <td><?php echo $detalle['hora_eliminacion'] ?></td>
-                            <td><?php echo $detalle['nombresusuario_sistema'] ?></td>
+                            <td><?php echo $detalle['eliminador_nombre'] ?></td>
+                            <td><?php echo $detalle['mesero_nombre'] ?></td>
 
                         </tr>
 

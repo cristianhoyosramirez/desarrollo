@@ -103,7 +103,7 @@ class kardexModel extends Model
     public function total_inc($id_apertura)
     {
         $datos = $this->db->query("
-        select sum(total) as total  from kardex where id_apertura=$id_apertura and id_estado=1
+        select sum(total) as total  from kardex where id_apertura=$id_apertura and id_estado=1 and aplica_ico=true
         ");
         return $datos->getResultArray();
     }
@@ -111,6 +111,14 @@ class kardexModel extends Model
     {
         $datos = $this->db->query("
         select sum(total) as total  from kardex where id_apertura=$id_apertura and id_estado=1
+        ");
+        return $datos->getResultArray();
+    }
+
+    public function get_iva_fiscal($id_apertura, $valor_iva)
+    {
+        $datos = $this->db->query("
+            select sum(total) as total from kardex where id_apertura = $id_apertura and id_estado = 1 and valor_iva = $valor_iva 
         ");
         return $datos->getResultArray();
     }

@@ -272,6 +272,14 @@
                   </svg>
                   Calculo propina
                 </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/sub_categoria">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M5 12l5 5l10 -10" />
+                  </svg>
+                  Configuración sub categoria
+                </a>
               </div>
           </li>
         <?php } ?>
@@ -660,6 +668,15 @@
                   <path d="M12 3v3m0 12v3" />
                 </svg>Egresos
               </a>
+              <a class="dropdown-item" href="<?= base_url() ?>/consultas_y_reportes/ventas_de_mesero">
+                <!-- Download SVG icon from http://tabler-icons.io/i/user-check -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                  <path d="M16 11l2 2l4 -4" />
+                </svg>Ventas de mesero
+              </a>
 
             </div>
           </li>
@@ -705,6 +722,18 @@
                   <line x1="5" y1="12" x2="5" y2="12.01" />
                   <line x1="5" y1="18" x2="5" y2="18.01" />
                 </svg> Categorias
+              </a>
+              <a class="dropdown-item" href="<?= base_url() ?>/configuracion/crear_sub_categoria">
+                <!-- Download SVG icon from http://tabler-icons.io/i/list -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <line x1="9" y1="6" x2="20" y2="6" />
+                  <line x1="9" y1="12" x2="20" y2="12" />
+                  <line x1="9" y1="18" x2="20" y2="18" />
+                  <line x1="5" y1="6" x2="5" y2="6.01" />
+                  <line x1="5" y1="12" x2="5" y2="12.01" />
+                  <line x1="5" y1="18" x2="5" y2="18.01" />
+                </svg> Sub categorias
               </a>
 
               <a class="dropdown-item" href="<?= base_url() ?>/producto/lista_de_productos">

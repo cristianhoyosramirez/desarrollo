@@ -103,12 +103,15 @@ class productoController extends BaseController
         $marcas = model('marcasModel')->orderBy('idmarca', 'asc')->findAll();
         $impuesto_saludable = model('impuestoSaludableModel')->findAll();
 
+        $sub_categorias=model('SubCategoriaModel')->find();
+
         return view('producto/listado', [
             'iva' => $iva,
             'ico' => $ico,
             'categorias' => $categorias,
             'marcas' => $marcas,
-            'impuesto_saludable' => $impuesto_saludable
+            'impuesto_saludable' => $impuesto_saludable,
+            'sub_categorias'=>$sub_categorias
         ]);
     }
 

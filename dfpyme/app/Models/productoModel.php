@@ -50,7 +50,8 @@ class productoModel extends Model
         'se_imprime',
         'aplica_descuento',
         'id_impuesto_saludable',
-        'valor_impuesto_saludable'
+        'valor_impuesto_saludable',
+        'id_subcategoria'
     ];
 
     public function autoComplete($valor)

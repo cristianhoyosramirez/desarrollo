@@ -126,7 +126,7 @@
     <?= $this->include('ventanas_modal_pedido/cambiar_de_mesa') ?>
     <?= $this->include('ventanas_modal_retiro_de_dinero/imprimir_retiro') ?>
     <?= $this->include('ventanas_modal_retiro_de_dinero/devolucion') ?>
-    <?= $this->include('pedidos/crear_cliente') ?>
+  < <?= $this->include('pedidos/crear_cliente') ?>
     <?= $this->include('toma_pedidos/offcanva_mesas') ?>
     <?= $this->include('toma_pedidos/offcanva_productos') ?>
 
@@ -142,8 +142,8 @@
                     <div id="info_producto"></div>
                 </div>
                 <div class="modal-footer text-end ">
-                    <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" onclick="actualizacion_cantidades()">Confirmar</button>
-                    <button type="button" class="btn btn-outline-danger">Cancelar </button>
+                    <button type="button" class="btn btn-outline-success"  onclick="actualizacion_cantidades()">Confirmar</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar </button>
                 </div>
             </div>
         </div>
@@ -217,6 +217,29 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_cantidad_partir_factura.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/meseros.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
+
+
+    <script>
+        function productos_subcategoria(id_subcategoria) {
+            var url = document.getElementById("url").value;
+
+            $.ajax({
+                data:{id_subcategoria},
+                url: url +"/" +"inventario/productos_subcategoria",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#productos_categoria').html(resultado.productos)
+                    
+                    }
+                },
+            });
+        }
+    </script>
+
+
 
     <script>
         function cerrar_modal_mesas() {
@@ -366,7 +389,7 @@
                 success: function(resultado) {
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
-
+                        $("#editar_cantidades").modal("hide");
                         $('#mesa_productos').html(resultado.productos_pedido)
                         $('#valor_pedido').html(resultado.total_pedido)
                         $('#val_pedido').html(resultado.total_pedido)

@@ -52,12 +52,12 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
 
                     let lista_categorias = document.getElementById("lista_categorias");
                     lista_categorias.style.display = "none";
-
+                    
                     Swal.fire({
                         title: 'Resumen de prefactura electrónica',
-                        showDenyButton: false,
-                        confirmButtonText: 'Facturar',
-                        denyButtonText: 'Facturar',
+                        showDenyButton: true,
+                        confirmButtonText: 'Imprimir factura', // Se intercambia con denyButtonText
+                        denyButtonText: 'Facturar', // Se intercambia con confirmButtonText
                         allowOutsideClick: false,
                         allowEscapeKey: false,
                         html: '<hr>' + resultado.mensaje +
@@ -78,23 +78,21 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                             '</div>' +
                             '<hr class="custom-hr">' + // Línea de separación personalizada
                             '</div>',
-
-                        confirmButtonColor: '#6782EF',
-                        denyButtonColor: '#6782EF',
-
+                        confirmButtonColor: '#58C269', // Se intercambia con denyButtonColor
+                        denyButtonColor: '#6782EF', // Se intercambia con confirmButtonColor
                     }).then((result) => {
                         /* Read more about isConfirmed, isDenied below */
                         if (result.isConfirmed) {
                             // Swal.fire('Saved!', '', 'success')
+                            
+                            let id_factura = resultado.id_factura
 
-
-                            let numero_de_factura = resultado.id_factura
-
-                            $.ajax({
+                            
+                           $.ajax({
                                 data: {
-                                    numero_de_factura,
+                                    id_factura, // Incluye el número de factura en los datos
                                 },
-                                url: url + "/" + "pedidos/imprimir_factura",
+                                url: url + "/" + "pedidos/imprimir_factura_electronica",
                                 type: "POST",
                                 success: function (resultado) {
                                     var resultado = JSON.parse(resultado);
@@ -107,13 +105,11 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                                         let lista_categorias = document.getElementById("lista_categorias");
                                         lista_categorias.style.display = "none";
                                         
-                                        /**
-                                         * Aca llamo a la funcion sweet alert y se le pasan los parametros.
-                                         */
+                                       
                                         sweet_alert('success', 'Impresión de factura correcto  ');
                                     }
                                 },
-                            });
+                            }); 
 
 
 

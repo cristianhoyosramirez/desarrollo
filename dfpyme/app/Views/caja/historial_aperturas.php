@@ -29,15 +29,22 @@
         $fecha_cierre_formateada = $formato->format(strtotime($fecha_cierre));
     }
 
-
+    $numero = model('consecutivoInformeModel')->select('numero')->where('id_apertura', $detalle[0])->first();
+//d( $numero)
     ?>
     <tr onclick="movimiento(<?php echo $detalle[0] ?>)" class="cursor-pointer">
+    <td>
+            <?php if (!empty($numero)) {
+                echo $numero['numero'];
+            } ?>
+        </td>
         <td>
             <p> <?php echo  $fecha_apertura_formateada . " " .  $hora_apertura_formateada;  ?> </p> <!-- feccha y hora apertura -->
         </td>
         <td>
             <p> <?php echo  $fecha_cierre_formateada . " " .  $hora_cierre_formateada;  ?> </p> <!-- feccha y hora apertura -->
         </td>
+        
 
 
     </tr>

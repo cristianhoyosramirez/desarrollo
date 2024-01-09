@@ -147,6 +147,7 @@ $routes->group('categoria', ['namespace' => 'App\Controllers\categoria', 'filter
     $routes->post('crear_marcas', 'categoriaController::crear_marcas');
     $routes->post('editar_marca', 'categoriaController::editar_marca');
     $routes->post('actualizar_marca', 'categoriaController::actualizar_marca');
+    $routes->post('sub_categoria', 'categoriaController::sub_categoria');
 });
 
 $routes->group('pedido', ['namespace' => 'App\Controllers\pedido', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -334,6 +335,7 @@ $routes->group('consultas_y_reportes', ['namespace' => 'App\Controllers\consulta
     $routes->post('consultar_por_cliente', 'Documento::consultar_por_cliente');
     $routes->post('consulta_de_cartera', 'Documento::consulta_de_cartera');
     $routes->post('aperturas', 'Documento::aperturas');
+    $routes->get('ventas_de_mesero', 'Documento::ventas_de_mesero');
 });
 
 $routes->group('devolucion', ['namespace' => 'App\Controllers\devolucion', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -455,6 +457,9 @@ $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter'
     $routes->post('salida_inventario', 'Inventarios::salida_inventario');
     $routes->post('buscar', 'Inventarios::buscar');
     $routes->get('exportar', 'Inventarios::exportar_inventario');
+    $routes->post('productos_borrados', 'Inventarios::productos_borrados');
+    $routes->post('productos_subcategoria', 'Inventarios::productos_subcategoria');
+    $routes->post('reporte_meseros', 'Inventarios::reporte_meseros');
 });
 
 $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -487,7 +492,9 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->get('reporte_costo', 'Ventas::reporte_costo');
     $routes->post('datos_reporte_costo', 'Ventas::datos_reporte_costo');
     $routes->post('exportar_reporte_costo', 'Ventas::exportar_reporte_costo');
+    $routes->post('exportar_reporte_costo_excel', 'Ventas::exportar_reporte_costo_excel');
     $routes->post('exportar_reporte_ventas', 'Ventas::exportar_reporte_ventas');
+    $routes->post('exportar_reporte_ventas_excel', 'Ventas::exportar_reporte_ventas_excel');
     $routes->post('datos_productos_borrados', 'Ventas::datos_productos_borrados');
     $routes->get('reportes_ventas', 'Ventas::reporte_ventas');
     $routes->post('datos_reportes_ventas', 'Ventas::datos_reporte_ventas');
@@ -505,6 +512,12 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->post('configuracion_propina', 'Configuracion::configuracion_propina');
     $routes->get('estacion_trabajo', 'Configuracion::estacion_trabajo');
     $routes->post('actualizar_caja', 'Configuracion::actualizar_caja');
+    $routes->get('sub_categoria', 'Configuracion::sub_categoria');
+    $routes->post('actualizar_sub_categoria', 'Configuracion::actualizar_sub_categoria');
+    $routes->get('crear_sub_categoria', 'Configuracion::crear_sub_categoria');
+    $routes->post('editar_sub_categoria', 'Configuracion::editar_sub_categoria');
+    $routes->post('actualizar_sub_categoria', 'Configuracion::actualizar_sub_categoria');
+    $routes->post('eliminar_sub_categoria', 'Configuracion::eliminar_sub_categoria');
 });
 
 /*

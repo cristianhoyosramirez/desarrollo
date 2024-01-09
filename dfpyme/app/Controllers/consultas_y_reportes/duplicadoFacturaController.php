@@ -83,14 +83,15 @@ class duplicadoFacturaController extends BaseController
         $items = model('productoFacturaVentaModel')->getProductosFacturaVentaModel($id_factura);
 
         $datos_factura = model('facturaVentaModel')->encabezado_facturas_venta($id_factura);
-        $total_factura = model('facturaVentaModel')->select('valor_factura')->where('id', $id_factura)->first();
+        //$total_factura = model('facturaVentaModel')->select('valor_factura')->where('id', $id_factura)->first();
+        $total_factura = model('kardexModel')->selectSum('total')->where('id_factura', $id_factura)->first();
         $productos = view('duplicado_de_factura/productos_factura_duplicado', [
             'productos' => $items,
             'fecha_factura' => $datos_factura[0]['fecha_factura_venta'],
             'numero_factura' => $datos_factura[0]['numerofactura_venta'],
             'nit_cliente' => $datos_factura[0]['nitcliente'],
             'hora_factura' => $datos_factura[0]['horafactura_venta'],
-            'total_factura' => $total_factura['valor_factura']
+            'total_factura' => $total_factura['total']
         ]);
 
         $returnData = array(

@@ -73,6 +73,23 @@
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg></button>
           </div>
+          <?php $sub_categoria = model('configuracionPedidoModel')->select('sub_categoria')->first(); ?>
+          <?php if ($sub_categoria['sub_categoria'] == 't') { ?>
+            <div class="col-md-3">
+              <label for="">Sub categoria</label>
+              <select class="form-select" id="sub_categoria" name="sub_categoria">
+
+                <?php foreach ($sub_categorias as $valor) { ?>
+
+                  <option value="<?php echo $valor['id'] ?>"><?php echo $valor['nombre'] ?> </option>
+
+                <?php } ?>
+              </select>
+
+              <span class="text-danger error-text categoria_producto_error"></span>
+            </div>
+          <?php } ?>
+
 
 
           <div class="col-md-3">
@@ -163,7 +180,7 @@
 
 
 
-      <!--     <div class="col-md-3">
+          <!--     <div class="col-md-3">
             <label for="inputPassword4" class="form-label">Tipo impuesto saludable </label>
             <select class="form-select" id="impuesto_saludable" name="impuesto_saludable">
 

@@ -150,14 +150,14 @@ class EmpresaController extends BaseController
             ]);
         } else {
             $data = [
-                'numeroresoluciondian' => '1233',
+                'numeroresoluciondian' => $this->request->getPost('numero_dian'),
                 'fechadian' => $this->request->getPost('fecha_dian'),
                 'rangoinicialdian' => $this->request->getPost('numero_inicial'),
                 'rangofinaldian' => $this->request->getPost('numero_final'),
                 'texto_inicial' => $this->request->getPost('texto_inicial'),
                 'inicialestatica' => $this->request->getPost('prefijo_dian'),
                 'finalestatica' => $this->request->getPost('prefijo_dian'),
-                'texto_final' => $this->request->getPost('texto_final'),
+                'texto_final' => $this->request->getPost('tipo_de_solicitud'),
                 'id_modalidad' => $this->request->getPost('modalidad_dian'),
                 'vigencia' => $this->request->getPost('fecha_caducidad'),
                 'id_caja' => 1,
@@ -365,6 +365,11 @@ class EmpresaController extends BaseController
             $dian = $model->set($data);
             $dian = $model->where('iddian', $_POST['id_resolucion']);
             $dian = $model->update();
+
+            $model = model('consecutivosModel');
+            $consecutivo = $model->set('numeroconsecutivo',$this->request->getPost('prefijo_dian'));
+            $consecutivo = $model->where('idconsecutivos',7);
+            $consecutivo = $model->update();
 
             if ($dian) {
                 $resoluciones_dian = model('resolucionDianModel')->findAll();

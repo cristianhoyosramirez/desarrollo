@@ -21,6 +21,7 @@
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Productos</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" onclick="mesas_actualizadas()"></button>
     </div>
+    
     <div class="offcanvas-body">
         <ul class="horizontal-list">
             <?php foreach ($categorias as $detalle) : ?>
@@ -29,6 +30,7 @@
 
             <?php endforeach ?>
         </ul>
+        <div id="sub_categorias"></div>
         <div>
             <div class="card" style="height: calc(<?php echo $alturaCalc; ?>)">
                 <div class="card-header border-0" style="margin-bottom: -10px; padding-bottom: 0;" id="pedido">

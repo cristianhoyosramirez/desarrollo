@@ -9,7 +9,7 @@
 <form class="row g-1" action="<?= base_url('producto/actualizar_precio_producto'); ?>" method="post" id="cambiar_datos_de_producto" autocomplete="off">
     <input type="hidden" id="codigo_interno_producto_editar" value="<?php echo $codigo_interno_producto ?>" name="codigo_interno_producto_editar">
     <div class="col-md-2">
-        <label for="inputEmail4" class="form-label">Código interno</label>
+        <label for="inputEmail4" class="form-label">Código interno </label>
         <input type="text" class="form-control" id="crear_producto_codigo_interno" name="crear_producto_codigo_interno" value="<?php echo $codigo_interno_producto ?>" readonly>
         <span class="text-danger error-text crear_producto_codigo_interno_error"></span>
     </div>
@@ -31,7 +31,7 @@
                     <line x1="19" y1="11" x2="19" y2="13" />
                 </svg>
             </span>
-            <input type="text" class="form-control" name="crear_producto_codigo_de_barras" id="crear_producto_codigo_de_barras" onkeyup="saltar_creacion_producto(event,'crear_producto_nombre')">
+            <input type="text" class="form-control" name="crear_producto_codigo_de_barras" id="crear_producto_codigo_de_barras" onkeyup="saltar_creacion_producto(event,'crear_producto_nombre')" value="<?php echo $codigo_barras ?>">
         </div>
     </div>
 

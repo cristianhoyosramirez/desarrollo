@@ -418,7 +418,8 @@ class FacturaElectronica extends BaseController
                     ]),
                     "categorias" => view('pedidos/categorias', [
                         'categorias' => $categorias
-                    ])
+                    ]),
+                    "id_factura"=>$id_factura
                 );
                 echo  json_encode($returnData);
             }

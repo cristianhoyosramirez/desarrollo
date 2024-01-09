@@ -116,8 +116,9 @@
                     <label for="inputEmail3" class="col-sm-4 col-form-label">Documento</label>
                     <div class="col-sm-8">
                       <select class="form-select" id="documento" name="documento" onchange="habilitarBotonPago()">
-                        <option value="1">POS Contado</option>
-                        <option value="8">Factura electrónica</option>
+                        <option value="1">POS CONTADO</option>
+                        <option value="2">POS CRÉDITO</option>
+                        <option value="8">FACTURA ELECTRÓNICA </option>
                       </select>
                       <p class="text-danger h3" id="error_documento"></p>
                     </div>

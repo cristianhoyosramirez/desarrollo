@@ -259,4 +259,15 @@ class categoriaController extends BaseController
         $session->setFlashdata('iconoMensaje', 'success');
         return redirect()->to(base_url('categoria/marcas'))->with('mensaje', 'Actualizacion correcta  ');
     }
+
+    function sub_categoria(){
+        $data=[
+            'nombre'=>$this->request->getPost('nombre_categoria')
+        ];
+
+        $insert= model('subCategoriaModel')->insert($data);
+        $session = session();
+        $session->setFlashdata('iconoMensaje', 'success');
+        return redirect()->to(base_url('configuracion/crear_sub_categoria'))->with('mensaje', 'Subcategoria creada  ');
+    }
 }
