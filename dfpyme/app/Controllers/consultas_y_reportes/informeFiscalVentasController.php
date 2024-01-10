@@ -553,7 +553,7 @@ class informeFiscalVentasController extends BaseController
         $registro_final = model('facturaVentaModel')->registro_final($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
         $total_registros = model('facturaVentaModel')->total_registros($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre); */
 
-        
+
         //$registro_inicial = model('pagosModel')->get_min_id($id_apertura);
         //$registro_final = model('pagosModel')->get_max_id($id_apertura);
 
@@ -565,6 +565,25 @@ class informeFiscalVentasController extends BaseController
         $registro_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
         $registro_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
 
+
+        $reg_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
+        $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+
+        if (empty($reg_inicial)) {
+            $registro_inicial = "";
+        }
+        if (!empty($reg_inicial)) {
+            $registro_inicial = $reg_inicial['documento'];
+        }
+        if (empty($reg_final)) {
+            $registro_final = "";
+        }
+        if (!empty($reg_final)) {
+            $registro_final = $reg_final['documento'];
+        }
+
+
+
         /**
          * Discriminación de las bases tributarias tanto iva como impuesto al consumo 
          */
@@ -572,11 +591,11 @@ class informeFiscalVentasController extends BaseController
         $iva = model('productoFacturaVentaModel')->fiscal_iva($id_apertura);
         $array_iva = array();
 
-        
+
         if (!empty($iva)) {
             foreach ($iva as $detalle) {
-               
-               /*  $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
+
+                /*  $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
 
@@ -586,7 +605,7 @@ class informeFiscalVentasController extends BaseController
                 $data_iva['base'] = $total[0]['total'] - $iva[0]['iva'];
                 $data_iva['total_iva'] = $iva[0]['iva'];
                 $data_iva['valor_venta'] = $total[0]['total']; */
-                
+
                 $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
@@ -648,7 +667,7 @@ class informeFiscalVentasController extends BaseController
         //$vantas_contado = model('productoFacturaVentaModel')->get_total_venta($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
 
         $vantas_contado = model('kardexModel')->ventas_contado($id_apertura);
-        
+
         if (empty($venta_credito[0]['total_ventas_credito'])) {
             $ventas_credito = 0;
         } else if (!empty($venta_credito[0]['total_ventas_credito'])) {
@@ -728,9 +747,9 @@ class informeFiscalVentasController extends BaseController
             "direccion" => $datos_empresa[0]['direccionempresa'],
             "nombre_ciudad" => $nombre_ciudad['nombreciudad'],
             "nombre_departamento" => $nombre_departamento['nombredepartamento'],
-            "registro_inicial" => $registro_inicial['documento'],
+            "registro_inicial" => $registro_inicial,
             //"registro_inicial" => $registro_inicial[0]['id'],
-            "registro_final" => $registro_final['documento'],
+            "registro_final" => $registro_final,
             //"registro_final" => $registro_final[0]['id'],
             //"total_registros" => $total_registros[0]['total_registros'],
             "total_registros" => $total_registros[0]['total_registros'],

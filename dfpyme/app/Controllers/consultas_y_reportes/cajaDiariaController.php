@@ -1151,7 +1151,7 @@ class cajaDiariaController extends BaseController
     {
 
         //$id_apertura = 56;
-        $id_apertura = $this->request->getPost('id_apertura'); 
+        $id_apertura = $this->request->getPost('id_apertura');
 
 
 
@@ -1205,7 +1205,7 @@ class cajaDiariaController extends BaseController
 
         $devoluciones = model('detalleDevolucionVentaModel')->where('id_apertura', $id_apertura)->find();
 
-        
+
 
         $returnData = [
             'resultado' => 1,
@@ -1688,7 +1688,7 @@ class cajaDiariaController extends BaseController
 
 
         $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 828;
+        //$id_apertura = 85;
 
         //$id_apertura = 41;
         $fecha_y_hora_cierre = "";
@@ -1728,8 +1728,21 @@ class cajaDiariaController extends BaseController
         $id_final = model('pagosModel')->get_max_id($id_apertura);
         $total_registros = model('pagosModel')->get_total_registros($id_apertura);
 
-        $registro_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
-        $registro_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        $reg_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
+        $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+
+        if (empty($reg_inicial)){
+            $registro_inicial="";
+        }
+        if (!empty($reg_inicial)){
+            $registro_inicial=$reg_inicial['documento'];
+        }
+        if (empty($reg_final)){
+            $registro_final="";
+        }
+        if (!empty($reg_final)){
+            $registro_final=$reg_final['documento'];
+        }
 
         /**
          * Discriminación de las bases tributarias tanto iva como impuesto al consumo 
@@ -1885,9 +1898,9 @@ class cajaDiariaController extends BaseController
                 "nombre_departamento" => $nombre_departamento['nombredepartamento'],
 
                 //"registro_inicial" => $registro_inicial[0]['id'],
-                "registro_inicial" => $registro_inicial['documento'],
+                "registro_inicial" => $registro_inicial,
                 // "registro_final" => $registro_final[0]['id'],
-                "registro_final" => $registro_final['documento'],
+                "registro_final" => $registro_final,
                 "total_registros" => $total_registros[0]['total_registros'],
                 "iva" => $array_iva,
                 "ico" => $array_ico,

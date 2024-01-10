@@ -16,6 +16,7 @@ class productoController extends BaseController
     {
 
         $valor_buscado = $_POST['search']['value'];
+        //$valor_buscado = "BU";
 
         $table_map = [
             0 => 'nombrecategoria',
@@ -43,31 +44,42 @@ class productoController extends BaseController
 
         if (!empty($valor_buscado)) {
 
-            $condition .= " AND nombreproducto ILIKE '%" . $valor_buscado . "%'";
+            /* $condition .= " AND nombreproducto ILIKE '%" . $valor_buscado . "%'";
             $condition .= " OR nombrecategoria ILIKE '%" . $valor_buscado . "%'";
-            $condition .= " OR codigointernoproducto ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR codigointernoproducto ILIKE '%" . $valor_buscado . "%'"; */
+            $condition .= " AND (nombreproducto ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR nombrecategoria ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR codigointernoproducto ILIKE '%" . $valor_buscado . "%')";
         }
 
         $sql_count = $sql_count . $condition;
         $sql_data = $sql_data . $condition;
-
+        
         //$total_count = $this->db->query($sql_count)->getRow();
         $total_count = $this->db->query($sql_count)->getRow();
         //echo $total_count->total;
         //dd($total_count);
-
+       
         $sql_data .= " ORDER BY " . $table_map[$_POST['order'][0]['column']] . " " . $_POST['order'][0]['dir'] . " " . "LIMIT " . $_POST['length'] . " OFFSET " . $_POST['start'];
-
+    
         $datos = $this->db->query($sql_data)->getResultArray();
         //$data = $this->db->query($sql_data)->getResult();
+        
         if (!empty($datos)) {
             foreach ($datos as $detalle) {
-                $cantidad = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                $cant = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                if (empty($cant)){
+                    $cantidad= 0;
+                }
+                if (!empty($cant)){
+                    $cantidad=$cant['cantidad_inventario'];
+                }
                 $sub_array = array();
                 $sub_array[] = $detalle['nombrecategoria'];
                 $sub_array[] = $detalle['codigointernoproducto'];
                 $sub_array[] = $detalle['nombreproducto'];
-                $sub_array[] = $cantidad['cantidad_inventario'];
+                //$sub_array[] = $cantidad['cantidad_inventario'];
+                $sub_array[] = $cantidad;
                 $sub_array[] = "$" . number_format($detalle['valorventaproducto'], 0, ",", ".");
 
                 $sub_array[] = '<a  class="btn btn-success "  onclick="editar_producto(' . $detalle['codigointernoproducto'] . ')"  >Editar</a> <a  class="btn btn-danger "  onclick="eliminar_producto(' . $detalle['codigointernoproducto'] . ')"  >Eliminar</a>  ';
@@ -103,7 +115,7 @@ class productoController extends BaseController
         $marcas = model('marcasModel')->orderBy('idmarca', 'asc')->findAll();
         $impuesto_saludable = model('impuestoSaludableModel')->findAll();
 
-        $sub_categorias=model('SubCategoriaModel')->find();
+        $sub_categorias = model('SubCategoriaModel')->find();
 
         return view('producto/listado', [
             'iva' => $iva,
@@ -111,7 +123,7 @@ class productoController extends BaseController
             'categorias' => $categorias,
             'marcas' => $marcas,
             'impuesto_saludable' => $impuesto_saludable,
-            'sub_categorias'=>$sub_categorias
+            'sub_categorias' => $sub_categorias
         ]);
     }
 
@@ -126,13 +138,13 @@ class productoController extends BaseController
 
         if (!empty($resultado)) {
             foreach ($resultado as $row) {
-                $cantidad_producto=model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto',$row['codigointernoproducto'])->first();
+                $cantidad_producto = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $row['codigointernoproducto'])->first();
                 $data['value'] =  $row['codigointernoproducto'] . " " . "/" . " " . $row['nombreproducto'];
                 $data['id_producto'] = $row['codigointernoproducto'];
                 $data['nombre_producto'] = $row['nombreproducto'];
                 $data['valor_venta'] = $row['valorventaproducto'];
                 $data['cantidad'] = $cantidad_producto['cantidad_inventario'];
-               // $data=['cantidad']=$cantidad_producto['cantidad_inventario'];
+                // $data=['cantidad']=$cantidad_producto['cantidad_inventario'];
                 array_push($returnData, $data);
             }
             echo json_encode($returnData);
@@ -583,7 +595,7 @@ class productoController extends BaseController
         echo  json_encode($returnData);
     }
 
-   
+
     public function editar_cantidades_de_pedido()
     {
         //$id_usuario = 20;
@@ -911,9 +923,8 @@ class productoController extends BaseController
             );
             echo  json_encode($returnData);
         }
-       
     }
- 
+
     public function usuario_pedido()
     {
 
@@ -1276,7 +1287,7 @@ class productoController extends BaseController
         }
     }
 
-  
+
 
     public function eliminacion_de_producto()
     {
