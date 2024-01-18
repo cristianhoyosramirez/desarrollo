@@ -606,9 +606,11 @@ class informeFiscalVentasController extends BaseController
                 $data_iva['total_iva'] = $iva[0]['iva'];
                 $data_iva['valor_venta'] = $total[0]['total']; */
 
-                $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
+            /*     $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
-                $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
+                $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find(); */
+
+                $iva = model('kardexModel')->get_iva_fiscales($id_apertura, $detalle['valor_iva']);
 
                 $total = model('kardexModel')->get_iva_fiscal($id_apertura, $detalle['valor_iva']);
 

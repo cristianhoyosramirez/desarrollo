@@ -29,6 +29,19 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function get_iva_fiscales($id_apertura,$valor_iva)
+    {
+        $datos = $this->db->query("
+        SELECT
+        SUM(iva) as iva
+        FROM
+        kardex
+        WHERE
+        id_apertura = $id_apertura AND valor_iva = $valor_iva AND id_estado = 1
+        
+        ");
+        return $datos->getResultArray();
+    }
     public function get_total($id_apertura, $valor_unitario, $codigo)
     {
         $datos = $this->db->query("

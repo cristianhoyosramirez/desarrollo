@@ -1688,7 +1688,7 @@ class cajaDiariaController extends BaseController
 
 
         $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 85;
+        // $id_apertura = 1093;
 
         //$id_apertura = 41;
         $fecha_y_hora_cierre = "";
@@ -1731,17 +1731,17 @@ class cajaDiariaController extends BaseController
         $reg_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
         $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
 
-        if (empty($reg_inicial)){
-            $registro_inicial="";
+        if (empty($reg_inicial)) {
+            $registro_inicial = "";
         }
-        if (!empty($reg_inicial)){
-            $registro_inicial=$reg_inicial['documento'];
+        if (!empty($reg_inicial)) {
+            $registro_inicial = $reg_inicial['documento'];
         }
-        if (empty($reg_final)){
-            $registro_final="";
+        if (empty($reg_final)) {
+            $registro_final = "";
         }
-        if (!empty($reg_final)){
-            $registro_final=$reg_final['documento'];
+        if (!empty($reg_final)) {
+            $registro_final = $reg_final['documento'];
         }
 
         /**
@@ -1751,14 +1751,20 @@ class cajaDiariaController extends BaseController
         $iva = model('productoFacturaVentaModel')->fiscal_iva($id_apertura);
         $array_iva = array();
 
+
+
         if (!empty($iva)) {
             foreach ($iva as $detalle) {
 
-                $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
-                $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
-                $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
+                //$iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
+                // $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
+                //$iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find();
+
+                $iva = model('kardexModel')->get_iva_fiscales($id_apertura, $detalle['valor_iva']);
 
                 $total = model('kardexModel')->get_iva_fiscal($id_apertura, $detalle['valor_iva']);
+
+
 
                 $data_iva['tarifa_iva'] =  $detalle['valor_iva'];
                 $data_iva['base'] = $total[0]['total'] - $iva[0]['iva'];
@@ -1773,6 +1779,8 @@ class cajaDiariaController extends BaseController
             $data_iva['valor_venta'] = 0;
             array_push($array_iva, $data_iva);
         }
+
+
 
         $ico = model('productoFacturaVentaModel')->fiscal_ico($id_apertura);
         $array_ico = array();
