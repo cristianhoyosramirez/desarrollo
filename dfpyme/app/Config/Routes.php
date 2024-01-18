@@ -518,6 +518,7 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->post('editar_sub_categoria', 'Configuracion::editar_sub_categoria');
     $routes->post('actualizar_sub_categoria', 'Configuracion::actualizar_sub_categoria');
     $routes->post('eliminar_sub_categoria', 'Configuracion::eliminar_sub_categoria');
+    $routes->post('actualizar_estado_sub_categoria', 'Configuracion::actualizar_estado_sub_categoria');
 });
 
 /*

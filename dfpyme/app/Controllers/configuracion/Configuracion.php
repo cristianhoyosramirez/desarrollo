@@ -149,6 +149,7 @@ class Configuracion extends BaseController
     function actualizar_sub_categoria()
     {
         $id_categoria = $this->request->getPost('valor');
+        //$id_categoria = 'true';
         $nombre = $this->request->getPost('nombre');
 
         $model = model('subCategoriaModel');
@@ -184,6 +185,23 @@ class Configuracion extends BaseController
                 'sub_categorias' => $subcategoria
             ])
 
+        );
+        echo  json_encode($returnData);
+    }
+
+    function actualizar_estado_sub_categoria()
+    {
+
+        $valor = $this->request->getPost('valor');
+
+        $model = model('configuracionPedidoModel');
+        $actualizar = $model->set('sub_categoria', $valor);
+        $actualizar = $model->update();
+
+        $subcategoria = model('subCategoriaModel')->find();
+
+        $returnData = array(
+            "resultado" => 1,
         );
         echo  json_encode($returnData);
     }

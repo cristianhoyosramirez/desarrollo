@@ -46,7 +46,7 @@ HOME
             data: {
                 valor,
             },
-            url: url + "/" + "configuracion/actualizar_sub_categoria",
+            url: url + "/" + "configuracion/actualizar_estado_sub_categoria",
             type: "POST",
             success: function(resultado) {
                 var resultado = JSON.parse(resultado);

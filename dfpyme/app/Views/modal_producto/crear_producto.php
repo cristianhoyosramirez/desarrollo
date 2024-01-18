@@ -78,7 +78,7 @@
             <div class="col-md-3">
               <label for="">Sub categoria</label>
               <select class="form-select" id="sub_categoria" name="sub_categoria">
-
+                <option value="">Seleccione una sub categoria </option>
                 <?php foreach ($sub_categorias as $valor) { ?>
 
                   <option value="<?php echo $valor['id'] ?>"><?php echo $valor['nombre'] ?> </option>
