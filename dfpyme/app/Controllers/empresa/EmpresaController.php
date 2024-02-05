@@ -64,6 +64,16 @@ class EmpresaController extends BaseController
             'id_dian' => $id_dian['numeroconsecutivo']
         ]);
     }
+    function resolucion_electronica()
+    {
+
+        $resoluciones_dian = model('resolElectronicaModel')->findAll();
+
+        return view('empresa/resolucion_facturacion_electronica', [
+            'resoluciones_dian' => $resoluciones_dian,
+
+        ]);
+    }
 
 
     function consecutivos()
@@ -235,8 +245,8 @@ class EmpresaController extends BaseController
     function municipios()
     {
 
-       $id_departamento=$this->request->getPost('id_departamento'); 
-       
+        $id_departamento = $this->request->getPost('id_departamento');
+
 
         $returnData = array(
             "resultado" => 1, //No hay pedido 
@@ -367,8 +377,8 @@ class EmpresaController extends BaseController
             $dian = $model->update();
 
             $model = model('consecutivosModel');
-            $consecutivo = $model->set('numeroconsecutivo',$this->request->getPost('prefijo_dian'));
-            $consecutivo = $model->where('idconsecutivos',7);
+            $consecutivo = $model->set('numeroconsecutivo', $this->request->getPost('prefijo_dian'));
+            $consecutivo = $model->where('idconsecutivos', 7);
             $consecutivo = $model->update();
 
             if ($dian) {
@@ -452,5 +462,36 @@ class EmpresaController extends BaseController
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
         return redirect()->to(base_url('home'))->with('mensaje', 'Configuración exitosa');
+    }
+
+    function agregar_resolucion_electronica()
+    {
+        $data = [
+            'numero' => $this->request->getPost('numero'),
+            'date_begin' => $this->request->getPost('fecha_inicial'),
+            'vigency' => $this->request->getPost('vigencia'),
+            'date_end' => $this->request->getPost('fecha_final'),
+            'prefijo' => $this->request->getPost('prefijo'),
+            'number_begin' => $this->request->getPost('numero_inicial'),
+            'number_end' => $this->request->getPost('numero_final'),
+            'consecutive' => 1,
+            'alerta' => $this->request->getPost('alerta')
+
+        ];
+
+        $insert = model('resolElectronicaModel')->insert($data);
+
+        if ($insert) {
+
+            $resoluciones_dian = model('resolElectronicaModel')->findAll();
+
+            $returnData = array(
+                "resultado" => 1, //Falta plata  
+                "resoluciones"=>view('empresa/resoluciones_electronicas',[
+                    'resoluciones_dian' => $resoluciones_dian
+                ])
+            );
+            echo  json_encode($returnData);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use App\Libraries\Impuestos;
+use App\Libraries\Inventario;
 
 class cerrarVentaModel extends Model
 {
@@ -16,6 +17,7 @@ class cerrarVentaModel extends Model
     {
 
         $impuestos = new Impuestos();
+        $inventario = new Inventario();
         $valor_unidad = "";
 
         foreach ($productos as $detalle) {
@@ -58,20 +60,28 @@ class cerrarVentaModel extends Model
             $codigo_categoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
             $id_tipo_inventario = model('productoModel')->select('id_tipo_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
             $id_medida = model('productoMedidaModel')->select('idvalor_unidad_medida')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+
+            if (empty($id_medida)) {
+                $medida = 3;
+            }
+            if (!empty($id_medida)) {
+                $medida = $id_medida['idvalor_unidad_medida'];
+            }
+
             $precio_costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
 
 
             // Calcular los impuestos del producto 
             $calculo = $impuestos->calcular_impuestos($detalle['codigointernoproducto'], $detalle['valor_total'], $detalle['valor_unitario'], $detalle['cantidad_producto']);
-           
+
             $numero_factura = model('pedidoModel')->select('numero_factura')->where('id', $numero_pedido)->first();
 
             /**
              * Consultar el tipo de inventario y descontarlo y actualizar el inventario 
              */
 
-            if ($id_tipo_inventario['id_tipo_inventario'] == 1) {
+            /*   if ($id_tipo_inventario['id_tipo_inventario'] == 1) {
                 $cantidad_inventario = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
                 $inventario_final = $cantidad_inventario['cantidad_inventario'] - $detalle['cantidad_producto'];
 
@@ -102,7 +112,10 @@ class cerrarVentaModel extends Model
                     $actualizar = $model->where('codigointernoproducto', $detall['prod_proceso']);
                     $actualizar = $model->update();
                 }
-            }
+            } */
+
+            $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'],$id_tipo_inventario['id_tipo_inventario'],$detalle['cantidad_producto']);
+
             $impuesto_saludable = model('productoModel')->select('valor_impuesto_saludable')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
             $id_saludable = model('productoModel')->select('id_impuesto_saludable')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
@@ -111,7 +124,8 @@ class cerrarVentaModel extends Model
                 'codigointernoproducto' => $detalle['codigointernoproducto'],
                 'cantidadproducto_factura_venta' => $detalle['cantidad_producto'],
                 'valorunitarioproducto_factura_venta' => $valor_unitario['valor_unitario'],
-                'idmedida' => $id_medida['idvalor_unidad_medida'],
+                //'idmedida' => $id_medida['idvalor_unidad_medida'],
+                'idmedida' => $medida,
                 'idcolor' => 0,
                 'valor_descuento' => 0, //pendiente de ajuste
                 'valor_recargo' => 0,

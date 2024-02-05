@@ -44,25 +44,32 @@ function pagar() {
 
     if (requiere_factura_electronica == "si") {  // Validacion de si requiere o no factura electronica 
 
-        if (estado == 8) {    // Validacion de que este seleccionada la factura electronica 
+        if (estado == 8 || estado == 11) {    // Validacion de que este seleccionada la factura electronica 
 
             factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario, propina_Format)
-        } else if (estado != 8) {
+        } else if (estado != 8 || estado != 11) {
             $('#error_documento').html('! Para continuar por favor seleccione Factura electrónica !')
         }
 
     } else if (requiere_factura_electronica == "no") {
 
-        if (pago_total >= parseInt(valor_venta)) {
 
-            if (estado == 8) {
 
+        if (estado == 8) {
+            if (pago_total >= parseInt(valor_venta)) {
                 factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario, propina_Format)
+                if (pago_total < parseInt(valor_venta)) {
+                    $('#valor_pago_error').html('¡ Pago insuficiente !')
+                }
 
-            } else if (estado != 8) {
+            }
 
 
 
+        } else if (estado == 1) {
+
+
+            if (pago_total >= parseInt(valor_venta)) {
                 $.ajax({
                     data: {
                         id_mesa,
@@ -92,10 +99,10 @@ function pagar() {
                             $('#tipo_pago').val(1)
 
 
-                            if (resultado.valor_pedio=='$ 0'){
+                            if (resultado.valor_pedio == '$ 0') {
                                 $('#mesa_pedido').html('')
                                 $('#pedido_mesa').html('Pedido')
-                                
+
                             }
 
                             if (resultado.tipo_pago == 1) {
@@ -220,10 +227,170 @@ function pagar() {
 
                     },
                 });
+            } else if (pago_total < parseInt(valor_venta)) {
+                $('#valor_pago_error').html('¡ Pago insuficiente !')
             }
-        } else if (pago_total < parseInt(valor_venta)) {
-            $('#valor_pago_error').html('¡ Pago insuficiente !')
         }
+
+
+        if (estado == 2) {
+
+
+            $.ajax({
+                data: {
+                    id_mesa,
+                    efectivo,
+                    transaccion,
+                    estado,
+                    nit_cliente,
+                    valor_venta,
+                    id_usuario,
+                    propina_Format,
+                    tipo_pago
+
+                },
+                url: url + "/" + "pedidos/cerrar_venta",
+                type: "POST",
+                success: function (resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#finalizar_venta').modal('hide');
+                        $('#todas_las_mesas').html(resultado.mesas)
+                        $('#lista_completa_mesas').html(resultado.mesas)
+                        $('#efectivo').val(0)
+                        $('#transaccion').val(0)
+                        $('#propina_pesos_final').val(0)
+                        $('#total_propina').val(0)
+                        $('#tipo_pago').val(1)
+
+
+                        if (resultado.valor_pedio == '$ 0') {
+                            $('#mesa_pedido').html('')
+                            $('#pedido_mesa').html('Pedido')
+                        }
+
+                        if (resultado.tipo_pago == 1) {
+                            limpiar_todo();
+                            //$('#efectivo').val(0)
+                        }
+                        if (resultado.tipo_pago == 0) {
+                            $('#mesa_productos').html(resultado.productos)
+                            //$('#mesa_pedido').html(resultado.nombre_mesa)
+                            //$('#pedido_mesa').html('Pedido: ' + resultado.pedido)
+                            $('#valor_pedido').html(resultado.valor_pedio)
+                            $('#subtotal_pedido').val(resultado.valor_pedio)
+                            $('#productos_categoria').html('')
+                            $('#pago').html('Valor pago: 0')
+                            $('#cambio').html('Cambio: 0')
+                            $('#propina_pesos').val(0)
+                            $('#propina_pesos_final').val(0)
+                            $('#total_propina').val(0)
+
+                        }
+                        let mesas = document.getElementById("todas_las_mesas");
+                        mesas.style.display = "block"
+
+
+
+                        Swal.fire({
+                            title: 'Resumen',
+                            showDenyButton: true,
+                            confirmButtonText: 'Imprimir factura',
+                            denyButtonText: 'Facturar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            html: '<hr>' + resultado.mensaje +
+                                '<div class="container">' +
+                                '<div class="row">' +
+                                '<div class="col-md-6 text-right-custom h1">Total :</div>' +
+                                '<div class="col-md-6 text-right-custom h1">' + resultado.total + '</div>' +
+                                '</div>' +
+                                '<hr class="custom-hr">' + // Línea de separación personalizada
+                                '<div class="row">' +
+                                '<div class="col-md-6 text-right-custom h1">Valor pagado :</div>' +
+                                '<div class="col-md-6 text-right-custom h1">' + resultado.valor_pago + '</div>' +
+                                '</div>' +
+                                '<hr class="custom-hr">' + // Línea de separación personalizada
+                                '<div class="row">' +
+                                '<div class="col-md-6 text-right-custom h1">Cambio : </div>' +
+                                '<div class="col-md-6 text-right-custom h1">' + resultado.cambio + '</div>' +
+                                '</div>' +
+                                '<hr class="custom-hr">' + // Línea de separación personalizada
+                                '</div>',
+
+                            confirmButtonColor: '#58C269',
+                            denyButtonColor: '#6782EF',
+
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+
+                                let categorias = document.getElementById("lista_categorias");
+                                categorias.style.display = "block"
+
+                                let numero_de_factura = resultado.id_factura
+
+                                $.ajax({
+                                    data: {
+                                        numero_de_factura,
+                                    },
+                                    url: url + "/" + "pedidos/imprimir_factura",
+                                    type: "POST",
+                                    success: function (resultado) {
+                                        var resultado = JSON.parse(resultado);
+                                        if (resultado.resultado == 1) {
+
+
+                                            let mesas = document.getElementById("todas_las_mesas");
+                                            mesas.style.display = "block"
+
+                                            let lista_categorias = document.getElementById("lista_categorias");
+                                            lista_categorias.style.display = "none";
+                                            /**
+                                             * Aca llamo a la funcion sweet alert y se le pasan los parametros.
+                                             */
+                                            sweet_alert('success', 'Impresión de factura correcto  ');
+                                        }
+                                    },
+                                });
+
+
+
+
+                            } else if (result.isDenied) {
+                                let id_factura = resultado.id_factura
+
+                                $.ajax({
+                                    data: {
+                                        id_factura,
+                                    },
+                                    url: url + "/" + "factura_pos/modulo_facturacion",
+                                    type: "get",
+                                    success: function (resultado) {
+                                        var resultado = JSON.parse(resultado);
+                                        if (resultado.resultado == 1) {
+
+                                            let mesas = document.getElementById("todas_las_mesas");
+                                            mesas.style.display = "block"
+
+                                            let lista_categorias = document.getElementById("lista_categorias");
+                                            lista_categorias.style.display = "none";
+
+                                            /**
+                                             * Aca llamo a la funcion sweet alert y se le pasan los parametros.
+                                             */
+                                            sweet_alert('success', 'Se ha finalizado la venta ');
+                                        }
+                                    },
+                                });
+                            }
+                        })
+                    }
+                },
+            });
+        }
+
 
     }
 }

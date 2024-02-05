@@ -240,9 +240,19 @@ class operacionesProductoController extends BaseController
                 $valorImpuestoSaludable = 0;
             }
 
+            //echo $this->request->getPost('sub_categoria'); exit();
+
+            if (empty($this->request->getPost('sub_categoria'))){
+                $id_categoria=0;
+            }
+            if (!empty($this->request->getPost('sub_categoria'))){
+                $id_categoria=$this->request->getPost('sub_categoria');
+            }
+
+            
 
             if ($this->request->getPost('informacion_tributaria') == 1) {
-                
+
                 $data = [
                     'codigointernoproducto' => $this->request->getPost('crear_producto_codigo_interno'),
                     'codigobarrasproducto' => $this->request->getPost('crear_producto_codigo_de_barras'),
@@ -286,7 +296,7 @@ class operacionesProductoController extends BaseController
                     'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
                     'valor_impuesto_saludable' => 0,
                     //'id_subcategoria'=>$this->request->getPost('sub_categoria')
-                    'id_subcategoria' => $this->request->getPost('sub_categoria')
+                    'id_subcategoria' => $id_categoria
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -373,6 +383,7 @@ class operacionesProductoController extends BaseController
                     'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
                     'valor_impuesto_saludable' => $valorImpuestoSaludable,
                     'id_subcategoria' => $this->request->getPost('sub_categoria')
+                    //'id_subcategoria' => 1
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -413,13 +424,14 @@ class operacionesProductoController extends BaseController
                 }
             }
 
+            if (!empty($this->request->getPost('sub_categoria'))) {
+                $data_producto = [
+                    'id_categoria' => $this->request->getPost('categoria_producto'),
+                    'id_sub_categoria' => $this->request->getPost('sub_categoria')
+                ];
 
-            $data_producto=[
-             'id_categoria'=>$this->request->getPost('categoria_producto'),
-             'id_sub_categoria'=>$this->request->getPost('sub_categoria')
-            ];
-
-            $insercion=model('productoCategoriaModel')->insert($data_producto);
+                $insercion = model('productoCategoriaModel')->insert($data_producto);
+            }
         }
     }
 
@@ -468,7 +480,7 @@ class operacionesProductoController extends BaseController
                 'precio_2' => number_format($precio_2, 0, ",", "."),
                 'impuesto_saludable' => $impuesto_saludable,
                 'valor_impuesto_saludable' => number_format($valor_impuesto_saludable['valor_impuesto_saludable'], 0, ",", "."),
-                'codigo_barras'=>$codigo_barras['codigobarrasproducto']
+                'codigo_barras' => $codigo_barras['codigobarrasproducto']
             ])
         );
         echo  json_encode($returnData);

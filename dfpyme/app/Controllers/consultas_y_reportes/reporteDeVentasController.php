@@ -382,32 +382,32 @@ class reporteDeVentasController extends BaseController
 
         $aperturas = model('aperturaModel')->findAll();
 
-    
-   
+
+
         if (!empty($aperturas)) {
 
-        
+
 
             if (empty($tiene_cierre)) {
                 $estado = "ABIERTA";
                 $cierre = 'Sin cierre';
-              
-     
+
+
 
                 $ingresos = model('pagosModel')->selectSum('efectivo')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 $ingresos_efectivo = $ingresos[0]['efectivo'];
 
                 $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 $propinas = $temp_propinas[0]['propina'];
-                
-           
+
+
                 $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_apertura['id'])->findAll();
                 $ingresos_transaccion = $transaccion[0]['transferencia'];
 
-              
+
                 $valor_cierre = 0;
                 $devolucion_venta = model('detalleDevolucionVentaModel')->selectSum('valor_total_producto')->where('id_apertura', $ultimo_apertura['id'])->findAll();
-                
+
                 if (empty($devolucion_venta)) {
                     $devoluciones = 0;
                 } else if (!empty($devolucion_venta)) {
@@ -415,8 +415,8 @@ class reporteDeVentasController extends BaseController
                 }
                 //$total_retiros = model('retiroFormaPagoModel')->total_retiros($fecha_y_hora_apertura['fecha_y_hora_apertura'], date('Y-m-d H:i:s'));
                 $total_retiros = model('retiroFormaPagoModel')->selectSum('valor')->where('id_apertura', $ultimo_apertura['id'])->findAll();
-                
-          
+
+
                 if (empty($total_retiros[0]['valor'])) {
                     $retiros = 0;
                 }
@@ -427,12 +427,12 @@ class reporteDeVentasController extends BaseController
                 $efectivo_cierre = 0;
                 $transaccion_cierre = 0;
                 $saldo = 0;
-             
+
                 //$diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
-                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'] ) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
             }
             if (!empty($tiene_cierre)) {
-           
+
                 $estado = 'CERRADA';
                 $fecha_cierre = model('cierreModel')->select('fecha')->where('idapertura', $ultimo_id)->first();
                 $cierre = $fecha_cierre['fecha'];
@@ -446,6 +446,7 @@ class reporteDeVentasController extends BaseController
                 }
 
                 $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_id)->findAll();
+                dd($transaccion);
                 if (empty($transaccion)) {
                     $ingresos_transaccion = 0;
                 } else if (!empty($transaccion)) {
@@ -454,7 +455,7 @@ class reporteDeVentasController extends BaseController
                 $valor_cierre = 0;
                 $devolucion_venta = model('devolucionModel')->sumar_devoluciones($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
 
-                
+
                 if (empty($devolucion_venta)) {
                     $devoluciones = 0;
                 } else if (!empty($devolucion_venta)) {
@@ -489,19 +490,19 @@ class reporteDeVentasController extends BaseController
 
                 $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_id)->findAll();
                 $propinas = $temp_propinas[0]['propina'];
-                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'] ) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
             }
 
-    
+
 
             return view('consultas_y_reportes/datos_consultas_caja', [
                 'estado' => $estado,
                 'fecha_apertura' => $fecha_apertura['fecha'],
                 'fecha_cierre' => $cierre,
                 'valor_apertura' => "$" . number_format($valor_apertura['valor'], 0, ",", "."),
-                'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo+$ingresos_transaccion)-$propinas, 0, ",", "."),
+                'ingresos_efectivo' =>  "$" . number_format(($ingresos_efectivo + $ingresos_transaccion) - $propinas, 0, ",", "."),
                 'ingresos_transaccion' =>  "$" . number_format($ingresos_transaccion, 0, ",", "."),
-                'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo)+$valor_apertura['valor'], 0, ",", "."),
+                'total_ingresos' =>  "$" . number_format(($ingresos_transaccion + $ingresos_efectivo) + $valor_apertura['valor'], 0, ",", "."),
                 'efectivo_cierre' => "$" . number_format($efectivo_cierre, 0, ",", "."),
                 'transaccion_cierre' => "$" . number_format($transaccion_cierre, 0, ",", "."),
                 'total_cierre' => "$" . number_format($efectivo_cierre + $transaccion_cierre, 0, ",", "."),
@@ -509,7 +510,7 @@ class reporteDeVentasController extends BaseController
                 'retiros' => "$" . number_format($retiros, 0, ",", "."),
                 'propinas' => "$" . number_format($propinas, 0, ",", "."),
                 'retirosmasdevoluciones' => "$" . number_format($retiros + $devoluciones, 0, ",", "."),
-                'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_efectivo +$ingresos_transaccion) - ($retiros + $devoluciones), 0, ",", "."),
+                'saldo_caja' => "$" . number_format(($valor_apertura['valor'] + $ingresos_efectivo + $ingresos_transaccion) - ($retiros + $devoluciones), 0, ",", "."),
                 'diferencia' => "$" . number_format($diferencia, 0, ",", "."),
                 'id_apertura' => $ultimo_id,
             ]);
@@ -1417,7 +1418,7 @@ class reporteDeVentasController extends BaseController
 
 
 
-        $id_apertura = $this->request->getGet('id_apertura'); 
+        $id_apertura = $this->request->getGet('id_apertura');
 
 
 

@@ -208,13 +208,14 @@ class duplicadoFacturaController extends BaseController
             $total = model('productoFacturaVentaModel')->selectSum('total')->where('id_factura', $id_factura)->find();
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
 
-
-            $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total']-($total_ico+$total_iva), 0, ",", ".") . "\n");
-            if ($total_iva != 0) {
-                $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");
-            }
-            if ($total_ico) {
-                $printer->text("IMPUESTO AL CONSUMO :" . "$" . number_format($total_ico, 0, ",", ".") . "\n");
+            if ($estado_factura[0]['idestado'] == 1) {
+                $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico + $total_iva), 0, ",", ".") . "\n");
+                if ($total_iva != 0) {
+                    $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");
+                }
+                if ($total_ico) {
+                    $printer->text("IMPUESTO AL CONSUMO :" . "$" . number_format($total_ico, 0, ",", ".") . "\n");
+                }
             }
             $descuento = model('facturaVentaModel')->select('descuento')->where('id', $id_factura)->first();
             $printer->text("DESCUENTO :" . "$" . number_format($descuento['descuento'], 0, ",", ".") . "\n");

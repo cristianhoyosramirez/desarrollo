@@ -1,24 +1,3 @@
-<!-- <style>
-  /* Estilos personalizados */
-  .teclado-container {
-    max-width: 100px;
-    margin: 0 auto;
-  }
-
-  .teclado-button {
-    font-size: 20px;
-    width: 70px;
-    height: 80px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .teclado-button:hover {
-    background-color: #ccc;
-  }
-</style> -->
 
 <style>
   /* Estilos personalizados */
@@ -114,11 +93,15 @@
                   </div>
                   <div class="row mb-2">
                     <label for="inputEmail3" class="col-sm-4 col-form-label">Documento</label>
+                   
                     <div class="col-sm-8">
                       <select class="form-select" id="documento" name="documento" onchange="habilitarBotonPago()">
                         <option value="1">POS CONTADO</option>
                         <option value="2">POS CRÉDITO</option>
                         <option value="8">FACTURA ELECTRÓNICA </option>
+                        <option value="11">FACTURA ELECTRÓNICA CRÉDITO</option>
+
+            
                       </select>
                       <p class="text-danger h3" id="error_documento"></p>
                     </div>

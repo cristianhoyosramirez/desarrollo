@@ -72,7 +72,7 @@ class Boletas extends BaseController
         $qrtext = $ultimoID;
 
         $path = 'images/';
-        $qrcode = $path .  $qrtext . ".png";
+        $qrcode = $path .  1 . ".png";
         $qrimage = time() . ".png";
 
         $model = model('boletasModel');
@@ -651,7 +651,7 @@ class Boletas extends BaseController
 
         if ($cantidad_actualizar < $cantidad_producto['cantidad_producto']) {
 
-        
+
 
             if ($tipo_usuario['idtipo'] == 1 || $tipo_usuario['idtipo'] == 0) {
                 $cantidades = [
@@ -728,5 +728,81 @@ class Boletas extends BaseController
             );
             echo  json_encode($returnData);
         }
+    }
+
+    function consultar_ventas()
+    {
+
+
+       $estado = model('estadoModel')->where('estado','true')->orderBy('orden','asc')->findAll();
+       //$estado = model('estadoModel')->findAll();
+        return view('ventas/ventas', [
+            'estado' => $estado
+        ]);
+    }
+
+    function documento()
+    {
+        $id_documento = $this->request->getPost('tipo_documento');
+        // $id_documento = 2;
+
+        $nombre_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $id_documento)->first();
+
+        $fecha_inicial = $this->request->getPost('fecha_inicial');
+        $fecha_final = $this->request->getPost('fecha_final');
+
+
+        if ($id_documento == 2) {
+            $consulta = "select * from pagos where id_estado= $id_documento and saldo > 0 
+           ";
+        }
+
+
+        $documentos = model('pagosModel')->get_ventas_credito($consulta);
+
+         $saldo= model('pagosModel')->get_saldo($id_documento);
+
+
+        $returnData = array(
+            "resultado" => 1,  // Se actulizo el registro 
+            "datos" => view('consultar_ventas/documento', [
+                'documentos' => $documentos,
+                'titulo' => "LISTADO COMPLETO DE VENTAS " . $nombre_documento['descripcionestado'],
+                'id_estado' => $id_documento,
+                'saldo'=> "$ ".number_format($saldo[0]['saldo'], 0, ",", ".")
+            ])
+
+        );
+        echo  json_encode($returnData);
+    }
+
+    function numero_documento()
+    {
+        $numero_documento = $this->request->getPost('numero_factura');
+
+        $factura = model('pagosModel')->get_documento($numero_documento);
+
+
+        if (!empty($factura)) {
+            $returnData = array(
+                "resultado" => 1,  // Se actulizo el registro 
+
+
+            );
+            echo  json_encode($returnData);
+        }
+        if (empty($factura)) {
+            $returnData = array(
+                "resultado" => 0,  // Se actulizo el registro 
+
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+    function get_cliente(){
+
+        echo "Hola mundo ";
+
     }
 }

@@ -54,25 +54,25 @@ class productoController extends BaseController
 
         $sql_count = $sql_count . $condition;
         $sql_data = $sql_data . $condition;
-        
+
         //$total_count = $this->db->query($sql_count)->getRow();
         $total_count = $this->db->query($sql_count)->getRow();
         //echo $total_count->total;
         //dd($total_count);
-       
+
         $sql_data .= " ORDER BY " . $table_map[$_POST['order'][0]['column']] . " " . $_POST['order'][0]['dir'] . " " . "LIMIT " . $_POST['length'] . " OFFSET " . $_POST['start'];
-    
+
         $datos = $this->db->query($sql_data)->getResultArray();
         //$data = $this->db->query($sql_data)->getResult();
-        
+
         if (!empty($datos)) {
             foreach ($datos as $detalle) {
                 $cant = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                if (empty($cant)){
-                    $cantidad= 0;
+                if (empty($cant)) {
+                    $cantidad = 0;
                 }
-                if (!empty($cant)){
-                    $cantidad=$cant['cantidad_inventario'];
+                if (!empty($cant)) {
+                    $cantidad = $cant['cantidad_inventario'];
                 }
                 $sub_array = array();
                 $sub_array[] = $detalle['nombrecategoria'];
@@ -133,17 +133,39 @@ class productoController extends BaseController
     {
         $returnData = array();
         $valor = $this->request->getVar('term');
+        //$valor = 'a';
 
         $resultado = model('productoModel')->autoComplete($valor);
 
         if (!empty($resultado)) {
             foreach ($resultado as $row) {
                 $cantidad_producto = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $row['codigointernoproducto'])->first();
+
+
+                if (empty($cantidad_producto)) {
+                    $inventario = [
+                        'codigointernoproducto' => $row['codigointernoproducto'],
+                        'idvalor_unidad_medida' => 3,
+                        'idcolor' => 0,
+                        'cantidad_inventario' => 0
+                    ];
+
+                    $insert = model('inventarioModel')->insert($inventario);
+
+                    $cantidad = 0;
+                }
+
+                if (!empty($cantidad_producto)) {
+                    $cantidad = $cantidad_producto['cantidad_inventario'];
+                }
+
+
                 $data['value'] =  $row['codigointernoproducto'] . " " . "/" . " " . $row['nombreproducto'];
                 $data['id_producto'] = $row['codigointernoproducto'];
                 $data['nombre_producto'] = $row['nombreproducto'];
                 $data['valor_venta'] = $row['valorventaproducto'];
-                $data['cantidad'] = $cantidad_producto['cantidad_inventario'];
+                //$data['cantidad'] = $cantidad_producto['cantidad_inventario'];
+                $data['cantidad'] = $cantidad;
                 // $data=['cantidad']=$cantidad_producto['cantidad_inventario'];
                 array_push($returnData, $data);
             }

@@ -4,6 +4,7 @@ namespace App\Controllers\factura_electronica;
 
 use App\Controllers\BaseController;
 use App\Libraries\Impuestos;
+use App\Libraries\Inventario;
 use \DateTime;
 use \DateTimeZone;
 
@@ -17,7 +18,7 @@ class FacturaElectronica extends BaseController
     function pre_factura()
     {
         $impuestos = new Impuestos();
-
+        $inventario = new Inventario();
         //var_dump($this->request->getPost());
         $id_mesa = $this->request->getPost('id_mesa');
         $tipo_pago = $this->request->getPost('tipo_pago');         // Tipo de pago 1 = pago completo; 0 pago parcial
@@ -29,8 +30,8 @@ class FacturaElectronica extends BaseController
         $estado = $this->request->getPost('estado');
         $pago_total = $this->request->getPost('pago_total');
         $propina = $this->request->getPost('propina_format');
-        /* 
-        $id_mesa = 1;
+
+        /*    $id_mesa = 300;
         $tipo_pago = 1;         // Tipo de pago 1 = pago completo; 0 pago parcial
         $id_usuario = 6;      // Tipo de pago 1 = pago completo; 0 pago parcial
         $efectivo = 100000;         // Tipo de pago 1 = pago completo; 0 pago parcial
@@ -39,9 +40,16 @@ class FacturaElectronica extends BaseController
         $nit_cliente = 222222222222;
         $estado = 8;
         $pago_total = 200000;
-        $propina =0; */
+        $propina =0;  */
 
 
+
+        if ($estado == 11) {
+            $saldo = $valor_venta;
+        }
+        if ($estado != 11) {
+            $saldo = 0;
+        }
 
 
         $id_regimen = model('empresaModel')->select('idregimen')->first();
@@ -54,6 +62,10 @@ class FacturaElectronica extends BaseController
 
         $apertura = model('aperturaRegistroModel')->select('numero')->where('idcaja', 1)->first();
 
+
+
+
+
         $data = [
             'nit_cliente' => $nit_cliente,
             //'nit_cliente' => '222222222222',
@@ -61,7 +73,7 @@ class FacturaElectronica extends BaseController
             'tipo' => 'INVOIC',
             'tipo_factura' => '01',
             'tipo_operacion' => '10',
-            'tipo_ambiente' => '1',
+            'tipo_ambiente' => '2',
             'id_status' => 1,
             //'numero' => $numero,
             'fecha' => date('Y-m-d'),
@@ -216,6 +228,9 @@ class FacturaElectronica extends BaseController
                     ];
 
                     $insertar = model('kardexModel')->insert($data);
+
+                    $id_tipo_inventario = model('productoModel')->select('id_tipo_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                    $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
                 }
             }
         } else if (($id_regimen['idregimen'] == 2)) {  //Empresa no responsabel de impuestos 
@@ -253,11 +268,14 @@ class FacturaElectronica extends BaseController
                     'iva' => 0,
                     'valor_ico' => 0,
                     'valor_iva' => 0,
-                    'aplica_ico' => 0
+                    'aplica_ico' => 'false'
                 ];
 
 
                 $insertar = model('kardexModel')->insert($data);
+
+                $id_tipo_inventario = model('productoModel')->select('id_tipo_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                    $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
             }
         }
         if ($insert) {
@@ -358,7 +376,8 @@ class FacturaElectronica extends BaseController
                 'cambio' => $cambio,
                 'recibido_efectivo' => $recibido_efectivo,
                 'recibido_transferencia' => $recibido_transaccion,
-                'id_factura' => $id_factura
+                'id_factura' => $id_factura,
+                'saldo' => $saldo
             ];
 
             $pagos = model('pagosModel')->insert($pagos);
@@ -419,7 +438,7 @@ class FacturaElectronica extends BaseController
                     "categorias" => view('pedidos/categorias', [
                         'categorias' => $categorias
                     ]),
-                    "id_factura"=>$id_factura
+                    "id_factura" => $id_factura
                 );
                 echo  json_encode($returnData);
             }

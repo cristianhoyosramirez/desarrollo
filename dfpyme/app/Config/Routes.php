@@ -376,6 +376,7 @@ $routes->group('empresa', ['namespace' => 'App\Controllers\empresa', 'filter' =>
     $routes->get('datos', 'EmpresaController::datos');
     $routes->post('actualizar_datos', 'EmpresaController::actualizar_datos');
     $routes->get('resolucion_facturacion', 'EmpresaController::resolucion_facturacion');
+    $routes->get('resolucion_electronica', 'EmpresaController::resolucion_electronica');
     $routes->get('consecutivos', 'EmpresaController::consecutivos');
     $routes->post('guardar_resolucion_facturacion', 'EmpresaController::guardar_resolucion_facturacion');
     $routes->post('actualizar_consecutivos', 'EmpresaController::actualizar_consecutivos');
@@ -387,6 +388,7 @@ $routes->group('empresa', ['namespace' => 'App\Controllers\empresa', 'filter' =>
     $routes->post('activar_resolucion_dian', 'EmpresaController::activar_resolucion_dian');
     $routes->get('comprobante_transaccion', 'EmpresaController::comprobante_transaccion');
     $routes->post('configuracion_impresion', 'EmpresaController::configuracion_impresion');
+    $routes->post('agregar_resolucion_electronica', 'EmpresaController::agregar_resolucion_electronica');
 });
 
 $routes->group('caja_general', ['namespace' => 'App\Controllers\caja_general', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -447,6 +449,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('buscar_mesero', 'Mesas::buscar_mesero');
     $routes->get('lista_electronicas', 'Imprimir::lista_electronicas');
     $routes->post('imprimir_factura_electronica', 'Imprimir::imprimir_factura_electronica');
+    $routes->post('impresion_factura_electronica', 'Imprimir::impresion_factura_electronica');
     $routes->post('detalle_f_e', 'Imprimir::detalle_f_e');
 });
 
@@ -460,6 +463,7 @@ $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter'
     $routes->post('productos_borrados', 'Inventarios::productos_borrados');
     $routes->post('productos_subcategoria', 'Inventarios::productos_subcategoria');
     $routes->post('reporte_meseros', 'Inventarios::reporte_meseros');
+    $routes->post('entradas_salidas', 'Inventarios::entradas_salidas');
 });
 
 $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -481,7 +485,14 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('valor', 'Boletas::valor');
     $routes->post('editar_cantidades', 'Boletas::editar_cantidades');
     $routes->post('actualizar_cantidades', 'Boletas::actualizar_cantidades');
+    $routes->get('consultar_ventas', 'Boletas::consultar_ventas');
+    $routes->post('consultar_documento', 'Boletas::documento');
+    $routes->post('numero_documento', 'Boletas::numero_documento');
+    $routes->post('get_cliente', 'Boletas::get_cliente');
 });
+
+
+
 $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->post('ventas', 'Ventas::ventas');
     $routes->post('exportar_excel', 'Ventas::exportar_excel');

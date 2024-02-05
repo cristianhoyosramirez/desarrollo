@@ -21,18 +21,18 @@ class CerrarVenta extends BaseController
 
 
 
-        /*    $id_mesa = 55;
+        /*   $id_mesa = 1;
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
-        $efectivo = 36000;
+        $efectivo = 500;
         $transaccion = 0;
-        $valor_venta = 36000;
+        $valor_venta = 500;
         $nit_cliente = '22222222';
         $id_usuario = 6;
         $estado = 1;
         $propina = 0;
         $descuento = 0;
-        $tipo_pago = 1; */
+        $tipo_pago = 1;  */
 
         // var_dump($this->request->getPost()); exit();
 
@@ -122,6 +122,10 @@ class CerrarVenta extends BaseController
 
                 $serie_update  = $serie['numeroconsecutivo'] + 1;
                 $incremento = model('consecutivosModel')->update_serie($serie_update);
+
+
+
+
                 $factura_venta = model('facturaVentaModel')->factura_venta(
                     $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'],
                     $nit_cliente,
@@ -168,6 +172,19 @@ class CerrarVenta extends BaseController
                 $numero_factura = ['numero_factura' => $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo']];
 
                 $actualiar_pedido_consecutivos =   model('cerrarVentaModel')->actualiar_pedido_consecutivos($numero_pedido, $numero_factura, $consecutivo);
+
+
+                $items = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
+                /*  foreach($items as $valor ){
+
+                  $exite=model('inventarioModel')->select('codigointernoproducto',$valor['codigointernoproducto'])->first();
+
+                  if (empty($exite))
+
+                } */
+
+
+
 
                 if ($tipo_pago == 1) {
                     $productos = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
@@ -279,10 +296,19 @@ class CerrarVenta extends BaseController
                     }
                 }
 
+                if ($estado == 2) {
+                    $valor_pago_transferencia = 0;
+                    $valor_pago_efectivo = 0;
+                    $cambio = 0;
+                    $recibido_transaccion = 0;
+                    $recibido_efectivo = 0;
+                }
+
 
 
                 $numero_pedido = $pedido['id'];
                 $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $numero_pedido)->first();
+
 
 
                 $pagos = [
@@ -303,7 +329,8 @@ class CerrarVenta extends BaseController
                     'cambio' => $cambio,
                     'recibido_efectivo' => $recibido_efectivo,
                     'recibido_transferencia' => $recibido_transaccion,
-                    'id_factura' => $factura_venta
+                    'id_factura' => $factura_venta,
+                    'saldo' => $saldo
                 ];
 
                 $pagos = model('pagosModel')->insert($pagos);

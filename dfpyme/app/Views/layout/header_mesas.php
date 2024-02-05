@@ -218,7 +218,19 @@
                     <line x1="9" y1="13" x2="15" y2="13" />
                     <line x1="13" y1="17" x2="15" y2="17" />
                   </svg>
-                  Resolución de facturación
+                  Resolución de facturación POS
+                </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/empresa/resolucion_electronica">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/file-invoice -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                    <line x1="9" y1="7" x2="10" y2="7" />
+                    <line x1="9" y1="13" x2="15" y2="13" />
+                    <line x1="13" y1="17" x2="15" y2="17" />
+                  </svg>
+                  Resolución de facturación electrónica
                 </a>
                 <a class="dropdown-item" href="<?= base_url() ?>/empresa/consecutivos">
                   <!-- Download SVG icon from http://tabler-icons.io/i/arrow-narrow-right -->
@@ -318,7 +330,7 @@
           </li>
         <?php } ?>
 
-        <?php if ($user_session->tipo == 0) { ?>
+        <?php if ($user_session->tipo == 0 || $user_session->tipo == 1) { ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="text-orange">
@@ -476,10 +488,17 @@
 
                     </div>
                   </div>
-
-
+                  <?php if ($user_session->tipo == 0) { ?>
+                    <a href="<?= base_url() ?>/eventos/consultar_ventas" class="dropdown-item">
+                      <!-- Download SVG icon from http://tabler-icons.io/i/activity -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M3 12h4l3 8l4 -16l3 8h4" />
+                      </svg>
+                      consultar ventas</a>
                 </div>
               <?php } ?>
+            <?php } ?>
 
             </div>
           </li>
@@ -781,7 +800,7 @@
           </li>
         <?php } ?>
 
-        <!--         <?php if ($user_session->tipo == 0) { ?>
+        <?php if ($user_session->tipo == 0) { ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="text-blue">
@@ -827,7 +846,7 @@
 
             </div>
           </li>
-        <?php } ?> -->
+        <?php } ?>
         </ul>
       </div>
     </div>

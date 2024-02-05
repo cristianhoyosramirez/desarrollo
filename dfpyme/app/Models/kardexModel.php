@@ -12,7 +12,7 @@ class kardexModel extends Model
     protected $allowedFields = [
         'idcompra', 'codigo', 'idusuario', 'idconcepto', 'numerodocumento', 'fecha', 'hora',
         'cantidad', 'valor', 'total', 'fecha_y_hora_factura_venta', 'id_categoria', 'id_apertura', 'valor_unitario', 'id_factura', 'costo',
-        'ico', 'iva', 'id_estado','valor_ico','valor_iva','aplica_ico'
+        'ico', 'iva', 'id_estado', 'valor_ico', 'valor_iva', 'aplica_ico'
     ];
 
     public function get_productos($id_apertura)
@@ -29,7 +29,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function get_iva_fiscales($id_apertura,$valor_iva)
+    public function get_iva_fiscales($id_apertura, $valor_iva)
     {
         $datos = $this->db->query("
         SELECT
@@ -132,6 +132,40 @@ class kardexModel extends Model
     {
         $datos = $this->db->query("
             select sum(total) as total from kardex where id_apertura = $id_apertura and id_estado = 1 and valor_iva = $valor_iva 
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_inc_calc($id_factura)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT ( valor_ico )
+        FROM   kardex
+        WHERE  id_factura =$id_factura
+               AND aplica_ico = true 
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_total_inc($id_factura)
+    {
+        $datos = $this->db->query("
+        SELECT sum ( ico ) as total_inc
+        FROM   kardex
+        WHERE  id_factura =$id_factura
+               AND aplica_ico = true 
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_iva_calc($id_factura)
+    {
+        $datos = $this->db->query("
+        select distinct (valor_iva ) from kardex where id_factura = $id_factura and aplica_ico= false
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_total_iva($id_factura)
+    {
+        $datos = $this->db->query("
+        select sum (iva ) as total_iva from kardex where id_factura = $id_factura and aplica_ico= false
         ");
         return $datos->getResultArray();
     }

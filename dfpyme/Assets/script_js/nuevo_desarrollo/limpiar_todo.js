@@ -35,6 +35,7 @@ function limpiar_todo() {
     $('#pago').html('Valor pago: 0');
     $('#cambio').html('Cambio: 0');
     $('#mesa_pedido').html('');
+    $('#valor_pago_error').html('');
     $('#sub_total_pedido').html('Sub total: 0');
 
     $('#efectivo').select()

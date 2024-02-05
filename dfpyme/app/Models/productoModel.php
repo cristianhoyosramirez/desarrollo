@@ -75,7 +75,7 @@ class productoModel extends Model
           OR codigointernoproducto ilike '%$valor%'
           AND id_tipo_inventario = '3'
           OR nombreproducto ilike '%$valor%'
-          AND id_tipo_inventario = '3' AND permitir_categoria = 'true'
+          AND id_tipo_inventario = '3' AND permitir_categoria = 'true' and estadoproducto='true'
               
           OR codigobarrasproducto ilike '%$valor'
           AND id_tipo_inventario = '1' 
@@ -83,10 +83,37 @@ class productoModel extends Model
           AND id_tipo_inventario = '1'
           OR nombreproducto ilike '%$valor%' 
           AND id_tipo_inventario = '1' 
-          AND permitir_categoria = 'true'
+          AND permitir_categoria = 'true' and estadoproducto='true'
         ");
         return $datos->getResultArray();
     }
+
+
+    public function get_productos($valor)
+    {
+
+        $datos = $this->db->query("
+        SELECT
+            categoria.codigocategoria,
+            codigointernoproducto,
+            codigobarrasproducto,
+            id_tipo_inventario,
+            nombreproducto,
+            valorventaproducto,
+            aplica_descuento
+        FROM
+            public.producto
+        INNER JOIN categoria ON producto.codigocategoria = categoria.codigocategoria
+        WHERE
+          codigobarrasproducto ilike '%$valor%' 
+          OR codigointernoproducto ilike '%$valor%'
+          OR nombreproducto ilike '%$valor%'
+          AND permitir_categoria = 'true' and estadoproducto='true'
+        ");
+        return $datos->getResultArray();
+    }
+
+
     public function producto_pedido_pos($valor)
     {
 
@@ -367,6 +394,7 @@ class productoModel extends Model
         categoria ON producto.codigocategoria = categoria.codigocategoria
     INNER JOIN 
         inventario ON producto.codigointernoproducto = inventario.codigointernoproducto
+    where estadoproducto='true'
     ORDER BY 
         categoria.nombrecategoria ASC,
         producto.nombreproducto ASC;

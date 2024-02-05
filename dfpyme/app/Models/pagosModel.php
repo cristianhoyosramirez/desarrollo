@@ -26,7 +26,8 @@ class pagosModel extends Model
         'recibido_efectivo',
         'recibido_transferencia',
         'cambio',
-        'id_factura'
+        'id_factura',
+        'saldo'
     ];
 
     public function set_ventas_pos($id_apertura)
@@ -226,6 +227,30 @@ class pagosModel extends Model
         $datos = $this->db->query("
         select DISTINCT(id_mesero) from pagos where fecha between '$fecha' and '$fecha'
  ");
+        return $datos->getResultArray();
+    }
+    function get_ventas_credito($consulta)
+    {
+
+        $datos = $this->db->query("
+       $consulta
+        ");
+        return $datos->getResultArray();
+    }
+    function get_documento($documento)
+    {
+
+        $datos = $this->db->query("
+        select * from pagos where documento = '$documento'
+        ");
+        return $datos->getResultArray();
+    }
+    function get_saldo($id_estado)
+    {
+
+        $datos = $this->db->query("
+            select sum (saldo) as saldo  from pagos where saldo > 0 and id_estado=$id_estado
+        ");
         return $datos->getResultArray();
     }
 }

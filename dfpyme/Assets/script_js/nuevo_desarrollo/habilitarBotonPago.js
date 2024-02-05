@@ -19,6 +19,12 @@ function habilitarBotonPago() {
         }
     }
 
+    if (select == 2) {
+        sweet_alert('warning', 'Venta crédito ')
+        $('#efectivo').val(0)
+        $('#transaccion').val(0)
+    }
+
 
 
 }
