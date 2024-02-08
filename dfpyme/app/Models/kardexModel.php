@@ -169,4 +169,37 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+
+
+    public function get_tarifa_ico($id_factura, $valor_ico)
+    {
+        $datos = $this->db->query("
+        select sum (ico) as inc from kardex where id_factura = $id_factura and valor_ico = $valor_ico
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_tarifa_iva($id_factura, $valor_iva)
+    {
+        $datos = $this->db->query("
+        select sum (iva) as inc from kardex where id_factura = $id_factura and valor_iva = $valor_iva
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_productos_factura($id_factura)
+    {
+        $datos = $this->db->query("
+        SELECT producto.nombreproducto AS descripcion,
+        cantidad,
+        codigo,
+        valor_unitario AS neto,
+        valor_ico,
+        valor_iva,
+        kardex.aplica_ico,
+        total
+ FROM kardex
+ INNER JOIN producto ON producto.codigointernoproducto = kardex.codigo
+ WHERE id_factura= $id_factura
+        ");
+        return $datos->getResultArray();
+    }
 }

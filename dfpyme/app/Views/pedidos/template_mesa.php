@@ -155,7 +155,7 @@
 
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="id_factura">
+                        <input type="text" id="id_factura">
                         <div class="mb-3" id="barra_de_progreso">
                             <label class="form-label">Esperando respuesta DIAN</label>
                             <div class="progress">
@@ -288,7 +288,7 @@
 
                 var url = document.getElementById("url").value;
                 var id_factura = document.getElementById("id_factura").value;
-
+                $("#barra_progreso").modal("hide");
                 $.ajax({
                     data: {
                         id_factura, // Incluye el número de factura en los datos

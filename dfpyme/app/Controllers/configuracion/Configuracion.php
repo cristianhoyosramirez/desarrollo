@@ -205,4 +205,15 @@ class Configuracion extends BaseController
         );
         echo  json_encode($returnData);
     }
+
+    function tipos_de_factura(){
+
+       // $facturas=model('estadoModel')->find()->orderBy('orden','asc');
+        $facturas=model('estadoModel')->orderBy('orden','asc')->find();
+
+    
+        return view('tipos_de_factura/facturas',[
+            'tipo_factura'=>$facturas
+        ]);
+    }
 }

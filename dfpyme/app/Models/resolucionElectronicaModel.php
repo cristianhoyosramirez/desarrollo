@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class resolucionElectronicaModel extends Model
 {
-    protected $table      = 'documento_electronico';
+    protected $table      = 'resolucion_electronica';
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
     protected $allowedFields = [

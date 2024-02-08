@@ -530,6 +530,7 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->post('actualizar_sub_categoria', 'Configuracion::actualizar_sub_categoria');
     $routes->post('eliminar_sub_categoria', 'Configuracion::eliminar_sub_categoria');
     $routes->post('actualizar_estado_sub_categoria', 'Configuracion::actualizar_estado_sub_categoria');
+    $routes->get('tipos_de_factura', 'Configuracion::tipos_de_factura');
 });
 
 /*
