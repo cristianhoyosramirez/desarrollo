@@ -1046,9 +1046,9 @@ class Imprimir extends BaseController
     }
     function impresion_factura_electronica()
     {
-        $id_factura = $this->request->getPost('id_factura');
+        $id_factura = $this->request->getPost('id_factura'); 
         
-        //$id_factura = 16;
+       // $id_factura = 66;
         $id_impresora = model('cajaModel')->select('id_impresora')->first();
         $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
         $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
@@ -1284,7 +1284,7 @@ class Imprimir extends BaseController
             foreach ($iva_tarifa as $detalle) {
                 $iva = model('kardexModel')->get_tarifa_iva($id_factura, $detalle['valor_iva']);
 
-                $tarifa = $inc_tarifa[0]['valor_iva'] . " %";
+                $tarifa = $iva_tarifa[0]['valor_iva'] . " %";
                 $base_iva = number_format(($total['total'] - $iva[0]['iva']), 0, ",", ".");
                 $venta = number_format($total['total'], 0, ",", ".");
 
