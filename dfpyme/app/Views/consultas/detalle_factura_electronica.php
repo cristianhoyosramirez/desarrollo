@@ -1,3 +1,8 @@
+<p>Factura electrónica de venta número  </p>
+<p>Cliente </p>
+<p>Fecha de factura </p>
+
+
 <table class="table table-striped table-hover">
     <thead class="table-dark">
         <tr>

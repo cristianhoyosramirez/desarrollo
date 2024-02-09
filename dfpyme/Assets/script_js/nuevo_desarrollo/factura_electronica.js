@@ -4,13 +4,15 @@ let Error = { error: "" };
 
 async function sendInvoice(iddoc) {
     invoice.id = iddoc;
-
+    $("#id_de_factura").val(iddoc);
     $("#barra_progreso").modal("show");
 
-    let url = new URL("http://localhost:5000/api/Invoice/id");
+    //let url = new URL("http://localhost:5000/api/Invoice/id");
+    let url = new URL("http://localhost:3000/api");
     url.search = new URLSearchParams({ id : iddoc });
     const response = await fetch(url , { method:"GET" });
     const data = await response.json();
+    console.log(invoice.id)
     if (response.status === 200) {
         invoice = JSON.parse(JSON.stringify(data, null, 2));
         
@@ -18,7 +20,8 @@ async function sendInvoice(iddoc) {
         //console.log('Fact No ' + invoice.order_reference + ' ' + invoice.dian_status);
 
        // $("#barra_progreso").modal("hide");
-       $("#id_factura").val(invoice.id);
+       //$("#id_factura").val(invoice.id);
+       $("#id_factura").val(iddoc);
        $("#barra_de_progreso").hide();
        $("#respuesta_dian").show();
        $("#opciones_dian").show();
@@ -34,7 +37,8 @@ async function sendInvoice(iddoc) {
         $("#respuesta_dian").show();
         $("#error_dian").show();
         $("#texto_dian").html(erroresp.errors[0].error);
-        $("#id_factura").val(invoice.id);
+        //$("#id_factura").val(invoice.id);
+        $("#id_factura").val(iddoc);
     }
     else {
         Error = JSON.parse(JSON.stringify(data, null, 2));  //Error Api 
@@ -43,7 +47,8 @@ async function sendInvoice(iddoc) {
         $("#respuesta_dian").show();
         $("#error_dian").show();
         $("#texto_dian").html('Respuesta DIAN: '+erroresp.errors[0].error);
-        $("#id_factura").val(invoice.id);
+        //$("#id_factura").val(invoice.id);
+        $("#id_factura").val(iddoc);
     }
 
 }
@@ -105,7 +110,7 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     
                     Swal.fire({
                         title: 'Resumen de prefactura electrónica',
-                        showDenyButton: true,
+                        showDenyButton: false,
                         confirmButtonText: 'Trasmitir', // Se intercambia con denyButtonText
                         denyButtonText: 'Nueva factura', // Se intercambia con confirmButtonText
                         allowOutsideClick: false,

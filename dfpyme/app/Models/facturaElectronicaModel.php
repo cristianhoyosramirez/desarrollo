@@ -37,7 +37,11 @@ class facturaElectronicaModel extends Model
         'fecha_y_hora_factura_venta',
         'id_apertura',
         'propina',
-        'id_apertura'
+        'id_apertura',
+        'qrcode',
+        'cufe',
+        'pdf_url',
+        'nota'
     ];
 
     public function insertar($datos) {

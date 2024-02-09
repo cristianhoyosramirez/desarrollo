@@ -198,7 +198,7 @@
                           </div>
                           <div>
                             <span class="payment payment-provider-visa payment-xs me-2"></span>
-                            Pago minímo
+                            Efectivo
                           </div>
                         </div>
                       </label>

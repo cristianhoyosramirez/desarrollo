@@ -734,8 +734,8 @@ class Boletas extends BaseController
     {
 
 
-       $estado = model('estadoModel')->where('estado','true')->orderBy('orden','asc')->findAll();
-       //$estado = model('estadoModel')->findAll();
+        $estado = model('estadoModel')->where('estado', 'true')->orderBy('orden', 'asc')->findAll();
+        //$estado = model('estadoModel')->findAll();
         return view('ventas/ventas', [
             'estado' => $estado
         ]);
@@ -743,8 +743,8 @@ class Boletas extends BaseController
 
     function documento()
     {
-        $id_documento = $this->request->getPost('tipo_documento');
-        // $id_documento = 2;
+        //$id_documento = $this->request->getPost('tipo_documento');
+         $id_documento = 8;
 
         $nombre_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $id_documento)->first();
 
@@ -752,16 +752,25 @@ class Boletas extends BaseController
         $fecha_final = $this->request->getPost('fecha_final');
 
 
-        if ($id_documento == 2) {
+        if ($id_documento == 2) {  //Documento credito
             $consulta = "select * from pagos where id_estado= $id_documento and saldo > 0 
            ";
         }
+         if ($id_documento != 2) {  //Documento credito
+            $consulta = "select * from pagos where id_estado= $id_documento 
+           ";
+        } 
+       /*  if ($id_documento == 8) {  //Documento credito
+            $consulta = "select * from documento_electronico  
+           ";
+        } */
 
 
         $documentos = model('pagosModel')->get_ventas_credito($consulta);
 
-         $saldo= model('pagosModel')->get_saldo($id_documento);
+        
 
+        $saldo = model('pagosModel')->get_saldo($id_documento);
 
         $returnData = array(
             "resultado" => 1,  // Se actulizo el registro 
@@ -769,7 +778,7 @@ class Boletas extends BaseController
                 'documentos' => $documentos,
                 'titulo' => "LISTADO COMPLETO DE VENTAS " . $nombre_documento['descripcionestado'],
                 'id_estado' => $id_documento,
-                'saldo'=> "$ ".number_format($saldo[0]['saldo'], 0, ",", ".")
+                'saldo' => "$ " . number_format($saldo[0]['saldo'], 0, ",", ".")
             ])
 
         );
@@ -800,9 +809,9 @@ class Boletas extends BaseController
         }
     }
 
-    function get_cliente(){
+    function get_cliente()
+    {
 
         echo "Hola mundo ";
-
     }
 }

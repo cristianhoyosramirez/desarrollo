@@ -28,7 +28,8 @@
             </div>
             <div class="page-body">
                 <?= $this->renderSection('content') ?>
-
+                <?= $this->include('pedidos/modal_trasmision_electronica') ?>
+                <?= $this->include('modal_abono_factura/modal_detalle_factura') ?>
             </div>
             <?= $this->include('layout/footer') ?>
         </div>
@@ -45,6 +46,10 @@
 
         <!--select2 -->
         <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
+
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/nueva_factura.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/detalle_f_e.js"></script>
+
 
         <script>
             $("#buscar_cliente").autocomplete({

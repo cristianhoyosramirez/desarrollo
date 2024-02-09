@@ -126,6 +126,8 @@
     <?= $this->include('ventanas_modal_pedido/cambiar_de_mesa') ?>
     <?= $this->include('ventanas_modal_retiro_de_dinero/imprimir_retiro') ?>
     <?= $this->include('ventanas_modal_retiro_de_dinero/devolucion') ?>
+    <?= $this->include('pedidos/modal_trasmision_electronica') ?>
+
     < <?= $this->include('pedidos/crear_cliente') ?> <?= $this->include('toma_pedidos/offcanva_mesas') ?> <?= $this->include('toma_pedidos/offcanva_productos') ?> <!-- Modal -->
         <div class="modal fade" id="editar_cantidades" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -146,39 +148,7 @@
         </div>
 
 
-        <!-- Modal -->
-        <div class="modal fade" id="barra_progreso" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5">Trasmisión de factura electrónica </h1>
-
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" id="id_factura">
-                        <div class="mb-3" id="barra_de_progreso">
-                            <label class="form-label">Esperando respuesta DIAN</label>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-indeterminate bg-green"></div>
-                            </div>
-                        </div>
-
-                        <div id="respuesta_dian" style="display: none;">
-                            <p class="text-primary h3 " id="texto_dian"> </p>
-                        </div>
-                    </div>
-                    <div class="modal-footer" id="opciones_dian" style="display: none;">
-                        <button type="button" class="btn btn-outline-success" onclick="impresion_factura_electronica()">Imprimir </button>
-                        <button type="button" class="btn btn-outline-primary" onclick="nueva_factura()">Nueva Factura </button>
-                    </div>
-                    <div class="modal-footer" id="error_dian" style="display: none;">
-                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Trasmitir </button>
-                        <button type="button" class="btn btn-outline-primary" onclick="imprimir_orden_pedido()">Imprimir orden de pedido </button>
-                        <button type="button" class="btn btn-outline-primary" onclick="nueva_factura()">Nueva factura </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
 
 
         <!-- Libs JS -->
@@ -249,6 +219,7 @@
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/actualizar_cantidad_partir_factura.js"></script>
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/meseros.js"></script>
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/nueva_factura.js"></script>
 
 
         <script>
@@ -288,7 +259,7 @@
 
                 var url = document.getElementById("url").value;
                 var id_factura = document.getElementById("id_factura").value;
-
+                $("#barra_progreso").modal("hide");
                 $.ajax({
                     data: {
                         id_factura, // Incluye el número de factura en los datos
@@ -314,11 +285,7 @@
             }
         </script>
 
-        <script>
-            function nueva_factura() {
-                $("#barra_progreso").modal("hide");
-            }
-        </script>
+        
 
         <script>
             function productos_subcategoria(id_subcategoria) {
