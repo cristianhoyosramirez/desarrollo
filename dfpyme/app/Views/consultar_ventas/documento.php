@@ -12,6 +12,7 @@
             <?php
 
             $nit_cliente = model('facturaElectronicaModel')->select('nit_cliente')->where('id', $detalle['id_factura'])->first();
+            d()
             ?>
             <div class="list-group-item">
                 <div class="row align-items-center">
@@ -39,20 +40,26 @@
                     <?php $pdf = model('facturaElectronicaModel')->select('pdf_url')->where('id', $detalle['id_factura'])->first();
                     ?>
 
-                    <?php if ($pdf['pdf_url'] != "") { ?>
+                    <!--         <?php #if ($pdf['pdf_url'] != "") { 
+                                    ?>
                         <div class="col-12 col-md-2">
 
-                            <a href="<?php echo $pdf['pdf_url'];  ?>" target="_blank" class="cursor-pointer">
-                                <img title="Descargar pdf " src="<?php echo base_url() ?>/Assets/img/pdf.png" width="40" height="40" />
+                            <a href="<?php #echo $pdf['pdf_url'];  
+                                        ?>" target="_blank" class="cursor-pointer">
+                                <img title="Descargar pdf " src="<?php #echo base_url() 
+                                                                    ?>/Assets/img/pdf.png" width="40" height="40" />
                             </a>
                         </div>
-                    <?php  } ?>
-                    <?php if (empty($pdf['pdf_url'])) { ?>
+                    <?php  #} 
+                    ?>
+                    <?php #if (empty($pdf['pdf_url'])) { 
+                    ?>
                         <div class="col-12 col-md-2">
 
 
                         </div>
-                    <?php  } ?>
+                    <?php  #} 
+                    ?> -->
 
                     <?php if ($id_estado == 2) { ?>
                         <div class="col-12 col-md-2">
@@ -97,7 +104,7 @@
 
 
                                         </li>
-                                        <li><a class="dropdown-item" href="#"> <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
+                                        <li><a class="dropdown-item" onclick="detalle_f_e(<?php echo $detalle['id_factura'] ?>)"> <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
                                                 <!-- Download SVG icon from http://tabler-icons.io/i/list-details -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -218,7 +225,7 @@
                 if (resultado.resultado == 1) {
 
 
-                    
+
                 }
             },
         });
@@ -250,10 +257,11 @@
 
     async function sendInvoice(iddoc) {
         invoice.id = iddoc;
-
+        $("#id_de_factura").val(iddoc);
         $("#barra_progreso").modal("show");
 
-        let url = new URL("http://localhost:5000/api/Invoice/id");
+        //let url = new URL("http://localhost:5000/api/Invoice/id");
+        let url = new URL("http://localhost:3000/api");
         url.search = new URLSearchParams({
             id: iddoc
         });

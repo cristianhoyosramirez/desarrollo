@@ -743,8 +743,8 @@ class Boletas extends BaseController
 
     function documento()
     {
-        $id_documento = $this->request->getPost('tipo_documento');
-        // $id_documento = 8;
+        //$id_documento = $this->request->getPost('tipo_documento');
+         $id_documento = 8;
 
         $nombre_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $id_documento)->first();
 
@@ -756,13 +756,19 @@ class Boletas extends BaseController
             $consulta = "select * from pagos where id_estado= $id_documento and saldo > 0 
            ";
         }
-        if ($id_documento != 2) {  //Documento credito
+         if ($id_documento != 2) {  //Documento credito
             $consulta = "select * from pagos where id_estado= $id_documento 
            ";
-        }
+        } 
+       /*  if ($id_documento == 8) {  //Documento credito
+            $consulta = "select * from documento_electronico  
+           ";
+        } */
 
 
         $documentos = model('pagosModel')->get_ventas_credito($consulta);
+
+        
 
         $saldo = model('pagosModel')->get_saldo($id_documento);
 

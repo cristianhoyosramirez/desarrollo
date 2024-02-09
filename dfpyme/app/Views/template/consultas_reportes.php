@@ -36,6 +36,10 @@
         <?= $this->include('ventanas_modal_duplicado_factura/detalle_factura') ?>
         <?= $this->include('ventanas_modal_detalle_de_ventas/detalle_de_ventas') ?>
         <?= $this->include('modal_abono_factura/abono') ?>
+        <?= $this->include('modal_abono_factura/modal_detalle_factura') ?>
+
+
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/detalle_f_e.js"></script>
       </div>
       <?= $this->include('layout/footer') ?>
     </div>

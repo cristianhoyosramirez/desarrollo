@@ -4,7 +4,7 @@ let Error = { error: "" };
 
 async function sendInvoice(iddoc) {
     invoice.id = iddoc;
-
+    $("#id_de_factura").val(iddoc);
     $("#barra_progreso").modal("show");
 
     //let url = new URL("http://localhost:5000/api/Invoice/id");
