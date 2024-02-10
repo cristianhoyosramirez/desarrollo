@@ -427,7 +427,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('consultar_nota', 'Mesas::consultar_nota');
     $routes->post('eliminar_producto', 'Mesas::eliminar_producto');
     $routes->post('actualizar_cantidades', 'Mesas::actualizar_cantidades');
-    $routes->post('eliminacion_de_pedido', 'Mesas::eliminacion_de_pedido');
+    $routes->get('eliminacion_de_pedido', 'Mesas::eliminacion_de_pedido');
     $routes->post('restar_producto', 'Mesas::restar_producto');
     $routes->post('productos_pedido', 'Mesas::productos_pedido');
     $routes->post('partir_factura', 'PartirFactura::partir_factura');
