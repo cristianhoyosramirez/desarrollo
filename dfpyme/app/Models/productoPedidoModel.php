@@ -44,7 +44,7 @@ class productoPedidoModel extends Model
         SELECT
              DISTINCT codigo_categoria
         FROM
-             producto_pedido where numero_de_pedido='$numero_pedido' and numero_productos_impresos_en_comanda < cantidad_producto order by codigo_categoria asc
+             producto_pedido where numero_de_pedido='$numero_pedido' 
         ");
         return $datos->getResultArray();
     }
@@ -63,9 +63,9 @@ class productoPedidoModel extends Model
     }
 
 
-    public function productos_pedido($numero_pedido)
+    public function productos_pedido($numero_pedido,$codigo_categoria)
     {
-        $datos = $this->db->query("
+        $datos =$this->db->query ("
         SELECT
              producto_pedido.id as id,
              producto.nombreproducto,
@@ -79,12 +79,13 @@ class productoPedidoModel extends Model
         FROM
              producto_pedido
         INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
-        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto  order by id asc;
+        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto and codigo_categoria='$codigo_categoria' order by id asc;
         ");
-        return $datos->getResultArray();
+    return $datos->getResultArray(); 
+       
     }
 
-    public function reimprimir_comanda($numero_pedido)
+    public function reimprimir_comanda($numero_pedido,$codigo_categoria)
     {
         $datos = $this->db->query("
         SELECT
@@ -100,7 +101,7 @@ class productoPedidoModel extends Model
         FROM
              producto_pedido
         INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
-        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true'  order by id asc;
+        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and codigo_categoria='$codigo_categoria'  order by id asc;
         ");
         return $datos->getResultArray();
     }

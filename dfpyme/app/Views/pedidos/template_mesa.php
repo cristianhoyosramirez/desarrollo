@@ -148,7 +148,7 @@
         </div>
 
 
-       
+
 
 
         <!-- Libs JS -->
@@ -226,7 +226,7 @@
             function imprimir_orden_pedido() {
 
                 var url = document.getElementById("url").value;
-                var id_factura = document.getElementById("id_factura").value;
+                var id_factura = document.getElementById("id_de_factura").value;
 
 
 
@@ -258,7 +258,7 @@
             function impresion_factura_electronica() {
 
                 var url = document.getElementById("url").value;
-                var id_factura = document.getElementById("id_factura").value;
+                var id_factura = document.getElementById("id_de_factura").value;
                 $("#barra_progreso").modal("hide");
                 $.ajax({
                     data: {
@@ -285,7 +285,7 @@
             }
         </script>
 
-        
+
 
         <script>
             function productos_subcategoria(id_subcategoria) {
@@ -300,7 +300,7 @@
                     success: function(resultado) {
                         var resultado = JSON.parse(resultado);
                         if (resultado.resultado == 1) {
-
+                            
                             $('#productos_categoria').html(resultado.productos)
 
                         }
@@ -947,7 +947,7 @@
                         if (resultado.resultado == 1) {
 
                             $('#lista_completa_mesas').html(resultado.mesas)
-
+                            $('#producto').val();
 
                         }
                     },

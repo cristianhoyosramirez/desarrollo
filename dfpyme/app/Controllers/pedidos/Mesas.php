@@ -14,7 +14,7 @@ class Mesas extends BaseController
         $salones = model('salonesModel')->findAll();
         $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
         $estado = model('estadoModel')->orderBy('idestado', 'ASC')->findAll();
-        $cliente_dian = model('clientesModel')->where('nitcliente', '22222222')->first();
+        $cliente_dian = model('clientesModel')->where('nitcliente', '222222222222')->first();
         $bancos = model('BancoModel')->findAll();
         $requiere_mesero = model('configuracionPedidoModel')->select('mesero_pedido')->first();
         $meseros = model('usuariosModel')->where('idtipo', 2)->orderBy('nombresusuario_sistema', 'asc')->find();
@@ -27,7 +27,7 @@ class Mesas extends BaseController
             'mesas' => $mesas,
             'estado' => $estado,
             'nit_cliente' => $cliente_dian['nitcliente'],
-            'nombre_cliente' => '22222222 CUANTIAS MENORES',
+            'nombre_cliente' => '222222222222 CONSUMIDOR FINAL',
             'bancos' => $bancos,
             'requiere_mesero' => $requiere_mesero['mesero_pedido'],
             'meseros' => $meseros
@@ -40,9 +40,10 @@ class Mesas extends BaseController
 
         $subcategorias = model('configuracionPedidoModel')->select('sub_categoria')->first();
         $id_categoria = $_POST['id_categoria'];
-        //$id_categoria = 1;
+        //  $id_categoria = 2;
+
         $tipo_pedido = $_POST['tipo_pedido'];
-        //$tipo_pedido = "computador";
+        //$tipo_pedido = "movil";
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
 
@@ -96,6 +97,7 @@ class Mesas extends BaseController
             }
 
             if ($tipo_pedido == "movil") {
+
                 $items = view('pedidos/productos_subcategoria_movil', [
                     'id_sub_categoria' => $id_subcategorias
 
@@ -112,12 +114,26 @@ class Mesas extends BaseController
             }
         }
         if (empty($id_subcategorias)) {
+
             $productos = model('productoModel')->tipoInventario($id_categoria);
 
+
             if ($tipo_pedido == "movil") {
+
                 $items = view('pedido/productos', [
                     'productos' => $productos,
                 ]);
+
+
+                $returnData = array(
+                    "resultado" => 1,
+                    "productos" => $items,
+                    "lista_categoria" => view('pedidos/lista_categoria', [
+                        'categorias' => $categorias,
+                        'id_categoria' => $id_categoria
+                    ]),
+                );
+                echo  json_encode($returnData);
             }
             if ($tipo_pedido == "computador") {
 

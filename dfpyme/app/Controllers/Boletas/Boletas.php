@@ -743,8 +743,8 @@ class Boletas extends BaseController
 
     function documento()
     {
-        //$id_documento = $this->request->getPost('tipo_documento');
-         $id_documento = 8;
+        $id_documento = $this->request->getPost('tipo_documento');
+        // $id_documento = 8;
 
         $nombre_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $id_documento)->first();
 
@@ -756,33 +756,53 @@ class Boletas extends BaseController
             $consulta = "select * from pagos where id_estado= $id_documento and saldo > 0 
            ";
         }
-         if ($id_documento != 2) {  //Documento credito
+        if ($id_documento != 2) {  //Documentos de contado 
             $consulta = "select * from pagos where id_estado= $id_documento 
            ";
-        } 
-       /*  if ($id_documento == 8) {  //Documento credito
+        }
+
+        if ($id_documento == 8) {  //Documento electronico 
             $consulta = "select * from documento_electronico  
            ";
-        } */
+        }
 
 
         $documentos = model('pagosModel')->get_ventas_credito($consulta);
 
-        
+
 
         $saldo = model('pagosModel')->get_saldo($id_documento);
 
-        $returnData = array(
-            "resultado" => 1,  // Se actulizo el registro 
-            "datos" => view('consultar_ventas/documento', [
-                'documentos' => $documentos,
-                'titulo' => "LISTADO COMPLETO DE VENTAS " . $nombre_documento['descripcionestado'],
-                'id_estado' => $id_documento,
-                'saldo' => "$ " . number_format($saldo[0]['saldo'], 0, ",", ".")
-            ])
 
-        );
-        echo  json_encode($returnData);
+        if ($id_documento != 8) {
+            $returnData = array(
+                "resultado" => 1,  // Se actulizo el registro 
+                "datos" => view('consultar_ventas/documento', [
+                    'documentos' => $documentos,
+                    'titulo' => "LISTADO COMPLETO DE VENTAS " . $nombre_documento['descripcionestado'],
+                    'id_estado' => $id_documento,
+                    'saldo' => "$ " . number_format($saldo[0]['saldo'], 0, ",", ".")
+                ])
+
+            );
+            echo  json_encode($returnData);
+        }
+        if ($id_documento == 8) {
+            $returnData = array(
+                "resultado" => 1,  // Se actulizo el registro 
+                "datos" => view('consultar_ventas/documento_electronico', [
+                    'documentos' => $documentos,
+                    'titulo' => "LISTADO COMPLETO DE VENTAS " . $nombre_documento['descripcionestado'],
+                    'id_estado' => $id_documento,
+                    'saldo' => "$ " . number_format($saldo[0]['saldo'], 0, ",", ".")
+                ])
+
+            );
+            echo  json_encode($returnData);
+        }
+
+
+
     }
 
     function numero_documento()

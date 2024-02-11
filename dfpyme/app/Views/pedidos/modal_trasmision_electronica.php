@@ -7,7 +7,7 @@
 
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="id_de_factura">
+                        <input type="text" id="id_de_factura">
                         <div class="mb-3" id="barra_de_progreso">
                             <label class="form-label">Esperando respuesta DIAN</label>
                             <div class="progress">

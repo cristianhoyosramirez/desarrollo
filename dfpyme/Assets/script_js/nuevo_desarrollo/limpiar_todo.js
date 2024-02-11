@@ -9,8 +9,8 @@ function limpiar_todo() {
     radio_efectivo.checked = true;
 
 
-    $('#nit_cliente').val('22222222')
-    $('#nombre_cliente').val('22222222 CUANTIAS MENORES')
+    $('#nit_cliente').val('222222222222')
+    $('#nombre_cliente').val('222222222222 CONSUMIDOR FINAL')
     $('#id_mesa_pedido').val('')
     $('#nota_pedido').val('')
 

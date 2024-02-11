@@ -110,7 +110,7 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     
                     Swal.fire({
                         title: 'Resumen de prefactura electrónica',
-                        showDenyButton: false,
+                        showDenyButton: true,
                         confirmButtonText: 'Trasmitir', // Se intercambia con denyButtonText
                         denyButtonText: 'Nueva factura', // Se intercambia con confirmButtonText
                         allowOutsideClick: false,

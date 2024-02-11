@@ -1,4 +1,3 @@
-
 <style>
   /* Estilos personalizados */
   .teclado-container {
@@ -93,15 +92,12 @@
                   </div>
                   <div class="row mb-2">
                     <label for="inputEmail3" class="col-sm-4 col-form-label">Documento</label>
-                   
+                    <?php $estados = model('estadoModel')->where('estado', 'true')->findAll(); ?>
                     <div class="col-sm-8">
                       <select class="form-select" id="documento" name="documento" onchange="habilitarBotonPago()">
-                        <option value="1">POS CONTADO</option>
-                        <option value="2">POS CRÉDITO</option>
-                        <option value="8">FACTURA ELECTRÓNICA </option>
-                        <option value="11">FACTURA ELECTRÓNICA CRÉDITO</option>
-
-            
+                        <?php foreach ($estados as $detalle) { ?>
+                          <option value="<?php echo $detalle['idestado'] ?>"><?php echo $detalle['descripcionestado'] ?></option>
+                        <?php } ?>
                       </select>
                       <p class="text-danger h3" id="error_documento"></p>
                     </div>
@@ -191,7 +187,7 @@
                     </div> -->
                     <div class="col-7">
                       <label class="form-selectgroup-item flex-fill">
-                        <input type="radio" name="form-payment" id="radio_efectivo" value="mastercard" class="form-selectgroup-input" checked/>
+                        <input type="radio" name="form-payment" id="radio_efectivo" value="mastercard" class="form-selectgroup-input" checked />
                         <div class="form-selectgroup-label d-flex align-items-center p-3" onclick="pago_efectivo()">
                           <div class="me-2">
                             <span class="form-selectgroup-check"></span>
@@ -289,7 +285,7 @@
 
           </div>
 
-      <!--   <div class="col-md-3 col-lg-3">
+          <!--   <div class="col-md-3 col-lg-3">
             <div class="card">
               <div class="card-header card-header-light">
                 <h3 class="card-title"></h3>
@@ -333,10 +329,10 @@
             </div>
           </div>
         </div> -->
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 
