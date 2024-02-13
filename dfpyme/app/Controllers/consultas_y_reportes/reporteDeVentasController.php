@@ -446,7 +446,7 @@ class reporteDeVentasController extends BaseController
                 }
 
                 $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_id)->findAll();
-                dd($transaccion);
+                
                 if (empty($transaccion)) {
                     $ingresos_transaccion = 0;
                 } else if (!empty($transaccion)) {
