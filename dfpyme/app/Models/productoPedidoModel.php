@@ -63,7 +63,28 @@ class productoPedidoModel extends Model
     }
 
 
-    public function productos_pedido($numero_pedido,$codigo_categoria)
+    public function productos_pedido($numero_pedido)
+    {
+        $datos =$this->db->query ("
+        SELECT
+             producto_pedido.id as id,
+             producto.nombreproducto,
+             producto.valorventaproducto,
+             valor_total,
+             cantidad_producto,
+             nota_producto,
+             valor_unitario,
+             producto_pedido.codigointernoproducto,
+             numero_productos_impresos_en_comanda
+        FROM
+             producto_pedido
+        INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
+        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto  order by id asc;
+        ");
+    return $datos->getResultArray(); 
+       
+    }
+    public function productos_pedido_comanda($numero_pedido,$codigo_categoria)
     {
         $datos =$this->db->query ("
         SELECT
@@ -101,7 +122,7 @@ class productoPedidoModel extends Model
         FROM
              producto_pedido
         INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
-        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and codigo_categoria='$codigo_categoria'  order by id asc;
+        where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and codigo_categoria='$codigo_categoria'   order by id asc;
         ");
         return $datos->getResultArray();
     }
@@ -124,7 +145,7 @@ class productoPedidoModel extends Model
         FROM
             producto_pedido_pos
         INNER JOIN producto ON producto_pedido_pos.codigointernoproducto = producto.codigointernoproducto
-        where pk_pedido_pos='$numero_pedido' and id_categoria='$id_categoria' and se_imprime_en_comanda='true'  and impreso_en_comanda='false' order by id asc;
+        where pk_pedido_pos='$numero_pedido' and id_categoria='$id_categoria' and se_imprime_en_comanda='true'  order by id asc;
         ");
         return $datos->getResultArray();
     }

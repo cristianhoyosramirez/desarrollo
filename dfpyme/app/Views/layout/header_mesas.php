@@ -812,7 +812,7 @@
           </li>
         <?php } ?>
 
-        <?php if ($user_session->tipo == 0) { ?>
+       <!--  <?php if ($user_session->tipo == 0) { ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="text-blue">
@@ -858,7 +858,7 @@
 
             </div>
           </li>
-        <?php } ?>
+        <?php } ?> -->
         </ul>
       </div>
     </div>

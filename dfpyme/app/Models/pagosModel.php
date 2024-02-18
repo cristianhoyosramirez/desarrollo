@@ -189,6 +189,22 @@ class pagosModel extends Model
  ");
         return $datos->getResultArray();
     }
+    function get_min_id_electronico($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        select min(id) as id from pagos where id_apertura=$id_apertura and id_estado =8
+ ");
+        return $datos->getResultArray();
+    }
+    function get_max_id_electronico($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        select max(id) as id from pagos where id_apertura=$id_apertura and id_estado =8
+ ");
+        return $datos->getResultArray();
+    }
     function get_max_id($id_apertura)
     {
 
@@ -202,6 +218,14 @@ class pagosModel extends Model
 
         $datos = $this->db->query("
         select count(id) as total_registros from pagos where id_apertura=$id_apertura and id_estado =1
+ ");
+        return $datos->getResultArray();
+    }
+    function get_total_registros_electronicos($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        select count(id) as total_registros from pagos where id_apertura=$id_apertura and id_estado =8
  ");
         return $datos->getResultArray();
     }
@@ -250,6 +274,18 @@ class pagosModel extends Model
 
         $datos = $this->db->query("
             select sum (saldo) as saldo  from pagos where saldo > 0 and id_estado=$id_estado
+        ");
+        return $datos->getResultArray();
+    }
+
+
+    public function fiscal_iva($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT ( valor_iva )
+        FROM   kardex
+        WHERE  id_apertura=$id_apertura
+        AND aplica_ico = 'false' and id_estado = 8 
         ");
         return $datos->getResultArray();
     }

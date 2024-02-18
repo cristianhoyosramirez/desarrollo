@@ -35,7 +35,7 @@
                 <tr>
                     <th style="text-align:left; font:  bold 80% cursive; border:none "><?php echo $nombre_comercial ?></th>
                     <th style="text-align:left; font:  bold 80% cursive; border:none "></th>
-                    <th style="text-align:left; font:  bold 80% cursive; border:none ">INFORME FISCAL DE VENTAS DIARIAS</th>
+                    <th style="text-align:left; font:  bold 80% cursive; border:none "><?php  echo $titulo?></th>
                 </tr>
                 <tr>
                     <td style="text-align:left; font:  bold 80% cursive; border:none "><?php echo $nombre_juridico ?></td>

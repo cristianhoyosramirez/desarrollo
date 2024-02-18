@@ -1476,6 +1476,29 @@
 
 
     <script>
+      function fiscal_electronico() {
+
+        var url = document.getElementById("url").value;
+        var id_apertura = document.getElementById("id_aperturas").value;
+        $.ajax({
+          data: {
+            id_apertura
+          },
+          url: url + "/" + "consultas_y_reportes/informe_fiscal_electronico",
+          type: "POST",
+          success: function(resultado) {
+            var resultado = JSON.parse(resultado);
+            if (resultado.resultado == 1) {
+
+              $("#datos_informe").html(resultado.datos);
+              $("#modal_informe_fiscal").modal("show");
+            }
+          },
+        });
+
+      }
+    </script>
+    <script>
       function fiscal() {
 
         var url = document.getElementById("url").value;

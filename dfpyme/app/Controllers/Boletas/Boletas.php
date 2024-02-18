@@ -735,9 +735,15 @@ class Boletas extends BaseController
 
 
         $estado = model('estadoModel')->where('estado', 'true')->orderBy('orden', 'asc')->findAll();
+
         //$estado = model('estadoModel')->findAll();
+
+        $consulta = "select * from documento_electronico";
+
+        $documentos = model('pagosModel')->get_ventas_credito($consulta);
         return view('ventas/ventas', [
-            'estado' => $estado
+            'estado' => $estado,
+            'documentos'=>$documentos
         ]);
     }
 
@@ -800,9 +806,6 @@ class Boletas extends BaseController
             );
             echo  json_encode($returnData);
         }
-
-
-
     }
 
     function numero_documento()

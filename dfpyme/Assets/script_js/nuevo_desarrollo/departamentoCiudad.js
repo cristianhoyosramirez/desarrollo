@@ -1,0 +1,56 @@
+function departamentoCiudad() {
+
+    var url = document.getElementById("url").value;
+    var valorSelect1 = document.getElementById("departamento").value;
+
+    /*   $.ajax({
+        url: url +
+          "/" +
+          "eventos/municipios",
+        type: "post",
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          valorSelect1
+        },
+        success: function(data) {
+          //$('#municipios').empty();
+          //$('#ciudad').empty();
+
+          var resultado = JSON.parse(data);
+
+          console.log(resultado)
+        },
+        error: function(xhr, textStatus, errorThrown) {
+          console.log('Error: ' + errorThrown);
+        }
+      }); */
+
+
+    $.ajax({
+      data: {
+        valorSelect1
+
+      },
+      url: url +
+        "/" +
+        "eventos/municipios",
+      type: "post",
+      success: function(resultado) {
+        var resultado = JSON.parse(resultado);
+        if (resultado.resultado == 1) {
+
+           $('#ciudad').html(resultado.ciudad)
+           $('#municipios').html(resultado.municipios)
+
+        }
+
+        if (resultado.resultado == 0) {
+          alert('No se puede actualizar ')
+        }
+      },
+    });
+
+
+
+  }

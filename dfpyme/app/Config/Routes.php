@@ -320,6 +320,7 @@ $routes->group('consultas_y_reportes', ['namespace' => 'App\Controllers\consulta
     $routes->post('pedidos_borrados', 'cajaDiariaController::pedidos_borrados');
     $routes->post('pedidos_borrados', 'cajaDiariaController::pedidos_borrados');
     $routes->post('informe_fiscal_desde_caja', 'cajaDiariaController::informe_fiscal_desde_caja');
+    $routes->post('informe_fiscal_electronico', 'cajaDiariaController::informe_fiscal_electronico');
     $routes->post('expotar_informe_ventas_pdf', 'informeFiscalVentasController::expotar_informe_ventas_pdf');
     $routes->post('fiscal_manual_pdf', 'informeFiscalVentasController::fiscal_manual_pdf');
     $routes->get('documento', 'Documento::documento');
@@ -336,6 +337,7 @@ $routes->group('consultas_y_reportes', ['namespace' => 'App\Controllers\consulta
     $routes->post('consulta_de_cartera', 'Documento::consulta_de_cartera');
     $routes->post('aperturas', 'Documento::aperturas');
     $routes->get('ventas_de_mesero', 'Documento::ventas_de_mesero');
+    $routes->post('expotar_informe_electronico_pdf', 'informeFiscalVentasController::expotar_informe_electronico_pdf');
 });
 
 $routes->group('devolucion', ['namespace' => 'App\Controllers\devolucion', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -427,7 +429,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('consultar_nota', 'Mesas::consultar_nota');
     $routes->post('eliminar_producto', 'Mesas::eliminar_producto');
     $routes->post('actualizar_cantidades', 'Mesas::actualizar_cantidades');
-    $routes->get('eliminacion_de_pedido', 'Mesas::eliminacion_de_pedido');
+    $routes->post('eliminacion_de_pedido', 'Mesas::eliminacion_de_pedido');
     $routes->post('restar_producto', 'Mesas::restar_producto');
     $routes->post('productos_pedido', 'Mesas::productos_pedido');
     $routes->post('partir_factura', 'PartirFactura::partir_factura');

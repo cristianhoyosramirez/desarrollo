@@ -533,6 +533,8 @@ class ClienteController extends BaseController
         $ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
         $municipios = model('municipiosModel')->findAll();
 
+        
+
 
         $returnData = array(
             "resultado" => 1,

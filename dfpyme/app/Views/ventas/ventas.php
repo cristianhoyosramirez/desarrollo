@@ -18,23 +18,19 @@ Ventas
                 <input type="hidden" id="opcion_seleccionada">
                 <input type="hidden" id="url" value="<?php echo base_url() ?>">
                 <select name="criterio_consulta" id="criterio_consulta" class="form-select" onchange="seleccionCambiada(this.value)">
-                    <option value="">Selecciona un criterio </option>
                     <option value="1">Número</option>
-                    <option value="2">Tipo de documento</option>
+                    <option value="2" selected>Tipo de documento</option> <!-- Corrección: Añadido 'selected' -->
                     <option value="3">Cliente</option>
                 </select>
                 <span id="error_de_seleccion" class="text-danger"></span>
-
             </div>
 
-            <div class="col" style="display:none" id="tipo_de_documento">
+            <div class="col" style="display:block" id="tipo_de_documento">
                 <label for="" class="form-label">Tipo de documento </label>
                 <select name="tipo_documento" id="tipo_documento" class="form-select" onchange="limpiar_error_documento()">
-                    <option value="">Selecciona un tipo de documento</option>
+
                     <?php foreach ($estado as $detalle) : ?>
-
-                        <option value="<?php echo $detalle['idestado'] ?>"><?php echo $detalle['descripcionestado'] ?></option>
-
+                        <option value="<?php echo $detalle['idestado'] ?>" <?php if ($detalle['idestado'] == 8) : ?>selected <?php endif; ?>><?php echo $detalle['descripcionestado'] ?> </option>
                     <?php endforeach ?>
                 </select>
 
@@ -58,16 +54,16 @@ Ventas
             </div>
 
 
-            <div class="col" style="display:none" id="periodo">
+            <div class="col" style="display:block" id="periodo">
                 <div class="row">
 
                     <div class="col">
                         <label for="" class="form-label">Desde </label>
-                        <input type="date" class="form-control" value="" id="fecha_inicial">
+                        <input type="date" class="form-control" value="<?php echo date('Y-m-d') ?>" id="fecha_inicial">
                     </div>
                     <div class="col">
                         <label for="" class="form-label">Hasta </label>
-                        <input type="date" class="form-control" value="" id="fecha_final">
+                        <input type="date" class="form-control" value="<?php echo date('Y-m-d') ?>" id="fecha_final">
                     </div>
 
                 </div>
@@ -107,7 +103,28 @@ Ventas
         var nit_cliente = document.getElementById("nit_cliente").value;
 
         if (opcion == "") {
-            $('#error_de_seleccion').html('No hay seleccionado un criterio de búsqueda ')
+            //$('#error_de_seleccion').html('No hay seleccionado un criterio de búsqueda ')
+            $.ajax({
+                data: {
+                    tipo_documento,
+                    fecha_inicial,
+                    fecha_final
+                },
+                url: url +
+                    "/" +
+                    "eventos/consultar_documento",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        $('#resultado_consultado').html(resultado.datos)
+
+
+
+                    }
+                },
+            });
         }
         if (opcion != "") {
 

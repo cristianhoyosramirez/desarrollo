@@ -38,43 +38,87 @@ class Imprimir extends BaseController
         if (!empty($pedido)) {
             $codigo_categoria = model('productoPedidoModel')->id_categoria($pedido['id']);
 
-            foreach ($codigo_categoria as $valor) {
-                $items = model('productoPedidoModel')->productos_pedido($pedido['id'], $codigo_categoria[0]['codigo_categoria']);
 
-                if (!empty($items)) {
-                    foreach ($items as $detalle) {
-                        $data['id'] = $detalle['id'];
-                        $data['nombreproducto'] = $detalle['nombreproducto'];
-                        $data['valor_venta'] = $detalle['valorventaproducto'];
-                        $data['valor_total'] = $detalle['valor_total'];
-                        $data['cantidad'] = $detalle['cantidad_producto'];
-                        $data['nota_producto'] = $detalle['nota_producto'];
-                        $data['valor_unitario'] = $detalle['valor_unitario'];
-                        $data['codigo_interno'] = $detalle['codigointernoproducto'];
-                        $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
-                        array_push($productos, $data);
+            $productos_pedido = $items = model('productoPedidoModel')->productos_pedido($pedido['id']);
+
+
+            if (!empty($productos_pedido)) {
+                foreach ($codigo_categoria as $valor) {
+                    $items = model('productoPedidoModel')->productos_pedido_comanda($pedido['id'], $valor['codigo_categoria']);
+                    //$items = model('tempProductoPedidoModel')->productos_pedido($pedido['id'], $valor['codigo_categoria']);
+
+
+
+                    if (!empty($items)) {
+                        foreach ($items as $detalle) {
+                            $data['id'] = $detalle['id'];
+                            $data['nombreproducto'] = $detalle['nombreproducto'];
+                            $data['valor_venta'] = $detalle['valorventaproducto'];
+                            $data['valor_total'] = $detalle['valor_total'];
+                            $data['cantidad'] = $detalle['cantidad_producto'];
+                            $data['nota_producto'] = $detalle['nota_producto'];
+                            $data['valor_unitario'] = $detalle['valor_unitario'];
+                            $data['codigo_interno'] = $detalle['codigointernoproducto'];
+                            $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
+                            array_push($productos, $data);
+                        }
+                        //$this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], $codigo_categoria[0]['codigo_categoria']);
+                        $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], $valor['codigo_categoria']);
+                        $productos = array();
                     }
-                    $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], $codigo_categoria[0]['codigo_categoria']);
                 }
+                $returnData = array(
+                    "resultado" => 1
+                );
+                echo  json_encode($returnData);
             }
-            if (empty($items)) {
+
+            if (empty($productos_pedido)) {
 
                 if ($tipo_usuario['idtipo'] == 1 || $tipo_usuario['idtipo'] == 0) {
-                    $items = model('productoPedidoModel')->reimprimir_comanda($pedido['id'], $codigo_categoria[0]['codigo_categoria']);
+                    /*  foreach ($codigo_categoria as $valor) {
+                        $items = model('productoPedidoModel')->reimprimir_comanda($pedido['id'], $valor['codigo_categoria']);
 
-                    foreach ($items as $detalle) {
-                        $data['id'] = $detalle['id'];
-                        $data['nombreproducto'] = $detalle['nombreproducto'];
-                        $data['valor_venta'] = $detalle['valorventaproducto'];
-                        $data['valor_total'] = $detalle['valor_total'];
-                        $data['cantidad'] = $detalle['cantidad_producto'];
-                        $data['nota_producto'] = $detalle['nota_producto'];
-                        $data['valor_unitario'] = $detalle['valor_unitario'];
-                        $data['codigo_interno'] = $detalle['codigointernoproducto'];
-                        $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
-                        array_push($productos, $data);
+                        foreach ($items as $detalle) {
+                            $data['id'] = $detalle['id'];
+                            $data['nombreproducto'] = $detalle['nombreproducto'];
+                            $data['valor_venta'] = $detalle['valorventaproducto'];
+                            $data['valor_total'] = $detalle['valor_total'];
+                            $data['cantidad'] = $detalle['cantidad_producto'];
+                            $data['nota_producto'] = $detalle['nota_producto'];
+                            $data['valor_unitario'] = $detalle['valor_unitario'];
+                            $data['codigo_interno'] = $detalle['codigointernoproducto'];
+                            $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
+                            array_push($productos, $data);
+                        }
+                        $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], $valor['codigo_categoria']);
+                    } */
+                    foreach ($codigo_categoria as $valor) {
+
+
+
+                        $items = model('productoPedidoModel')->reimprimir_comanda($pedido['id'], $valor['codigo_categoria']);
+
+
+                        foreach ($items as $detalle) {
+                            $data['id'] = $detalle['id'];
+                            $data['nombreproducto'] = $detalle['nombreproducto'];
+                            $data['valor_venta'] = $detalle['valorventaproducto'];
+                            $data['valor_total'] = $detalle['valor_total'];
+                            $data['cantidad'] = $detalle['cantidad_producto'];
+                            $data['nota_producto'] = $detalle['nota_producto'];
+                            $data['valor_unitario'] = $detalle['valor_unitario'];
+                            $data['codigo_interno'] = $detalle['codigointernoproducto'];
+                            $data['impresos'] = $detalle['numero_productos_impresos_en_comanda'];
+                            array_push($productos, $data);
+                        }
+                        $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], $valor['codigo_categoria']);
+                        $productos = array();
                     }
-                    $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], $codigo_categoria[0]['codigo_categoria']);
+                    $returnData = array(
+                        "resultado" => 1
+                    );
+                    echo  json_encode($returnData);
                 } else if ($tipo_usuario['idtipo'] == 2) {
                     $returnData = array(
                         "resultado" => 0
@@ -82,19 +126,23 @@ class Imprimir extends BaseController
                     echo  json_encode($returnData);
                 }
             }
-            if (!empty($items)) {
+
+
+            /*  if (!empty($items)) {
                 $returnData = array(
                     "resultado" => 1
                 );
                 echo  json_encode($returnData);
-            }
+            } */
         }
     }
 
 
     function generar_comanda($productos, $numero_pedido, $nombre_mesa, $codigo_categoria)
+
     {
-        //$nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('codigocategoria', $codigo_categoria)->first();
+
+        $nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('codigocategoria', $codigo_categoria)->first();
 
         // $impresora = model('categoriasModel')->select('impresora')->where('codigocategoria', $codigo_categoria)->first();
         $id_impresora = model('categoriasModel')->select('impresora')->where('codigocategoria', $codigo_categoria)->first();
@@ -108,7 +156,7 @@ class Imprimir extends BaseController
 
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->setTextSize(1, 1);
-        $printer->text("**" . " PEDIDO " . "**" . "\n\n");
+        $printer->text("**" .  $nombre_categoria['nombrecategoria'] . "**" . "\n\n");
 
 
 
@@ -144,6 +192,9 @@ class Imprimir extends BaseController
 
             if (($cantidad_productos['cantidad_producto'] - $cantidad_productos_impresos['numero_productos_impresos_en_comanda']) > 0) {
                 $printer->text("Cant. " . $cantidad_productos['cantidad_producto'] - $cantidad_productos_impresos['numero_productos_impresos_en_comanda'] . "\n");
+            }
+            if (($cantidad_productos['cantidad_producto'] == $cantidad_productos_impresos['numero_productos_impresos_en_comanda'])) {
+                $printer->text("Cant. " . $cantidad_productos['cantidad_producto'] . "\n");
             }
             if (!empty($productos['nota_producto'])) {
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -903,7 +954,7 @@ class Imprimir extends BaseController
     function imprimir_factura_electronica()
     {
         $id_factura = $this->request->getPost('id_factura');
-       //$id_factura = 24;
+        //$id_factura = 24;
         $id_impresora = model('cajaModel')->select('id_impresora')->first();
         $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
         $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
@@ -919,138 +970,134 @@ class Imprimir extends BaseController
 
         if ($id_estado['id_status'] == 1) {
             $estado = "PENDIENTE";
-
-
-
         }
         if ($id_estado['id_status'] == 2) {
             $estado = "FIRMADO";
         }
 
-            $nit_cliente = model('facturaElectronicaModel')->select('nit_cliente')->where('id', $id_factura)->first();
-            $nombres_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
-            $direccion = model('clientesModel')->select('direccioncliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
-            $telefono = model('clientesModel')->select('telefonocliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
-            $email = model('clientesModel')->select('emailcliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
+        $nit_cliente = model('facturaElectronicaModel')->select('nit_cliente')->where('id', $id_factura)->first();
+        $nombres_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
+        $direccion = model('clientesModel')->select('direccioncliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
+        $telefono = model('clientesModel')->select('telefonocliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
+        $email = model('clientesModel')->select('emailcliente')->where('nitcliente', $nit_cliente['nit_cliente'])->first();
 
 
-            $datos_empresa = model('empresaModel')->datosEmpresa();
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $datos_empresa = model('empresaModel')->datosEmpresa();
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->setTextSize(1, 1);
+        $printer->text($datos_empresa[0]['nombrecomercialempresa'] . "\n");
+        $printer->text($datos_empresa[0]['nombrejuridicoempresa'] . "\n");
+        $printer->text("NIT :" . $datos_empresa[0]['nitempresa'] . "\n");
+        $printer->text($datos_empresa[0]['direccionempresa'] . "  " . $datos_empresa[0]['nombreciudad'] . " " . $datos_empresa[0]['nombredepartamento'] . "\n");
+        $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
+        $printer->text("Responsable de IVA – INC\n");
+        /*  $printer->text($datos_empresa[0]['nombreregimen'] . "\n"); */
+        $printer->text("\n");
+
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->text("ORDEN DE PEDIDO  " . $numero['numero'] . "\n");
+        $printer->text("TIPO DE VENTA:   ELECTRÓNICA DE CONTADO \n");
+        $printer->text("FECHA:           " . date('Y-m-d') . "\n");
+        $printer->text("CAJA:            1"  . "\n");
+        $printer->text("CAJERO:          Usuario administrador"  . "\n");
+        $printer->text("\n");
+        $items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
+
+        $printer->text("---------------------------------------------" . "\n");
+        $printer->text("CLIENTE:         " . $nombres_cliente['nombrescliente'] . "\n");
+        $printer->text("NIT :            " . $nit_cliente['nit_cliente']  . "\n");
+        $printer->text("DIRECCIÓN:       " . $direccion['direccioncliente']  . "\n");
+        $printer->text("TELEFÓNO         " . $telefono['telefonocliente'] . "\n");
+        $printer->text("EMAIL:           " . $email['emailcliente'] . "\n");
+
+
+        $printer->text("---------------------------------------------" . "\n");
+        $printer->text("CÓDIGO    DESCRIPCIÓN   VALOR UNITARIO    TOTAL" . "\n");
+        $printer->text("---------------------------------------------" . "\n");
+
+
+
+
+        foreach ($items as $productos) {
+
             $printer->setTextSize(1, 1);
-            $printer->text($datos_empresa[0]['nombrecomercialempresa'] . "\n");
-            $printer->text($datos_empresa[0]['nombrejuridicoempresa'] . "\n");
-            $printer->text("NIT :" . $datos_empresa[0]['nitempresa'] . "\n");
-            $printer->text($datos_empresa[0]['direccionempresa'] . "  " . $datos_empresa[0]['nombreciudad'] . " " . $datos_empresa[0]['nombredepartamento'] . "\n");
-            $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
-            $printer->text("Responsable de IVA – INC\n");
-            /*  $printer->text($datos_empresa[0]['nombreregimen'] . "\n"); */
-            $printer->text("\n");
-
-            $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text("ORDEN DE PEDIDO  " . $numero['numero'] . "\n");
-            $printer->text("TIPO DE VENTA:   ELECTRÓNICA DE CONTADO \n");
-            $printer->text("FECHA:           " . date('Y-m-d') . "\n");
-            $printer->text("CAJA:            1"  . "\n");
-            $printer->text("CAJERO:          Usuario administrador"  . "\n");
-            $printer->text("\n");
-            $items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
-
-            $printer->text("---------------------------------------------" . "\n");
-            $printer->text("CLIENTE:         " . $nombres_cliente['nombrescliente'] . "\n");
-            $printer->text("NIT :            " . $nit_cliente['nit_cliente']  . "\n");
-            $printer->text("DIRECCIÓN:       " . $direccion['direccioncliente']  . "\n");
-            $printer->text("TELEFÓNO         " . $telefono['telefonocliente'] . "\n");
-            $printer->text("EMAIL:           " . $email['emailcliente'] . "\n");
-
-
-            $printer->text("---------------------------------------------" . "\n");
-            $printer->text("CÓDIGO    DESCRIPCIÓN   VALOR UNITARIO    TOTAL" . "\n");
-            $printer->text("---------------------------------------------" . "\n");
-
-
-
-
-            foreach ($items as $productos) {
-
-                $printer->setTextSize(1, 1);
-                $printer->text("Cod." . $productos['codigo'] . "      " . $productos['descripcion'] . "\n");
-                $printer->text("Cant. " . $productos['cantidad'] . "      " . "$" . number_format($productos['neto'], 0, ',', '.') . "                   " . "$" . number_format($productos['total'], 0, ',', '.') . "\n");
-                if (!empty($productos['nota_producto'])) {
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->text("NOTAS:\n");
-                    $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->text($productos['nota_producto'] . "\n");
-                }
-
-                $printer->text("\n");
+            $printer->text("Cod." . $productos['codigo'] . "      " . $productos['descripcion'] . "\n");
+            $printer->text("Cant. " . $productos['cantidad'] . "      " . "$" . number_format($productos['neto'], 0, ',', '.') . "                   " . "$" . number_format($productos['total'], 0, ',', '.') . "\n");
+            if (!empty($productos['nota_producto'])) {
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text("NOTAS:\n");
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printer->text($productos['nota_producto'] . "\n");
             }
 
-            $inc = model('kardexModel')->get_total_inc($id_factura);
-            $iva = model('kardexModel')->get_total_iva($id_factura);
-
-
-
-            $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
-            $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
-            $transferencia =  model('pagosModel')->select('recibido_transferencia')->where('id_factura', $id_factura)->first();
-            $efectivo =  model('pagosModel')->select('recibido_efectivo')->where('id_factura', $id_factura)->first();
-
-            $sub_total = $total['total_documento'] - ($inc[0]['total_inc'] + $iva[0]['total_iva']);
-
-
-
-
-            $printer->text("_______________________________________________ \n");
-            $printer->setJustification(Printer::JUSTIFY_RIGHT);
-            $printer->text("SUB TOTAL:" .    number_format($sub_total, 0, ",", ".") . "\n");
-            $printer->text("INC:"    .     number_format($inc[0]['total_inc'], 0, ",", ".") . "\n");
-            $printer->text("IVA:"    .     number_format($iva[0]['total_iva'], 0, ",", ".") . "\n");
-
             $printer->text("\n");
-            $printer->setTextSize(2, 1);
-            $printer->text("TOTAL:      " . "$ " . number_format($total['total_documento'], 0, ",", ".") . "\n");
-            $printer->text("\n");
-            $printer->setTextSize(1, 1);
+        }
 
-            if ($efectivo['recibido_efectivo'] > 0) {
-                $printer->text("Efectivo:" . "$ " . number_format($efectivo['recibido_efectivo'], 0, ",", ".")  . "\n");
-            }
-            if ($transferencia['recibido_transferencia'] > 0) {
-                $printer->text("Transferencia:" . "$ " . number_format($transferencia['recibido_transferencia'], 0, ",", ".") . "\n");
-            }
-
-            //$printer->text("Cambio:."" ."\n");
+        $inc = model('kardexModel')->get_total_inc($id_factura);
+        $iva = model('kardexModel')->get_total_iva($id_factura);
 
 
 
+        $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
+        $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
+        $transferencia =  model('pagosModel')->select('recibido_transferencia')->where('id_factura', $id_factura)->first();
+        $efectivo =  model('pagosModel')->select('recibido_efectivo')->where('id_factura', $id_factura)->first();
 
-            $printer->text("_______________________________________________ \n");
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("ACTIVIDAD ECONÓMICA 1063;4719 \n");
-            $printer->text("NO CONTRIBUYENTES DE RENTA  \n");
-            $printer->text("NO SUJETO A RETENCIÓN  \n");
-            $printer->text("GRAN CONTRIBUYENTE  \n");
-            $printer->text("AGENTE RETENEDOR IVA \n");
-            $printer->text("DOMICILIO PRINCIPAL: CALLE 73 NO. 8 - 13  \n");
-            $printer->text("BOGOTÁ - COLOMBIA. \n");
-            $printer->text("_______________________________________________ \n");
-            $total = model('facturaElectronicaModel')->select('total')->where('id', $id_factura)->first();
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->setTextSize(1, 1);
-            $printer->text("IMPRESO POR SOFTWARE DFPYME INTREDETE. \n");
-            $printer->text("NIT: 901448365-5\n");
-            $printer->text("\n");
+        $sub_total = $total['total_documento'] - ($inc[0]['total_inc'] + $iva[0]['total_iva']);
 
-            $printer->feed(1);
-            $printer->cut();
 
-            $printer->close();
 
-            $returnData = array(
-                "resultado" => 1
-            );
-            echo  json_encode($returnData);
-        
+
+        $printer->text("_______________________________________________ \n");
+        $printer->setJustification(Printer::JUSTIFY_RIGHT);
+        $printer->text("SUB TOTAL:" .    number_format($sub_total, 0, ",", ".") . "\n");
+        $printer->text("INC:"    .     number_format($inc[0]['total_inc'], 0, ",", ".") . "\n");
+        $printer->text("IVA:"    .     number_format($iva[0]['total_iva'], 0, ",", ".") . "\n");
+
+        $printer->text("\n");
+        $printer->setTextSize(2, 1);
+        $printer->text("TOTAL:      " . "$ " . number_format($total['total_documento'], 0, ",", ".") . "\n");
+        $printer->text("\n");
+        $printer->setTextSize(1, 1);
+
+        if ($efectivo['recibido_efectivo'] > 0) {
+            $printer->text("Efectivo:" . "$ " . number_format($efectivo['recibido_efectivo'], 0, ",", ".")  . "\n");
+        }
+        if ($transferencia['recibido_transferencia'] > 0) {
+            $printer->text("Transferencia:" . "$ " . number_format($transferencia['recibido_transferencia'], 0, ",", ".") . "\n");
+        }
+
+        //$printer->text("Cambio:."" ."\n");
+
+
+
+
+        $printer->text("_______________________________________________ \n");
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("ACTIVIDAD ECONÓMICA 1063;4719 \n");
+        $printer->text("NO CONTRIBUYENTES DE RENTA  \n");
+        $printer->text("NO SUJETO A RETENCIÓN  \n");
+        $printer->text("GRAN CONTRIBUYENTE  \n");
+        $printer->text("AGENTE RETENEDOR IVA \n");
+        $printer->text("DOMICILIO PRINCIPAL: CALLE 73 NO. 8 - 13  \n");
+        $printer->text("BOGOTÁ - COLOMBIA. \n");
+        $printer->text("_______________________________________________ \n");
+        $total = model('facturaElectronicaModel')->select('total')->where('id', $id_factura)->first();
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->setTextSize(1, 1);
+        $printer->text("IMPRESO POR SOFTWARE DFPYME INTREDETE. \n");
+        $printer->text("NIT: 901448365-5\n");
+        $printer->text("\n");
+
+        $printer->feed(1);
+        $printer->cut();
+
+        $printer->close();
+
+        $returnData = array(
+            "resultado" => 1
+        );
+        echo  json_encode($returnData);
     }
     function impresion_factura_electronica()
     {

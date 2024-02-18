@@ -17,11 +17,11 @@ function imprimir_comanda() {
             success: function (resultado) {
                 var resultado = JSON.parse(resultado);
                 if (resultado.resultado == 1) {
-                    sweet_alert('success', 'Impresión de comanda éxitoso')
+                    sweet_alert_start('success', 'Impresión de comanda éxitoso')
                 }
                 if (resultado.resultado == 0) {
 
-                    sweet_alert('warning', 'No hay productos para imprimir ')
+                    sweet_alert_start('warning', 'No hay productos para imprimir ')
                 }
             },
         });

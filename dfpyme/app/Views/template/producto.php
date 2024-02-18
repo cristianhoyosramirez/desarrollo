@@ -51,6 +51,7 @@
         <script src="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.js"></script>
         <!-- Locales-->
         <script src="<?= base_url() ?>/Assets/script_js/consultas_y_reportes/reporte_venta_fecha_hora_agrupados.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert_start.js"></script>
         <!--select2 -->
         <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
         <script>

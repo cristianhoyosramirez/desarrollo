@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-1">
-                <form action="<?= base_url('consultas_y_reportes/expotar_informe_ventas_pdf') ?>" method="POST">
+                <form action="<?php echo $action_url; ?>" method="POST">
                     <input type="hidden" value="<?php echo $fecha_apertura ?>" name="fecha_reporte">
                     <input type="hidden" value="<?php echo $id_apertura; ?>" name="id_apertura">
 
@@ -11,7 +11,7 @@
                         Pdf
                     </button>
                 </form>
-                </form>
+            
             </div>
         </div>
         <div class="row">
@@ -43,7 +43,7 @@
 
                     <tbody>
                         <tr>
-                            <th>INFORME FISCAL DE VENTAS DIARIAS </th>
+                            <th><?php  echo $titulo ?></th>
                         </tr>
                         <tr>
                             <td>N°:<?php echo $consecutivo ?></td>

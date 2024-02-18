@@ -47,7 +47,10 @@
         <!--select2 -->
         <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
-        
+
+
+   
+
         <script>
             $('#creacion_cliente_electronico').submit(function(e) {
                 e.preventDefault();

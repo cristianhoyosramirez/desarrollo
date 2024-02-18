@@ -225,6 +225,8 @@ RESOLUCIÓN ElECTRÓNICA
               $("#resolucion_electronica").modal("hide");
               $('#resoluciones_de_facturacion').html(resultado.resoluciones)
 
+              sweet_alert_start('success','Resolución agregada')
+
             }
           },
         });

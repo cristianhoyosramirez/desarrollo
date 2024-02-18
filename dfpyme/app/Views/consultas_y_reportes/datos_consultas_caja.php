@@ -62,6 +62,10 @@ MOVIMIENTO DE CAJA
                         <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_aperturas">
                         <button type="button" class="btn btn-outline-dark btn-icon" target="_blank" onclick="fiscal()" title="Informe fiscal de ventas " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Fiscal </button>
                     </form>
+                    <form action="<?= base_url('consultas_y_reportes/informe_fiscal_desde_caja') ?>" method="POST">
+                        <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_aperturas">
+                        <button type="button" class="btn btn-outline-dark btn-icon" target="_blank" onclick="fiscal_electronico()" title="Informe fiscal de ventas " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Fiscal electrónico </button>
+                    </form>
                 </div>
             </div>
         </div>
