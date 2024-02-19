@@ -606,7 +606,7 @@ class informeFiscalVentasController extends BaseController
                 $data_iva['total_iva'] = $iva[0]['iva'];
                 $data_iva['valor_venta'] = $total[0]['total']; */
 
-            /*     $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
+                /*     $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find(); */
 
@@ -765,7 +765,7 @@ class informeFiscalVentasController extends BaseController
             "fecha_apertura" => $fecha_apertura['fecha'],
             "id_apertura" => $id_apertura,
             "fecha" => $fecha_apertura['fecha'],
-            "titulo"=>"INFORME DE VENTAS DIARIAS "
+            "titulo" => "INFORME DE VENTAS DIARIAS "
 
         ]));
 
@@ -788,6 +788,7 @@ class informeFiscalVentasController extends BaseController
         $dompdf->setOptions($options);
 
         $id_apertura = $this->request->getPost('id_apertura');
+        //$id_apertura = 1131; 
         $fecha_y_hora_cierre = "";
         $ventas_credito = "";
 
@@ -830,26 +831,47 @@ class informeFiscalVentasController extends BaseController
         // $registro_final = model('pagosModel')->get_max_id($id_apertura);
         $id_final = model('pagosModel')->get_max_id_electronico($id_apertura);
 
+
+        $id_factura_min = model('pagosModel')->select('id_factura')->where('id', $id_inicial[0]['id'])->first();
+        $id_factura_max = model('pagosModel')->select('id_factura')->where('id', $id_final[0]['id'])->first();
+
+
+
+
+        $reg_inicial = model('facturaElectronicaModel')->select('numero')->where('id', $id_factura_min['id_factura'])->first();
+        // $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        $reg_final = model('facturaElectronicaModel')->select('numero')->where('id', $id_factura_max['id_factura'])->first();
+
         $total_registros = model('pagosModel')->get_total_registros_electronicos($id_apertura);
 
-        $registro_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
-        $registro_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        /* $registro_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
+        $registro_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first(); */
 
 
-        $reg_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
-        $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        //$reg_inicial = model('facturaElectronicaModel')->select('numero')->where('id', $id_inicial[0]['id'])->first();
+        // $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        // $reg_final = model('facturaElectronicaModel')->select('numero')->where('id', $id_final[0]['id'])->first();
+
+
+        /*  $reg_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
+        $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first(); */
+
+
+        $reg_inicial = model('facturaElectronicaModel')->select('numero')->where('id', $id_factura_min['id_factura'])->first();
+        // $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        $reg_final = model('facturaElectronicaModel')->select('numero')->where('id', $id_factura_max['id_factura'])->first();
 
         if (empty($reg_inicial)) {
             $registro_inicial = "";
         }
         if (!empty($reg_inicial)) {
-            $registro_inicial = $reg_inicial['documento'];
+            $registro_inicial = $reg_inicial['numero'];
         }
         if (empty($reg_final)) {
             $registro_final = "";
         }
         if (!empty($reg_final)) {
-            $registro_final = $reg_final['documento'];
+            $registro_final = $reg_final['numero'];
         }
 
 
@@ -876,7 +898,7 @@ class informeFiscalVentasController extends BaseController
                 $data_iva['total_iva'] = $iva[0]['iva'];
                 $data_iva['valor_venta'] = $total[0]['total']; */
 
-            /*     $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
+                /*     $iva = model('kardexModel')->selectSum('iva')->where('id_apertura', $id_apertura)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('id_estado', 1)->find();
                 $iva = model('kardexModel')->selectSum('iva')->where('valor_iva', $detalle['valor_iva'])->find(); 
 
@@ -949,9 +971,9 @@ class informeFiscalVentasController extends BaseController
 
         //$vantas_contado = model('productoFacturaVentaModel')->get_total_venta($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
 
-       // $vantas_contado = model('kardexModel')->ventas_contado($id_apertura);
+        // $vantas_contado = model('kardexModel')->ventas_contado($id_apertura);
 
-       $vantas_contado = model('kardexModel')->ventas_contado_electronicas($id_apertura);
+        $vantas_contado = model('kardexModel')->ventas_contado_electronicas($id_apertura);
 
         if (empty($venta_credito[0]['total_ventas_credito'])) {
             $ventas_credito = 0;
@@ -1048,7 +1070,7 @@ class informeFiscalVentasController extends BaseController
             "fecha_apertura" => $fecha_apertura['fecha'],
             "id_apertura" => $id_apertura,
             "fecha" => $fecha_apertura['fecha'],
-            "titulo"=>"INFORME FISCAL DE VENTAS ELECTRÓNICAS"
+            "titulo" => "INFORME FISCAL DE VENTAS ELECTRÓNICAS"
 
         ]));
 

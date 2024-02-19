@@ -73,7 +73,7 @@ class ClienteController extends BaseController
                         'required' => 'Dato necesarios',
                     ],
                 ],
-              
+
                 'direccion' => [
                     'rules' => 'required',
                     'errors' => [
@@ -139,31 +139,11 @@ class ClienteController extends BaseController
             $code = model('municipiosModel')->select('code')->where('id', $this->request->getPost('municipios'))->first();
 
 
-            /*  $data = [
-                'nitcliente' => '25170832',
-                'idregimen' => 1,
-                'nombrescliente' => 'liliana',
-                'telefonocliente' => '3113155025',
-                'celularcliente' => '3113155025',
-                'emailcliente' => 'cc',
-                'idciudad' =>  319,
-                'direccioncliente' => 'san clemewnte',
-                'estadocliente' => true,
-                'idtipo_cliente' => $_POST['tipo_ventas'],
-                'id_clasificacion' => $_POST['clasificacion'],
-                'name' => $_POST['nombres'],
-                'last_name' => $_POST['apellidos'],
-                'dv' => $_POST['dv'],
-                'type_person' => $_POST['tipo_persona'],
-                'type_document' => $_POST['tipo_documento'],
-                'name_comercial' => $_POST['nombre_comercial'],
-                'is_customer' => true
-            ]; */
+      
             $data = [
                 'nitcliente' => $_POST['identificacion'],
                 'idregimen' => $_POST['regimen'],
                 'nombrescliente' => $_POST['razon_social'],
-                //'nombrescliente' => $_POST['razon_social'],
                 'telefonocliente' => $_POST['telefono'],
                 'celularcliente' => $_POST['telefono'],
                 'emailcliente' => $_POST['correo_electronico'],
@@ -172,7 +152,6 @@ class ClienteController extends BaseController
                 'estadocliente' => true,
                 'idtipo_cliente' => $_POST['tipo_ventas'],
                 'id_clasificacion' => $_POST['clasificacion'],
-                //'name' => $_POST['razon_social'],
                 'name' => $_POST['nombres'],
                 'last_name' => $_POST['apellidos'],
                 'dv' => $_POST['dv'],
@@ -521,20 +500,33 @@ class ClienteController extends BaseController
 
     function editar_cliente()
     {
-        //$id_cliente = 419;
-        $id_cliente = $_POST['id_cliente']; 
-        $datos_cliente = model('clientesModel')->select('*')->where('id', $id_cliente)->first();
+        //$id_cliente = 660;
+        $id_cliente = $_POST['id_cliente'];
+
         $regimen = model('regimenModel')->orderBy('idregimen', 'desc')->findAll();
         $tipo_cliente = model('tipoClienteModel')->orderBy('id', 'asc')->findAll();
         $clasificacion_cliente = model('clasificacionClienteModel')->orderBy('id', 'asc')->findAll();
         $departamento = model('departamentoModel')->select('*')->where('idpais', 49)->find();
-        $id_departamento_empresa = model('empresaModel')->select('iddepartamento')->first();
-        $id_ciudad_empresa = model('empresaModel')->select('idciudad')->first();
-        $ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $id_ciudad_empresa['idciudad'])->first();
+
+
+
         $municipios = model('municipiosModel')->findAll();
 
-        
 
+        //Datos de cliente 
+        $datos_cliente = model('clientesModel')->select('*')->where('id', $id_cliente)->first();
+        $id_departamento = model('ciudadModel')->select('iddepartamento')->where('idciudad', $datos_cliente['idciudad'])->first();
+        $codigo_postal = model('ciudadModel')->select('code_postal')->where('idciudad', $datos_cliente['idciudad'])->first();
+
+
+        $tipos_persona = model('clientesModel')->get_tipos_persona();
+        //$tipos_documento = model('clientesModel')->get_tipos_documento();
+
+        $detallles_tributarios=model('detallesTributariosModel')->where('nit_cliente',$datos_cliente['nitcliente'])->first();
+
+        //dd($detallles_tributarios);
+
+        $detallles_rut=model('detallesRutModel')->where('nit_cliente',$datos_cliente['nitcliente'])->findAll();
 
         $returnData = array(
             "resultado" => 1,
@@ -543,10 +535,12 @@ class ClienteController extends BaseController
                 'tipo_cliente' => $tipo_cliente,
                 'clasificacion_cliente' => $clasificacion_cliente,
                 'departamentos' => $departamento,
-                "id_departamento" => $id_departamento_empresa['iddepartamento'],
-                "id_ciudad" => $id_ciudad_empresa['idciudad'],
-                "ciudad" => $ciudad['nombreciudad'],
-                "datos_cliente" => $datos_cliente
+                "datos_cliente" => $datos_cliente,
+                "tipos_persona" => $tipos_persona,
+                "id_departamento" => $id_departamento['iddepartamento'],
+                "codigo_postal"=>$codigo_postal['code_postal'], 
+                "detalles_tributarios"=>$detallles_tributarios,
+                "detalles_rut"=>$detallles_rut
             ])
         );
         echo  json_encode($returnData);

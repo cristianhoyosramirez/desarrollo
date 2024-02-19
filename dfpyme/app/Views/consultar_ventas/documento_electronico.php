@@ -56,7 +56,7 @@
                                     <path d="M21 16.5a3.5 3.5 0 0 1 -7 0v-2.5h7v2.5" />
                                     <path d="M10 16.5a3.5 3.5 0 0 1 -7 0v-2.5h7v2.5" />
                                 </svg></button>
-                                
+
                             <?php if ($detalle['pdf_url'] != "") {
                             ?>
 
@@ -93,8 +93,8 @@
         $("#id_de_factura").val(iddoc);
         $("#barra_progreso").modal("show");
 
-        //let url = new URL("http://localhost:5000/api/Invoice/id");
-        let url = new URL("http://localhost:3000/api");
+        let url = new URL("http://localhost:5000/api/Invoice/id");
+        //let url = new URL("http://localhost:3000/api");
         url.search = new URLSearchParams({
             id: iddoc
         });

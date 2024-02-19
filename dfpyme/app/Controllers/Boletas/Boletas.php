@@ -768,7 +768,7 @@ class Boletas extends BaseController
         }
 
         if ($id_documento == 8) {  //Documento electronico 
-            $consulta = "select * from documento_electronico  
+            $consulta = "select * from documento_electronico order by fecha desc
            ";
         }
 

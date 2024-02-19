@@ -1933,7 +1933,7 @@ class cajaDiariaController extends BaseController
 
 
         $id_apertura = $this->request->getPost('id_apertura');
-        // $id_apertura = 1093;
+        //$id_apertura = 1131;
 
         //$id_apertura = 41;
         $fecha_y_hora_cierre = "";
@@ -1973,21 +1973,39 @@ class cajaDiariaController extends BaseController
         $id_final = model('pagosModel')->get_max_id_electronico($id_apertura);
         $total_registros = model('pagosModel')->get_total_registros_electronicos($id_apertura);
 
-        $reg_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
-        $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        // $reg_inicial = model('pagosModel')->select('documento')->where('id', $id_inicial[0]['id'])->first();
+
+        $id_factura_min = model('pagosModel')->select('id_factura')->where('id', $id_inicial[0]['id'])->first();
+        $id_factura_max = model('pagosModel')->select('id_factura')->where('id', $id_final[0]['id'])->first();
+
+
+
+
+        $reg_inicial = model('facturaElectronicaModel')->select('numero')->where('id', $id_factura_min['id_factura'])->first();
+        // $reg_final = model('pagosModel')->select('documento')->where('id', $id_final[0]['id'])->first();
+        $reg_final = model('facturaElectronicaModel')->select('numero')->where('id', $id_factura_max['id_factura'])->first();
+
+
+
+
 
         if (empty($reg_inicial)) {
             $registro_inicial = "";
         }
         if (!empty($reg_inicial)) {
-            $registro_inicial = $reg_inicial['documento'];
+            $registro_inicial = $reg_inicial['numero'];
         }
         if (empty($reg_final)) {
             $registro_final = "";
         }
         if (!empty($reg_final)) {
-            $registro_final = $reg_final['documento'];
+            $registro_final = $reg_final['numero'];
         }
+
+
+
+        // dd($registro_inicial);
+
 
         /**
          * Discriminación de las bases tributarias tanto iva como impuesto al consumo 
@@ -2170,6 +2188,7 @@ class cajaDiariaController extends BaseController
                 "action_url" => base_url('consultas_y_reportes/expotar_informe_electronico_pdf')
             ])
         );
+
         echo  json_encode($returnData);
     }
 }

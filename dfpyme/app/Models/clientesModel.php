@@ -27,4 +27,27 @@ class clientesModel extends Model
          ");
         return $datos->getResultArray();
     }
+    public function get_tipo_persona($codigo)
+    {
+        $datos = $this->db->query("
+            select * from tipo_persona where codigo= $codigo
+         ");
+        return $datos->getResultArray();
+    }
+    public function get_tipos_persona()
+    {
+        $datos = $this->db->query("
+             select * from tipo_persona 
+
+         ");
+        return $datos->getResultArray();
+    }
+    public function get_tipos_documento()
+    {
+        $datos = $this->db->query("
+             select * from documento_identidad
+
+         ");
+        return $datos->getResultArray();
+    }
 }
