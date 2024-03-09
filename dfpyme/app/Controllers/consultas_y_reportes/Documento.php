@@ -56,13 +56,13 @@ class Documento extends BaseController
 
     public function tipo_documento()
     {
-        $valor_buscado = $_GET['search']['value'];
+        //$valor_buscado = $_GET['search']['value'];
 
-        //$tipo_documento = 5;
-        $tipo_documento = $_REQUEST['documento'];
+        $tipo_documento = 5;
+        //$tipo_documento = $_REQUEST['documento'];
 
-        $fecha_ini = $_REQUEST['fecha_inicial'];
-        //$fecha_ini = '2023-01-01';
+        //$fecha_ini = $_REQUEST['fecha_inicial'];
+        $fecha_ini = '2023-01-01';
 
 
 
@@ -81,8 +81,8 @@ class Documento extends BaseController
             $fecha_inicial = $fecha_ini;
         }
 
-        $fecha_fin = $_REQUEST['fecha_final'];
-        //$fecha_fin = '2023-06-07';
+        //$fecha_fin = $_REQUEST['fecha_final'];
+        $fecha_fin = '2023-06-07';
 
 
         $fecha_final = '';

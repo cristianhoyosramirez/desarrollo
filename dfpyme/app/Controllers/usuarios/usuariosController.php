@@ -9,16 +9,16 @@ class usuariosController extends BaseController
     public function index()
     {
         //  $usuarios = model('usuariosModel')->orderBy('idusuario_sistema','asc')->findAll();
-        $usuarios = model('usuariosModel')->select('*')->where('estadousuario_sistema', 'true')->find();
-        $administrador = 0;
-        $general = 1;
+        $usuarios = model('usuariosModel')->get_listado_usuarios();
+        $usuarios_eliminados = model('usuariosModel')->select('*')->where('estadousuario_sistema', 'false')->find();
+        $tipos_usuario=model('tipoUsuarioModel')->findAll();
 
         $roles = model('tipoUsuarioModel')->findAll();
         return view('usuarios/listado', [
             'usuarios' => $usuarios,
-            'administrador' => $administrador,
-            'general' => $general,
-            'rol' => $roles
+            'tipo_usarios'=>$tipos_usuario,
+            'rol' => $roles,
+            'usuarios_eliminados'=>$usuarios_eliminados
         ]);
     }
 
@@ -34,13 +34,16 @@ class usuariosController extends BaseController
         $datos = $modelo->select('idtipo');
         $datos = $modelo->where('idusuario_sistema', $id_usuario)->first();
 
+        $tipos_usuario=model('tipoUsuarioModel')->findAll();
+
         return view('usuarios/editar', [
             'identificacion' => $datos['cedulausuario_sistema'],
             'nombres' => $datos['nombresusuario_sistema'],
             'usuario' => $datos['usuariousuario_sistema'],
             'idusuario_sistema' => $datos['idusuario_sistema'],
             'pin_de_usuario' => $datos['pinusuario_sistema'],
-            'id_tipo' => $datos['idtipo']
+            'id_tipo' => $datos['idtipo'],
+            'tipos_usuario'=> $tipos_usuario
         ]);
     }
 

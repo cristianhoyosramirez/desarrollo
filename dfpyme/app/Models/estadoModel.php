@@ -9,6 +9,6 @@ class estadoModel extends Model
     protected $table      = 'estado';
     // Uncomment below if you want add primary key
    // protected $primaryKey = 'id';
-   protected $allowedFields = [' descripcionestado','estado','orden'];
+   protected $allowedFields = ['descripcionestado','estado','orden'];
    
 }

@@ -11,10 +11,17 @@
     <!-- Select 2 -->
     <link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.css" rel="stylesheet" />
     <link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <!-- Data tables -->
+    <link href="<?= base_url() ?>/Assets/plugin/data_tables/bootstrap.min.css" />
+    <link href="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.css" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="<?php echo base_url(); ?>/Assets/img/favicon.png">
     <!-- Jquery-ui -->
     <link href="<?php echo base_url() ?>/Assets/plugin/jquery-ui/jquery-ui.css" rel="stylesheet">
+
+    <!-- Data tables -->
+    <link href="<?= base_url() ?>/Assets/plugin/data_tables/bootstrap.min.css" />
+    <link href="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.css" />
 </head>
 <?php $session = session(); ?>
 
@@ -30,6 +37,8 @@
                 <?= $this->renderSection('content') ?>
                 <?= $this->include('pedidos/modal_trasmision_electronica') ?>
                 <?= $this->include('modal_abono_factura/modal_detalle_factura') ?>
+                <?= $this->include('ventanas_modal_duplicado_factura/detalle_factura') ?>
+                <?= $this->include('modal_abono_factura/abono') ?>
             </div>
             <?= $this->include('layout/footer') ?>
         </div>
@@ -49,7 +58,378 @@
 
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/nueva_factura.js"></script>
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/detalle_f_e.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert_start.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/duplicado_factura/imprimir_duplicado_factura.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/duplicado_factura/detalle_factura.js"></script>
 
+
+        <!-- Data tables -->
+        <script src="<?= base_url() ?>/Assets/plugin/data_tables/jquery.dataTables.min.js"></script>
+        <script src="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.js"></script>
+
+
+        <script>
+            function limpiar() {
+                document.getElementById("abono_factura_credito").addEventListener("keydown", function(event) {
+                    if (event.key === "Backspace") {
+                        limpiar(); // Llama a la función limpiar solo si se presiona Backspace
+                        
+                        $('#abono_mayor_que_saldo').html('')
+                    }
+                });
+            }
+        </script>
+
+        <script>
+            function buscar() {
+                var url = document.getElementById("url").value;
+                var opcion = document.getElementById("opcion_seleccionada").value;
+                var fecha_inicial = document.getElementById("fecha_inicial").value;
+                var fecha_final = document.getElementById("fecha_final").value;
+                var tipo_documento = document.getElementById("tipo_documento").value;
+                var numero_factura = document.getElementById("numero_factura").value;
+                var nit_cliente = document.getElementById("nit_cliente").value;
+
+
+
+
+                if ($.fn.DataTable.isDataTable('#consulta_ventas')) {
+                    $('#consulta_ventas').DataTable().destroy();
+                }
+
+
+                if (opcion == "") {
+
+                    /*       $.ajax({
+                              data: {
+                                  tipo_documento,
+                                  fecha_inicial,
+                                  fecha_final
+                              },
+                              url: url +
+                                  "/" +
+                                  "eventos/consultar_documento",
+                              type: "post",
+                              success: function(resultado) {
+                                  var resultado = JSON.parse(resultado);
+                                  if (resultado.resultado == 1) {
+
+                                      $('#resultado_consultado').html(resultado.datos)
+
+
+
+                                  }
+                              },
+                          }); */
+
+
+                    $('#consulta_ventas').DataTable({
+                        serverSide: true,
+                        processing: true,
+                        searching: false,
+                        order: [
+                            [0, 'desc']
+                        ],
+                        language: {
+                            decimal: "",
+                            emptyTable: "No hay datos",
+                            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                            infoFiltered: "(Filtro de _MAX_ total registros)",
+                            infoPostFix: "",
+                            thousands: ",",
+                            lengthMenu: "Mostrar _MENU_ registros",
+                            loadingRecords: "Cargando...",
+                            processing: "Procesando...",
+                            search: "Buscar",
+                            zeroRecords: "No se encontraron coincidencias",
+                            paginate: {
+                                first: "Primero",
+                                last: "Ultimo",
+                                next: "Próximo",
+                                previous: "Anterior"
+                            },
+                            aria: {
+                                sortAscending: ": Activar orden de columna ascendente",
+                                sortDescending: ": Activar orden de columna desendente"
+                            }
+                        },
+                        ajax: {
+                            url: '<?php echo base_url() ?>' + "/eventos/consultar_documento",
+                            data: function(d) {
+                                return $.extend({}, d, {
+                                    // documento: documento,
+                                    fecha_inicial: fecha_inicial,
+                                    fecha_final: fecha_final
+                                });
+                            },
+                            dataSrc: function(json) {
+                                $('#saldo_total').html(json.total);
+                                $('#saldo_cliente').html(json.saldo);
+                                $('#pagos_factura').html(json.pagos);
+                                return json.data;
+                            }
+                        },
+                        columnDefs: [{
+                            targets: [4],
+                            orderable: false
+                        }]
+                    });
+
+
+
+
+                }
+                if (opcion != "") {
+
+                    if (opcion == 1) {
+
+                        if (numero_factura == "") {
+                            $('#error_numero').html('No se ha definido número de documento')
+                        }
+                        if (numero_factura != "") {
+
+                            $.ajax({
+                                data: {
+                                    numero_factura
+                                },
+                                url: url +
+                                    "/" +
+                                    "eventos/numero_documento",
+                                type: "post",
+                                success: function(resultado) {
+                                    var resultado = JSON.parse(resultado);
+                                    if (resultado.resultado == 1) {
+
+                                        $('#resultado_consultado').html(resultado.datos)
+
+
+
+                                    }
+                                },
+                            });
+                        }
+                    }
+                    if (opcion == 2) {
+
+
+                        if (tipo_documento == "") {
+                            $('#error_tipo_documento').html('No hay documento seleccionado ')
+                        }
+                        if (tipo_documento == 8) {
+
+                            $('#consulta_ventas').DataTable({
+                                serverSide: true,
+                                processing: true,
+                                searching: false,
+                                order: [
+                                    [0, 'desc']
+                                ],
+                                language: {
+                                    decimal: "",
+                                    emptyTable: "No hay datos",
+                                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                                    infoFiltered: "(Filtro de _MAX_ total registros)",
+                                    infoPostFix: "",
+                                    thousands: ",",
+                                    lengthMenu: "Mostrar _MENU_ registros",
+                                    loadingRecords: "Cargando...",
+                                    processing: "Procesando...",
+                                    search: "Buscar",
+                                    zeroRecords: "No se encontraron coincidencias",
+                                    paginate: {
+                                        first: "Primero",
+                                        last: "Ultimo",
+                                        next: "Próximo",
+                                        previous: "Anterior"
+                                    },
+                                    aria: {
+                                        sortAscending: ": Activar orden de columna ascendente",
+                                        sortDescending: ": Activar orden de columna desendente"
+                                    }
+                                },
+                                ajax: {
+                                    url: '<?php echo base_url() ?>' + "/eventos/consultar_documento",
+                                    data: function(d) {
+                                        return $.extend({}, d, {
+                                            // documento: documento,
+                                            fecha_inicial: fecha_inicial,
+                                            fecha_final: fecha_final
+                                        });
+                                    },
+                                    dataSrc: function(json) {
+                                        $('#saldo_total').html(json.total);
+                                        $('#saldo_cliente').html(json.saldo);
+                                        $('#pagos_factura').html(json.pagos);
+                                        return json.data;
+                                    }
+                                },
+                                columnDefs: [{
+                                    targets: [4],
+                                    orderable: false
+                                }]
+                            });
+                        }
+
+                        if (tipo_documento != 8) {
+
+
+
+
+                            $('#consulta_ventas').DataTable({
+                                serverSide: true,
+                                processing: true,
+                                searching: false,
+                                order: [
+                                    [0, 'desc']
+                                ],
+                                language: {
+                                    decimal: "",
+                                    emptyTable: "No hay datos",
+                                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                                    infoFiltered: "(Filtro de _MAX_ total registros)",
+                                    infoPostFix: "",
+                                    thousands: ",",
+                                    lengthMenu: "Mostrar _MENU_ registros",
+                                    loadingRecords: "Cargando...",
+                                    processing: "Procesando...",
+                                    search: "Buscar",
+                                    zeroRecords: "No se encontraron coincidencias",
+                                    paginate: {
+                                        first: "Primero",
+                                        last: "Ultimo",
+                                        next: "Próximo",
+                                        previous: "Anterior"
+                                    },
+                                    aria: {
+                                        sortAscending: ": Activar orden de columna ascendente",
+                                        sortDescending: ": Activar orden de columna desendente"
+                                    }
+                                },
+                                ajax: {
+                                    url: '<?php echo base_url() ?>' + "/eventos/consultar_de_tipo_documento",
+                                    data: function(d) {
+                                        return $.extend({}, d, {
+                                            tipo_documento: tipo_documento,
+                                            fecha_inicial: fecha_inicial,
+                                            fecha_final: fecha_final
+                                        });
+                                    },
+                                    dataSrc: function(json) {
+                                        $('#saldo_total').html(json.total);
+                                        $('#saldo_cliente').html(json.saldo);
+                                        $('#pagos_factura').html(json.pagos);
+                                        return json.data;
+                                    }
+                                },
+                                columnDefs: [{
+                                    targets: [4],
+                                    orderable: false
+                                }]
+                            });
+                        }
+
+                    }
+                }
+                if (opcion == 3) {
+                    if (nit_cliente == "") {
+                        $('#error_cliente').html('No se ha definido un cliente')
+
+                    }
+                    if (nit_cliente != "") {
+                       /*  $.ajax({
+                            data: {
+                                nit_cliente,
+                                tipo_documento,
+                                fecha_inicial,
+                                fecha_final
+                            },
+                            url: url +
+                                "/" +
+                                "eventos/get_cliente",
+                            type: "post",
+                            success: function(resultado) {
+                                var resultado = JSON.parse(resultado);
+                                if (resultado.resultado == 1) {
+
+                                    $('#resultado_consultado').html(resultado.datos)
+
+
+
+                                }
+                            },
+                        }); */
+
+                        alert('Hola mundo ')
+
+                    }
+                }
+            }
+        </script>
+
+
+
+
+
+
+        <script>
+            $(document).ready(function() {
+                $('#consulta_ventas').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    searching: false,
+                    order: [
+                        [0, 'desc']
+                    ],
+                    language: {
+                        decimal: "",
+                        emptyTable: "No hay datos",
+                        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                        infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                        infoFiltered: "(Filtro de _MAX_ total registros)",
+                        infoPostFix: "",
+                        thousands: ",",
+                        lengthMenu: "Mostrar _MENU_ registros",
+                        loadingRecords: "Cargando...",
+                        processing: "Procesando...",
+                        search: "Buscar",
+                        zeroRecords: "No se encontraron coincidencias",
+                        paginate: {
+                            first: "Primero",
+                            last: "Ultimo",
+                            next: "Próximo",
+                            previous: "Anterior"
+                        },
+                        aria: {
+                            sortAscending: ": Activar orden de columna ascendente",
+                            sortDescending: ": Activar orden de columna desendente"
+                        }
+                    },
+                    ajax: {
+                        url: '<?php echo base_url() ?>' + "/eventos/tipo_documento",
+                        data: function(d) {
+                            return $.extend({}, d, {
+                                // documento: documento,
+                                // fecha_inicial: fecha_inicial,
+                                // fecha_final: fecha_final
+                            });
+                        },
+                        dataSrc: function(json) {
+                            $('#saldo_total').html(json.total);
+                            $('#saldo_cliente').html(json.saldo);
+                            $('#pagos_factura').html(json.pagos);
+                            return json.data;
+                        }
+                    },
+                    columnDefs: [{
+                        targets: [4],
+                        orderable: false
+                    }]
+                });
+            });
+        </script>
 
         <script>
             $("#buscar_cliente").autocomplete({
@@ -72,7 +452,7 @@
                     //$("#clientes_factura_pos").val(ui.item.nit_cliente);
                     $("#nit_cliente").val(ui.item.nit_cliente);
                     $("#buscar_cliente").val(ui.item.value);
-                
+
                     return false;
                     //$('#buscar_cliente').val(''); 
                 },

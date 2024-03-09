@@ -52,7 +52,7 @@
                                             <path d="M12 3v3m0 12v3" />
                                         </svg>
                                     </span>
-                                    <input type="text" class="form-control" id="abono_factura_credito" onkeyup="saltar(event,'valor_abono_factura_credito'),abono_efectivo_credito()" >
+                                    <input type="text" class="form-control" id="abono_factura_credito" onkeyup="saltar(event,'valor_abono_factura_credito'),abono_efectivo_credito(),limpiar()" >
                                 </div>
                             </div>
                             <span id="abono_mayor_que_saldo" style="color:red";></span>

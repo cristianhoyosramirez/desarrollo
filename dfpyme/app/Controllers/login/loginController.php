@@ -51,7 +51,7 @@ class loginController extends BaseController
                 ];
                 $sesion = session();
                 $sesion->set($datosSesion);
-                if ($usuario[0]['idtipo'] == 0 or $usuario[0]['idtipo'] == 1) {
+                if ($usuario[0]['idtipo'] == 0 or $usuario[0]['idtipo'] == 1 or $usuario[0]['idtipo'] == 3) {
                     return redirect()->to(base_url('pedidos/mesas'));
                 }
 

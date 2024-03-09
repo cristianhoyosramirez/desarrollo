@@ -1150,8 +1150,8 @@ class cajaDiariaController extends BaseController
     function reporte_de_ventas()
     {
 
-        //$id_apertura = 56;
-        $id_apertura = $this->request->getPost('id_apertura');
+       // $id_apertura = 851;
+       $id_apertura = $this->request->getPost('id_apertura'); 
 
 
 

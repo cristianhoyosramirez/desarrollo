@@ -18,7 +18,25 @@ class AbonosController extends BaseController
 {
     public function saldo_factura()
     {
-        //return view('home/home');
+
+        $id_factura = $this->request->getPost('id_factura');
+        //$tipo_factura = model('pagosModel')->select('id_estado')->where('id', $id_factura)->first();
+        $saldo = model('pagosModel')->select('saldo')->where('id_factura', $id_factura)->first();
+        $valor = model('pagosModel')->select('valor')->where('id_factura', $id_factura)->first();
+        $documento = model('pagosModel')->select('documento')->where('id_factura', $id_factura)->first();
+
+        $returnData = array(
+            "saldo" => number_format($saldo['saldo'], 0, ",", "."),
+            "valor_factura" => number_format($valor['valor'], 0, ",", "."),
+            "numero_factura" => $documento['documento'],
+            "id_factura" => $id_factura,
+            "resultado" => 1,
+        );
+        echo  json_encode($returnData);
+    }
+    /*   public function saldo_factura()
+    {
+    
         $id_factura = $this->request->getPost('id_factura');
         $tipo_factura = model('facturaVentaModel')->select('idestado')->where('id', $id_factura)->first();
 
@@ -40,7 +58,7 @@ class AbonosController extends BaseController
                 echo  json_encode($returnData);
             } else if ($saldo['saldo'] == 0) {
                 $returnData = array(
-                    "resultado" => 0
+                    "resultado" => 1
                 );
                 echo  json_encode($returnData);
             }
@@ -48,11 +66,11 @@ class AbonosController extends BaseController
 
         if ($tipo_factura['idestado'] == 1 or  $tipo_factura['idestado'] == 7) {
             $returnData = array(
-                "resultado" => 0
+                "resultado" => 1
             );
             echo  json_encode($returnData);
         }
-    }
+    } */
 
 
     function actualizar_saldo()
@@ -60,29 +78,29 @@ class AbonosController extends BaseController
 
         $efectivo = $this->request->getPost('efectivo');
         $transaccion = $this->request->getPost('transaccion');
-        $id_factura = $this->request->getPost('id_factura');
+         $id_factura = $this->request->getPost('id_factura'); 
         $abono = $this->request->getPost('abono');
-        $saldo = $this->request->getPost('saldo');
-
+        // $saldo = $this->request->getPost('saldo');
+        $saldo = model('pagosModel')->select('saldo')->where('id_factura', $id_factura)->first();
+        
         $id_usuario = $this->request->getPost('id_usuario');
 
 
         $resultado = $efectivo + $transaccion;
 
-        $saldo_actualizado = $saldo - $abono;
+        $saldo_actualizado = $saldo['saldo'] - $abono;
 
         $data = [
             'saldo' => $saldo_actualizado,
         ];
-        $model = model('facturaVentaModel');
+        $model = model('pagosModel');
         $actualizar = $model->set($data);
-        $actualizar = $model->where('id', $id_factura);
+        $actualizar = $model->where('id_factura', $id_factura);
         $actualizar = $model->update();
 
 
-        $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
-
-
+        // $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
+        $numero_factura = model('pagosModel')->select('documento')->where('id_factura', $id_factura)->first();
 
         if ($actualizar) {
 
@@ -92,7 +110,7 @@ class AbonosController extends BaseController
 
             $factura_forma_pago_efectivo = [
 
-                'numerofactura_venta' => $numero_factura['numerofactura_venta'],
+                'numerofactura_venta' => $numero_factura['documento'],
                 'idusuario' => $id_usuario,
                 'idcaja' => 1,
                 'idforma_pago' => 1,
@@ -106,7 +124,7 @@ class AbonosController extends BaseController
             ];
 
             $factura_forma_pago_transaccion = [
-                'numerofactura_venta' => $numero_factura['numerofactura_venta'],
+                'numerofactura_venta' => $numero_factura['documento'],
                 'idusuario' => $id_usuario,
                 'idcaja' => 1,
                 'idforma_pago' => 4,
@@ -125,17 +143,13 @@ class AbonosController extends BaseController
 
                 $insert_efectivo = model('facturaFormaPagoModel')->insert($factura_forma_pago_efectivo);
 
-
-
-
-
                 $consecutivo_ingreso = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', 32)->first();
 
                 $nit_cliente = model('facturaVentaModel')->select('nitcliente')->where('id', $id_factura)->first();
 
                 $ingreso = [
                     'numero' => $consecutivo_ingreso['numeroconsecutivo'],
-                    'concepto' => 'ABONO A FACTURA NUMERO ' . $numero_factura['numerofactura_venta'],
+                    'concepto' => 'ABONO A FACTURA NUMERO ' . $numero_factura['documento'],
                     'tipo' => 1,
                     'id_relacion' => 0,
                     'fecha' => date('Y-m-d'),
@@ -166,10 +180,6 @@ class AbonosController extends BaseController
                 $actualizar = $model->set($data);
                 $actualizar = $model->where('idconsecutivos', 32);
                 $actualizar = $model->update();
-
-
-
-
 
 
                 $returnData = array(

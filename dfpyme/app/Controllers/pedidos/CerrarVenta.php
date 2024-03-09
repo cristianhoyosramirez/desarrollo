@@ -21,7 +21,7 @@ class CerrarVenta extends BaseController
 
 
 
-        /*   $id_mesa = 1;
+        /*       $id_mesa = 4;
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
         $efectivo = 500;
@@ -32,7 +32,7 @@ class CerrarVenta extends BaseController
         $estado = 1;
         $propina = 0;
         $descuento = 0;
-        $tipo_pago = 1;  */
+        $tipo_pago = 1;   */
 
         // var_dump($this->request->getPost()); exit();
 
@@ -175,15 +175,6 @@ class CerrarVenta extends BaseController
 
 
                 $items = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
-                /*  foreach($items as $valor ){
-
-                  $exite=model('inventarioModel')->select('codigointernoproducto',$valor['codigointernoproducto'])->first();
-
-                  if (empty($exite))
-
-                } */
-
-
 
 
                 if ($tipo_pago == 1) {
@@ -330,7 +321,9 @@ class CerrarVenta extends BaseController
                     'recibido_efectivo' => $recibido_efectivo,
                     'recibido_transferencia' => $recibido_transaccion,
                     'id_factura' => $factura_venta,
-                    'saldo' => $saldo
+                    'saldo' => $saldo,
+                    'nit_cliente' => $nit_cliente
+
                 ];
 
                 $pagos = model('pagosModel')->insert($pagos);
@@ -367,6 +360,9 @@ class CerrarVenta extends BaseController
                     }
                 }
                 $mensaje = "";
+
+
+
 
 
                 if ($numero_facturas['numeroconsecutivo'] >= $facturas_sin_alerta and $diferencia_fecha->format('%R%a') > 0) {

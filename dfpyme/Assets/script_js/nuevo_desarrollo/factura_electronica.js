@@ -1,5 +1,5 @@
-let invoice = { id: 0, dian_status : "", order_reference: "" }
-let erroresp = { errors:[] };
+let invoice = { id: 0, dian_status: "", order_reference: "" }
+let erroresp = { errors: [] };
 let Error = { error: "" };
 
 async function sendInvoice(iddoc) {
@@ -7,25 +7,25 @@ async function sendInvoice(iddoc) {
     $("#id_de_factura").val(iddoc);
     $("#barra_progreso").modal("show");
 
-    let url = new URL("http://localhost:5000/api/Invoice/id");
-    //let url = new URL("http://localhost:3000/api");
-    url.search = new URLSearchParams({ id : iddoc });
-    const response = await fetch(url , { method:"GET" });
+    //let url = new URL("http://localhost:5000/api/Invoice/id");
+    let url = new URL("http://localhost:3000/api");
+    url.search = new URLSearchParams({ id: iddoc });
+    const response = await fetch(url, { method: "GET" });
     const data = await response.json();
     console.log(invoice.id)
     if (response.status === 200) {
         invoice = JSON.parse(JSON.stringify(data, null, 2));
-        
+
         //alert('Fact No ' + invoice.id + ' ' + invoice.order_reference + ' ' + invoice.dian_status);
         //console.log('Fact No ' + invoice.order_reference + ' ' + invoice.dian_status);
 
-       // $("#barra_progreso").modal("hide");
-       //$("#id_factura").val(invoice.id);
-       $("#id_factura").val(iddoc);
-       $("#barra_de_progreso").hide();
-       $("#respuesta_dian").show();
-       $("#opciones_dian").show();
-       $("#texto_dian").html( invoice.order_reference + ' ' + invoice.dian_status);
+        // $("#barra_progreso").modal("hide");
+        //$("#id_factura").val(invoice.id);
+        $("#id_factura").val(iddoc);
+        $("#barra_de_progreso").hide();
+        $("#respuesta_dian").show();
+        $("#opciones_dian").show();
+        $("#texto_dian").html(invoice.order_reference + ' ' + invoice.dian_status);
 
 
     }
@@ -46,14 +46,14 @@ async function sendInvoice(iddoc) {
         $("#barra_de_progreso").hide();
         $("#respuesta_dian").show();
         $("#error_dian").show();
-        $("#texto_dian").html('Respuesta DIAN: '+erroresp.errors[0].error);
+        $("#texto_dian").html('Respuesta DIAN: ' + erroresp.errors[0].error);
         //$("#id_factura").val(invoice.id);
         $("#id_factura").val(iddoc);
     }
 
 }
 
-function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario,propina_format) {
+function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario, propina_format) {
 
     if (pago_total >= parseInt(valor_venta)) {
         $.ajax({
@@ -101,15 +101,15 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     $('#mesa_pedido').html("Mesa: ")
                     $('#nombre_mesero').html("Mesero: ")
                     $('#tipo_pago').val(1)
-                    
+
 
 
 
                     let lista_categorias = document.getElementById("lista_categorias");
                     lista_categorias.style.display = "none";
-                    
+
                     Swal.fire({
-                        title: 'Resumen de prefactura electrónica',
+                        title: 'Información de pago',
                         showDenyButton: true,
                         confirmButtonText: 'Trasmitir', // Se intercambia con denyButtonText
                         denyButtonText: 'Nueva factura', // Se intercambia con confirmButtonText
@@ -139,32 +139,32 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                         /* Read more about isConfirmed, isDenied below */
                         if (result.isConfirmed) {
                             // Swal.fire('Saved!', '', 'success')
-                            
+
                             let id_factura = resultado.id_factura
 
-                            
-                          /*  $.ajax({
-                                data: {
-                                    id_factura, // Incluye el número de factura en los datos
-                                },
-                                url: url + "/" + "pedidos/imprimir_factura_electronica",
-                                type: "POST",
-                                success: function (resultado) {
-                                    var resultado = JSON.parse(resultado);
-                                    if (resultado.resultado == 1) {
 
-
-                                        let mesas = document.getElementById("todas_las_mesas");
-                                        mesas.style.display = "block"
-
-                                        let lista_categorias = document.getElementById("lista_categorias");
-                                        lista_categorias.style.display = "none";
-                                        
-                                       
-                                        sweet_alert('success', 'Impresión de factura correcto  ');
-                                    }
-                                },
-                            });  */
+                            /*  $.ajax({
+                                  data: {
+                                      id_factura, // Incluye el número de factura en los datos
+                                  },
+                                  url: url + "/" + "pedidos/imprimir_factura_electronica",
+                                  type: "POST",
+                                  success: function (resultado) {
+                                      var resultado = JSON.parse(resultado);
+                                      if (resultado.resultado == 1) {
+  
+  
+                                          let mesas = document.getElementById("todas_las_mesas");
+                                          mesas.style.display = "block"
+  
+                                          let lista_categorias = document.getElementById("lista_categorias");
+                                          lista_categorias.style.display = "none";
+                                          
+                                         
+                                          sweet_alert('success', 'Impresión de factura correcto  ');
+                                      }
+                                  },
+                              });  */
 
                             sendInvoice(id_factura);
 

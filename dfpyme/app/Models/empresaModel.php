@@ -40,7 +40,8 @@ class empresaModel extends Model
         representantelegalempresa,
         nombrejuridicoempresa,
         ciudad.nombreciudad,
-        departamento.nombredepartamento
+        departamento.nombredepartamento,
+        empresa.idregimen
     FROM
     empresa
     inner join regimen on empresa.idregimen=regimen.idregimen

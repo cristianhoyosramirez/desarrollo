@@ -1216,15 +1216,14 @@ class Mesas extends BaseController
     function reporte_propinas()
     {
 
-        //$id_apertura = 36;
+        //$id_apertura = 851;
         $id_apertura = $_REQUEST['id_apertura'];
 
         $meseros  = model('facturaPropinaModel')->get_meseros($id_apertura);
 
 
-
         $total_propinas = model('FacturaPropinaModel')->selectSum('valor_propina')->where('id_apertura', $id_apertura)->findAll();
-
+        
         $returnData = array(
             "resultado" => 1,
             "propinas" => view('pedidos/propinas', [

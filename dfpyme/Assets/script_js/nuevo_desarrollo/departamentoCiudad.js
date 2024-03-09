@@ -41,6 +41,7 @@ function departamentoCiudad() {
         if (resultado.resultado == 1) {
 
            $('#ciudad').html(resultado.ciudad)
+           $('#ciudad_cliente_edicion').html(resultado.ciudad)
            $('#municipios').html(resultado.municipios)
 
         }

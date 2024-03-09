@@ -120,21 +120,12 @@ PIN USUARIOS
                     <label class="form-label">Tipo de usuario</label>
                     <div class="input-icon mb-3">
                         <select class="form-select" id="tipo_usuario" name="tipo_usuario">
-                            <?php if ($id_tipo == 0) { ?>
-                                <option value="0" selected>Administrador</option>
-                                <option value="1">General</option>
-                                <option value="2" >Mesero</option>
-                            <?php } ?>
-                            <?php if ($id_tipo == 1) { ?>
-                                <option value="0">Administrador</option>
-                                <option value="1" selected>General</option>
-                                <option value="2" >Mesero</option>
-                            <?php } ?>
-                            <?php if ($id_tipo == 2) { ?>
-                                <option value="0">Administrador</option>
-                                <option value="1" selected>General</option>
-                                <option value="2" selected>Mesero</option>
-                            <?php } ?>
+
+                            <?php foreach ($tipos_usuario as $detalle) : ?>
+                                <option value="<?php echo $detalle['idtipo'] ?>" <?php if ($detalle['idtipo'] == $id_tipo) : ?>selected <?php endif; ?>><?php echo $detalle['descripciontipo'] ?> </option>
+                            <?php endforeach ?>
+
+
 
                         </select>
                     </div>

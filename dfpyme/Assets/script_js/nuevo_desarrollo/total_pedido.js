@@ -21,4 +21,6 @@ function total_pedido(valor) {
 
     $('#valor_pedido').html('$' + valor_pedido.toLocaleString('es-CO'))
 
+    actualizar_propina(valor)
+
 }

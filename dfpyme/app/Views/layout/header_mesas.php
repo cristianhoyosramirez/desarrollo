@@ -76,7 +76,7 @@
                   </svg>
                 </span>
                 <span class="nav-link-title">
-                  Administracion
+                  Administración
                 </span>
               </a>
               <div class="dropdown-menu">

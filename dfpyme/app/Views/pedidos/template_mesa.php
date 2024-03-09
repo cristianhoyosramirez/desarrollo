@@ -223,6 +223,66 @@
 
 
         <script>
+            function actualizar_propina(valor_propina) {
+
+                var url = document.getElementById("url").value;
+                let id_mesa = document.getElementById("id_mesa_pedido").value;
+
+                $.ajax({
+                    data: {
+                        id_mesa,valor_propina
+                    },
+                    url: url + "/" + "eventos/actualizar_propina",
+                    type: "POST",
+                    success: function(resultado) {
+                        var resultado = JSON.parse(resultado);
+                        if (resultado.resultado == 1) {
+
+                            
+
+                            sweet_alert_start('success', 'Propina actualizada  ');
+
+
+                        }
+                    },
+                });
+
+            }
+        </script>
+
+
+        <script>
+            function borrar_propina() {
+                var url = document.getElementById("url").value;
+                let id_mesa = document.getElementById("id_mesa_pedido").value;
+
+                $.ajax({
+                    data: {
+                        id_mesa,
+                    },
+                    url: url + "/" + "eventos/borrar_propina",
+                    type: "POST",
+                    success: function(resultado) {
+                        var resultado = JSON.parse(resultado);
+                        if (resultado.resultado == 1) {
+
+                            $('#propina_pesos').val(0)
+                            $('#propina_del_pedido').val(0)
+
+                            sweet_alert_start('success', 'Propina borrada  ');
+
+
+                        }
+                    },
+                });
+
+            }
+        </script>
+
+
+
+
+        <script>
             function imprimir_orden_pedido() {
 
                 var url = document.getElementById("url").value;
@@ -300,7 +360,7 @@
                     success: function(resultado) {
                         var resultado = JSON.parse(resultado);
                         if (resultado.resultado == 1) {
-                            
+
                             $('#productos_categoria').html(resultado.productos)
 
                         }

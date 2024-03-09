@@ -11,7 +11,7 @@
 
                 $dia_final = $dias[(date('N', strtotime($fecha_cierre))) - 1];
                 $mes_final = $meses[(date('m', strtotime($fecha_cierre))) - 1];
-         
+
                 ?>
 
                <div class="col">
@@ -31,7 +31,7 @@
                    </div>
                <?php } ?>
 
-               <div class="col-1 w-5 ">
+               <div class="col-2 ">
                    <form action="<?= base_url('consultas_y_reportes/datos_consultar_producto_agrupado_pdf') ?>">
                        <?php
                         if (!empty($id_apertura)) {
@@ -46,10 +46,19 @@
                        <input type="hidden" value="<?php echo $fecha_final ?>" id="fecha_final_reporte" name="fecha_final_agrupado">
                        <input type="hidden" value="<?php echo $hora_inicial ?>" id="hora_inicial_reporte" name="hora_inicial_agrupado">
                        <input type="hidden" value="<?php echo $hora_final ?>" id="hora_final_reporte" name="hora_final_agrupado">
-                       <button type="submit" class="btn btn-danger btn-icon">Pdf</button>
+                       <div class="row">
+                           <div class="col">
+                               <button type="button" class="btn btn-outline-success btn-icon text-end" onclick="imprimir_reporte()">Imprimir</button>
+
+                           </div>
+                           <div class="col">
+
+                               <button type="submit" class="btn btn-outline-danger btn-icon text-end">Pdf</button>
+                           </div>
+                       </div>
                    </form>
                </div>
-              <!--  <div class="col-1 w-5">
+               <!--  <div class="col-1 w-5">
                    <form action="<?= base_url('caja/exportar_a_excel_reporte_categorias') ?>" method="POST">
                        <input type="hidden" value="<?php echo $id_apertura ?>" id="id_apertura" name="id_apertura">
                        <input type="hidden" value="<?php echo $fecha_inicial ?>" id="fecha_inicial_reporte" name="fecha_inicial_agrupado">
@@ -176,7 +185,7 @@
                            </tr>
                        </thead>
                        <?php foreach ($devoluciones as $detalle) {
-                        
+
                             $detalle_devolucion = model('detalleDevolucionVentaModel')->detalle_devolucion($detalle['id_apertura']);
 
                         ?>
@@ -185,7 +194,7 @@
                                <td><?php echo $detalle['codigo'] ?></td>
                                <td><?php echo $detalle_devolucion[0]['nombreproducto'] ?></td>
                                <td><?php echo $detalle['cantidad'] ?></td>
-                               <td><?php echo  "$ " . number_format($detalle['valor_total_producto']/$detalle['cantidad'], 0, ",", "."); ?></td>
+                               <td><?php echo  "$ " . number_format($detalle['valor_total_producto'] / $detalle['cantidad'], 0, ",", "."); ?></td>
                                <td><?php echo "$ " . number_format($detalle['valor_total_producto'], 0, ",", ".") ?></td>
                            </tr>
 
@@ -202,3 +211,33 @@
                </div>
            <?php } ?>
        </div>
+
+
+
+       <script>
+           function imprimir_reporte() {
+
+               let url = document.getElementById("url").value;
+               let id_apertura = document.getElementById("id_apertura").value;
+
+               $.ajax({
+                   data: {
+
+                       id_apertura,
+                   },
+
+                   url: url + "/" + "pedidos/reporte_ventas",
+                   type: "POST",
+                   success: function(resultado) {
+                       var resultado = JSON.parse(resultado);
+                       if (resultado.resultado == 1) {
+                           sweet_alert_start('success', 'Impresión de comanda éxitoso')
+                       }
+                       if (resultado.resultado == 0) {
+
+                           sweet_alert_start('warning', 'No hay productos para imprimir ')
+                       }
+                   },
+               });
+           }
+       </script>

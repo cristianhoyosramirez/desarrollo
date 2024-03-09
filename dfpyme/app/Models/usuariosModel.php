@@ -70,4 +70,19 @@ class usuariosModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function get_listado_usuarios()
+    {
+        $datos = $this->db->query("
+        SELECT
+            nombresusuario_sistema,
+            usuariousuario_sistema,
+            idusuario_sistema,
+            tipo.descripciontipo,
+            pinusuario_sistema
+        FROM
+            usuario_sistema
+        INNER JOIN tipo ON tipo.idtipo = usuario_sistema.idtipo WHERE estadousuario_sistema='true'
+        ");
+        return $datos->getResultArray();
+    }
 }

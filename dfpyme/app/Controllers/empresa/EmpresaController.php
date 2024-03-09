@@ -398,17 +398,32 @@ class EmpresaController extends BaseController
     function activacion_resolucion_facturacion()
     {
         $id_dian = $this->request->getPost('id_resolucion');
-        $datos_resolucion = model('dianModel')->findAll();
+        //$id_dian = 7;
+        
+        $datos_resolucion = model('dianModel')->where('iddian',$id_dian)->first();
+
+    
 
         $ultima_id = model('facturaVentaModel')->selectMax('id')->first();
 
-        $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $ultima_id['id'])->first();
+        
+
+        if (!empty( $ultima_id['id'])){
+            $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $ultima_id['id'])->first(); 
+            $factura=$numero_factura['numerofactura_venta'];
+        }
+        if (empty( $ultima_id['id'])){
+            $numero_factura = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', 8)->first();
+            $factura=$numero_factura['numeroconsecutivo'];
+
+        }
+        
 
         echo json_encode([
-            'texto' => $datos_resolucion[0]['texto_inicial'] . "-" . $datos_resolucion[0]['inicialestatica'] . " desde " . $datos_resolucion[0]['inicialestatica'] . " hasta " . $datos_resolucion[0]['rangofinaldian'] . " fecha " . $datos_resolucion[0]['fechadian'] . " vigencia 6 meses ",
+            'texto' => $datos_resolucion['texto_inicial'] . "-" . $datos_resolucion['inicialestatica'] . " desde " . $datos_resolucion['inicialestatica'] . " hasta " . $datos_resolucion['rangofinaldian'] . " fecha " . $datos_resolucion['fechadian'] . " vigencia 6 meses ",
             'resultado' => 1,
-            'numero_factura' => $numero_factura['numerofactura_venta'],
-            'prefijo' => $datos_resolucion[0]['inicialestatica'],
+            'numero_factura' => $factura ,
+            'prefijo' => $datos_resolucion['inicialestatica'],
             'id_dian' => $id_dian
         ]);
     }
@@ -474,7 +489,7 @@ class EmpresaController extends BaseController
             'prefijo' => $this->request->getPost('prefijo'),
             'number_begin' => $this->request->getPost('numero_inicial'),
             'number_end' => $this->request->getPost('numero_final'),
-            'consecutive' => 1,
+            'consecutive' => $this->request->getPost('numero_inicial'),
             'alerta' => $this->request->getPost('alerta')
 
         ];
@@ -487,7 +502,7 @@ class EmpresaController extends BaseController
 
             $returnData = array(
                 "resultado" => 1, //Falta plata  
-                "resoluciones"=>view('empresa/resoluciones_electronicas',[
+                "resoluciones" => view('empresa/resoluciones_electronicas', [
                     'resoluciones_dian' => $resoluciones_dian
                 ])
             );

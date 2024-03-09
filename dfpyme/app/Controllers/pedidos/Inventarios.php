@@ -9,6 +9,14 @@ use Dompdf\Options;
 
 class Inventarios extends BaseController
 {
+
+    public $db;
+
+    public function __construct()
+    {
+        $this->db = \Config\Database::connect();
+    }
+
     public function ingreso()
     {
         return view('inventarios/ingreso');
@@ -202,5 +210,143 @@ class Inventarios extends BaseController
             array_push($returnData, $data);
             echo json_encode($returnData);
         }
+    }
+
+
+
+    public function por_defecto()
+    {
+
+        $sql_count = '';
+        $sql_data = '';
+
+        $fecha_inicial = date('Y-m-d');
+        $fecha_final = date('Y-m-d');
+
+
+
+
+        $table_map = [
+            0 => 'id',
+            1 => 'nitcliente',
+            2 => 'nombrescliente',
+            3 => 'descripcionestado',
+            4 => 'fecha_factura_venta',
+            5 => 'horafactura_venta',
+            6 => 'fechalimitefactura_venta',
+        ];
+
+        $temp_sql_count = "SELECT
+                    COUNT(factura_venta.id) AS total
+                FROM
+                    factura_venta
+                INNER JOIN cliente ON factura_venta.nitcliente = cliente.nitcliente
+                INNER JOIN estado ON factura_venta.idestado = estado.idestado WHERE  fecha_factura_venta BETWEEN '$fecha_inicial' AND '$fecha_final' ";
+
+        $temp_sql_data = " SELECT
+                        factura_venta.id,
+                        factura_venta.nitcliente,
+                        cliente.nombrescliente,
+                        descripcionestado,
+                        fecha_factura_venta,
+                        horafactura_venta,
+                        fechalimitefactura_venta,
+                        numerofactura_venta,
+                        fechalimitefactura_venta,
+                        valor_factura,saldo
+                    FROM
+                        factura_venta
+                    INNER JOIN cliente ON factura_venta.nitcliente = cliente.nitcliente
+                    INNER JOIN estado ON factura_venta.idestado = estado.idestado WHERE fecha_factura_venta BETWEEN '$fecha_inicial' AND '$fecha_final' ";
+
+        $condition = "";
+
+        if (!empty($valor_buscado)) {
+            $condition .= " AND descripcionestado ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR cliente.nombrescliente ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR factura_venta.nitcliente ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR numerofactura_venta ILIKE '%" . $valor_buscado . "%'";
+            // $condition .= " OR fecha_factura_venta BETWEEN " . "'$valor_buscado'" . " AND " . "'$valor_buscado'";
+        }
+
+        $sql_count = $temp_sql_count;
+        $sql_data = $temp_sql_data;
+        //$sql_sum = $temp_sql_sum;
+        $sql_count = $sql_count . $condition;
+        $sql_data = $sql_data . $condition;
+        // $sql_sum = $sql_sum . $condition;
+        //dd($sql_data);
+        //$saldo = $this->db->query($sql_sum)->getRow();
+        $total_count = $this->db->query($sql_count)->getRow();
+        $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
+
+
+        $datos = $this->db->query($sql_data)->getResultArray();
+
+        if (!empty($datos) && !empty($total_count->total)) {
+
+            foreach ($datos as $detalle) {
+                $sub_array = array();
+                $sub_array[] = number_format($detalle['nitcliente'], 0, ",", ".");
+                $sub_array[] = $detalle['nombrescliente'];
+                $sub_array[] = $detalle['descripcionestado'];
+                $sub_array[] = $detalle['numerofactura_venta'];
+                $sub_array[] = $detalle['fecha_factura_venta'];
+                $sub_array[] = $detalle['fechalimitefactura_venta'];
+                $sub_array[] = "$" . number_format($detalle['valor_factura'], 0, ",", ".");
+                $sub_array[] = "$" . number_format($detalle['saldo'], 0, ",", ".");
+                //$sub_array[] = date("g:i a", strtotime($detalle['horafactura_venta']));
+                $sub_array[] = '<a  class="btn btn-primary btn-icon " title="Imprimir copia " onclick="imprimir_duplicado_factura(' . $detalle['id'] . ')" >
+                <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><rect x="7" y="13" width="10" height="8" rx="2" /></svg></a>  
+            <a  class="btn bg-muted-lt btn-icon " title="Ver detalle" onclick="detalle_de_factura(' . $detalle['id'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg></a>
+            <a  class="btn bg-green-lt btn-icon " title="Realizar pago " onclick="abonos_a_cartera(' . $detalle['nitcliente'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" /><path d="M12 3v3m0 12v3" /></svg></a>
+            <a  class="btn bg-muted-lt-lt btn-icon " title="Ver pago " onclick="detalle_de_factura(' . $detalle['id'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/eyeglass-2 -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 4h-2l-3 10v2.5" /><path d="M16 4h2l3 10v2.5" /><line x1="10" y1="16" x2="14" y2="16" /><circle cx="17.5" cy="16.5" r="3.5" /><circle cx="6.5" cy="16.5" r="3.5" /></svg></a>
+            <a  class="btn bg-green-lt btn-icon "  onclick="detalle_de_factura(' . $detalle['id'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/pencil -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" /><line x1="13.5" y1="6.5" x2="17.5" y2="10.5" /></svg></a>
+            <a onclick="abono_credito(' . $detalle['id'] . ')"  class="btn btn-primary  btn-icon" ><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" /><path d="M12 3v3m0 12v3" /></svg> </a> ';
+                $data[] = $sub_array;
+            }
+
+            //$saldo = model('facturaVentaModel')->saldo($fecha_inicial, $fecha_final);
+
+            $json_data = [
+                //'draw' => intval($this->request->getGEt(index: 'draw')),
+                'draw' => intval($this->request->getGEt(index: 'draw')),
+                'recordsTotal' => $total_count->total,
+                'recordsFiltered' => $total_count->total,
+                //'saldo' => 'SALDO:  ' . number_format($saldo[0]['saldo'], 0, ",", "."),
+                'data' => $data,
+
+
+            ];
+
+            echo  json_encode($json_data);
+        } /* else {
+            $sub_array = array();
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $sub_array[] = 'NO HAY DATOS ';
+            $data[] = $sub_array;
+            $json_data = [
+                //'draw' => intval($this->request->getGEt(index: 'draw')),
+                'draw' => intval($this->request->getGEt(index: 'draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => $data,
+
+            ];
+            echo  json_encode($json_data);
+        } */
     }
 }

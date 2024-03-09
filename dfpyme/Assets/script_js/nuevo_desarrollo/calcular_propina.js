@@ -12,7 +12,7 @@ function calcular_propina(propina) {
         temp_propina = propina
     }
 
-    
+   
 
     if (criterio_propina == 1) {
 
@@ -31,6 +31,9 @@ function calcular_propina(propina) {
             }
 
         }
+
+        actualizar_propina(valor_propina)
+
 
     }
 
@@ -57,10 +60,14 @@ function calcular_propina(propina) {
 
         total = parseInt(propina_pesos_limpio) + parseInt(subtotalLimpio)
 
+        actualizar_propina(propina_pesos_limpio)
+
         //$('#propina_del_pedido').val(propinaFormateada)
         $('#valor_pedido').html(total.toLocaleString('es-ES'))
 
     }
+
+
 
 
 }

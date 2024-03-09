@@ -15,6 +15,12 @@ Reporte de costos
     <p class="text-center text-primary h3">INFORME COSTO DE VENTA </p>
 
     <div class="my-4"></div> <!-- Added space between the title and date inputs -->
+    <!-- Agregar una barra de progreso -->
+
+
+
+
+
 
 
     <div class="row">
@@ -82,14 +88,14 @@ Reporte de costos
                         <input type="hidden" id="inicial" name="inicial">
                         <input type="hidden" id="final" name="final">
                         <button class="btn btn-outline-success" type="submit" title="Exportar a Excel" data-bs-toggle="tooltip">Excel </button>
-                    </form> 
+                    </form>
                 </div>
                 <div class="col-md-1 text-start"><br>
 
                     <!-- <button class="btn btn-outline-success" onclick="exportToExcel()" title="Exportar a excel " data-bs-toggle="tooltip">Excel</button> -->
 
                     <form action="<?= base_url('reportes/exportar_reporte_costo') ?>" method="POST">
-                        <input type="hidden" id="inicial" name="inicial">
+                        <input type="hidden" id="inicial" name="inicial" >
                         <input type="hidden" id="final" name="final">
                         <button class="btn btn-outline-danger" type="submit" title="Exportar a PDF" data-bs-toggle="tooltip">PDF</button>
                     </form>
@@ -101,33 +107,71 @@ Reporte de costos
 
     </div>
 
-
-    <div class="my-3"></div> <!-- Added space between the buttons and the table -->
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <td>Nit</th>
-                    <td>Tercero</th>
-                    <td>Documento</th>
-                    <td>Número</th>
-                    <td>Fecha</th>
-                    <td>Costo</th>
-                    <td>Base</th>
-                    <td>IVA</th>
-                    <td>INC</th>
-                    <td>Venta</th>
-                </tr>
-            </thead>
-            <tbody id="datos_costos">
-
-            </tbody>
-        </table>
-        <br>
-        <p class="text-primary h1 text-center " id="no_hay_datos"> </p>
+    <div id="processing-bar" style="display: none;">
+        <p class="text-primary h3">Procesando petición</p>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+        </div>
     </div>
+    <div class="my-3"></div> <!-- Added space between the buttons and the table -->
+
+    <table class="table table-striped table-hover" id="consulta_costo">
+        <thead class="table-dark">
+            <tr>
+                <td>Fecha</th>
+                <td>Nit cliente</th>
+                <td>Cliente</th>
+                <td>Documento</th>
+                <td>Valor</th>
+                <td>Tipo documento</th>
+                <td>Costo</th>
+                <td>Base </th>
+                <td>IVA</th>
+                <td>INC</th>
+
+            </tr>
+        </thead>
+        <tbody id="datos_costos">
+
+        </tbody>
+    </table>
+
+
+
+    <br>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <td scope="col">BASE IVA 19 </td>
+                <td scope="col">IVA 19</td>
+                <td scope="col">BASE IVA 5</td>
+                <td scope="col">IVA 5</td>
+                <td scope="col">BASE INC 8</td>
+                <td scope="col">INC</td>
+                
+                <td scope="col">VALOR VENTA</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                <p id="base_iva_19">
+                    </th>
+                <td><p id="iva_19"></td>
+                <td><p id="base_iva_5"></td>
+                <td><p id="iva_5"></td>
+                <td><p id="base_inc"></td>
+                <td><p id="inc"></td>
+                <td><p id="valor_venta"></td>
+               
+            </tr>
+        </tbody>
+    </table>
+
 </div>
 
+
+</div>
 <!-- jQuery -->
 <script src="<?= base_url() ?>/Assets/js/jquery-3.5.1.js"></script>
 <!-- jQuery UI -->
@@ -135,39 +179,159 @@ Reporte de costos
 <!-- Sweet alert -->
 <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
 
+<!-- Data tables -->
+<script src="<?= base_url() ?>/Assets/plugin/data_tables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.js"></script>
+
+
 <!-- <script>
-    $(function() {
-        //var dateFormat = "yy/mm/dd";
-        var dateFormat = "mm-dd-yy"
+    $(document).ready(function() {
+        // Muestra el modal cuando comienza la solicitud AJAX
+        $(document).ajaxStart(function() {
 
-        var from = $("#fecha_inicial").datepicker({
-            changeMonth: true,
-            numberOfMonths: 1,
-            changeYear: true,
-            onClose: function(selectedDate) {
-                to.datepicker("option", "minDate", selectedDate);
-            }
+            $('#processing-bar').show();
+
+
         });
 
-        var to = $("#fecha_final").datepicker({
-            changeMonth: true,
-            numberOfMonths: 1,
-            changeYear: true,
-            onClose: function(selectedDate) {
-                from.datepicker("option", "maxDate", selectedDate);
-            }
+        // Oculta el modal cuando todas las solicitudes AJAX se completan
+        $(document).ajaxStop(function() {
+
+
+            $('#processing-bar').hide();
+
+
+
+
         });
 
-        // Export to Excel and PDF functionality
-        $('#exportExcelBtn').click(function() {
-            // Add your code to export to Excel here
-        });
+        var dataTable = $('#consulta_costo').DataTable({
+            serverSide: true,
+            processing: true,
+            searching: false,
+            processingMarkup: '<div id="custom-loader" class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>',
+            order: [
+                [0, 'desc']
+            ],
+            language: {
+                decimal: "",
+                emptyTable: "No hay datos",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(Filtro de _MAX_ total registros)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ registros",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar",
+                zeroRecords: "No se encontraron coincidencias",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Próximo",
+                    previous: "Anterior"
+                },
+                aria: {
+                    sortAscending: ": Activar orden de columna ascendente",
+                    sortDescending: ": Activar orden de columna desendente"
+                }
+            },
+            ajax: {
+                url: '<?php echo base_url() ?>' + "/reportes/data_table_reporte_costo",
+                data: function(d) {
+                    return $.extend({}, d, {
+                        // documento: documento,
+                        // fecha_inicial: fecha_inicial,
+                        // fecha_final: fecha_final
+                    });
+                },
+                dataSrc: function(json) {
+                    $('#base_iva_19').html(json.base_iva_19);
+                    //$('#saldo_cliente').html(json.saldo);
+                    //$('#pagos_factura').html(json.pagos);
 
-        $('#exportPdfBtn').click(function() {
-            // Add your code to export to PDF here
+                    return json.data;
+                },
+
+            },
+            columnDefs: [{
+                targets: [4],
+                orderable: false
+            }]
         });
     });
 </script> -->
+<script>
+    $(document).ready(function() {
+        // Muestra el modal cuando comienza la solicitud AJAX
+        $(document).ajaxStart(function() {
+            $('#processing-bar').show();
+        });
+
+        // Oculta el modal cuando todas las solicitudes AJAX se completan
+        $(document).ajaxStop(function() {
+            $('#processing-bar').hide();
+        });
+
+        var dataTable = $('#consulta_costo').DataTable({
+            serverSide: true,
+            processing: true,
+            searching: false,
+            order: [
+                [0, 'desc']
+            ],
+            language: {
+                decimal: "",
+                emptyTable: "No hay datos",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(Filtro de _MAX_ total registros)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ registros",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar",
+                zeroRecords: "No se encontraron coincidencias",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Próximo",
+                    previous: "Anterior"
+                },
+                aria: {
+                    sortAscending: ": Activar orden de columna ascendente",
+                    sortDescending: ": Activar orden de columna desendente"
+                }
+            },
+            ajax: {
+                url: '<?php echo base_url() ?>' + "/reportes/data_table_reporte_costo",
+                data: function(d) {
+                    return $.extend({}, d, {
+                        // documento: documento,
+                        // fecha_inicial: fecha_inicial,
+                        // fecha_final: fecha_final
+                    });
+                },
+                dataSrc: function(json) {
+                    $('#base_iva_19').html(json.base_iva_19);
+                    $('#iva_19').html(json.iva_19);
+                    return json.data;
+                },
+            },
+            columnDefs: [{
+                targets: [4],
+                orderable: false
+            }]
+        });
+    });
+</script>
+
+
+
+
+
 
 <script>
     let mensaje = "<?php echo $session->getFlashdata('mensaje'); ?>";

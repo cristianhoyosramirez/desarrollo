@@ -46,6 +46,10 @@ function retiro_efectivo() {
                         );
                         myModal.show();
                     }
+
+                    if (resultado.resultado==0){
+                        sweet_alert_start('warning','No hay apertura de caja ')
+                    }
                 },
             });
         }

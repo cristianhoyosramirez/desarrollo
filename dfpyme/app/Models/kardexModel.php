@@ -255,4 +255,24 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+
+    public function temp_categoria($id_apertura)
+    {
+        $datos = $this->db->query("
+            select distinct(id_categoria) from kardex where id_apertura = $id_apertura
+        ");
+        return $datos->getResultArray();
+    }
+    public function temp_categoria_productos($id_categoria,$id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT kardex.codigo, SUM(kardex.cantidad) AS cantidad, producto.nombreproducto 
+        FROM kardex 
+        INNER JOIN producto ON kardex.codigo = producto.codigointernoproducto 
+        WHERE id_categoria = '$id_categoria' AND id_apertura = $id_apertura 
+        GROUP BY kardex.codigo, producto.nombreproducto
+        ORDER BY producto.nombreproducto ASC;
+        ");
+        return $datos->getResultArray();
+    }
 }

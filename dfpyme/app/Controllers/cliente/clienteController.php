@@ -139,7 +139,7 @@ class ClienteController extends BaseController
             $code = model('municipiosModel')->select('code')->where('id', $this->request->getPost('municipios'))->first();
 
 
-      
+
             $data = [
                 'nitcliente' => $_POST['identificacion'],
                 'idregimen' => $_POST['regimen'],
@@ -288,13 +288,16 @@ class ClienteController extends BaseController
     {
         $returnData = array();
         $valor = $this->request->getVar('term');
+        //$valor = 'cr';
 
 
         $resultado = model('clientesModel')->clientes($valor);
 
+
+
         if (!empty($resultado)) {
             foreach ($resultado as $row) {
-                $data['value'] =  number_format($row['nitcliente'], 0, ',', '.') . " " . "/" . " " . $row['nombrescliente'];
+                $data['value'] =  $row['nitcliente'] . " " . "/" . " " . $row['nombrescliente'];
                 $data['nit_cliente'] = $row['nitcliente'];
 
 
@@ -522,11 +525,11 @@ class ClienteController extends BaseController
         $tipos_persona = model('clientesModel')->get_tipos_persona();
         //$tipos_documento = model('clientesModel')->get_tipos_documento();
 
-        $detallles_tributarios=model('detallesTributariosModel')->where('nit_cliente',$datos_cliente['nitcliente'])->first();
+        $detallles_tributarios = model('detallesTributariosModel')->where('nit_cliente', $datos_cliente['nitcliente'])->first();
 
         //dd($detallles_tributarios);
 
-        $detallles_rut=model('detallesRutModel')->where('nit_cliente',$datos_cliente['nitcliente'])->findAll();
+        $detallles_rut = model('detallesRutModel')->where('nit_cliente', $datos_cliente['nitcliente'])->findAll();
 
         $returnData = array(
             "resultado" => 1,
@@ -538,9 +541,10 @@ class ClienteController extends BaseController
                 "datos_cliente" => $datos_cliente,
                 "tipos_persona" => $tipos_persona,
                 "id_departamento" => $id_departamento['iddepartamento'],
-                "codigo_postal"=>$codigo_postal['code_postal'], 
-                "detalles_tributarios"=>$detallles_tributarios,
-                "detalles_rut"=>$detallles_rut
+                "codigo_postal" => $codigo_postal['code_postal'],
+                "detalles_tributarios" => $detallles_tributarios,
+                "detalles_rut" => $detallles_rut,
+                "id_cliente" => $id_cliente
             ])
         );
         echo  json_encode($returnData);
@@ -548,7 +552,7 @@ class ClienteController extends BaseController
 
     function actualizar_datos_cliente()
     {
-        if (!$this->validate([
+        /*  if (!$this->validate([
             'nombres_cliente' => [
                 'rules' => 'required',
                 'errors' => [
@@ -579,36 +583,88 @@ class ClienteController extends BaseController
                 'code' => 0,
                 'error' => $errors
             ]);
-        } else {
+        } else { */
 
 
 
-            $data = [
-                'nitcliente' => $_POST['identificacion_cliente'],
-                'idregimen' => $_POST['regimen_cliente'],
-                'nombrescliente' => $_POST['nombres_cliente'],
-                'telefonocliente' => $_POST['telefono_cliente'],
-                'celularcliente' => $_POST['celular_cliente'],
-                'emailcliente' => $_POST['e-mail'],
-                'idciudad' => $_POST['municipios'],
-                'direccioncliente' => $_POST['direccion_cliente'],
-                'estadocliente' => true,
-                'idtipo_cliente' => $_POST['tipo_cliente'],
-                'id_clasificacion' => $_POST['clasificacion_cliente']
+        $data = [
+            'nitcliente' => $this->request->getPost('identificacion'),
+            'idregimen' => $this->request->getPost('regimen'),
+            'nombrescliente' => $this->request->getPost('razon_social'),
+            'telefonocliente' => $this->request->getPost('telefono'),
+            'celularcliente' => $this->request->getPost('telefono'),
+            'emailcliente' => $this->request->getPost('correo_electronico'),
+            'idciudad' => $this->request->getPost('ciudad_edicion'),
+            'direccioncliente' => $this->request->getPost('direccion'),
+            'estadocliente' => 'true',
+            'idtipo_cliente' => $this->request->getPost('tipo_ventas_cliente'),
+            'punto' => 0,
+            'id_clasificacion' => $this->request->getPost('clasificacion'),
+            'name' => $this->request->getPost('nombres'),
+            'last_name' => $this->request->getPost('apellidos'),
+            'dv' => $this->request->getPost('dv'),
+            'type_person' => $this->request->getPost('tipo_depersona'),
+            'type_document' => $this->request->getPost('tipo_documento'),
+            'name_comercial' => $this->request->getPost('nombre_comercial'),
+            'is_customer' => 'true'
+        ];
+
+
+
+        $model = model('clientesModel');
+        $cliente = $model->set($data);
+        $cliente = $model->where('id', $_POST['id_cliente']);
+        $cliente = $model->update();
+
+
+        $model = model('detallesTributariosModel');
+        $cliente = $model->where('nit_cliente', $this->request->getPost('identificacion'));
+        $cliente = $model->delete();
+
+        $descripcion_impuesto = model('impuestosModel')->select('descripcion')->where('codigo', $_POST['impuestos_cliente'])->first();
+
+
+
+        $impuestos = [
+            'nit_cliente' => $this->request->getPost('identificacion'),
+            'codigo' => $_POST['impuestos_cliente'],
+            'nombre' => 'No aplica',
+            'descripcion' => $descripcion_impuesto['descripcion']
+        ];
+
+
+        $insertar_impuestos = model('detallesTributariosModel')->insert($impuestos);
+
+
+        $model = model('detallesRutModel');
+        $cliente_res = $model->where('nit_cliente', $this->request->getPost('identificacion'));
+        $cliente_res = $model->delete();
+
+        $responsabilidad_rut = $this->request->getPost('responsabilidad_fiscal');
+
+        foreach ($responsabilidad_rut as $detalle) {
+
+            $descripcion = model('responsabilidadFiscalModel')->select('descripcion')->where('codigo', $detalle)->find();
+
+
+            //$codigo = model('responsabilidadFiscalModel')->select('codigo')->where('id',$responsabilidad_rut)->first();
+
+            $rut = [
+                'nit_cliente' => $_POST['identificacion'],
+                'codigo' => $detalle,
+                'descripcion' => $descripcion[0]['descripcion']
             ];
 
-
-
-            $model = model('clientesModel');
-            $cliente = $model->set($data);
-            $cliente = $model->where('id', $_POST['id_cliente']);
-            $cliente = $model->update();
-
-
-
-            if ($cliente) {
-                echo json_encode(['code' => 1, 'msg' => 'Usuario creado']);
-            }
+            $insert = model('detallesRutModel')->insert($rut);
         }
+
+
+
+
+
+        if ($cliente) {
+            echo json_encode(['code' => 1, 'msg' => 'Datos cambiados ']);
+        }
+        //}
     }
 }

@@ -82,7 +82,7 @@ Reporte de costos
                         <input type="hidden" id="inicial" name="inicial">
                         <input type="hidden" id="final" name="final">
                         <button class="btn btn-outline-success" type="submit" title="Exportar a Excel" data-bs-toggle="tooltip">Excel</button>
-                    </form> 
+                    </form>
                 </div>
                 <div class="col-md-1 text-start"><br>
 
@@ -104,15 +104,16 @@ Reporte de costos
 
     <div class="my-3"></div> <!-- Added space between the buttons and the table -->
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" id="reporte_ventas">
             <thead class="table-dark">
                 <tr>
-                    <td>Nit</th>
-                    <td>Tercero</th>
-                    <td>Documento</th>
-                    <td>Número</th>
                     <td>Fecha</th>
-                    <td>Base</th>
+                    <td>Nit cliente </th>
+                    <td>Cliente</th>
+                    <td>Documento</th>
+                    <td>Valor</th>
+                    <td>Tipo documento</th>
+                    <td>Valor</th>
                     <td>IVA</th>
                     <td>INC</th>
                     <td>Venta</th>
@@ -133,6 +134,70 @@ Reporte de costos
 <script src="<?= base_url() ?>/Assets/plugin/jquery-ui/jquery-ui.js"></script>
 <!-- Sweet alert -->
 <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
+
+
+<!-- Data tables -->
+<script src="<?= base_url() ?>/Assets/plugin/data_tables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function() {
+        $('#reporte_ventas').DataTable({
+            serverSide: true,
+            processing: true,
+            searching: false,
+            order: [
+                [0, 'desc']
+            ],
+            language: {
+                decimal: "",
+                emptyTable: "No hay datos",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(Filtro de _MAX_ total registros)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ registros",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar",
+                zeroRecords: "No se encontraron coincidencias",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Próximo",
+                    previous: "Anterior"
+                },
+                aria: {
+                    sortAscending: ": Activar orden de columna ascendente",
+                    sortDescending: ": Activar orden de columna desendente"
+                }
+            },
+            ajax: {
+                url: '<?php echo base_url() ?>' + "/reportes/data_table_reporte_costo",
+                data: function(d) {
+                    return $.extend({}, d, {
+                        // documento: documento,
+                        // fecha_inicial: fecha_inicial,
+                        // fecha_final: fecha_final
+                    });
+                },
+                dataSrc: function(json) {
+                    $('#saldo_total').html(json.total);
+                    $('#saldo_cliente').html(json.saldo);
+                    $('#pagos_factura').html(json.pagos);
+                    return json.data;
+                }
+            },
+            columnDefs: [{
+                targets: [4],
+                orderable: false
+            }]
+        });
+    });
+</script>
 
 <!-- <script>
     $(function() {

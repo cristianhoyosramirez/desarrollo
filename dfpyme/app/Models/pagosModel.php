@@ -27,7 +27,8 @@ class pagosModel extends Model
         'recibido_transferencia',
         'cambio',
         'id_factura',
-        'saldo'
+        'saldo',
+        'nit_cliente'
     ];
 
     public function set_ventas_pos($id_apertura)

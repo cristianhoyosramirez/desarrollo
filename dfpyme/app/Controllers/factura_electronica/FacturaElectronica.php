@@ -263,7 +263,7 @@ class FacturaElectronica extends BaseController
                     'id_apertura' => $apertura['numero'],
                     'valor_unitario' => $detalle['valor_unitario'],
                     'id_factura' => $id_factura,
-                    'costo' => $costo['precio_costo'],
+                    'costo' => $costo['precio_costo']*$detalle['cantidad_producto'],
                     'ico' => 0,
                     'iva' => 0,
                     'valor_ico' => 0,
@@ -377,7 +377,8 @@ class FacturaElectronica extends BaseController
                 'recibido_efectivo' => $recibido_efectivo,
                 'recibido_transferencia' => $recibido_transaccion,
                 'id_factura' => $id_factura,
-                'saldo' => $saldo
+                'saldo' => $saldo,
+                'nit_cliente'=>$nit_cliente
             ];
 
             $pagos = model('pagosModel')->insert($pagos);

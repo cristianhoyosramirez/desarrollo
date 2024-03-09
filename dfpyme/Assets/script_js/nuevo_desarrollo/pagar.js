@@ -66,7 +66,7 @@ function pagar() {
 
 
 
-        } else if (estado == 1) {
+        } else if (estado == 1 || estado == 7 ) {
 
 
             if (pago_total >= parseInt(valor_venta)) {
@@ -222,7 +222,15 @@ function pagar() {
                                 }
                             })
                         }
+                        if (resultado.resultado == 0) {
+                            Swal.fire({
+                                title: resultado.mensaje,
+                                icon: "warning",
+                                confirmButtonColor: "#ff0000", // Color rojo en formato hexadecimal
+                                confirmButtonText: "Aceptar" // Texto personalizado para el botón de aceptar
+                            });
 
+                        }
 
 
                     },
@@ -386,6 +394,16 @@ function pagar() {
                                 });
                             }
                         })
+                    }
+
+                    if (resultado.resultado == 0) {
+                        Swal.fire({
+                            title: resultado.mensaje,
+                            icon: "warning",
+                            confirmButtonColor: "#ff0000", // Color rojo en formato hexadecimal
+                            confirmButtonText: "Aceptar" // Texto personalizado para el botón de aceptar
+                        });
+
                     }
                 },
             });

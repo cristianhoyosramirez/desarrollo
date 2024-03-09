@@ -453,6 +453,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('imprimir_factura_electronica', 'Imprimir::imprimir_factura_electronica');
     $routes->post('impresion_factura_electronica', 'Imprimir::impresion_factura_electronica');
     $routes->post('detalle_f_e', 'Imprimir::detalle_f_e');
+    $routes->post('reporte_ventas', 'Imprimir::reporte_ventas');
 });
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -488,9 +489,13 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('editar_cantidades', 'Boletas::editar_cantidades');
     $routes->post('actualizar_cantidades', 'Boletas::actualizar_cantidades');
     $routes->get('consultar_ventas', 'Boletas::consultar_ventas');
-    $routes->post('consultar_documento', 'Boletas::documento');
+    $routes->get('consultar_documento', 'Boletas::documento');
     $routes->post('numero_documento', 'Boletas::numero_documento');
     $routes->post('get_cliente', 'Boletas::get_cliente');
+    $routes->post('borrar_propina', 'Boletas::borrar_propina');
+    $routes->get('tipo_documento', 'Boletas::tipo_documento');
+    $routes->post('actualizar_propina', 'Boletas::actualizar_propina');
+    $routes->get('consultar_de_tipo_documento', 'Boletas::consultar_de_tipo_documento');
 });
 
 
@@ -515,7 +520,7 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->post('editar_cierre_efectivo', 'Ventas::editar_cierre_efectivo');
     $routes->post('editar_cierre_transaccion', 'Ventas::editar_cierre_transaccion');
     $routes->post('cambiar_valor_apertura', 'Ventas::cambiar_valor_apertura');
-    $routes->post('cambiar_valor_cierre_efectivo', 'Ventas::cambiar_valor_cierre_efectivo');
+    $routes->get('data_table_reporte_costo', 'Ventas::data_table_reporte_costo');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -533,6 +538,8 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->post('eliminar_sub_categoria', 'Configuracion::eliminar_sub_categoria');
     $routes->post('actualizar_estado_sub_categoria', 'Configuracion::actualizar_estado_sub_categoria');
     $routes->get('tipos_de_factura', 'Configuracion::tipos_de_factura');
+    $routes->post('actualizar_estado', 'Configuracion::actualizar_estado');
+    $routes->post('consulta_factura_electronica', 'Configuracion::consulta_factura_electronica');
 });
 
 /*

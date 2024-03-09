@@ -123,6 +123,8 @@ class duplicadoFacturaController extends BaseController
             $nombre_usuario = model('usuariosModel')->select('nombresusuario_sistema')->where('idusuario_sistema', $id_usuario['idusuario_sistema'])->first();
             $datos_empresa = model('empresaModel')->datosEmpresa();
 
+         
+
             $nit_cliente = model('facturaVentaModel')->select('nitcliente')->where('id', $id_factura)->first();
             $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $nit_cliente['nitcliente'])->first();
 
@@ -208,7 +210,7 @@ class duplicadoFacturaController extends BaseController
             $total = model('productoFacturaVentaModel')->selectSum('total')->where('id_factura', $id_factura)->find();
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
 
-            if ($estado_factura[0]['idestado'] == 1) {
+            if ($datos_empresa[0]['idregimen'] == 1) {
                 $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico + $total_iva), 0, ",", ".") . "\n");
                 if ($total_iva != 0) {
                     $printer->text("IVA       :" . "$" . number_format($total_iva, 0, ",", ".") . "\n");

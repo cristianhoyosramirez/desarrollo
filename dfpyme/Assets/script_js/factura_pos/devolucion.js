@@ -37,10 +37,14 @@ function devolucion() {
         $("#devolucion").modal("hide");
         Swal.fire({
           icon: "success",
-          title: "Devolucion del producto : "+resultado.nombre_producto,
+          title: "Devolucion del producto : " + resultado.nombre_producto,
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#2AA13D",
         });
+      }
+
+      if (resultado.resultado == 2) {
+        sweet_alert_start('warning', 'No hay apertura de caja ')
       }
     },
   });
@@ -50,7 +54,7 @@ function devolucion() {
 /**
  * Establece el autofoco en el modal finalizar venta , facturacion directa
  */
- $(function () {
+$(function () {
   $("#devolucion").on("shown.bs.modal", function (e) {
     $("#devolucion_producto").focus();
   });

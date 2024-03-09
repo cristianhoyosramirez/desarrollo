@@ -8,7 +8,11 @@ Bienvenido DFpyme
 <div class="page">
     <!-- Navbar -->
     <div id="header">
+
+
         <?= $this->include('layout/header_mesas') ?>
+      
+
     </div>
     <div id="header_oculto" class="container" style="display:none">
         <div class="row text-center align-items-center flex-row-reverse">
@@ -195,6 +199,7 @@ Bienvenido DFpyme
                         </div>
                     </div>
                 </div>
+
                 <!--valor Pedido-->
                 <div class="col-md-3">
 
@@ -242,7 +247,18 @@ Bienvenido DFpyme
 
                                             <input type="text" aria-label="Last name" class="form-control w-1" style="width: 50px;" value=0 onkeyup="calcular_propina(this.value)" id="propina_pesos" placeholder="%">
                                             <input type="text" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
+                                            <a href="#" class="btn btn-outline-warning text-center" onclick="borrar_propina()" title="Eliminar propina" style="width: 1px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
+                                                <!-- Download SVG icon from http://tabler-icons.io/i/trash -->&nbsp;&nbsp;
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon text-center" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <line x1="4" y1="7" x2="20" y2="7" />
+                                                    <line x1="10" y1="11" x2="10" y2="17" />
+                                                    <line x1="14" y1="11" x2="14" y2="17" />
+                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                </svg></a>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -267,20 +283,22 @@ Bienvenido DFpyme
                                         Orden de pedido
                                     </a>
                                 </div>
-                                <div class="col-md-6">
-                                    <a class="btn btn-outline-muted w-100" onclick="retiro_dinero()">
-                                        Retirar dinero</a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">
-                                        Devolución
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <a href="#" class="btn btn-outline-azure w-100" onclick="pago_parcial()">
-                                        Pago parcial
-                                    </a>
-                                </div>
+                                <?php if ($user_session->tipo != 3) : ?>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-outline-muted w-100" onclick="retiro_dinero()">
+                                            Retirar dinero</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">
+                                            Devolución
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="btn btn-outline-azure w-100" onclick="pago_parcial()">
+                                            Pago parcial
+                                        </a>
+                                    </div>
+                                <?php endif ?>
                             </div>
 
                         </div>
@@ -288,6 +306,9 @@ Bienvenido DFpyme
                 </div>
 
                 <!--partida-->
+
+
+
             </div>
         </div>
     </div>
