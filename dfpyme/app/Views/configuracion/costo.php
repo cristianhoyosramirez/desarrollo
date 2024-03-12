@@ -83,7 +83,7 @@ Reporte de costos
                 <div class="col-4">
                     <p class="text-red" id="error_fecha"></p>
                 </div>
-                <div class="col-md-2 text-end"><br>
+                <!--    <div class="col-md-2 text-end"><br>
                     <form action="<?= base_url('reportes/exportar_reporte_costo_excel') ?>" method="POST">
                         <input type="hidden" id="inicial" name="inicial">
                         <input type="hidden" id="final" name="final">
@@ -92,14 +92,14 @@ Reporte de costos
                 </div>
                 <div class="col-md-1 text-start"><br>
 
-                    <!-- <button class="btn btn-outline-success" onclick="exportToExcel()" title="Exportar a excel " data-bs-toggle="tooltip">Excel</button> -->
+                    
 
                     <form action="<?= base_url('reportes/exportar_reporte_costo') ?>" method="POST">
                         <input type="hidden" id="inicial" name="inicial" >
                         <input type="hidden" id="final" name="final">
                         <button class="btn btn-outline-danger" type="submit" title="Exportar a PDF" data-bs-toggle="tooltip">PDF</button>
                     </form>
-                </div>
+                </div> -->
             </div>
 
         </div>
@@ -148,22 +148,34 @@ Reporte de costos
                 <td scope="col">IVA 5</td>
                 <td scope="col">BASE INC 8</td>
                 <td scope="col">INC</td>
-                
+
                 <td scope="col">VALOR VENTA</td>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>
-                <p id="base_iva_19">
-                    </th>
-                <td><p id="iva_19"></td>
-                <td><p id="base_iva_5"></td>
-                <td><p id="iva_5"></td>
-                <td><p id="base_inc"></td>
-                <td><p id="inc"></td>
-                <td><p id="valor_venta"></td>
-               
+                    <p id="base_iva_19">
+                        </th>
+                <td>
+                    <p id="iva_19">
+                </td>
+                <td>
+                    <p id="base_iva_5">
+                </td>
+                <td>
+                    <p id="iva_5">
+                </td>
+                <td>
+                    <p id="base_inc">
+                </td>
+                <td>
+                    <p id="inc">
+                </td>
+                <td>
+                    <p id="valor_venta">
+                </td>
+
             </tr>
         </tbody>
     </table>
@@ -317,6 +329,11 @@ Reporte de costos
                 dataSrc: function(json) {
                     $('#base_iva_19').html(json.base_iva_19);
                     $('#iva_19').html(json.iva_19);
+                    $('#base_iva_5').html(json.base_iva_5);
+                    $ ('#iva_5').html(json.iva_5);
+                    $('#valor_venta').html(json.total_venta);
+                    $('#base_inc').html(json.base_inc);
+                    $('#inc').html(json.inc);
                     return json.data;
                 },
             },

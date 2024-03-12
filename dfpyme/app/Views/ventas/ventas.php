@@ -18,9 +18,9 @@ Ventas
                 <input type="hidden" id="opcion_seleccionada" value=2>
                 <input type="hidden" id="url" value="<?php echo base_url() ?>">
                 <select name="criterio_consulta" id="criterio_consulta" class="form-select" onchange="seleccionCambiada(this.value)">
-                    <option value="1">Número</option>
-                    <option value="2" selected>Tipo de documento</option> <!-- Corrección: Añadido 'selected' -->
-                    <option value="3">Cliente</option>
+                    <!--  <option value="1">NÚMERO</option> -->
+                    <option value="2" selected>TIPO DE DOCUMENTO</option> <!-- Corrección: Añadido 'selected' -->
+                    <option value="3">CLIENTE</option>
                 </select>
                 <span id="error_de_seleccion" class="text-danger"></span>
             </div>
@@ -48,11 +48,23 @@ Ventas
 
             <div class="col" style="display:none" id="cliente">
                 <label for="" class="form-label">Cliente </label>
-                <input type="text" id="nit_cliente" name="nit_cliente">
+                <input type="hidden" id="nit_cliente" name="nit_cliente">
                 <input type="text" class="form-control" id="buscar_cliente" name="buscar_cliente">
                 <span id="error_cliente" class="text-danger"></span>
             </div>
 
+
+            <!--     <div class="col">
+
+                <label for="" class="form-label">Período</label>
+                <select name="" id="periodo_tiempo" name="periodo" class="form-select">
+
+                    <option value="">DESDE EL INICIO </option>
+                    <option value="">FECHA  </option>
+                    <option value="">ENTRE FECHAS </option>
+                </select>
+
+            </div> -->
 
             <div class="col" style="display:block" id="periodo">
                 <div class="row">
@@ -252,30 +264,8 @@ Ventas
         var abono_cliente = document.getElementById("abono_factura_credito").value;
         var abono = parseInt(abono_cliente.replace(/[.]/g, ""));
 
-        /*  if (abono > saldo) {
-
-           const Toast = Swal.mixin({
-             toast: true,
-             position: 'top-end',
-             showConfirmButton: false,
-             timer: 3000,
-             timerProgressBar: true,
-             didOpen: (toast) => {
-               toast.addEventListener('mouseenter', Swal.stopTimer)
-               toast.addEventListener('mouseleave', Swal.resumeTimer)
-             }
-           })
-
-           Toast.fire({
-             icon: 'error',
-             title: 'El abono no puede ser mayor al sado '
-           })
-         } */
-
-
-        // if (abono <= saldo) {
-
-
+      
+    
         var resultado = parseInt(efectivo) + parseInt(transaccion)
 
         if (resultado < saldo) {
@@ -440,134 +430,7 @@ Ventas
     }
 </script>
 
-<!-- 
-<script>
-    function buscar() {
-        var url = document.getElementById("url").value;
-        var opcion = document.getElementById("opcion_seleccionada").value;
-        var fecha_inicial = document.getElementById("fecha_inicial").value;
-        var fecha_final = document.getElementById("fecha_final").value;
-        var tipo_documento = document.getElementById("tipo_documento").value;
-        var numero_factura = document.getElementById("numero_factura").value;
-        var nit_cliente = document.getElementById("nit_cliente").value;
 
-        if (opcion == "") {
-            
-            $.ajax({
-                data: {
-                    tipo_documento,
-                    fecha_inicial,
-                    fecha_final
-                },
-                url: url +
-                    "/" +
-                    "eventos/consultar_documento",
-                type: "post",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 1) {
-
-                        $('#resultado_consultado').html(resultado.datos)
-
-
-
-                    }
-                },
-            });
-        }
-        if (opcion != "") {
-
-            if (opcion == 1) {
-
-                if (numero_factura == "") {
-                    $('#error_numero').html('No se ha definido número de documento')
-                }
-                if (numero_factura != "") {
-
-                    $.ajax({
-                        data: {
-                            numero_factura
-                        },
-                        url: url +
-                            "/" +
-                            "eventos/numero_documento",
-                        type: "post",
-                        success: function(resultado) {
-                            var resultado = JSON.parse(resultado);
-                            if (resultado.resultado == 1) {
-
-                                $('#resultado_consultado').html(resultado.datos)
-
-
-
-                            }
-                        },
-                    });
-                }
-            }
-            if (opcion == 2) {
-                if (tipo_documento == "") {
-                    $('#error_tipo_documento').html('No hay documento seleccionado ')
-                }
-                if (tipo_documento != "") {
-
-                    $.ajax({
-                        data: {
-                            tipo_documento,
-                            fecha_inicial,
-                            fecha_final
-                        },
-                        url: url +
-                            "/" +
-                            "eventos/consultar_documento",
-                        type: "post",
-                        success: function(resultado) {
-                            var resultado = JSON.parse(resultado);
-                            if (resultado.resultado == 1) {
-
-                                $('#resultado_consultado').html(resultado.datos)
-
-
-
-                            }
-                        },
-                    });
-                }
-            }
-        }
-        if (opcion == 3) {
-            if (nit_cliente == "") {
-                $('#error_cliente').html('No se ha definido un cliente')
-
-            }
-            if (nit_cliente != "") {
-                $.ajax({
-                    data: {
-                        nit_cliente,
-                        tipo_documento,
-                        fecha_inicial,
-                        fecha_final
-                    },
-                    url: url +
-                        "/" +
-                        "eventos/get_cliente",
-                    type: "post",
-                    success: function(resultado) {
-                        var resultado = JSON.parse(resultado);
-                        if (resultado.resultado == 1) {
-
-                            $('#resultado_consultado').html(resultado.datos)
-
-
-
-                        }
-                    },
-                });
-
-            }
-        }
-    }
-</script> -->
 
 <script>
     function seleccionCambiada(opcion) {

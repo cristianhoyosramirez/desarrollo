@@ -995,13 +995,32 @@ class Ventas extends BaseController
             $data[] = $sub_array;
         }
         $total_venta = model('pagosModel')->selectSum('total_documento')->where('id_apertura', $apertura)->findAll();
+        $total_venta_iva_5 = model('kardexModel')->total_venta_iva_5($apertura);  //Total de la venta con impuestos 
+        $venta_iva_5 = model('kardexModel')->venta_iva_5($apertura);  // Total del valor del iva 5 % 
+
+
         $base_iva_19 = model('kardexModel')->selectSum('iva')->where('valor_iva', 19)->findAll();
+        $base_iva_5 = model('kardexModel')->selectSum('iva')->where('valor_iva', 5)->findAll();
+
+        $total_venta_inc = model('kardexModel')->total_venta_inc($apertura);
+        $venta_inc = model('kardexModel')->venta_inc($apertura);
+
         if (empty($base_iva_19[0]['iva'])) {
             $base_iva_019 = 0;
             $iva_19=0;
         }
         if (!empty($base_iva_19[0]['iva'])) {
             $base_iva_019 = $total_venta[0]['total_documento'] - $base_iva_19[0]['iva'];
+        }
+
+        if (empty($base_iva_5[0]['iva'])) {
+            $base_iva_5 = 0;
+            $iva_5=0;
+        }
+        if (!empty($base_iva_5[0]['iva'])) {
+            //$base_iva_5 = $total_venta_iva_5[0]['total'] - $base_iva_5[0]['iva'];
+            $base_iva_5 = $total_venta_iva_5[0]['total'] - $venta_iva_5[0]['iva'] ;
+            $iva_5=$venta_iva_5[0]['iva'] ;
         }
 
 
@@ -1013,8 +1032,11 @@ class Ventas extends BaseController
             'data' => $data,
             'total_venta' => number_format($total_venta[0]['total_documento'], 0, ",", "."),
             'base_iva_19' => number_format($base_iva_019, 0, ",", "."),
-            'iva_19'=>0
-            
+            'iva_19'=>0,
+            'base_iva_5' => number_format($base_iva_5, 0, ",", "."),
+            'iva_5'=>number_format($iva_5, 0, ",", "."),
+            'inc'=> number_format($venta_inc[0]['inc'], 0, ",", "."),
+            'base_inc'=>number_format($total_venta_inc[0]['total']-$venta_inc[0]['inc'], 0, ",", ".")
         ];
 
         echo  json_encode($json_data);

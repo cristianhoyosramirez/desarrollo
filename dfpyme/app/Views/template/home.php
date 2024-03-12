@@ -73,7 +73,7 @@
                 document.getElementById("abono_factura_credito").addEventListener("keydown", function(event) {
                     if (event.key === "Backspace") {
                         limpiar(); // Llama a la función limpiar solo si se presiona Backspace
-                        
+
                         $('#abono_mayor_que_saldo').html('')
                     }
                 });
@@ -339,28 +339,28 @@
 
                     }
                     if (nit_cliente != "") {
-                       /*  $.ajax({
-                            data: {
-                                nit_cliente,
-                                tipo_documento,
-                                fecha_inicial,
-                                fecha_final
-                            },
-                            url: url +
-                                "/" +
-                                "eventos/get_cliente",
-                            type: "post",
-                            success: function(resultado) {
-                                var resultado = JSON.parse(resultado);
-                                if (resultado.resultado == 1) {
+                        /*  $.ajax({
+                             data: {
+                                 nit_cliente,
+                                 tipo_documento,
+                                 fecha_inicial,
+                                 fecha_final
+                             },
+                             url: url +
+                                 "/" +
+                                 "eventos/get_cliente",
+                             type: "post",
+                             success: function(resultado) {
+                                 var resultado = JSON.parse(resultado);
+                                 if (resultado.resultado == 1) {
 
-                                    $('#resultado_consultado').html(resultado.datos)
+                                     $('#resultado_consultado').html(resultado.datos)
 
 
 
-                                }
-                            },
-                        }); */
+                                 }
+                             },
+                         }); */
 
                         alert('Hola mundo ')
 
@@ -462,6 +462,14 @@
 
 
         <script>
+            $("#periodo_tiempo").select2({
+                width: "100%",
+                //placeholder: "Definir el periodo de tiempo",
+                language: "es",
+                theme: "bootstrap-5",
+                allowClear: false,
+                minimumResultsForSearch: -1,
+            });
             $("#criterio_consulta").select2({
                 width: "100%",
                 placeholder: "Seleccione un criterio de consulta",

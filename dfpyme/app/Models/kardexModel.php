@@ -275,4 +275,39 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+
+    public function total_venta_iva_5($id_apertura)  //Total de la venta con impuestos 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (total) as total
+        FROM kardex
+        WHERE valor_iva= 5
+          AND id_apertura = $id_apertura
+        ");
+        return $datos->getResultArray();
+    }
+    public function total_venta_inc($id_apertura)  //Total de la venta con impuestos 
+    {
+        $datos = $this->db->query("
+        select sum (total )as total from kardex where valor_ico= 8 and id_apertura =  $id_apertura and aplica_ico='true'
+        ");
+        return $datos->getResultArray();
+    }
+    public function venta_inc($id_apertura)  //Total de la venta con impuestos 
+    {
+        $datos = $this->db->query("
+        select sum (ico )as inc from kardex where valor_ico= 8 and id_apertura =  $id_apertura and aplica_ico='true'
+        ");
+        return $datos->getResultArray();
+    }
+    public function venta_iva_5($id_apertura)  // Total del valor del iva 5 % 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (iva) as iva
+        FROM kardex
+        WHERE valor_iva= 5
+          AND id_apertura = $id_apertura
+        ");
+        return $datos->getResultArray();
+    }
 }
