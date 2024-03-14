@@ -290,4 +290,37 @@ class pagosModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function total_venta($id_apertura)
+    {
+        $datos = $this->db->query("
+        select sum(total_documento) as total from pagos where id_apertura= $id_apertura
+        ");
+        return $datos->getResultArray();
+    }
+    public function total_venta_fecha($fecha_inicial, $fecha_final)
+    {
+        $datos = $this->db->query("
+            select sum(total_documento) as total  from pagos where fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
+    public function total_venta_fecha_estado($fecha_inicial, $fecha_final, $id_estado)
+    {
+        
+        $datos = $this->db->query("
+            select sum(total_documento) as total  from pagos where fecha between '$fecha_inicial' and '$fecha_final' and id_estado=$id_estado
+        ");
+        return $datos->getResultArray();
+    }
+    public function total_venta_costo($fecha_inicial, $fecha_final)
+    {
+        
+        $datos = $this->db->query("
+        SELECT 
+        sum(total_documento) AS total
+        FROM
+        pagos where fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
 }

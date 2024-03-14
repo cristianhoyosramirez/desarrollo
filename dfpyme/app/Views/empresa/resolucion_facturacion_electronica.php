@@ -76,8 +76,7 @@ RESOLUCIÓN ElECTRÓNICA
 
 
 
-                  </div> &nbsp; &nbsp;&nbsp; <button type="button" class="btn btn-outline-success btn-icon" onclick="editar_resolucion(<?php echo $detalle['id']
-                                                                                                                                        ?>)">Editar</button>
+                  </div> &nbsp; &nbsp;&nbsp; <button type="button" class="btn btn-outline-success btn-icon" onclick="editar_resolucion_electronica(<?php echo $detalle['id'] ?>)">Editar</button>
 
                 </div>
 
@@ -164,6 +163,79 @@ RESOLUCIÓN ElECTRÓNICA
   </div>
 
 
+  <!-- Modal -->
+  <div class="modal fade" id="editar_resolucion_electronica" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Cambiar datos de la resolución de facturacion electrónica </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label for="inputEmail4" class="form-label">Número de resolución</label>
+              <input type="hidden" id="id_resolucion">
+              <input type="text" class="form-control" id="numero_dian_edicion" name="numero_dian_edicion">
+              <span class="text-danger " id="error_numero_dian_edicion"></span>
+            </div>
+            <div class="col-md-3">
+              <label for="inputPassword4" class="form-label">Fecha de expedición</label>
+              <input type="date" class="form-control" id="fecha_inicial_edicion" name="fecha_dian_edicion" value="<?php echo date('Y-m-d') ?>">
+              <span class="text-danger " id="error_fecha_inicial_edicion"></span>
+            </div>
+            <div class="col-md-3">
+              <label for="inputPassword4" class="form-label">Fecha de caducidad</label>
+              <input type="date" class="form-control" id="fecha_final_edicion" name="fecha_caducidad_edicion" value="<?php echo date('Y-m-d') ?>">
+              <span class="text-danger " id=""></span>
+            </div>
+
+
+            <div class="col-3">
+              <label for="inputAddress2" class="form-label">Prefijo </label>
+              <input type="text" class="form-control" id="prefijo_dian_edicion" name="prefijo_dian_edicion">
+              <span class="text-danger error-text prefijo_error" id="error_prefijo_edicion"></span>
+            </div>
+            <div class="col-md-3">
+              <label for="inputCity" class="form-label">Desde el número </label>
+              <input type="text" class="form-control" id="numero_inicial_edicion" name="numero_inicial_edicion">
+              <span class="text-danger " id="error_numero_inicial_edicion"></span>
+            </div>
+
+            <div class="col-3">
+              <label for="inputAddress2" class="form-label">Hasta el núemro </label>
+              <input type="text" class="form-control" id="numero_final_edicion" name="numero_final_edicion">
+              <span class="text-danger error-text numero_final_error_edicion" id="error_numero_final"></span>
+            </div>
+            <div class="col-md-3">
+              <label for="inputCity" class="form-label">Vigencia</label>
+              <input type="text" class="form-control" id="vigencia_edicion" name="vigencia_edicion">
+              <span class="text-danger error-text vigencia_error" id="error_vigencia_edicion"></span>
+            </div>
+
+
+
+            <div class="col-md-3">
+              <label for="inputCity" class="form-label">Alertar cuando falten </label>
+              <input type="number" class="form-control" id="alerta_edicion" name="alerta_edicion">
+              <span class="text-danger" id="error_alerta_edicion"></span>
+            </div>
+
+
+
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-outline-success" onclick="cambiar_resolucion_electronica()">Guardar </button>
+              <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
   <script>
     function agregar_resolucion_electronica() {
 
@@ -225,7 +297,83 @@ RESOLUCIÓN ElECTRÓNICA
               $("#resolucion_electronica").modal("hide");
               $('#resoluciones_de_facturacion').html(resultado.resoluciones)
 
-              sweet_alert_start('success','Resolución agregada')
+              sweet_alert_start('success', 'Resolución agregada')
+
+            }
+          },
+        });
+      }
+    }
+  </script>
+
+  <script>
+    function cambiar_resolucion_electronica() {
+
+      var url = document.getElementById("url").value;
+      var numero = document.getElementById("numero_dian_edicion").value;
+      var numero_inicial = document.getElementById("numero_inicial_edicion").value;
+      var numero_final = document.getElementById("numero_final_edicion").value;
+      var fecha_inicial = document.getElementById("fecha_inicial_edicion").value;
+      var fecha_final = document.getElementById("fecha_final_edicion").value;
+      var vigencia = document.getElementById("vigencia_edicion").value;
+      var alerta = document.getElementById("alerta_edicion").value;
+      var prefijo = document.getElementById("prefijo_dian_edicion").value;
+      var id = document.getElementById("id_resolucion").value;
+
+
+      if (numero == "") {
+        $('#error_numero_dian_edicion').html('No hay numero valido')
+      }
+      if (fecha_inicial == "") {
+        $('#error_fecha_inicial_edicion').html('No hay fecha inicial válida ')
+      }
+      if (fecha_final == "") {
+        $('#error_fecha_final_edicion').html('No hay fecha final válida ')
+      }
+      if (prefijo == "") {
+        $('#error_prefijo_edicion').html('No hay prefijo válido ')
+      }
+      if (numero_inicial == "") {
+        $('#error_numero_inicial_edicion').html('No un numero válido  ')
+      }
+      if (numero_final == "") {
+        $('#error_numero_final_edicion').html('No un numero válido  ')
+      }
+      if (prefijo == "") {
+        $('#error_prefijo_edicion').html('No hay prefijo válido ')
+      }
+      if (vigencia == "") {
+        $('#error_vigencia').html('No hay vigencia definida')
+      }
+      if (vigencia == "") {
+        $('#error_alerta_edicion').html('No hay alerta definida')
+      }
+      if (numero != "" && fecha_inicial != "" && fecha_final != "" && numero_inicial != "" && numero_final != "" && vigencia != "" && alerta != "") {
+        $.ajax({
+          data: {
+            numero,
+            numero_inicial,
+            numero_final,
+            fecha_inicial,
+            fecha_final,
+            vigencia,
+            alerta,
+            prefijo,
+            id
+          },
+          url: url + "/" + "empresa/actualizar_resolucion_electronica",
+          type: "POST",
+          success: function(resultado) {
+            var resultado = JSON.parse(resultado);
+            if (resultado.resultado == 1) {
+              $("#editar_resolucion_electronica").modal("hide");
+              $('#resoluciones_de_facturacion').html(resultado.resoluciones)
+
+              setTimeout(function() {
+                window.location.reload();
+              }, 2000); // 2000 milisegundos = 2 segundos
+
+              sweet_alert_start('success', 'Cambios efectuados')
 
             }
           },
@@ -236,8 +384,38 @@ RESOLUCIÓN ElECTRÓNICA
 
 
   <script>
-    function editar_resolucion() {
-      alert('Hola mundo ')
+    function editar_resolucion_electronica(id_resolucion) {
+      var url = document.getElementById("url").value;
+      $.ajax({
+        data: {
+          id_resolucion
+        },
+        url: url +
+          "/" +
+          "empresa/editar_resolucion_electronica",
+        type: "post",
+        success: function(resultado) {
+          var resultado = JSON.parse(resultado);
+          if (resultado.resultado == 1) {
+
+
+            $("#numero_dian_edicion").val(resultado.numero);
+            $("#fecha_inicial_edicion").val(resultado.fecha_inicial);
+            $("#fecha_final_edicion").val(resultado.fecha_final);
+            $("#prefijo_dian_edicion").val(resultado.prefijo);
+            $("#numero_inicial_edicion").val(resultado.inicial);
+            $("#numero_final_edicion").val(resultado.final);
+            $("#vigencia_edicion").val(resultado.vigencia);
+            $("#alerta_edicion").val(resultado.alerta);
+            $("#id_resolucion").val(resultado.id_resolucion);
+            $("#editar_resolucion_electronica").modal("show");
+
+
+
+          }
+        },
+      });
+
     }
   </script>
 

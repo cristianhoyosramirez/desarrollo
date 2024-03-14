@@ -6,6 +6,13 @@
     }
 </style>
 
+<!-- Agrega esta clase CSS -->
+<style>
+    .producto-seleccionado {
+        background-color: #fff; /* Cambia el color de fondo al que prefieras */
+    }
+</style>
+
 
 
 
@@ -21,7 +28,7 @@
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Productos</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" onclick="mesas_actualizadas()"></button>
     </div>
-    
+
     <div class="offcanvas-body">
         <ul class="horizontal-list">
             <?php foreach ($categorias as $detalle) : ?>
@@ -60,30 +67,19 @@
                         <?php $productos = model('productoModel')->orderBy('nombreproducto', 'asc')->findAll();
                         foreach ($productos as $valor) : ?>
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-4 ">
-                                <div class="cursor-pointer mb-1 elemento ">
+                              
+                                <a href="#" class="card card-link card-link-pop bg-azure-lt cursor-pointer" onclick="agregar_al_pedido(<?php echo $valor['codigointernoproducto'] ?>, this)">
+                                    <div class="card-body">
 
-                                    <div class="row ">
-
-                                        <label class="form-selectgroup-item flex-fill " onclick="agregar_al_pedido(<?php echo $valor['codigointernoproducto'] ?>)">
-
-
-                                            <div class="form-selectgroup-label d-flex align-items-center p-3 bg-azure-lt text-white">
-                                                <div class="me-3">
-
-                                                </div>
-                                                <div class="form-selectgroup-label-content d-flex align-items-center">
-                                                    <span class="avatar me-3" style="background-image: url(<?php echo base_url(); ?>/images/productos/producto.png)"></span>
-                                                    <div>
-                                                        <div class="font-weight-medium text-primary text-start"><?php echo $valor['nombreproducto'] ?></div>
-                                                        <div class="text-muted text-start"><?php echo "$ " . number_format($valor['valorventaproducto'], 0, ",", ".") ?></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </label>
-
+                                        <div>
+                                            <div class="font-weight-medium text-primary text-start"><?php echo $valor['nombreproducto'] ?></div>
+                                            <div class="text-muted text-start"><?php echo "$ " . number_format($valor['valorventaproducto'], 0, ",", ".") ?></div>
+                                        </div>
                                     </div>
+                                </a>
 
-                                </div>
+                                <br>
+
                             </div>
 
                         <?php endforeach ?>

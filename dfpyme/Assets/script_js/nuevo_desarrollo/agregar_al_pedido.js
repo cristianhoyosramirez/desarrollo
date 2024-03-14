@@ -5,7 +5,8 @@ function agregar_al_pedido(id_producto) {
     let id_usuario = document.getElementById("id_usuario").value;
     let mesero = document.getElementById("mesero").value;
     
-
+   
+    
     $.ajax({
         data: {
             id_producto,

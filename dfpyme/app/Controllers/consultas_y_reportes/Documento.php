@@ -10,6 +10,8 @@ use \DateTimeZone;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use App\Libraries\data_table;
+use App\Libraries\tipo_consulta;
 
 
 class Documento extends BaseController
@@ -58,12 +60,11 @@ class Documento extends BaseController
     {
         //$valor_buscado = $_GET['search']['value'];
 
-        $tipo_documento = 5;
-        //$tipo_documento = $_REQUEST['documento'];
+        // $tipo_documento = 5;
+        $tipo_documento = $_REQUEST['documento'];
 
-        //$fecha_ini = $_REQUEST['fecha_inicial'];
-        $fecha_ini = '2023-01-01';
-
+        $fecha_ini = $_REQUEST['fecha_inicial'];
+        //$fecha_ini = '2023-01-01';
 
 
         $sql_count = '';
@@ -81,8 +82,8 @@ class Documento extends BaseController
             $fecha_inicial = $fecha_ini;
         }
 
-        //$fecha_fin = $_REQUEST['fecha_final'];
-        $fecha_fin = '2023-06-07';
+        $fecha_fin = $_REQUEST['fecha_final'];
+        //$fecha_fin = '2023-06-07';
 
 
         $fecha_final = '';
@@ -380,15 +381,13 @@ class Documento extends BaseController
                 $sub_array[] = "$" . number_format($detalle['valor_factura'], 0, ",", ".");
                 $sub_array[] = "$" . number_format($detalle['saldo'], 0, ",", ".");
                 //$sub_array[] = date("g:i a", strtotime($detalle['horafactura_venta']));
-                $sub_array[] = '<a  class="btn btn-primary btn-icon " title="Imprimir copia " onclick="imprimir_duplicado_factura(' . $detalle['id'] . ')" >
-                <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><rect x="7" y="13" width="10" height="8" rx="2" /></svg></a>  
-            <a  class="btn bg-muted-lt btn-icon " title="Ver detalle" onclick="detalle_de_factura(' . $detalle['id'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg></a>
-            <a  class="btn bg-green-lt btn-icon " title="Realizar pago " onclick="abonos_a_cartera(' . $detalle['nitcliente'] . ',' . $detalle['idestado'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" /><path d="M12 3v3m0 12v3" /></svg></a>
-            <a onclick="abono_credito(' . $detalle['id'] . ')"  class="btn btn-primary  btn-icon" ><!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" /><path d="M12 3v3m0 12v3" /></svg> </a> ';
+
+                $accion = new data_table();
+
+                $acciones = $accion->row_data_table($detalle['id_estado'], $detalle['id_factura']);
+
+                $sub_array[] = $acciones;
+
                 $data[] = $sub_array;
             }
 
@@ -1217,12 +1216,12 @@ class Documento extends BaseController
     function ventas_de_mesero()
     {
         //$ventas=model('pagosModel')->get_ventas_mesero(date('Y-m-d'));
-        $id_meseros=model('pagosModel')->get_id_mesero(date('Y-m-d'));
-        $meseros=model('usuariosModel')->get_usuarios();
-        
-        return view('consultas/ventas_de_mesero',[
-            'id_meseros'=>$id_meseros,
-            'meseros'=>$meseros
+        $id_meseros = model('pagosModel')->get_id_mesero(date('Y-m-d'));
+        $meseros = model('usuariosModel')->get_usuarios();
+
+        return view('consultas/ventas_de_mesero', [
+            'id_meseros' => $id_meseros,
+            'meseros' => $meseros
         ]);
     }
 }

@@ -247,6 +247,38 @@
   </div>
 </div>
 
+
+<script>
+  function cancelar_creacion_producto() {
+    $("#crear_producto").modal("hide");
+    $(".crear_producto_nombre_error").html("");
+    $(".categoria_producto_error").html("");
+    $(".marca_producto_error").html("");
+    $(".informacion_tributaria_error").html("");
+    $(".valor_costo_producto_error").html("");
+    $(".valor_venta_producto_error").html("");
+    $('#categoria_producto').val(null).trigger('change');
+    $('#marca_producto').val(null).trigger('change');
+    
+    $('#crear_producto_codigo_interno').val('');
+
+    $('#crear_producto_codigo_de_barras').val('');
+    $('#crear_producto_nombre').val('');
+    $('#categoria_product').val('');
+    $('#sub_categoria').val('');
+    $('#marca_product').val('');
+    $('#impresion_en_comanda').prop('checked', false);
+    $('#permitir_descuento').prop('checked', false);
+    $('#valor_costo_producto').val('');
+    $('#valor_venta_producto').val('');
+    $('#precio_2').val('0');
+    $('#informacion_tributaria').val('1');
+    $('#valor_iv').val('');
+    $('#valor_ico').val('');
+  }
+</script>
+
+
 <script>
   function mandar() {
     // Obtén el elemento <button> que deseas cambiar

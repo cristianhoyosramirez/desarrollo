@@ -321,6 +321,7 @@
                                         $('#saldo_total').html(json.total);
                                         $('#saldo_cliente').html(json.saldo);
                                         $('#pagos_factura').html(json.pagos);
+                                        $('#total_documentos').html(json.total);
                                         return json.data;
                                     }
                                 },
@@ -362,7 +363,59 @@
                              },
                          }); */
 
-                        alert('Hola mundo ')
+                         $('#consulta_ventas').DataTable({
+                                serverSide: true,
+                                processing: true,
+                                searching: false,
+                                order: [
+                                    [0, 'desc']
+                                ],
+                                language: {
+                                    decimal: "",
+                                    emptyTable: "No hay datos",
+                                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                                    infoFiltered: "(Filtro de _MAX_ total registros)",
+                                    infoPostFix: "",
+                                    thousands: ",",
+                                    lengthMenu: "Mostrar _MENU_ registros",
+                                    loadingRecords: "Cargando...",
+                                    processing: "Procesando...",
+                                    search: "Buscar",
+                                    zeroRecords: "No se encontraron coincidencias",
+                                    paginate: {
+                                        first: "Primero",
+                                        last: "Ultimo",
+                                        next: "Próximo",
+                                        previous: "Anterior"
+                                    },
+                                    aria: {
+                                        sortAscending: ": Activar orden de columna ascendente",
+                                        sortDescending: ": Activar orden de columna desendente"
+                                    }
+                                },
+                                ajax: {
+                                    url: '<?php echo base_url() ?>' + "/eventos/consultar_cliente",
+                                    data: function(d) {
+                                        return $.extend({}, d, {
+                                            tipo_documento: tipo_documento,
+                                            fecha_inicial: fecha_inicial,
+                                            fecha_final: fecha_final,
+                                            nit_cliente:nit_cliente
+                                        });
+                                    },
+                                    dataSrc: function(json) {
+                                        $('#saldo_total').html(json.total);
+                                        $('#saldo_cliente').html(json.saldo);
+                                        $('#pagos_factura').html(json.pagos);
+                                        return json.data;
+                                    }
+                                },
+                                columnDefs: [{
+                                    targets: [4],
+                                    orderable: false
+                                }]
+                            });
 
                     }
                 }
@@ -420,6 +473,7 @@
                             $('#saldo_total').html(json.total);
                             $('#saldo_cliente').html(json.saldo);
                             $('#pagos_factura').html(json.pagos);
+                            $('#total_documentos').html(json.total);
                             return json.data;
                         }
                     },

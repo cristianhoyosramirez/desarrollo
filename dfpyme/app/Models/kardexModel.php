@@ -286,6 +286,39 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function total_venta_iva_5_costo($fecha_inicial,$fecha_final)  //Total de la venta con impuestos 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (total) as total
+        FROM kardex
+        WHERE valor_iva= 5
+        and 
+        fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
+    public function total_venta_iva_19_costo($fecha_inicial,$fecha_final)  //Total de la venta con impuestos 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (total) as total
+        FROM kardex
+        WHERE valor_iva= 19
+        and 
+        fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
+    public function total_venta_inc_costo($fecha_inicial,$fecha_final)  //Total de la venta con impuestos 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (total) as total
+        FROM kardex
+        WHERE valor_ico= 8
+        and 
+        fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
     public function total_venta_inc($id_apertura)  //Total de la venta con impuestos 
     {
         $datos = $this->db->query("
@@ -307,6 +340,39 @@ class kardexModel extends Model
         FROM kardex
         WHERE valor_iva= 5
           AND id_apertura = $id_apertura
+        ");
+        return $datos->getResultArray();
+    }
+    public function venta_iva_5_costo($fecha_inicial,$fecha_final)  // Total del valor del iva 5 % 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (iva) as iva
+        FROM kardex
+        WHERE valor_iva= 5
+        and 
+        fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
+    public function venta_iva_19_costo($fecha_inicial,$fecha_final)  // Total del valor del iva 5 % 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (iva) as iva
+        FROM kardex
+        WHERE valor_iva= 19
+        and 
+        fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
+    public function venta_inc_costo($fecha_inicial,$fecha_final)  // Total del valor del iva 5 % 
+    {
+        $datos = $this->db->query("
+        SELECT SUM (ico) as inc
+        FROM kardex
+        WHERE valor_ico= 8
+        and 
+        fecha between '$fecha_inicial' and '$fecha_final'
         ");
         return $datos->getResultArray();
     }

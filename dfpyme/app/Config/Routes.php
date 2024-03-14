@@ -391,6 +391,8 @@ $routes->group('empresa', ['namespace' => 'App\Controllers\empresa', 'filter' =>
     $routes->get('comprobante_transaccion', 'EmpresaController::comprobante_transaccion');
     $routes->post('configuracion_impresion', 'EmpresaController::configuracion_impresion');
     $routes->post('agregar_resolucion_electronica', 'EmpresaController::agregar_resolucion_electronica');
+    $routes->post('editar_resolucion_electronica', 'EmpresaController::editar_resolucion_electronica');
+    $routes->post('actualizar_resolucion_electronica', 'EmpresaController::actualizar_resolucion_electronica');
 });
 
 $routes->group('caja_general', ['namespace' => 'App\Controllers\caja_general', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -496,6 +498,7 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->get('tipo_documento', 'Boletas::tipo_documento');
     $routes->post('actualizar_propina', 'Boletas::actualizar_propina');
     $routes->get('consultar_de_tipo_documento', 'Boletas::consultar_de_tipo_documento');
+    $routes->get('consultar_cliente', 'Boletas::consultar_cliente');
 });
 
 
@@ -508,7 +511,7 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->post('devoluciones', 'Ventas::devoluciones');
     $routes->get('productos_borrados', 'Ventas::productos_borrados');
     $routes->get('reporte_costo', 'Ventas::reporte_costo');
-    $routes->post('datos_reporte_costo', 'Ventas::datos_reporte_costo');
+    $routes->get('datos_reporte_costo', 'Ventas::datos_reporte_costo');
     $routes->post('exportar_reporte_costo', 'Ventas::exportar_reporte_costo');
     $routes->post('exportar_reporte_costo_excel', 'Ventas::exportar_reporte_costo_excel');
     $routes->post('exportar_reporte_ventas', 'Ventas::exportar_reporte_ventas');

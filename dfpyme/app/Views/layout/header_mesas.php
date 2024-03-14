@@ -167,8 +167,8 @@
                     <rect x="7" y="13" width="10" height="8" rx="2" />
                   </svg> Impresora facturación
                 </a> -->
-                <a class="dropdown-item" href="<?= base_url() ?>/caja/lista_precios">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/checkup-list -->
+                <!--  <a class="dropdown-item" href="<?= base_url() ?>/caja/lista_precios">
+               Download SVG icon from http://tabler-icons.io/i/checkup-list 
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
@@ -177,7 +177,7 @@
                     <path d="M9 17h.01" />
                     <path d="M12 16l1 1l3 -3" />
                   </svg>Lista precios
-                </a>
+                </a> -->
                 <a class="dropdown-item" href="<?= base_url() ?>/devolucion/listado">
                   <!-- Download SVG icon from http://tabler-icons.io/i/clipboard -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -699,15 +699,15 @@
                   <path d="M12 3v3m0 12v3" />
                 </svg>Egresos
               </a>
-              <a class="dropdown-item" href="<?= base_url() ?>/consultas_y_reportes/ventas_de_mesero">
-                <!-- Download SVG icon from http://tabler-icons.io/i/user-check -->
+              <!-- <a class="dropdown-item" href="<?= base_url() ?>/consultas_y_reportes/ventas_de_mesero">
+                Download SVG icon from http://tabler-icons.io/i/user-check 
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <circle cx="9" cy="7" r="4" />
                   <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
                   <path d="M16 11l2 2l4 -4" />
                 </svg>Ventas de mesero
-              </a>
+              </a>-->
 
             </div>
           </li>
@@ -812,7 +812,7 @@
           </li>
         <?php } ?>
 
-       <!--  <?php if ($user_session->tipo == 0) { ?>
+        <!--  <?php if ($user_session->tipo == 0) { ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
               <span class="text-blue">

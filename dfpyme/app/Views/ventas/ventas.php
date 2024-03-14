@@ -49,7 +49,18 @@ Ventas
             <div class="col" style="display:none" id="cliente">
                 <label for="" class="form-label">Cliente </label>
                 <input type="hidden" id="nit_cliente" name="nit_cliente">
-                <input type="text" class="form-control" id="buscar_cliente" name="buscar_cliente">
+                <div class="input-group input-group-flat">
+                    <input type="text" class="form-control" id="buscar_cliente" name="buscar_cliente">
+                    <span class="input-group-text">
+                        <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_busqueda()"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M18 6l-12 12" />
+                                <path d="M6 6l12 12" />
+                            </svg>
+                        </a>
+                    </span>
+                </div>
                 <span id="error_cliente" class="text-danger"></span>
             </div>
 
@@ -114,9 +125,36 @@ Ventas
         <br>
 
         <div id="resultado_consultado"></div>
+        <div class="row justify-content-end">
+
+            <div class="col-md-4 col-lg-4" style="display: none;">
+                <a href="#" class="card card-link card-link-pop bg-primary-lt">
+                    <div class="card-body">
+                        <h3 class="card-title">TOTAL ABONOS </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 col-lg-4" style="display: none;">
+                <a href="#" class="card card-link card-link-pop bg-primary-lt">
+                    <div class="card-body">
+
+                        <h3 class="card-title">TOTAL CRÉDITO </h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 col-lg-4">
+                <a href="#" class="card card-link card-link-pop bg-primary-lt">
+                    <div class="card-body">
 
 
+                        <h4 class="card-title text-center">TOTAL DOCUMENTOS </h4>
+                        <h3 class="card-title text-center" id="total_documentos">TOTAL DOCUMENTOS </h3>
+                    </div>
+                </a>
+            </div>
 
+        </div>
     </div>
 </div>
 
@@ -127,6 +165,14 @@ Ventas
 
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/f_e.js"></script>
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/imprimir_electronica.js"></script>
+
+<script>
+    function limpiar_busqueda() {
+        $('#nit_cliente').val('')
+        $('#buscar_cliente').val('')
+        $('#buscar_cliente').focus()
+    }
+</script>
 
 
 <script>
@@ -264,8 +310,8 @@ Ventas
         var abono_cliente = document.getElementById("abono_factura_credito").value;
         var abono = parseInt(abono_cliente.replace(/[.]/g, ""));
 
-      
-    
+
+
         var resultado = parseInt(efectivo) + parseInt(transaccion)
 
         if (resultado < saldo) {

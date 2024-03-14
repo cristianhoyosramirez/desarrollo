@@ -5,6 +5,31 @@ Reporte de costos
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
+<style>
+    /* Estilo para el botón de exportación a Excel */
+    .buttons-excel {
+        background-color: #4CAF50;
+        /* Color de fondo */
+        color: white;
+        /* Color del texto */
+        border: none;
+        /* Quitar borde */
+        padding: 10px 20px;
+        /* Añadir espacio alrededor del texto */
+        cursor: pointer;
+        /* Cambiar el cursor al pasar por encima */
+        border-radius: 5px;
+        /* Añadir esquinas redondeadas */
+        font-size: 16px;
+        /* Tamaño de la fuente */
+    }
+
+    /* Estilo para el botón de exportación a Excel al pasar el ratón por encima */
+    .buttons-excel:hover {
+        background-color: #45a049;
+        /* Cambiar color de fondo al pasar el ratón por encima */
+    }
+</style>
 <!-- Jquery date picker  -->
 <link rel="stylesheet" type="text/css" href="<?= base_url() ?>/Assets/plugin/calendario/jquery-ui-1.12.1.custom/jquery-ui.css">
 <!-- Data tables -->
@@ -195,101 +220,35 @@ Reporte de costos
 <script src="<?= base_url() ?>/Assets/plugin/data_tables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.js"></script>
 
-
-<!-- <script>
-    $(document).ready(function() {
-        // Muestra el modal cuando comienza la solicitud AJAX
-        $(document).ajaxStart(function() {
-
-            $('#processing-bar').show();
-
-
-        });
-
-        // Oculta el modal cuando todas las solicitudes AJAX se completan
-        $(document).ajaxStop(function() {
+<!-- DataTables Buttons -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
 
 
-            $('#processing-bar').hide();
-
-
-
-
-        });
-
-        var dataTable = $('#consulta_costo').DataTable({
-            serverSide: true,
-            processing: true,
-            searching: false,
-            processingMarkup: '<div id="custom-loader" class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>',
-            order: [
-                [0, 'desc']
-            ],
-            language: {
-                decimal: "",
-                emptyTable: "No hay datos",
-                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                infoEmpty: "Mostrando 0 a 0 de 0 registros",
-                infoFiltered: "(Filtro de _MAX_ total registros)",
-                infoPostFix: "",
-                thousands: ",",
-                lengthMenu: "Mostrar _MENU_ registros",
-                loadingRecords: "Cargando...",
-                processing: "Procesando...",
-                search: "Buscar",
-                zeroRecords: "No se encontraron coincidencias",
-                paginate: {
-                    first: "Primero",
-                    last: "Ultimo",
-                    next: "Próximo",
-                    previous: "Anterior"
-                },
-                aria: {
-                    sortAscending: ": Activar orden de columna ascendente",
-                    sortDescending: ": Activar orden de columna desendente"
-                }
-            },
-            ajax: {
-                url: '<?php echo base_url() ?>' + "/reportes/data_table_reporte_costo",
-                data: function(d) {
-                    return $.extend({}, d, {
-                        // documento: documento,
-                        // fecha_inicial: fecha_inicial,
-                        // fecha_final: fecha_final
-                    });
-                },
-                dataSrc: function(json) {
-                    $('#base_iva_19').html(json.base_iva_19);
-                    //$('#saldo_cliente').html(json.saldo);
-                    //$('#pagos_factura').html(json.pagos);
-
-                    return json.data;
-                },
-
-            },
-            columnDefs: [{
-                targets: [4],
-                orderable: false
-            }]
-        });
-    });
-</script> -->
 <script>
     $(document).ready(function() {
         // Muestra el modal cuando comienza la solicitud AJAX
-        $(document).ajaxStart(function() {
-            $('#processing-bar').show();
-        });
+        /*   $(document).ajaxStart(function() {
+              $('#processing-bar').show();
+          });
 
-        // Oculta el modal cuando todas las solicitudes AJAX se completan
-        $(document).ajaxStop(function() {
-            $('#processing-bar').hide();
-        });
+          // Oculta el modal cuando todas las solicitudes AJAX se completan
+          $(document).ajaxStop(function() {
+              $('#processing-bar').hide();
+          }); */
 
         var dataTable = $('#consulta_costo').DataTable({
             serverSide: true,
             processing: true,
             searching: false,
+            dom: 'Bfrtip',
+            buttons: [
+                'excelHtml5' // Agregar el botón de exportar a Excel
+            ],
             order: [
                 [0, 'desc']
             ],
@@ -330,7 +289,7 @@ Reporte de costos
                     $('#base_iva_19').html(json.base_iva_19);
                     $('#iva_19').html(json.iva_19);
                     $('#base_iva_5').html(json.base_iva_5);
-                    $ ('#iva_5').html(json.iva_5);
+                    $('#iva_5').html(json.iva_5);
                     $('#valor_venta').html(json.total_venta);
                     $('#base_inc').html(json.base_inc);
                     $('#inc').html(json.inc);
@@ -440,9 +399,16 @@ Reporte de costos
         });
     });
 </script>
+>
+
 
 <script>
     function buscar() {
+
+        if ($.fn.DataTable.isDataTable('#consulta_costo')) {
+            $('#consulta_costo').DataTable().destroy();
+        }
+
         var url = document.getElementById("url").value;
         var fecha_inicial = document.getElementById("fecha_inicial").value;
         var fecha_final = document.getElementById("fecha_final").value;
@@ -453,26 +419,69 @@ Reporte de costos
             return;
         }
 
-        $.ajax({
-            url: url + "/" + "reportes/datos_reporte_costo",
-            type: "POST",
-            data: {
-                fecha_inicial,
-                fecha_final
-            },
-            success: function(resultado) {
-                var resultado = JSON.parse(resultado);
-                if (resultado.resultado == 1) {
-                    $('#datos_costos').html(resultado.datos);
-                    $('#no_hay_datos').html('');
-                    $('#inicial').val(resultado.fecha_inicial);
-                    $('#final').val(resultado.fecha_final);
+        var dataTable = $('#consulta_costo').DataTable({
+            serverSide: true,
+            processing: true,
+            searching: false,
+            dom: 'Bfrtip',
+            buttons: [
+                'excelHtml5' // Agregar el botón de exportar a Excel
+            ],
+            order: [
+                [0, 'desc']
+            ],
+            language: {
+                decimal: "",
+                emptyTable: "No hay datos",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(Filtro de _MAX_ total registros)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ registros",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar",
+                zeroRecords: "No se encontraron coincidencias",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Próximo",
+                    previous: "Anterior"
+                },
+                aria: {
+                    sortAscending: ": Activar orden de columna ascendente",
+                    sortDescending: ": Activar orden de columna desendente"
                 }
-                if (resultado.resultado == 0) {
-                    $('#no_hay_datos').html('!No hay datos para el rango de fecha solicitado¡');
-                }
             },
+            ajax: {
+                url: '<?php echo base_url() ?>' + "/reportes/datos_reporte_costo",
+                data: function(d) {
+                    return $.extend({}, d, {
+                        // documento: documento,
+                        fecha_inicial: fecha_inicial,
+                        fecha_final: fecha_final
+                    });
+                },
+                dataSrc: function(json) {
+                    $('#base_iva_19').html(json.base_iva_19);
+                    $('#iva_19').html(json.iva_19);
+                    $('#base_iva_5').html(json.base_iva_5);
+                    $('#iva_5').html(json.iva_5);
+                    $('#valor_venta').html(json.total_venta);
+                    $('#base_inc').html(json.base_inc);
+                    $('#inc').html(json.inc);
+                    return json.data;
+                },
+            },
+            columnDefs: [{
+                targets: [4],
+                orderable: false
+            }]
         });
+
+
+
     }
 </script>
 

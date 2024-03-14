@@ -419,17 +419,13 @@ class Boletas extends BaseController
 
     function municipios()
     {
-        //$id_departamento = '749';
-        //$id_departamento = 751; 
+
         $id_departamento = $this->request->getPost('valorSelect1');
         // $id_departamento = strval($id_departamento);
 
 
         $code_depto = model('departamentoModel')->select('code')->where('iddepartamento', $id_departamento)->first();
 
-        //dd( $id_depto);
-
-        // Supongamos que tienes un modelo que obtiene las opciones en función del valor seleccionado.
         $municipios = model('municipiosModel')->where('code_depto', $code_depto['code'])->orderBy('nombre', 'asc')->findAll();
 
         $ciudad = model('ciudadModel')->where('iddepartamento', $id_departamento)->orderBy('nombreciudad', 'asc')->findAll();
@@ -447,31 +443,6 @@ class Boletas extends BaseController
 
         );
         echo  json_encode($returnData);
-
-
-
-
-        /* 
-       $data = array(
-            'municipios' => view('municipios/municipios', [
-                'municipios' => $municipios
-            ]),
-            'ciudad' => view('municipios/ciudad', [
-                'ciudad' => $ciudad
-            ])
-        );  */
-
-        /*  $data = array();
-
-        foreach ($municipios as $opcion) {
-            $data[] = array(
-                'value' => $opcion['idciudad'], // Reemplaza 'id' con el campo adecuado de tu base de datos.
-                'text' => $opcion['nombreciudad'], // Reemplaza 'nombre' con el campo adecuado de tu base de datos.
-            );
-        } */
-
-        //return $this->response->setJSON($data);
-
     }
 
     function ciudad()
@@ -556,63 +527,6 @@ class Boletas extends BaseController
         echo  json_encode($returnData);
     }
 
-    /*  function actualizar_cantidades()
-    {
-        $id_tabla_producto = $this->request->getPost('id_producto');
-        $cantidad_actualizar = $this->request->getPost('cantidad_producto');
-        $id_usuario = $this->request->getPost('id_usuario');
-        $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_tabla_producto)->first();
-        $tipo_usuario = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_usuario)->first();
-
-        $cantidad_producto = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_tabla_producto)->first();
-        $cantidad_impresos = model('productoPedidoModel')->select('numero_productos_impresos_en_comanda')->where('id', $id_tabla_producto)->first();
-        $valor_unitario  = model('productoPedidoModel')->select('valor_unitario')->where('id', $id_tabla_producto)->first();
-
-       // echo $cantidad_impresos['numero_productos_impresos_en_comanda'] . "</br>";
-        //echo $cantidad_producto['cantidad_producto'] . "</br>";
-
-        if ($cantidad_actualizar > $cantidad_producto['cantidad_producto']) {
-
-
-            $model = model('productoPedidoModel');
-            $actualizar = $model->set('valor_total', $valor_unitario['valor_unitario'] * $cantidad_actualizar);
-            $actualizar = $model->set('cantidad_producto', $cantidad_actualizar);
-            $actualizar = $model->where('id', $id_tabla_producto);
-            $actualizar = $model->update();
-        }
-
-        if ($cantidad_actualizar < $cantidad_producto['cantidad_producto']) {
-            if ($cantidad_actualizar  > 0) {
-
-                $actualizar = $cantidad_impresos['numero_productos_impresos_en_comanda'] - $cantidad_actualizar;
-                echo $actualizar;
-                exit();
-            }
-        }
-
-        if ($cantidad_impresos['numero_productos_impresos_en_comanda'] == $cantidad_producto['cantidad_producto']) {
-            $returnData = array(
-                "resultado" => 0,  // Se actulizo el registro 
-            );
-            echo  json_encode($returnData);
-        }
-
-        $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
-        $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['numero_de_pedido'])->first();
-        $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido['numero_de_pedido'])->first();
-        $productos_del_pedido = view('pedidos/productos_pedido', [
-            "productos" => $productos_pedido,
-            "pedido" => $numero_pedido['numero_de_pedido']
-        ]);
-
-        $returnData = array(
-            "resultado" => 1,  // Se actulizo el registro 
-            "productos" => $productos_del_pedido,
-            "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
-            "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
-        );
-        echo  json_encode($returnData);
-    } */
 
 
 
@@ -628,18 +542,13 @@ class Boletas extends BaseController
         $cantidad_impresos = model('productoPedidoModel')->select('numero_productos_impresos_en_comanda')->where('id', $id_tabla_producto)->first();
         $valor_unitario  = model('productoPedidoModel')->select('valor_unitario')->where('id', $id_tabla_producto)->first();
 
-        // echo $cantidad_impresos['numero_productos_impresos_en_comanda'] . "</br>";
-        //echo $cantidad_producto['cantidad_producto'] . "</br>";
         $model_pedido = model('pedidoModel');
 
         if ($cantidad_actualizar > $cantidad_producto['cantidad_producto']) {
 
 
             $model = model('productoPedidoModel');
-            /*  $actualizar = $model->set('valor_total', $valor_unitario['valor_unitario'] * $cantidad_actualizar);
-            $actualizar = $model->set('cantidad_producto', $cantidad_actualizar);
-            $actualizar = $model->where('id', $id_tabla_producto);
-            $actualizar = $model->update(); */
+
 
             $cantidades = [
                 'valor_total' => $cantidad_actualizar * $valor_unitario['valor_unitario'],
@@ -894,7 +803,7 @@ class Boletas extends BaseController
 
 
         $pedido = model('pedidoModel')->set('propina', 0)->where('fk_mesa', $id_mesa)->update();
-       
+
         if ($pedido) {
             $returnData = array(
                 "resultado" => 1,  // Se actulizo el registro 
@@ -962,6 +871,8 @@ class Boletas extends BaseController
         $datos = $this->db->query($sql_data)->getResultArray();
         $data = [];
 
+        $accion = new data_table();
+
         foreach ($datos as $detalle) {
             $sub_array = array();
 
@@ -974,75 +885,22 @@ class Boletas extends BaseController
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $tipo_documento['descripcionestado'];
-            if ($detalle['id_estado'] == 8) {
-                $pdf = model('facturaElectronicaModel')->select('transaccion_id')->where('id', $detalle['id_factura'])->first();
 
-                if (empty($pdf['transaccion_id'])) {
-                    $sub_array[] = '<a  class="btn btn-outline-success btn-icon " title="Trasmitir " onclick="sendInvoice(' . $detalle['id_factura'] . ')" >
-            <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <line x1="17" y1="3" x2="17" y2="21" />
-                                    <path d="M10 18l-3 3l-3 -3" />
-                                    <line x1="7" y1="21" x2="7" y2="3" />
-                                    <path d="M20 6l-3 -3l-3 3" />
-                                </svg></a> 
+            $acciones = $accion->row_data_table($detalle['id_estado'], $detalle['id_factura']);
 
-            <a  class="btn btn-outline-success btn-icon " title="Imprimir copia " onclick="imprimir_electronica(' . $detalle['id_factura'] . ')" >
-            <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><rect x="7" y="13" width="10" height="8" rx="2" /></svg></a>
-            
+            $sub_array[] = $acciones;
 
-        <a  class="btn bg-muted-lt btn-icon " title="Ver detalle" onclick="detalle_f_e(' . $detalle['id_factura'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg></a>';
-                }
-                if (!empty($pdf['transaccion_id'])) {
 
-                    $pdf_url = model('facturaElectronicaModel')->select('pdf_url')->where('id', $detalle['id_factura'])->first();
-
-                    $sub_array[] = '<a  class="btn btn-outline-success btn-icon " title="Trasmitir " onclick="sendInvoice(' . $detalle['id_factura'] . ')" >
-            <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <line x1="17" y1="3" x2="17" y2="21" />
-                                    <path d="M10 18l-3 3l-3 -3" />
-                                    <line x1="7" y1="21" x2="7" y2="3" />
-                                    <path d="M20 6l-3 -3l-3 3" />
-                                </svg></a> 
-            
-
-            <a  class="btn btn-outline-success btn-icon " title="Imprimir copia " onclick="imprimir_electronica(' . $detalle['id_factura'] . ')" >
-            <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><rect x="7" y="13" width="10" height="8" rx="2" /></svg></a>
-            
-
-        <a  class="btn bg-muted-lt btn-icon " title="Ver detalle" onclick="detalle_f_e(' . $detalle['id_factura'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg></a>
-        
-        
-<a href="' . $pdf_url['pdf_url'] . '" target="_blank" class="cursor-pointer">
-    <img title="Descargar pdf" src="' . base_url() . '/Assets/img/pdf.png" width="40" height="40" />
-</a>';
-                }
-            }
-            if ($detalle['id_estado'] != 8) {
-
-                $sub_array[] = '<a  class="btn btn-outline-success btn-icon " title="Imprimir copia " onclick="imprimir_duplicado_factura(' . $detalle['id_factura'] . ')" >
-            <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><rect x="7" y="13" width="10" height="8" rx="2" /></svg></a>  
-        <a  class="btn bg-muted-lt btn-icon " title="Ver detalle" onclick="detalle_de_factura(' . $detalle['id'] . ')"  ><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg></a>
-        
-         ';
-            }
             $data[] = $sub_array;
         }
 
+        $total_ventas = model('pagosModel')->total_venta($id_apertura[0]['id']);
         $json_data = [
             'draw' => intval($this->request->getGEt(index: 'draw')),
             'recordsTotal' => $total_count->total,
             'recordsFiltered' => $total_count->total,
             'data' => $data,
+            'total' => "$ " . number_format($total_ventas[0]['total'], 0, ",", ".")
         ];
 
         echo  json_encode($json_data);
@@ -1082,9 +940,107 @@ class Boletas extends BaseController
         $fecha_final = $this->request->getGet('fecha_final');
         $tipo_documento = $this->request->getGet('tipo_documento');
         //$tipo_documento = 5;
-
+        
         $acciones = new tipo_consulta();
         $acci = $acciones->consulta($fecha_inicial, $fecha_final, $tipo_documento);
+
+        $table_map = [
+            0 => 'id',
+            1 => 'fecha',
+            2 => 'nit_cliente',
+            3 => 'nombrescliente',
+            4 => 'documento',
+            5 => 'total_documento',
+
+        ];
+
+        $sql_count = $acci['sql_count'];
+        $sql_data = $acci['sql_data'];
+
+
+
+
+        $condition = "";
+
+        if (!empty($valor_buscado)) {
+            $condition .= " AND cliente.nitcliente ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR descripcionestado ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR cliente.nombrescliente ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR factura_venta.nitcliente ILIKE '%" . $valor_buscado . "%'";
+            $condition .= " OR numerofactura_venta ILIKE '%" . $valor_buscado . "%'";
+        }
+
+        $sql_count .= $condition;
+        $sql_data .= $condition;
+
+        $total_count = $this->db->query($sql_count)->getRow();
+
+        $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
+
+
+        
+
+        $datos = $this->db->query($sql_data)->getResultArray();
+        $data = [];
+
+
+        $accion = new data_table();
+        foreach ($datos as $detalle) {
+            $sub_array = array();
+
+            $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $detalle['nit_cliente'])->first();
+            $sub_array[] = $detalle['fecha'];
+            $sub_array[] = $detalle['nit_cliente'];
+            $sub_array[] =  $nombre_cliente['nombrescliente'];
+            $sub_array[] = $detalle['documento'];
+            $sub_array[] =  number_format($detalle['total_documento'], 0, ",", ".");
+            $documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
+
+            $sub_array[] = $documento['descripcionestado'];
+            $acciones = $accion->row_data_table($detalle['id_estado'], $detalle['id_factura']);
+
+            $sub_array[] = $acciones;
+
+
+            $data[] = $sub_array;
+        }
+        
+
+        if ($tipo_documento == 5) {
+            $total_venta = model('pagosModel')->total_venta_fecha($fecha_inicial, $fecha_final);
+        }
+
+        if ($tipo_documento != 5) {
+            
+            $total_venta = model('pagosModel')->total_venta_fecha_estado($fecha_inicial, $fecha_final, $tipo_documento);
+        }
+
+
+
+        $json_data = [
+            'draw' => intval($this->request->getGEt(index: 'draw')),
+            'recordsTotal' => $total_count->total,
+            'recordsFiltered' => $total_count->total,
+            'data' => $data,
+            'total' => "$ ".number_format($total_venta[0]['total'], 0, ",", ".")
+        ];
+
+        echo  json_encode($json_data);
+    }
+    function consultar_cliente()
+    {
+
+        //$valor_buscado = $_GET['search']['value'];
+        //$fecha_inicial = '2024-01-01';
+        $fecha_inicial = $this->request->getGet('fecha_inicial');
+        //$fecha_final = '2024-03-04';
+        $fecha_final = $this->request->getGet('fecha_final');
+        $tipo_documento = $this->request->getGet('tipo_documento');
+        $nit_cliente = $this->request->getGet('nit_cliente');
+        //$tipo_documento = 5;
+
+        $acciones = new tipo_consulta();
+        $acci = $acciones->consulta_cliente($fecha_inicial, $fecha_final, $tipo_documento, $nit_cliente);
 
         $table_map = [
             0 => 'id',

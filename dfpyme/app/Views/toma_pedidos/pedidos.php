@@ -360,12 +360,7 @@ Bienvenido DFpyme
                             <div class="row mb-2 gy-2">
                                 <div class="col-sm-12">
                                     <div class="input-group">
-                                        <!-- 
-                        <select class="form-select" aria-label="Default select example" id="criterio_propina" style="width: 90px;">
-                            <option value="1">Propina %</option>
-                            <option value="2">Propina $</option>
-
-                        </select> -->
+                       
 
 
 

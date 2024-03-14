@@ -399,30 +399,29 @@ class EmpresaController extends BaseController
     {
         $id_dian = $this->request->getPost('id_resolucion');
         //$id_dian = 7;
-        
-        $datos_resolucion = model('dianModel')->where('iddian',$id_dian)->first();
 
-    
+        $datos_resolucion = model('dianModel')->where('iddian', $id_dian)->first();
+
+
 
         $ultima_id = model('facturaVentaModel')->selectMax('id')->first();
 
-        
 
-        if (!empty( $ultima_id['id'])){
-            $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $ultima_id['id'])->first(); 
-            $factura=$numero_factura['numerofactura_venta'];
+
+        if (!empty($ultima_id['id'])) {
+            $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $ultima_id['id'])->first();
+            $factura = $numero_factura['numerofactura_venta'];
         }
-        if (empty( $ultima_id['id'])){
+        if (empty($ultima_id['id'])) {
             $numero_factura = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', 8)->first();
-            $factura=$numero_factura['numeroconsecutivo'];
-
+            $factura = $numero_factura['numeroconsecutivo'];
         }
-        
+
 
         echo json_encode([
             'texto' => $datos_resolucion['texto_inicial'] . "-" . $datos_resolucion['inicialestatica'] . " desde " . $datos_resolucion['inicialestatica'] . " hasta " . $datos_resolucion['rangofinaldian'] . " fecha " . $datos_resolucion['fechadian'] . " vigencia 6 meses ",
             'resultado' => 1,
-            'numero_factura' => $factura ,
+            'numero_factura' => $factura,
             'prefijo' => $datos_resolucion['inicialestatica'],
             'id_dian' => $id_dian
         ]);
@@ -476,7 +475,7 @@ class EmpresaController extends BaseController
 
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
-        return redirect()->to(base_url('home'))->with('mensaje', 'Configuración exitosa');
+        return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Configuración exitosa');
     }
 
     function agregar_resolucion_electronica()
@@ -505,6 +504,63 @@ class EmpresaController extends BaseController
                 "resoluciones" => view('empresa/resoluciones_electronicas', [
                     'resoluciones_dian' => $resoluciones_dian
                 ])
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+    function editar_resolucion_electronica()
+    {
+        $id_resolucion = $this->request->getPost('id_resolucion');
+
+
+        $resolucion = model('resolElectronicaModel')->where('id', $id_resolucion)->first();
+
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata  
+            "id_resolucion" => $resolucion['id'],
+            "numero" => $resolucion['numero'],
+            "fecha_inicial" => $resolucion['date_begin'],
+            "fecha_final" => $resolucion['date_end'],
+            "vigencia" => $resolucion['vigency'],
+            "vigencia" => $resolucion['vigency'],
+            "prefijo" => $resolucion['prefijo'],
+            "prefijo" => $resolucion['prefijo'],
+            "inicial" => $resolucion['number_begin'],
+            "final" => $resolucion['number_end'],
+            "consecutivo" => $resolucion['consecutive'],
+            "alerta" => $resolucion['alerta'],
+        );
+        echo  json_encode($returnData);
+    }
+
+
+    function actualizar_resolucion_electronica()
+    {
+        $data = [
+            'numero' => $this->request->getPost('numero'),
+            'date_begin' => $this->request->getPost('fecha_inicial'),
+            'vigency' => $this->request->getPost('vigencia'),
+            'date_end' => $this->request->getPost('fecha_final'),
+            'prefijo' => $this->request->getPost('prefijo'),
+            'number_begin' => $this->request->getPost('numero_inicial'),
+            'number_end' => $this->request->getPost('numero_final'),
+            'consecutive' => $this->request->getPost('numero_inicial'),
+            'alerta' => $this->request->getPost('alerta')
+
+        ];
+
+
+        $model = model('resolElectronicaModel');
+        $act_reso = $model->set($data);
+        $act_reso = $model->where('id', $this->request->getPost('id'));
+        $act_reso = $model->update();
+        $resoluciones_dian = model('resolElectronicaModel')->findAll();
+        if ($act_reso) {
+            $returnData = array(
+                "resultado" => 1,  
+
             );
             echo  json_encode($returnData);
         }

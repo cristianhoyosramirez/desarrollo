@@ -93,11 +93,11 @@ class impresionFacturaController extends BaseController
 
             $session = session();
             $session->setFlashdata('iconoMensaje', 'success');
-            return redirect()->to(base_url('home'))->with('mensaje', 'Actualizacion correcta ');
+            return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Actualizacion correcta ');
         } else if (!empty($pedidos)) {
             $session = session();
             $session->setFlashdata('iconoMensaje', 'info');
-            return redirect()->to(base_url('home'))->with('mensaje', 'Antes de realizar esta accion primero se deben de cerrar los pedidos actuales ');
+            return redirect()->to(base_url('pedidos/mesas'))->with('mensaje', 'Antes de realizar esta accion primero se deben de cerrar los pedidos actuales ');
         }
     }
 }

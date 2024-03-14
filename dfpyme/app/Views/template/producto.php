@@ -26,7 +26,7 @@
 <body>
     <div class="wrapper">
         <?= $this->include('layout/header_mesas') ?>
-        
+
 
         <div class="page-wrapper">
             <div class="container-xl">
@@ -265,24 +265,24 @@
                             return "Buscando..";
                         }
                     },
-              /*       ajax: {
-                        //url: "tipos_formulacion",
-                        url: url + "/producto/categorias",
-                        type: "post",
-                        dataType: 'json',
-                        delay: 200,
-                        data: function(params) {
-                            return {
-                                palabraClave: params.term // search term
-                            };
-                        },
-                        processResults: function(response) {
-                            return {
-                                results: response
-                            };
-                        },
-                        cache: true
-                    } */
+                    /*       ajax: {
+                              //url: "tipos_formulacion",
+                              url: url + "/producto/categorias",
+                              type: "post",
+                              dataType: 'json',
+                              delay: 200,
+                              data: function(params) {
+                                  return {
+                                      palabraClave: params.term // search term
+                                  };
+                              },
+                              processResults: function(response) {
+                                  return {
+                                      results: response
+                                  };
+                              },
+                              cache: true
+                          } */
                 });
 
                 $("#marca_producto").select2({
@@ -300,24 +300,24 @@
                             return "Buscando..";
                         }
                     },
-                   /*  ajax: {
-                        //url: "tipos_formulacion",
-                        url: url + "/producto/marcas",
-                        type: "post",
-                        dataType: 'json',
-                        delay: 200,
-                        data: function(params) {
-                            return {
-                                palabraClave: params.term // search term
-                            };
-                        },
-                        processResults: function(response) {
-                            return {
-                                results: response
-                            };
-                        },
-                        cache: true
-                    } */
+                    /*  ajax: {
+                         //url: "tipos_formulacion",
+                         url: url + "/producto/marcas",
+                         type: "post",
+                         dataType: 'json',
+                         delay: 200,
+                         data: function(params) {
+                             return {
+                                 palabraClave: params.term // search term
+                             };
+                         },
+                         processResults: function(response) {
+                             return {
+                                 results: response
+                             };
+                         },
+                         cache: true
+                     } */
 
                 });
 
@@ -545,6 +545,10 @@
                                     iva.style.display = 'none';
                                 }
                                 $(form)[0].reset();
+
+                                var buttonElement = document.getElementById("btn_crear_producto");
+                                // Cambia el tipo del botón a "submit"
+                                buttonElement.type = "button";
 
 
 
@@ -1014,20 +1018,7 @@
             }
         </script>
 
-        <script>
-            function cancelar_creacion_producto() {
-                $("#crear_producto").modal("hide");
-                $(".crear_producto_nombre_error").html("");
-                $(".categoria_producto_error").html("");
-                $(".marca_producto_error").html("");
-                $(".informacion_tributaria_error").html("");
-                $(".valor_costo_producto_error").html("");
-                $(".valor_venta_producto_error").html("");
-                $('#categoria_producto').val(null).trigger('change');
-                $('#marca_producto').val(null).trigger('change');
-                $(form)[0].reset();
-            }
-        </script>
+
         <script>
             $(function() {
                 $("#activar_resolucion_facturacion").on("shown.bs.modal", function(e) {
