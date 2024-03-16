@@ -40,19 +40,31 @@ HOME
             </thead>
             <tbody>
 
-                <?php foreach ($sub_categorias as $detalle) { ?>
-                    <tr>
+                <?php foreach ($id_categorias as $detalle) {
+                    $sub_categorias = model('subCategoriaModel')->where('id_categoria', $detalle['id_categoria'])->findAll();
+                    $nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('id', $detalle['id_categoria'])->first();
+                ?>
 
-                        <td><?php echo $detalle['nombre'] ?></td>
-                        <td><button type="button" class="btn btn-outline-success" onclick="editar_categoria(<?php echo $detalle['id'] ?>)">
-                                Editar
-                            </button>
-                            <button type="button" class="btn btn-outline-danger" onclick="eliminar_categoria(<?php echo $detalle['id'] ?>)">
-                                Eliminar
-                            </button>
-                        </td>
-
+                    <tr class="table-primary">
+                        
+                        <td><?php echo " Categoria: ".$nombre_categoria['nombrecategoria'] ?></td>
+                        <td></td>
                     </tr>
+
+                    <?php foreach ($sub_categorias as $valor_sub) : ?>
+                        <tr>
+
+                            <td><?php echo $valor_sub['nombre'] ?></td>
+                            <td><button type="button" class="btn btn-outline-success" onclick="editar_categoria(<?php echo $valor_sub['id'] ?>)">
+                                    Editar
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" onclick="eliminar_categoria(<?php echo $valor_sub['id'] ?>)">
+                                    Eliminar
+                                </button>
+                            </td>
+
+                        </tr>
+                    <?php endforeach ?>
                 <?php } ?>
             </tbody>
         </table>
@@ -74,6 +86,14 @@ HOME
                     <form class="row g-3" action="<?= base_url('categoria/sub_categoria') ?>" method="POST" id="crear_categoria">
                         <div class="row">
 
+
+
+                            <div class="col">
+                                <label for="" class="form-label">Categoria </label>
+                                <select class="form-select" aria-label="Default select example" id="categoria" name="categoria">
+                                    >
+                                </select>
+                            </div>
                             <div class="col">
                                 <label for="" class="form-label">Nombre sub categoria </label>
                                 <input type="text" class="form-control" name="nombre_categoria" id="nombre_categoria" required>
@@ -122,10 +142,13 @@ HOME
     function actualizar_categoria(valor) {
         var url = document.getElementById("url").value;
         var nombre = document.getElementById("nombre_categoria").value;
+        var categoria = document.getElementById("nombre_categoria_edicion").value;
+        
         $.ajax({
             data: {
                 valor,
-                nombre
+                nombre,
+                categoria
             },
             url: url + "/" + "configuracion/actualizar_sub_categoria",
             type: "POST",
@@ -176,7 +199,7 @@ HOME
             showCancelButton: true,
             confirmButtonText: "Aceptar",
             denyButtonText: `Cancelar`,
-            icon:'question'
+            icon: 'question'
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {

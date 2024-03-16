@@ -148,6 +148,8 @@ $routes->group('categoria', ['namespace' => 'App\Controllers\categoria', 'filter
     $routes->post('editar_marca', 'categoriaController::editar_marca');
     $routes->post('actualizar_marca', 'categoriaController::actualizar_marca');
     $routes->post('sub_categoria', 'categoriaController::sub_categoria');
+    $routes->post('actualizar_sub_categoria', 'categoriaController::actualizar_sub_categoria');
+    $routes->post('consulta_sub_categoria', 'categoriaController::consulta_sub_categoria');
 });
 
 $routes->group('pedido', ['namespace' => 'App\Controllers\pedido', 'filter' => \App\Filters\Auth::class], function ($routes) {

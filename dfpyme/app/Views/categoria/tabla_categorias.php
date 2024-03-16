@@ -3,7 +3,7 @@
 
         <input type="hidden" name="codigo_categoria" value="<?php echo $detalle['codigocategoria'] ?>">
 <tr>
-    <td> <input type="text" value="<?php echo $detalle['nombrecategoria'] ?>" class="form-control"  onkeyup="actualizar_categoria(event, this.value,<?php echo $detalle['codigocategoria'] ?>)"  placeholder="Cambiar el nombre de la categoria "></td>
+    <td> <input type="text" value="<?php echo $detalle['nombrecategoria'] ?>" class="form-control" onkeyup="actualizar_categoria(event, this.value,<?php echo $detalle['codigocategoria'] ?>)" placeholder="Cambiar el nombre de la categoria "></td>
     <td>
         <select class="form-select" id="estado_categoria" name="estado_categoria" onchange="estado_categoria(this.options[this.selectedIndex].value,<?php echo $detalle['codigocategoria'] ?>)">
             <option value="true" <?php if ($detalle['permitir_categoria'] == 't') : ?>selected <?php endif; ?>>
@@ -28,6 +28,22 @@
 
             </div>
         </div>
+    </td>
+    <td>
+
+        <select class="form-select" aria-label="Default select example" onchange="sub_categoria(this.options[this.selectedIndex].value,<?php echo $detalle['codigocategoria'] ?>)">
+
+            <?php if ($detalle['subcategoria'] == 't') : ?>
+                <option value="true" selected>Si </option>
+                <option value="false">No </option>
+
+            <?php endif ?>
+            <?php if ($detalle['subcategoria'] == 'f') : ?>
+                <option value="true">Si </option>
+                <option value="false" selected>No </option>
+
+            <?php endif ?>
+        </select>
     </td>
 </tr>
 

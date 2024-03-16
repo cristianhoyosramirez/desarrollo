@@ -206,6 +206,52 @@
             }
         </script>
 
+        <script>
+            function sub_categoria(opcion, id_categoria) {
+                var url = document.getElementById("url").value;
+                
+                $.ajax({
+                    data: {
+                        opcion,
+                        id_categoria
+                    },
+                    url: url + "/" + "categoria/actualizar_sub_categoria",
+                    type: "POST",
+                    success: function(resultado) {
+                        var resultado = JSON.parse(resultado);
+
+                        if (resultado.resultado == 0) {
+                            //$('#creacion_cliente_factura_pos').modal('hide');
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Actualizacion de sub categoria '
+                            })
+
+                            //window.location.href = window.location.href
+                            $('#tabla_categorias').html(resultado.categorias)
+                        }
+                        if (resultado.resultado == 1) {
+                            alert("No se pudo insertar");
+                        }
+                    },
+                });
+
+
+            }
+        </script>
+
 
         <script>
             function actualizar_categoria(e, nombre_categoria, codigo_categoria) {

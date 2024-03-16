@@ -54,6 +54,11 @@
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert_start.js"></script>
         <!--select2 -->
         <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
+
+
+       
+
+
         <script>
             $("#producto_imagen").autocomplete({
                 source: function(request, response) {
@@ -530,6 +535,7 @@
                         if ($.isEmptyObject(data.error)) {
                             if (data.code == 1) {
                                 $("#crear_producto").modal("hide");
+                                $("#div_sub_categoria").hide();
 
                                 $(".crear_producto_nombre_error").html("");
                                 $(".categoria_producto_error").html("");

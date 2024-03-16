@@ -71,6 +71,9 @@ CATEGORIAS
                             <polyline points="11 12 12 12 12 16 13 16" />
                         </svg>
                     </td>
+                    <td>
+                        Subcategoria
+                    </td>
                 </tr>
             </thead>
             <tbody id="tabla_categorias">
@@ -104,6 +107,22 @@ CATEGORIAS
 
                                 </div>
                             </div>
+                        </td>
+                        <td>
+
+                            <select class="form-select" aria-label="Default select example"  onchange="sub_categoria(this.options[this.selectedIndex].value,<?php echo $detalle['codigocategoria'] ?>)">
+
+                                <?php if ($detalle['subcategoria'] == 't') : ?>
+                                    <option value="true" selected>Si </option>
+                                    <option value="false">No </option>
+
+                                <?php endif ?>
+                                <?php if ($detalle['subcategoria'] == 'f') : ?>
+                                    <option value="true" >Si </option>
+                                    <option value="false" selected >No </option>
+
+                                <?php endif ?>
+                            </select>
                         </td>
                     </tr>
 

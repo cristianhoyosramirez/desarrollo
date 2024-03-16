@@ -82,6 +82,7 @@ function cierre_caja() {
               reverseButtons: true,
             }).then((result) => {
               if (result.isConfirmed) {
+                console.log(id_cierre)
                 $.ajax({
                   data: {
                     id_cierre,
@@ -93,7 +94,7 @@ function cierre_caja() {
 
                     if (resultado.resultado == 1) {
                       let id_cierre = resultado.id_cierre
-                    
+
                       Swal.fire({
                         icon: "question",
                         title: "¿Desea imprimir el movimiento de caja ? ",
@@ -108,7 +109,7 @@ function cierre_caja() {
                         reverseButtons: true,
                       }).then((result) => {
                         /* Read more about isConfirmed, isDenied below */
-
+                        console.log(id_cierre)
                         if (result.isConfirmed) {
                           $.ajax({
                             data: {
@@ -167,8 +168,8 @@ function cierre_caja() {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                   let id_cierre = resultado.id_cierre
-                    
+                    let id_cierre = resultado.id_cierre
+
                     $.ajax({
                       data: {
                         id_cierre,

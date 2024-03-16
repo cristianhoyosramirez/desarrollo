@@ -12,6 +12,7 @@ class categoriaController extends BaseController
         $categorias = model('categoriasModel')->select('codigocategoria');
         $categorias = model('categoriasModel')->select('permitir_categoria');
         $categorias = model('categoriasModel')->select('impresora');
+        $categorias = model('categoriasModel')->select('subcategoria');
         $categorias = model('categoriasModel')->select('nombrecategoria')->orderBy('codigocategoria', 'asc')->find();
         $impresoras = model('impresorasModel')->select('*')->find();
         return view('categoria/categoria', [
@@ -97,13 +98,14 @@ class categoriaController extends BaseController
 
                 $categorias = model('categoriasModel')->findAll();
 
-                echo json_encode(['code' => 1,
-                 'msg' => 'Usuario creado',
-                 'categorias'=> view('categoria/select_categorias',[
-                    'codigo_categoria'=>$consecutivos_categoria['numeroconsecutivo'],
-                    'categorias'=>$categorias
-                 ])
-            ]);
+                echo json_encode([
+                    'code' => 1,
+                    'msg' => 'Usuario creado',
+                    'categorias' => view('categoria/select_categorias', [
+                        'codigo_categoria' => $consecutivos_categoria['numeroconsecutivo'],
+                        'categorias' => $categorias
+                    ])
+                ]);
             }
         }
     }
@@ -232,7 +234,7 @@ class categoriaController extends BaseController
 
     function editar_marca()
     {
-       $id_marca = $this->request->getPost('id');
+        $id_marca = $this->request->getPost('id');
         $nombre_marca = model('marcasModel')->select('nombremarca')->where('idmarca', $id_marca)->first();
         if (!empty($nombre_marca)) {
             return view('marcas/datosIniciales', [
@@ -242,12 +244,13 @@ class categoriaController extends BaseController
         }
     }
 
-    function actualizar_marca(){
+    function actualizar_marca()
+    {
         $id_marca = $this->request->getPost('id');
         $nombre_marca = $this->request->getPost('nombre');
 
-        $data=[
-           'nombremarca'=>$nombre_marca
+        $data = [
+            'nombremarca' => $nombre_marca
         ];
 
         $marca = model('marcasModel');
@@ -260,14 +263,66 @@ class categoriaController extends BaseController
         return redirect()->to(base_url('categoria/marcas'))->with('mensaje', 'Actualizacion correcta  ');
     }
 
-    function sub_categoria(){
-        $data=[
-            'nombre'=>$this->request->getPost('nombre_categoria')
+    function sub_categoria()
+    {
+        $data = [
+            'nombre' => $this->request->getPost('nombre_categoria'),
+            'id_categoria' => $this->request->getPost('categoria')
         ];
 
-        $insert= model('subCategoriaModel')->insert($data);
+        $insert = model('subCategoriaModel')->insert($data);
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
         return redirect()->to(base_url('configuracion/crear_sub_categoria'))->with('mensaje', 'Subcategoria creada  ');
+    }
+
+
+    function actualizar_sub_categoria()
+    {
+
+        //echo $this->request->getPost('opcion'); exit();
+        $data = [
+            'subcategoria' => $this->request->getPost('opcion')
+        ];
+
+        $model = model('categoriasModel');
+        $categorias = $model->set($data);
+        $categorias = $model->where('codigocategoria', $this->request->getPost('id_categoria'));
+        $categorias = $model->update();
+
+        if ($categorias) {
+
+            $categorias = model('categoriasModel')->select('codigocategoria');
+            $categorias = model('categoriasModel')->select('permitir_categoria');
+            $categorias = model('categoriasModel')->select('impresora');
+            $categorias = model('categoriasModel')->select('subcategoria');
+            $categorias = model('categoriasModel')->select('nombrecategoria')->orderBy('codigocategoria', 'asc')->find();
+            $impresoras = model('impresorasModel')->select('*')->find();
+
+
+            $returnData = array(
+                "resultado" => 0, //No hay pedido 
+                "categorias" => view('categoria/tabla_categorias', [
+                    'categorias' => $categorias,
+                    'impresoras' => $impresoras
+                ])
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+    function consulta_sub_categoria()
+    {
+        $id_categoria = $this->request->getPost('id_categoria');
+        //$id_categoria=1; 
+
+        $sub_categoria = model('categoriasModel')->select('subcategoria')->where('id', $id_categoria)->first();
+
+
+        $returnData = array(
+            "resultado" => 1, //No hay pedido 
+            "sub_categoria" => $sub_categoria['subcategoria']
+        );
+        echo  json_encode($returnData);
     }
 }

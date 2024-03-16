@@ -11,6 +11,7 @@ use App\Controllers\BaseController;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use App\Libraries\impresion;
 
 class cajaController extends BaseController
 {
@@ -246,7 +247,7 @@ class cajaController extends BaseController
                         'idcierre' => $id_cierre,
                         'idpago' => 4,
                         //'valor' => $transaccion,
-                        'valor' => $numero = 0
+                        'valor' => 0
                     ];
                     $cierre_transaccion = model('cierreFormaPagoModel')->insert($cierre_forma_pago_transaccion);
                     if ($cierre_efectivo and $cierre_transaccion) {
@@ -293,6 +294,26 @@ class cajaController extends BaseController
             echo  json_encode($returnData);
         }
     }
+
+    /*     function imprimir_cierre()
+    {
+        $id_cierre = $_REQUEST['id_cierre'];
+        $existe_cierre = model('cierreModel')->select('id')->where('id', $id_cierre)->first();
+        if (!empty($existe_cierre['id'])) {
+            $id_apert = model('cierreModel')->select('idapertura')->where('id', $id_cierre)->first();
+
+            $imp = new impresion();
+
+            $impresion = $imp->imprimir_cuadre_caja($id_apert['idapertura']);
+
+            $returnData = array(
+                "resultado" => 1,
+                "id_cierre"=>$id_cierre
+            );
+            echo  json_encode($returnData);
+        }
+    } */
+
 
     function imprimir_cierre()
     {
@@ -528,8 +549,8 @@ class cajaController extends BaseController
             $printer->text("(-) Total retiros: " . "$" . number_format($total_retiros, 0, ",", ".") . "\n");
             $printer->text("(-) Total devoluciones:" . "$" . number_format($total_devoluciones, 0, ",", ".") . "\n");
 
-           # $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
-           // $tot_en_caja = $temp - $total_retiros;
+            # $temp = $ingresos_efectivo[0]['ingresos_efectivo'] + $valor_apertura['valor'];
+            // $tot_en_caja = $temp - $total_retiros;
             $tot_en_caja =  $total_retiros;
             $total_en_caja = $tot_en_caja - $total_devoluciones;
 
@@ -1006,12 +1027,12 @@ class cajaController extends BaseController
         }
     }
 
-    function imp_movimiento_caja()
+    /*   function imp_movimiento_caja()
     {
 
 
-        $id_cierre = $this->request->getPost('id_cierre');
-        //$id_cierre = 4952;
+        echo $id_cierre = $this->request->getPost('id_cierre'); exit();
+        //$id_cierre = 2;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -1187,7 +1208,7 @@ class cajaController extends BaseController
 
         //dd($valor_cierre_efectivo_usuario);
 
-       // $id_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura['idapertura'])->first();
+        // $id_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura['idapertura'])->first();
 
         $valor_cierre_efectivo_usuario = model('cierreFormaPagoModel')->cierre_efectivo($id_cierre);
 
@@ -1198,7 +1219,7 @@ class cajaController extends BaseController
         if (!empty($valor_cierre_efectivo_usuario)) {
             $cierre_usuario =  $valor_cierre_efectivo_usuario[0]['valor'];
         }
-        
+
         $printer->text("Cierre efectivo:  " . "       $ " . number_format($cierre_usuario, 0, ",", ".") . "\n");
         //$printer->text("Diferencia efectivo   " . "   $ " . number_format($cierre_usuario - $total_en_caja, 0, ",", ".")   . "\n");
         $printer->text("Diferencia efectivo  " . "    $ " . number_format(($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor']) - $cierre_usuario, 0, ",", ".") . "\n");
@@ -1206,7 +1227,7 @@ class cajaController extends BaseController
         //$ingresos_transaccion = model('facturaFormaPagoModel')->ingresos_efectivo($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre['fecha_y_hora_cierre']);
         $valor_cierre_transaccion_usuario = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre);
 
-       
+
 
         if (empty($ingresos_transaccion)) {
             $transaccion = 0;
@@ -1217,7 +1238,7 @@ class cajaController extends BaseController
 
         $printer->text("Transacciones: \n");
         $valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre);
-        
+
         if (empty($valor_cierre_transaccion_usuari)) {
             $valor_cierre_transaccion_usuario = 0;
         }
@@ -1225,7 +1246,7 @@ class cajaController extends BaseController
             $valor_cierre_transaccion_usuario = $valor_cierre_transaccion_usuari[0]['valor'];
         }
         $printer->text("Cierre transacciones  " . "   $ " .  number_format($transaccion, 0, ",", ".") .  "\n");
-        
+
         //$printer->text("Diferencia transaccion  " . " $ " . number_format($valor_cierre_transaccion_usuario - $transaccion, 0, ",", ".") . "\n");
 
 
@@ -1234,7 +1255,7 @@ class cajaController extends BaseController
         $printer->text("\n");
 
 
-
+        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor']) - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
 
         $printer->feed(1);
         $printer->cut();
@@ -1246,8 +1267,28 @@ class cajaController extends BaseController
         );
         echo  json_encode($returnData);
 
-        /* if (empty($tiene_cierre)) {
+         if (empty($tiene_cierre)) {
             $this->imprimir_movimiento_caja_sin_cierre($id_apertura);
-        } */
+        } 
+    } */
+
+
+    function imp_movimiento_caja()
+    {
+        $id_cierre = $_REQUEST['id_cierre'];
+        $existe_cierre = model('cierreModel')->select('id')->where('id', $id_cierre)->first();
+        if (!empty($existe_cierre['id'])) {
+            $id_apert = model('cierreModel')->select('idapertura')->where('id', $id_cierre)->first();
+
+            $imp = new impresion();
+
+            $impresion = $imp->imprimir_cuadre_caja($id_apert['idapertura']);
+
+            $returnData = array(
+                "resultado" => 1,
+                "id_cierre" => $id_cierre
+            );
+            echo  json_encode($returnData);
+        }
     }
 }

@@ -9,7 +9,7 @@ class subCategoriaModel extends Model
     protected $table      = 'sub_categoria';
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
-    protected $allowedFields = ['nombre'];
+    protected $allowedFields = ['nombre','id_categoria'];
 
     public function get_productos($id_subcategoria)
     {

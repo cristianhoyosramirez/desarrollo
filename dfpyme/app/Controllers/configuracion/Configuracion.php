@@ -131,8 +131,15 @@ class Configuracion extends BaseController
     function crear_sub_categoria()
     {
         $sub_categorias = model('subCategoriaModel')->find();
+
+        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
+
+        $id_categorias = model('categoriasModel')->sub_categorias();
+
+
         return view('configuracion/sub_categoria', [
-            'sub_categorias' => $sub_categorias
+            'id_categorias' => $sub_categorias,
+            'categorias' => $categorias
         ]);
     }
 
@@ -142,10 +149,15 @@ class Configuracion extends BaseController
 
         $subcategoria = model('subCategoriaModel')->where('id', $id_categoria)->first();
 
+        $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
+
+
         $returnData = array(
             "resultado" => 1,
             "subcategoria" => view('configuracion/editar_sub_categoria', [
-                'subcategoria' => $subcategoria
+                'subcategoria' => $subcategoria,
+                'categorias' => $categorias,
+                'id_categoria' => $id_categoria
             ])
 
         );
@@ -156,11 +168,13 @@ class Configuracion extends BaseController
     function actualizar_sub_categoria()
     {
         $id_categoria = $this->request->getPost('valor');
+        $categoria = $this->request->getPost('categoria');
         //$id_categoria = 'true';
         $nombre = $this->request->getPost('nombre');
 
         $model = model('subCategoriaModel');
         $actualizar = $model->set('nombre', $nombre);
+        $actualizar = $model->set('id_categoria', $categoria);
         $actualizar = $model->where('id', $id_categoria);
         $actualizar = $model->update();
 
@@ -312,7 +326,7 @@ class Configuracion extends BaseController
 
         $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
 
-    
+
 
         $datos = $this->db->query($sql_data)->getResultArray();
         $data = [];

@@ -52,8 +52,8 @@
 
           <div class="col-md-3">
             <label for="">Categoria</label>
-            <select class="form-select" id="categoria_product" name="categoria_producto" onclick="categorias_productos()" onkeyup="saltar_creacion_producto(event,'marca_producto')">
-
+            <select class="form-select" id="categoria_product" name="categoria_producto" onchange="sub_categorias_productos(this.value)" onkeyup="saltar_creacion_producto(event,'marca_producto')">
+              <option value="">Seleccione una categoria</option>
               <?php foreach ($categorias as $valor) { ?>
 
                 <option value="<?php echo $valor['codigocategoria'] ?>"><?php echo $valor['nombrecategoria'] ?> </option>
@@ -73,22 +73,22 @@
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg></button>
           </div>
-          <?php $sub_categoria = model('configuracionPedidoModel')->select('sub_categoria')->first(); ?>
-          <?php if ($sub_categoria['sub_categoria'] == 't') { ?>
-            <div class="col-md-3">
-              <label for="">Sub categoria</label>
-              <select class="form-select" id="sub_categoria" name="sub_categoria">
-                <option value="">Seleccione una sub categoria </option>
-                <?php foreach ($sub_categorias as $valor) { ?>
 
-                  <option value="<?php echo $valor['id'] ?>"><?php echo $valor['nombre'] ?> </option>
+          <div class="col-md-3" id="div_sub_categoria" style="display:none">
+            <input type="hidden" id="requiere_categoria" value=0>
+            <label for="">Sub categoria</label>
+            <select class="form-select" id="sub_categoria" name="sub_categoria">
+              <option value="">Seleccione una sub categoria </option>
+              <?php foreach ($sub_categorias as $valor) { ?>
 
-                <?php } ?>
-              </select>
+                <option value="<?php echo $valor['id'] ?>"><?php echo $valor['nombre'] ?> </option>
 
-              <span class="text-danger error-text categoria_producto_error"></span>
-            </div>
-          <?php } ?>
+              <?php } ?>
+            </select>
+
+            <span class="text-danger error-text categoria_producto_error"></span>
+          </div>
+
 
 
 
@@ -247,6 +247,34 @@
   </div>
 </div>
 
+<script>
+  function sub_categorias_productos(id_categoria) {
+    var url = document.getElementById("url").value;
+    $.ajax({
+      data: {
+        id_categoria
+      },
+      url: url +
+        "/" +
+        "categoria/consulta_sub_categoria",
+      type: "post",
+      success: function(resultado) {
+        var resultado = JSON.parse(resultado);
+        if (resultado.resultado == 1) {
+
+          if (resultado.sub_categoria == 't') {
+            $("#div_sub_categoria").show();
+            $("#requiere_categoria").val(1);
+
+          }
+
+
+
+        }
+      },
+    });
+  }
+</script>
 
 <script>
   function cancelar_creacion_producto() {
@@ -259,7 +287,7 @@
     $(".valor_venta_producto_error").html("");
     $('#categoria_producto').val(null).trigger('change');
     $('#marca_producto').val(null).trigger('change');
-    
+
     $('#crear_producto_codigo_interno').val('');
 
     $('#crear_producto_codigo_de_barras').val('');
@@ -282,9 +310,20 @@
 <script>
   function mandar() {
     // Obtén el elemento <button> que deseas cambiar
-    var buttonElement = document.getElementById("btn_crear_producto");
-    // Cambia el tipo del botón a "submit"
-    buttonElement.type = "submit";
+
+
+
+    var sub_categoria = document.getElementById("requiere_categoria");
+
+    if (sub_categoria == 1) {
+
+    }
+
+    if (sub_categoria == 0) {
+      var buttonElement = document.getElementById("btn_crear_producto");
+      // Cambia el tipo del botón a "submit"
+      buttonElement.type = "submit";
+    }
   }
 </script>
 <script>
