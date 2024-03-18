@@ -64,6 +64,20 @@
                 </svg></button>
         </div>
 
+        <div class="col-md-3" id="div_sub_categoria" style="display:display">
+            <input type="hidden" id="requiere_categoria" value=0>
+            <label for="">Sub categoria</label>
+            <select class="form-select" id="sub_categoria" name="sub_categoria">
+                <option value="">Seleccione una sub categoria </option>
+                <?php #foreach ($sub_categorias as $valor) { ?>
+                    <option value="<?php #echo $valor['id'] ?>"><?php #echo $valor['nombre'] ?> </option>
+
+                <?php #} ?>
+            </select>
+
+            <span class="text-danger " id="error_sub_categoria"></span>
+        </div>
+
 
         <div class="col-md-3">
             <label for="">Marca</label>
@@ -153,7 +167,7 @@
             <label for="inputPassword4" class="form-label">Valor IVA </label>
             <select class="form-select" id="valor_iva" name="valor_iva">
                 <?php foreach ($iva as $detalle) { ?>
-                    <option value="<?php echo $detalle['idiva'] ?>" <?php if ($detalle['idiva'] == $id_iva) : ?>selected <?php endif; ?>><?php echo $detalle['valoriva']. "-" . $detalle['conceptoiva']  ?> </option>
+                    <option value="<?php echo $detalle['idiva'] ?>" <?php if ($detalle['idiva'] == $id_iva) : ?>selected <?php endif; ?>><?php echo $detalle['valoriva'] . "-" . $detalle['conceptoiva']  ?> </option>
                 <?php } ?>
             </select>
         </div>
@@ -176,7 +190,7 @@
             <label for="inputPassword4" class="form-label">Valor IVA </label>
             <select class="form-select" id="valor_iva" name="valor_iva">
                 <?php foreach ($iva as $detalle) { ?>
-                    <option value="<?php echo $detalle['idiva'] ?>" selected><?php echo $detalle['valoriva']. "-" . $detalle['conceptoiva']  ?></option>
+                    <option value="<?php echo $detalle['idiva'] ?>" selected><?php echo $detalle['valoriva'] . "-" . $detalle['conceptoiva']  ?></option>
                 <?php } ?>
             </select>
         </div>
@@ -191,7 +205,7 @@
         </div>
     <?php } ?>
 
-<!--     <div class="col-md-3">
+    <!--     <div class="col-md-3">
         <label for="inputPassword4" class="form-label">Tipo impuesto saludable </label>
         <select class="form-select" id="impuesto_saludable" name="impuesto_saludable">
 

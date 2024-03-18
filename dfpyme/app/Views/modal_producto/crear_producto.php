@@ -86,7 +86,7 @@
               <?php } ?>
             </select>
 
-            <span class="text-danger error-text categoria_producto_error"></span>
+            <span class="text-danger " id="error_sub_categoria"></span>
           </div>
 
 
@@ -312,18 +312,30 @@
     // Obtén el elemento <button> que deseas cambiar
 
 
+    var requiere_sub_categoria = document.getElementById("requiere_categoria").value;
 
-    var sub_categoria = document.getElementById("requiere_categoria");
 
-    if (sub_categoria == 1) {
+    if (requiere_sub_categoria == 1) {
+      var sub_categoria = document.getElementById("sub_categoria").value;
+      if (sub_categoria === "") {
+        $('#error_sub_categoria').html('Debe seleccionar una subcategoria');
+      }
+      if (sub_categoria !== "") {
+        var buttonElement = document.getElementById("btn_crear_producto");
+        // Cambia el tipo del botón a "submit"
+        buttonElement.type = "submit";
+      }
+
 
     }
 
-    if (sub_categoria == 0) {
+    if (requiere_sub_categoria == 0) {
       var buttonElement = document.getElementById("btn_crear_producto");
       // Cambia el tipo del botón a "submit"
       buttonElement.type = "submit";
     }
+
+
   }
 </script>
 <script>

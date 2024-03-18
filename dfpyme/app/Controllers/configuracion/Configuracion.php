@@ -134,11 +134,14 @@ class Configuracion extends BaseController
 
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
+       
+
         $id_categorias = model('categoriasModel')->sub_categorias();
 
+      
 
         return view('configuracion/sub_categoria', [
-            'id_categorias' => $sub_categorias,
+            'id_categorias' => $id_categorias,
             'categorias' => $categorias
         ]);
     }
@@ -245,11 +248,13 @@ class Configuracion extends BaseController
         $descripcion = $this->request->getPost('descripcion');
         $estado = $this->request->getPost('estado');
         $orden = $this->request->getPost('orden');
+        $consulta = $this->request->getPost('consulta');
 
         $data = [
             'descripcionestado' => $descripcion,
             'estado' => $estado,
-            'orden' => $orden
+            'orden' => $orden,
+            'consulta'=>$consulta
         ];
 
         //var_dump($data);  exit();

@@ -6,6 +6,9 @@ function habilitarBotonPago() {
 
     if (select == 8) {
 
+      /*   $('#nombre_cliente').val('');
+        $('#nit_cliente').val('');
+
         if (nit_cliente == 22222222) {
 
             $('#nombre_cliente').val('222222222222 CONSUMIDOR FINAL');
@@ -14,9 +17,10 @@ function habilitarBotonPago() {
         }
 
         if (nit_cliente != 22222222) {
+
             $('#nombre_cliente').val(nit_cliente + " " + nombre_cliente)
             $('#nit_cliente').val(nit_cliente);
-        }
+        } */
     }
 
     if (select == 2) {

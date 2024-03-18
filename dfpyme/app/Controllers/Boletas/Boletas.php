@@ -654,7 +654,7 @@ class Boletas extends BaseController
     {
 
 
-        $estado = model('estadoModel')->where('estado', 'true')->orderBy('orden', 'asc')->findAll();
+        $estado = model('estadoModel')->consultar_ventas();
 
         //$estado = model('estadoModel')->findAll();
 

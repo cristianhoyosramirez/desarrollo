@@ -92,7 +92,7 @@
                   </div>
                   <div class="row mb-2">
                     <label for="inputEmail3" class="col-sm-4 col-form-label">Documento</label>
-                    <?php $estados = model('estadoModel')->where('estado', 'true')->findAll(); ?>
+                    <?php $estados = model('estadoModel')->estados(); ?>
                     <div class="col-sm-8">
                       <select class="form-select" id="documento" name="documento" onchange="habilitarBotonPago()">
                         <?php foreach ($estados as $detalle) { ?>

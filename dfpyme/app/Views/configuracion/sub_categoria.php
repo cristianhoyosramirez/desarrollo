@@ -26,6 +26,7 @@ HOME
 </div>
 
 
+
 <div class="container">
     <br>
     <div id="all_subcategorias">
@@ -39,15 +40,16 @@ HOME
                 </tr>
             </thead>
             <tbody>
-
+                 
+            
                 <?php foreach ($id_categorias as $detalle) {
                     $sub_categorias = model('subCategoriaModel')->where('id_categoria', $detalle['id_categoria'])->findAll();
                     $nombre_categoria = model('categoriasModel')->select('nombrecategoria')->where('id', $detalle['id_categoria'])->first();
                 ?>
 
                     <tr class="table-primary">
-                        
-                        <td><?php echo " Categoria: ".$nombre_categoria['nombrecategoria'] ?></td>
+
+                        <td><?php echo " Categoria: " . $nombre_categoria['nombrecategoria'] ?></td>
                         <td></td>
                     </tr>
 
@@ -91,7 +93,9 @@ HOME
                             <div class="col">
                                 <label for="" class="form-label">Categoria </label>
                                 <select class="form-select" aria-label="Default select example" id="categoria" name="categoria">
-                                    >
+                                    <?php foreach ($categorias as $detalle) : ?>
+                                        <option value="<?php echo $detalle['id'] ?>"><?php echo $detalle['nombrecategoria'] ?></option>
+                                    <?php endforeach ?>
                                 </select>
                             </div>
                             <div class="col">
@@ -143,7 +147,7 @@ HOME
         var url = document.getElementById("url").value;
         var nombre = document.getElementById("nombre_categoria").value;
         var categoria = document.getElementById("nombre_categoria_edicion").value;
-        
+
         $.ajax({
             data: {
                 valor,

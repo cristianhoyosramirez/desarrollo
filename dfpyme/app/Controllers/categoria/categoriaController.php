@@ -271,6 +271,15 @@ class categoriaController extends BaseController
         ];
 
         $insert = model('subCategoriaModel')->insert($data);
+
+
+        $model = model('categoriasModel');
+        $categoria = $model->set('subcategoria','true');
+        $categoria = $model->where('id', $this->request->getPost('categoria'));
+        $categoria = $model->update();
+
+
+
         $session = session();
         $session->setFlashdata('iconoMensaje', 'success');
         return redirect()->to(base_url('configuracion/crear_sub_categoria'))->with('mensaje', 'Subcategoria creada  ');

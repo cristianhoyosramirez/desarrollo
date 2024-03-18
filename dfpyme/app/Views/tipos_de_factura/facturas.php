@@ -81,6 +81,7 @@ DFpyme
         // var descripcion = $("#nombre" + id_estado).val();
         var estado = document.getElementById("estado" + id_estado).value;
         var orden = document.getElementById("orden" + id_estado).value;
+        var consulta = document.getElementById("consulta" + id_estado).value;
 
 
         $.ajax({
@@ -88,7 +89,8 @@ DFpyme
                 id_estado,
                 descripcion,
                 estado,
-                orden
+                orden,
+                consulta
             },
             url: url + "/" + "configuracion/actualizar_estado",
             type: "POST",
