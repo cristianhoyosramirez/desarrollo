@@ -829,7 +829,7 @@ class Mesas extends BaseController
     {
 
         $numer_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $this->request->getPost('id_mesa'))->first();
-        $numero_pedido = $numer_pedido['id'];
+         $numero_pedido = $numer_pedido['id'];
 
         $id_usuario = model('pedidoModel')->select('fk_usuario')->where('id', $numero_pedido)->first();
 
@@ -837,6 +837,8 @@ class Mesas extends BaseController
 
         $id_de_usuario = $this->request->getPost('id_usuario');
         $permiso_eliminar = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_de_usuario)->first();
+
+      
 
         // if (!empty($permiso_eliminar['idusuario_sistema'])) {
 
@@ -846,9 +848,10 @@ class Mesas extends BaseController
         $valor_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
 
         $fecha_creacion = model('pedidoModel')->select('fecha_creacion')->where('id', $numero_pedido)->first();
-        $items = model('productoPedidoModel')->productos_pedido($numero_pedido);
+        $items = model('productoPedidoModel')->productos_borrar($numero_pedido);
 
         if ($permiso_eliminar['idtipo'] == 1 || $permiso_eliminar['idtipo'] == 0) {
+
             $pedido_borrado = [
                 'numero_pedido' => $numero_pedido,
                 'valor_pedido' => $valor_pedido['valor_total'],
@@ -860,6 +863,8 @@ class Mesas extends BaseController
             ];
 
             $insert = model('eliminacionPedidosModel')->insert($pedido_borrado);
+
+          
 
             foreach ($items as $detalle) {
                 $producto = [

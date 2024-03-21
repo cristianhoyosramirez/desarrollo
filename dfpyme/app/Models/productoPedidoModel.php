@@ -84,6 +84,27 @@ class productoPedidoModel extends Model
     return $datos->getResultArray(); 
        
     }
+    public function productos_borrar($numero_pedido)
+    {
+        $datos =$this->db->query ("
+        SELECT
+             producto_pedido.id as id,
+             producto.nombreproducto,
+             producto.valorventaproducto,
+             valor_total,
+             cantidad_producto,
+             nota_producto,
+             valor_unitario,
+             producto_pedido.codigointernoproducto,
+             numero_productos_impresos_en_comanda
+        FROM
+             producto_pedido
+        INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
+        where numero_de_pedido='$numero_pedido' ;
+        ");
+    return $datos->getResultArray(); 
+       
+    }
     public function productos_pedido_comanda($numero_pedido,$codigo_categoria)
     {
         $datos =$this->db->query ("

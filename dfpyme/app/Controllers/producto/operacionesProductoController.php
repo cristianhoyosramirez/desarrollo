@@ -579,8 +579,12 @@ class operacionesProductoController extends BaseController
         $valor_impuesto_saludable = model('productoModel')->select('valor_impuesto_saludable')->where('codigointernoproducto', $id_producto)->first();
         $codigo_barras = model('productoModel')->select('codigobarrasproducto')->where('codigointernoproducto', $id_producto)->first();
 
-        $sub_categoria=model('categoriasModel')->select('subcategoria')->where('codigocategoria',$id_categoria['codigocategoria'])->first();
+        $sub_categoria = model('categoriasModel')->select('subcategoria')->where('codigocategoria', $id_categoria['codigocategoria'])->first();
 
+
+        $sub_categorias=model('subCategoriaModel')->findAll();
+
+    
         $returnData = array(
             "resultado" => 1,
             "edicion_producto" => view('producto/editar_producto', [
@@ -602,7 +606,9 @@ class operacionesProductoController extends BaseController
                 'impuesto_saludable' => $impuesto_saludable,
                 'valor_impuesto_saludable' => number_format($valor_impuesto_saludable['valor_impuesto_saludable'], 0, ",", "."),
                 'codigo_barras' => $codigo_barras['codigobarrasproducto'],
-                'sub_categoria'=>$sub_categoria['subcategoria']
+                'sub_categoria' => $sub_categoria['subcategoria'],
+                'sub_categorias'=>$sub_categorias
+
             ])
         );
         echo  json_encode($returnData);

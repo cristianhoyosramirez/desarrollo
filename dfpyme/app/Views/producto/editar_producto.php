@@ -48,7 +48,9 @@
             <select class="form-select" id="editar_categoria_producto" name="edicion_de_categoria_producto" onkeyup="saltar_creacion_producto(event,'marca_producto')">
 
                 <?php foreach ($categorias as $detalle) { ?>
+
                     <option value="<?php echo $detalle['codigocategoria'] ?>" <?php if ($detalle['codigocategoria'] == $id_categoria) : ?>selected <?php endif; ?>><?php echo $detalle['nombrecategoria'] ?> </option>
+
                 <?php } ?>
             </select>
 
@@ -64,20 +66,30 @@
                 </svg></button>
         </div>
 
-        <div class="col-md-3" id="div_sub_categoria" style="display:display">
-            <input type="hidden" id="requiere_categoria" value=0>
-            <label for="">Sub categoria</label>
-            <select class="form-select" id="sub_categoria" name="sub_categoria">
-                <option value="">Seleccione una sub categoria </option>
-                <?php #foreach ($sub_categorias as $valor) { ?>
-                    <option value="<?php #echo $valor['id'] ?>"><?php #echo $valor['nombre'] ?> </option>
+        <?php if ($sub_categoria == 't') : ?>
 
-                <?php #} ?>
-            </select>
+            <?php $id_sub_categoria = model('productoModel')->select('id_subcategoria')->where('codigointernoproducto', $codigo_interno_producto)->first();
 
-            <span class="text-danger " id="error_sub_categoria"></span>
-        </div>
 
+
+
+            ?>
+
+            <div class="col-md-3" id="div_sub_categoria">
+                <input type="hidden" id="requiere_categoria" value=0>
+                <label for="">Sub categoria</label>
+                <select class="form-select" id="sub_categoria" name="sub_categoria">
+                    <option value="">Seleccione una sub categoria </option>
+                    <?php foreach ($sub_categorias as $valor) { ?>
+
+                        <option value="<?php echo $valor['id'] ?>" <?php if ($valor['id'] == $id_sub_categoria['id_subcategoria']) : ?>selected <?php endif; ?>><?php echo $valor['nombre'] ?> </option>
+
+                    <?php } ?>
+                </select>
+
+                <span class="text-danger " id="error_sub_categoria"></span>
+            </div>
+        <?php endif ?>
 
         <div class="col-md-3">
             <label for="">Marca</label>

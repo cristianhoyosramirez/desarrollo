@@ -116,7 +116,7 @@ class Inventarios extends BaseController
 
     function productos_borrados()
     {
-        $id_pedido = $this->request->getPost('valor');
+         $id_pedido = $this->request->getPost('valor');
 
         $productos = model('productosBorradosModel')->get_productos_borrados($id_pedido);
 
