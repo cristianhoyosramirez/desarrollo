@@ -116,7 +116,7 @@ class Inventarios extends BaseController
 
     function productos_borrados()
     {
-         $id_pedido = $this->request->getPost('valor');
+        $id_pedido = $this->request->getPost('valor');
 
         $productos = model('productosBorradosModel')->get_productos_borrados($id_pedido);
 
@@ -266,17 +266,12 @@ class Inventarios extends BaseController
             $condition .= " OR cliente.nombrescliente ILIKE '%" . $valor_buscado . "%'";
             $condition .= " OR factura_venta.nitcliente ILIKE '%" . $valor_buscado . "%'";
             $condition .= " OR numerofactura_venta ILIKE '%" . $valor_buscado . "%'";
-            // $condition .= " OR fecha_factura_venta BETWEEN " . "'$valor_buscado'" . " AND " . "'$valor_buscado'";
         }
 
         $sql_count = $temp_sql_count;
         $sql_data = $temp_sql_data;
-        //$sql_sum = $temp_sql_sum;
         $sql_count = $sql_count . $condition;
         $sql_data = $sql_data . $condition;
-        // $sql_sum = $sql_sum . $condition;
-        //dd($sql_data);
-        //$saldo = $this->db->query($sql_sum)->getRow();
         $total_count = $this->db->query($sql_count)->getRow();
         $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
 
@@ -312,58 +307,148 @@ class Inventarios extends BaseController
                 $data[] = $sub_array;
             }
 
-            //$saldo = model('facturaVentaModel')->saldo($fecha_inicial, $fecha_final);
 
             $json_data = [
-                //'draw' => intval($this->request->getGEt(index: 'draw')),
                 'draw' => intval($this->request->getGEt(index: 'draw')),
                 'recordsTotal' => $total_count->total,
                 'recordsFiltered' => $total_count->total,
-                //'saldo' => 'SALDO:  ' . number_format($saldo[0]['saldo'], 0, ",", "."),
                 'data' => $data,
-
-
             ];
 
             echo  json_encode($json_data);
-        } /* else {
-            $sub_array = array();
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $sub_array[] = 'NO HAY DATOS ';
-            $data[] = $sub_array;
-            $json_data = [
-                //'draw' => intval($this->request->getGEt(index: 'draw')),
-                'draw' => intval($this->request->getGEt(index: 'draw')),
-                'recordsTotal' => 0,
-                'recordsFiltered' => 0,
-                'data' => $data,
-
-            ];
-            echo  json_encode($json_data);
-        } */
+        }
     }
 
-    function exportar_excel(){
+    function exportar_excel()
+    {
 
 
-       $productos = model('productoModel')->get_todos_productos();
-       
-       $datos_empresa=model('empresaModel')->findAll();
-        
-      
-        return view('inventarios/excel',[
-            'productos'=>$productos,
-            'datos_empresa'=>$datos_empresa
+        $productos = model('productoModel')->get_todos_productos();
+
+        $datos_empresa = model('empresaModel')->findAll();
+
+
+        return view('inventarios/excel', [
+            'productos' => $productos,
+            'datos_empresa' => $datos_empresa
         ]);
+    }
+    function reporte_ventas()
+    {
+        model('reporteProductoModel')->truncate();
+        $fecha_inicial = $this->request->getPost('fecha_inicial');
+        $fecha_final = $this->request->getPost('fecha_final');
+
+        // $fecha_inicial = "2024-03-01";
+        //$fecha_final = "2024-03-30";
+
+        $inicial = $fecha_inicial;
+        $final = $fecha_final;
+
+        if (empty($fecha_inicial) &&  empty($fecha_final)) {
+
+            $min_id = model('pagosModel')->selectMin('id')->first();
+            $max_id = model('pagosModel')->selectMax('id')->first();
+
+            $temp_fecha_ini = model('pagosModel')->select('fecha')->where('id', $min_id['id'])->first();
+            $temp_fecha_fin = model('pagosModel')->select('fecha')->where('id', $max_id['id'])->first();
+
+            $inicial = $temp_fecha_ini['fecha'];
+            $final = $temp_fecha_fin['fecha'];
+        }
+
+        $resultado = model('kardexModel')->resultado_suma_entre_fechas($inicial, $final);
+
+        if (!empty($resultado)) {
+
+            $validar_tabla_reporte_producto = model('reporteProductoModel')->findAll();
+            $categorias = model('productoFacturaVentaModel')->kardex_categorias($inicial, $final);
 
 
+            $devoluciones = model('devolucionModel')->resutado_suma_entre_fechas($inicial, $final);
+            $total_devoluciones = model('devolucionModel')->total($inicial, $final);
 
+            if (empty($validar_tabla_reporte_producto)) {
+
+                foreach ($resultado as $detalle) {
+                    $productos_suma = model('kardexModel')->reporte_suma_cantidades($inicial, $final, $detalle['total'], $detalle['codigo']);
+                    $nombre_producto = model('productoModel')->select('nombreproducto')->where('codigointernoproducto', $detalle['codigo'])->first();
+                    $codigocategoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigo'])->first();
+
+                    $data = [
+                        'cantidad' => round($productos_suma[0]['cantidad']),
+                        'nombre_producto' => $nombre_producto['nombreproducto'],
+                        'precio_venta' => round($productos_suma[0]['total'] / $productos_suma[0]['cantidad']),
+                        'valor_total' => $productos_suma[0]['total'],
+                        'id_categoria' => $codigocategoria['codigocategoria'],
+                        'codigo_interno_producto' => $detalle['codigo']
+                    ];
+                    $insert = model('reporteProductoModel')->insert($data);
+                }
+            }
+            $productos = view('producto/datos_consulta_producto', [
+                //'datos_productos' => $resultado,
+                'categorias' => $categorias,
+                'fecha_inicial' => $inicial,
+                'fecha_final' => $final,
+                //'total' => "$" . number_format($total[0]['total'], 0, ",", "."),
+                'devoluciones' => $devoluciones,
+                'total_devoluciones' => "$" . number_format($total_devoluciones[0]['total'], 0, ",", "."),
+                'hora_inicial' => 0,
+                'hora_final' => 0
+            ]);
+
+
+            $returnData = [
+                'resultado' => 0,
+                'datos' => $productos
+            ];
+            echo json_encode($returnData);
+        } else if (empty($resultado)) {
+            $returnData = [
+                'resultado' => 2,
+                
+            ];
+            echo json_encode($returnData);
+        }
+    }
+
+    function export_pdf(){
+
+        $dompdf = new Dompdf();
+
+        $options = $dompdf->getOptions();
+
+        $options->set(array('isRemoteEnable' => true));
+        $dompdf->setOptions($options);
+
+        $id_categoria=model('reporteProductoModel')->categorias();
+
+        $datos_empresa = model('empresaModel')->find();
+        $id_regimen = $datos_empresa[0]['idregimen'];
+        $regimen = model('regimenModel')->select('nombreregimen')->where('idregimen', $id_regimen)->first();
+        $nombre_ciudad = model('ciudadModel')->select('nombreciudad')->where('idciudad', $datos_empresa[0]['idciudad'])->first();
+        $nombre_departamento = model('departamentoModel')->select('nombredepartamento')->where('iddepartamento', $datos_empresa[0]['iddepartamento'])->first();
+
+       //dd($datos_empresa);
+
+        $dompdf->loadHtml(view('reportes/pdf_producto', [
+            'categorias'=>$id_categoria,
+            'datos_empresa' => $datos_empresa,
+            'regimen' => $regimen['nombreregimen'],
+            'nombre_ciudad' => $nombre_ciudad['nombreciudad'],
+            'nombre_departamento' => $nombre_departamento['nombredepartamento'],
+            'nombre_comercial'=>$datos_empresa[0]['nombrecomercialempresa'],
+            'nombre_juridico'=>$datos_empresa[0]['nombrejuridicoempresa'],
+            'nit'=>$datos_empresa[0]['nitempresa'],
+            'nombre_regimen'=>$regimen['nombreregimen'],
+            'direccion'=>$datos_empresa[0]['direccionempresa'],
+
+        ]));
+        
+        $options = $dompdf->getOptions();
+        $dompdf->setPaper('letter');
+        $dompdf->render();
+        $dompdf->stream("Reporte de producto.pdf", array("Attachment" => true));
     }
 }

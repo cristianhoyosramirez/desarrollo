@@ -284,7 +284,7 @@
                   </svg>
                   Calculo propina
                 </a>
-                 <!--  <a class="dropdown-item" href="<?= base_url() ?>/configuracion/sub_categoria">
+                <!--  <a class="dropdown-item" href="<?= base_url() ?>/configuracion/sub_categoria">
                  Download SVG icon from http://tabler-icons.io/i/check 
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -644,13 +644,23 @@
                       <path d="M17 14l0 7"></path>
                       <path d="M13 13l0 8"></path>
                       <path d="M21 12l0 9"></path>
-                    </svg> Costo</a>
+                    </svg>De Costo</a>
                   <a href="<?= base_url() ?>/reportes/reportes_ventas" class="dropdown-item">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-currency-dollar" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" />
                       <path d="M12 3v3m0 12v3" />
-                    </svg> Ventas</a>
+                    </svg> De Ventas</a>
+                  <a href="<?= base_url() ?>/consultas_y_reportes/producto_agrupados" class="dropdown-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <circle cx="6" cy="19" r="2" />
+                      <circle cx="17" cy="19" r="2" />
+                      <path d="M17 17h-11v-14h-2" />
+                      <path d="M6 5l14 1l-1 7h-13" />
+                    </svg> Por Producto</a>
+
+  
                   <!--  -->
                   <!--  <a href="<?= base_url() ?>/consultas_y_reportes/consulta_cartera" class="dropdown-item">
 

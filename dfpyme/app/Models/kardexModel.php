@@ -263,7 +263,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function temp_categoria_productos($id_categoria,$id_apertura)
+    public function temp_categoria_productos($id_categoria, $id_apertura)
     {
         $datos = $this->db->query("
         SELECT kardex.codigo, SUM(kardex.cantidad) AS cantidad, producto.nombreproducto 
@@ -286,7 +286,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function total_venta_iva_5_costo($fecha_inicial,$fecha_final)  //Total de la venta con impuestos 
+    public function total_venta_iva_5_costo($fecha_inicial, $fecha_final)  //Total de la venta con impuestos 
     {
         $datos = $this->db->query("
         SELECT SUM (total) as total
@@ -297,7 +297,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function total_venta_iva_19_costo($fecha_inicial,$fecha_final)  //Total de la venta con impuestos 
+    public function total_venta_iva_19_costo($fecha_inicial, $fecha_final)  //Total de la venta con impuestos 
     {
         $datos = $this->db->query("
         SELECT SUM (total) as total
@@ -308,7 +308,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function total_venta_inc_costo($fecha_inicial,$fecha_final)  //Total de la venta con impuestos 
+    public function total_venta_inc_costo($fecha_inicial, $fecha_final)  //Total de la venta con impuestos 
     {
         $datos = $this->db->query("
         SELECT SUM (total) as total
@@ -343,7 +343,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function venta_iva_5_costo($fecha_inicial,$fecha_final)  // Total del valor del iva 5 % 
+    public function venta_iva_5_costo($fecha_inicial, $fecha_final)  // Total del valor del iva 5 % 
     {
         $datos = $this->db->query("
         SELECT SUM (iva) as iva
@@ -354,7 +354,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function venta_iva_19_costo($fecha_inicial,$fecha_final)  // Total del valor del iva 5 % 
+    public function venta_iva_19_costo($fecha_inicial, $fecha_final)  // Total del valor del iva 5 % 
     {
         $datos = $this->db->query("
         SELECT SUM (iva) as iva
@@ -365,7 +365,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function venta_inc_costo($fecha_inicial,$fecha_final)  // Total del valor del iva 5 % 
+    public function venta_inc_costo($fecha_inicial, $fecha_final)  // Total del valor del iva 5 % 
     {
         $datos = $this->db->query("
         SELECT SUM (ico) as inc
@@ -373,6 +373,34 @@ class kardexModel extends Model
         WHERE valor_ico= 8
         and 
         fecha between '$fecha_inicial' and '$fecha_final'
+        ");
+        return $datos->getResultArray();
+    }
+
+    public function resultado_suma_entre_fechas($fecha_inicial, $fecha_final)  // Total del valor del iva 5 % 
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT 
+                total,
+                codigo,
+                valor
+            FROM   kardex
+            WHERE  fecha BETWEEN '$fecha_inicial' AND '$fecha_final' and idcompra=0 and idconcepto=10
+        ");
+        return $datos->getResultArray();
+    }
+
+    public function reporte_suma_cantidades($fecha_inicial, $fecha_final, $valor_unitario, $codigointernoproducto)
+    {
+        $datos = $this->db->query("
+        SELECT SUM(total) as valor_total,
+            SUM(cantidad) as cantidad,
+            total
+        FROM   kardex
+        WHERE  fecha BETWEEN '$fecha_inicial' AND '$fecha_final'
+        AND total = $valor_unitario
+        AND codigo = '$codigointernoproducto' 
+        GROUP BY kardex.total
         ");
         return $datos->getResultArray();
     }

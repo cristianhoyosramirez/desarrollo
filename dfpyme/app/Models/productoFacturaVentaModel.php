@@ -504,6 +504,15 @@ class productoFacturaVentaModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function kardex_categorias($fecha_inicial, $fecha_final)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT id_categoria
+        FROM   kardex
+        WHERE  fecha BETWEEN '$fecha_inicial' AND '$fecha_final' AND id_categoria IS NOT NULL order by id_categoria; 
+        ");
+        return $datos->getResultArray();
+    }
     public function categorias_con_horas($fecha_inicial, $fecha_final)
     {
         $datos = $this->db->query("

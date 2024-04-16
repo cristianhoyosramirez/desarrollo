@@ -56,7 +56,126 @@
         <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
 
 
-       
+
+        <!-- 
+        <script>
+            $(function() {
+                var formatoFecha = "dd-mm-yy"; // Cambia el formato de fecha a "yy-mm-dd"
+
+                var desde = $("#fecha_inicial").datepicker({
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    changeYear: true,
+                    dateFormat: formatoFecha, // Establece el nuevo formato de fecha
+                    onClose: function(selectedDate) {
+                        hasta.datepicker("option", "minDate", selectedDate);
+                    }
+                });
+
+                var hasta = $("#fecha_final").datepicker({
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    changeYear: true,
+                    dateFormat: formatoFecha, // Establece el nuevo formato de fecha
+                    onClose: function(selectedDate) {
+                        desde.datepicker("option", "maxDate", selectedDate);
+                    }
+                });
+
+                // Funcionalidad para exportar a Excel y PDF
+                $('#exportarExcelBtn').click(function() {
+                    // Agrega tu código para exportar a Excel aquí
+                });
+
+                $('#exportarPdfBtn').click(function() {
+                    // Agrega tu código para exportar a PDF aquí
+                });
+            });
+        </script> -->
+
+        <script>
+            $(function() {
+                // Configuración regional en español para datepicker
+                $.datepicker.regional['es'] = {
+                    closeText: 'Cerrar',
+                    prevText: '< Ant',
+                    nextText: 'Sig >',
+                    currentText: 'Hoy',
+                    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+                    dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+                    weekHeader: 'Sm',
+                    dateFormat: 'dd/mm/yy',
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: ''
+                };
+
+                // Establecer los ajustes regionales por defecto para datepicker en español
+                $.datepicker.setDefaults($.datepicker.regional['es']);
+
+                // Inicializar el datepicker en el elemento con el id "fecha"
+                $("#fecha").datepicker();
+
+                // Configuración de datepicker para el rango de fechas
+                var dateFormat = "yy-mm-dd"; // Cambia el formato de fecha a "yy-mm-dd"
+
+                var desde = $("#fecha_inicial").datepicker({
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    changeYear: true,
+                    dateFormat: dateFormat, // Establece el nuevo formato de fecha
+                    onClose: function(selectedDate) {
+                        hasta.datepicker("option", "minDate", selectedDate);
+                    }
+                });
+
+                var hasta = $("#fecha_final").datepicker({
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    changeYear: true,
+                    dateFormat: dateFormat, // Establece el nuevo formato de fecha
+                    onClose: function(selectedDate) {
+                        desde.datepicker("option", "maxDate", selectedDate);
+                    }
+                });
+
+                // Funcionalidad para exportar a Excel y PDF
+                $('#exportarExcelBtn').click(function() {
+                    // Agrega tu código para exportar a Excel aquí
+                });
+
+                $('#exportarPdfBtn').click(function() {
+                    // Agrega tu código para exportar a PDF aquí
+                });
+            });
+        </script>
+
+
+
+        <script>
+            $("#periodo").select2({
+                width: "100%",
+                language: "es",
+                theme: "bootstrap-5",
+                allowClear: false,
+                placeholder: "Seleccionar un rango ",
+                minimumResultsForSearch: -1,
+                language: {
+                    noResults: function() {
+                        return "No hay resultado";
+                    },
+                    searching: function() {
+                        return "Buscando..";
+                    }
+                },
+
+            });
+        </script>
+
 
 
         <script>

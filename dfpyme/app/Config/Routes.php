@@ -474,6 +474,9 @@ $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter'
     $routes->post('reporte_meseros', 'Inventarios::reporte_meseros');
     $routes->post('entradas_salidas', 'Inventarios::entradas_salidas');
     $routes->get('exportar_excel', 'Inventarios::exportar_excel');
+    $routes->get('reporte_categoria', 'Inventarios::reporte_categoria');
+    $routes->post('reporte_ventas', 'Inventarios::reporte_ventas');
+    $routes->post('export_pdf', 'Inventarios::export_pdf');
 });
 
 $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' => \App\Filters\Auth::class], function ($routes) {

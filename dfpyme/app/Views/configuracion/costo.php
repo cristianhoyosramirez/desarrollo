@@ -167,6 +167,10 @@ Reporte de costos
     <table class="table">
         <thead class="table-dark">
             <tr>
+
+                <td scope="col">BASE IVA 0 </td>
+                <td scope="col">IVA 0</td>
+
                 <td scope="col">BASE IVA 19 </td>
                 <td scope="col">IVA 19</td>
                 <td scope="col">BASE IVA 5</td>
@@ -179,6 +183,8 @@ Reporte de costos
         </thead>
         <tbody>
             <tr>
+                <td>0</td>
+                <td>0</td>
                 <td>
                     <p id="base_iva_19">
                         </th>
@@ -399,7 +405,7 @@ Reporte de costos
         });
     });
 </script>
->
+
 
 
 <script>
