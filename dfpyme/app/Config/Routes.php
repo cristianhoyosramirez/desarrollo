@@ -219,7 +219,7 @@ $routes->group('clientes', ['namespace' => 'App\Controllers\clientes', 'filter' 
 });
 
 $routes->group('factura_electronica', ['namespace' => 'App\Controllers\factura_electronica', 'filter' => \App\Filters\Auth::class], function ($routes) {
-    $routes->get('pre_factura', 'FacturaElectronica::pre_factura');
+    $routes->post('pre_factura', 'FacturaElectronica::pre_factura');
 });
 
 

@@ -276,7 +276,7 @@
                                         $('#total_documentos').html(json.total);
                                         $('#total_ventas').html(json.titulo);
 
-                                        
+
                                         return json.data;
                                     }
                                 },
@@ -492,7 +492,16 @@
                             $('#total_documentos').html(json.total);
                             $('#total_ventas').html(json.titulo);
 
-                            
+                            if (json.abonos_sin_punto > 0) {
+                                var div = document.getElementById("pagos_recibidos");
+                                div.style.display = "block";
+                            }
+                            if (json.saldo_pendiente_por_cobrar_sin_punto > 0) {
+                                var div = document.getElementById("saldo_pendiente_pago");
+                                div.style.display = "block";
+                            }
+
+
                             return json.data;
                         }
                     },

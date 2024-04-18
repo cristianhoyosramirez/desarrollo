@@ -443,7 +443,6 @@ class Inventarios extends BaseController
             'nit'=>$datos_empresa[0]['nitempresa'],
             'nombre_regimen'=>$regimen['nombreregimen'],
             'direccion'=>$datos_empresa[0]['direccionempresa'],
-
         ]));
         
         $options = $dompdf->getOptions();

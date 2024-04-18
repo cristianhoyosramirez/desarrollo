@@ -801,7 +801,10 @@ class Boletas extends BaseController
             'total' => "$ " . number_format($total_venta[0]['total'], 0, ",", "."),
             'cuentas_por_cobrar' => "$ " . number_format($c_x_c, 0, ",", "."),
             'abonos' => "$ " . number_format($abonos, 0, ",", "."),
+            'abonos_sin_punto' => $abonos,
             'saldo_pendiente' => "$ " . number_format($c_x_c - $abonos, 0, ",", "."),
+            'saldo_pendiente_sin_punto' => ($c_x_c - $abonos),
+        
         ];
 
         echo  json_encode($json_data);
@@ -957,7 +960,9 @@ class Boletas extends BaseController
             'total' => "$ " . number_format($total_ventas[0]['total'], 0, ",", "."),
             'titulo' => "Total ventas ",
             'abonos' => "$ " . number_format($abonos, 0, ",", "."),
+            'abonos_sin_punto' => $abonos,
             'saldo_pendiente_por_cobrar' => "$ " . number_format($saldo[0]['saldo'], 0, ",", "."),
+            'saldo_pendiente_por_cobrar_sin_punto' => $saldo[0]['saldo'],
         ];
 
         echo  json_encode($json_data);

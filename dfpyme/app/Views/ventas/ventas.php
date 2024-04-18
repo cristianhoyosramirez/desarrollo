@@ -158,7 +158,7 @@ Ventas
                         </div>
                     </div> -->
             </div>
-            <div class="col-md-3 col-lg-3">
+            <div class="col-md-3 col-lg-3" style="display: none;" id="pagos_recibidos">
                 <div class="card card-sm">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -177,7 +177,8 @@ Ventas
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-lg-3">
+
+            <div class="col-md-3 col-lg-3" style="display: none;" id = "saldo_pendiente_pago" >
                 <div class="card card-sm">
                     <div class="card-body">
                         <div class="row align-items-center">

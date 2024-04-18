@@ -5,6 +5,9 @@ Reporte de costos
 <?= $this->endSection('title') ?>
 
 <?= $this->section('content') ?>
+<!-- Select 2 -->
+<link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.css" rel="stylesheet" />
+<link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style>
     /* Estilo para el botón de exportación a Excel */
     .buttons-excel {
@@ -36,6 +39,9 @@ Reporte de costos
 <link href="<?= base_url() ?>/Assets/plugin/data_tables/bootstrap.min.css" />
 <link href="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.css" />
 
+<!--select2 -->
+<script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
+
 <div class="container">
     <p class="text-center text-primary h3">INFORME COSTO DE VENTA </p>
 
@@ -62,8 +68,18 @@ Reporte de costos
                 </tr>
             </table>
         </div> -->
+
         <div id="entre_fechas" class="col-12">
             <div class="row">
+                <div class="col">
+                    <label for="">Período</label>
+                    <select class="form-select" id="periodo">
+                        <option></option>
+                        <option value="1">Desde el inicio </option>
+                        <option value="2">Fecha </option>
+                        <option value="3">Periodo </option>
+                    </select>
+                </div>
                 <div class="col-md-2">
                     <label for="fecha_inicial">Desde</label>
 
@@ -233,6 +249,28 @@ Reporte de costos
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+
+
+
+<script>
+    $("#periodo").select2({
+        width: "100%",
+        language: "es",
+        theme: "bootstrap-5",
+        allowClear: false,
+        placeholder: "Seleccionar un rango ",
+        minimumResultsForSearch: -1,
+        language: {
+            noResults: function() {
+                return "No hay resultado";
+            },
+            searching: function() {
+                return "Buscando..";
+            }
+        },
+
+    });
+</script>
 
 
 <script>
