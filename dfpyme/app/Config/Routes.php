@@ -456,7 +456,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->get('gestion_pedidos', 'TomaPedidosController::index');
     $routes->post('buscar_mesero', 'Mesas::buscar_mesero');
     $routes->get('lista_electronicas', 'Imprimir::lista_electronicas');
-    $routes->post('imprimir_factura_electronica', 'Imprimir::imprimir_factura_electronica');
+    $routes->get('imprimir_factura_electronica', 'Imprimir::imprimir_factura_electronica');
     $routes->post('impresion_factura_electronica', 'Imprimir::impresion_factura_electronica');
     $routes->post('detalle_f_e', 'Imprimir::detalle_f_e');
     $routes->post('reporte_ventas', 'Imprimir::reporte_ventas');
