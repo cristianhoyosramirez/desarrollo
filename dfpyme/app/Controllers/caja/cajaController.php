@@ -403,7 +403,7 @@ class cajaController extends BaseController
         //$id_apertura = 26;
 
         $tiene_cierre = model('cierreModel')->select('id')->where('idapertura', $id_apertura)->first();
-
+       
 
         if (!empty($tiene_cierre)) {
             $id_cierre = $tiene_cierre['id'];

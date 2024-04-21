@@ -533,6 +533,7 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->post('cambiar_valor_apertura', 'Ventas::cambiar_valor_apertura');
     $routes->get('data_table_reporte_costo', 'Ventas::data_table_reporte_costo');
     $routes->get('pedidos_borrados', 'Ventas::pedidos_borrados');
+    $routes->post('cambiar_valor_cierre_efectivo', 'Ventas::cambiar_valor_cierre_efectivo');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
