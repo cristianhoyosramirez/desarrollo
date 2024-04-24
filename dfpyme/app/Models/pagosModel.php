@@ -43,7 +43,7 @@ class pagosModel extends Model
     ");
         return $datos->getResultArray();
     }
-    public function set_ventas_electronicas($id_apertura)
+  /*   public function set_ventas_electronicas($id_apertura)
     {
         $datos = $this->db->query("
     SELECT
@@ -54,7 +54,19 @@ class pagosModel extends Model
         id_apertura = $id_apertura AND id_estado = 8
     ");
         return $datos->getResultArray();
-    }
+    } */
+ public function set_ventas_electronicas($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT
+        SUM(total_documento) as valor
+        FROM
+            pagos
+        WHERE
+            id_apertura = $id_apertura AND id_estado = 8
+    ");
+        return $datos->getResultArray();
+    } 
 
     function get_id($fecha_inicial, $fecha_final)
     {

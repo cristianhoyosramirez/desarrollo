@@ -715,7 +715,8 @@ class Imprimir extends BaseController
     {
 
 
-        $id_apertura = $this->request->getPost('id_apertura');
+         $id_apertura = $this->request->getPost('id_apertura'); 
+         //$id_apertura = 1176; 
 
         $imp = new impresion();
 

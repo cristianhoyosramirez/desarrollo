@@ -150,10 +150,20 @@ class kardexModel extends Model
     public function ventas_contado_electronicas($id_apertura)
     {
         $datos = $this->db->query("
-        select sum(total) as total  from kardex where id_apertura=$id_apertura and id_estado=8
+        SELECT sum(total_documento) AS total
+        FROM pagos
+        WHERE id_apertura=$id_apertura
+        AND id_estado=8
         ");
         return $datos->getResultArray();
     }
+   /*  public function ventas_contado_electronicas($id_apertura)
+    {
+        $datos = $this->db->query("
+        select sum(total) as total  from kardex where id_apertura=$id_apertura and id_estado=8
+        ");
+        return $datos->getResultArray();
+    } */
     public function ventas_contado($id_apertura)
     {
         $datos = $this->db->query("

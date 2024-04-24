@@ -73,6 +73,8 @@ class impresion
         $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura);
         
         $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura);
+
+
         $printer->text("Ventas pos: " . "            $ " . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
         $printer->text("Valor electrónicas: "  .  "    $ " . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
 
