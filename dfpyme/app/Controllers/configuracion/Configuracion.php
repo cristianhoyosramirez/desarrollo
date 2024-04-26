@@ -565,4 +565,33 @@ class Configuracion extends BaseController
 
         echo  json_encode($json_data);
     }
+
+    function borrar_remisiones(){
+        $remsiones=model('configuracionPedidoModel')->select('borrar_remisiones')->first();
+
+        return view('configuracion/remisiones', [
+            'remisiones'=>$remsiones['borrar_remisiones']
+        ]);
+    }
+
+    function actualizar_remisiones(){
+        
+        $valor = $this->request->getPost('valor');
+
+        if ($valor== 1){
+            $permitir=true;
+        }
+        if ($valor== 0){
+            $permitir=false;
+        }
+
+        $actualizar = model('configuracionPedidoModel')->set('borrar_remisiones',$permitir)->update();
+
+        $returnData = array(
+            
+            "resultado" => 1
+        );
+        echo  json_encode($returnData);
+
+    }
 }

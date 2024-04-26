@@ -114,7 +114,7 @@ class cerrarVentaModel extends Model
                 }
             } */
 
-            $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'],$id_tipo_inventario['id_tipo_inventario'],$detalle['cantidad_producto']);
+            $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
 
             $impuesto_saludable = model('productoModel')->select('valor_impuesto_saludable')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
             $id_saludable = model('productoModel')->select('id_impuesto_saludable')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
@@ -157,34 +157,38 @@ class cerrarVentaModel extends Model
             $costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
 
 
+            $id_pedido = model('kardexModel')->select('id_pedido')->where('id_pedido', $detalle['id'])->first();
 
+            if (empty($id_pedido['id_pedido'])) {
 
-            $data_kardex = [
-                'idcompra' => 0,
-                'codigo' => $detalle['codigointernoproducto'],
-                'idusuario' => $id_usuario,
-                'idconcepto' => 10,
-                'numerodocumento' => $numero_factura,
-                'fecha' => date('Y-m-d'),
-                'hora' => date("H:i:s"),
-                'cantidad' => $detalle['cantidad_producto'],
-                'valor' => $valor_unidad,
-                'total' => $valor_unidad * $detalle['cantidad_producto'],
-                'fecha_y_hora_factura_venta' => $fecha_y_hora,
-                'id_categoria' => $codigo_categoria['codigocategoria'],
-                'id_apertura' => $id_apertura,
-                'valor_unitario' => $detalle['valor_unitario'],
-                'id_factura' => $factura_venta,
-                'costo' => $costo['precio_costo']*$detalle['cantidad_producto'],
-                'ico' => $calculo[0]['ico'],
-                'iva' => $calculo[0]['iva'],
-                'id_estado' => $estado,
-                'valor_ico' => $calculo[0]['valor_ico'],
-                'valor_iva' => $calculo[0]['valor_iva'],
-                'aplica_ico' => $calculo[0]['aplica_ico']
-            ];
+                $data_kardex = [
+                    'idcompra' => 0,
+                    'codigo' => $detalle['codigointernoproducto'],
+                    'idusuario' => $id_usuario,
+                    'idconcepto' => 10,
+                    'numerodocumento' => $numero_factura,
+                    'fecha' => date('Y-m-d'),
+                    'hora' => date("H:i:s"),
+                    'cantidad' => $detalle['cantidad_producto'],
+                    'valor' => $valor_unidad,
+                    'total' => $valor_unidad * $detalle['cantidad_producto'],
+                    'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                    'id_categoria' => $codigo_categoria['codigocategoria'],
+                    'id_apertura' => $id_apertura,
+                    'valor_unitario' => $detalle['valor_unitario'],
+                    'id_factura' => $factura_venta,
+                    'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
+                    'ico' => $calculo[0]['ico'],
+                    'iva' => $calculo[0]['iva'],
+                    'id_estado' => $estado,
+                    'valor_ico' => $calculo[0]['valor_ico'],
+                    'valor_iva' => $calculo[0]['valor_iva'],
+                    'aplica_ico' => $calculo[0]['aplica_ico'],
+                    'id_pedido'=>$detalle['id']
+                ];
 
-            $insertar = model('kardexModel')->insert($data_kardex);
+                $insertar = model('kardexModel')->insert($data_kardex);
+            }
         }
     }
 

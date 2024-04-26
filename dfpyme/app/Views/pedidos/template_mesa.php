@@ -222,6 +222,7 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/meseros.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/nueva_factura.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_precio.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -1033,11 +1034,14 @@
     </script>
     <script>
         function cambio_manual_precio(valor) {
+
+
             var url = document.getElementById("url").value;
             var id_producto_pedido = document.getElementById("id_producto_pedido").value;
 
             valor = valor.trim() === '' ? 0 : parseInt(valor.replace(/\./g, ''));
 
+            cambio_precio(url, valor, id_producto_pedido);
 
             $.ajax({
                 data: {

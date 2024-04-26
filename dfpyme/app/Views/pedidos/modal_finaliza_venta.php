@@ -285,50 +285,7 @@
 
           </div>
 
-          <!--   <div class="col-md-3 col-lg-3">
-            <div class="card">
-              <div class="card-header card-header-light">
-                <h3 class="card-title"></h3>
-              </div>
-              <div class="card-body">
-
-                <div class="row mb-3">
-
-                    <div class="col">
-
-                 <table>
-                      <tr>
-                        <td><button type="button" class="teclado-button" onclick="agregarNumero('1');cambio_teclado()">1</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('2');cambio_teclado()">2</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('3');cambio_teclado()">3</button></td>
-                      </tr>
-                      <tr>
-                        <td><button class="teclado-button" onclick="agregarNumero('4');cambio_teclado()">4</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('5');cambio_teclado()">5</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('6');cambio_teclado()">6</button></td>
-                      </tr>
-                      <tr>
-                        <td><button class="teclado-button" onclick="agregarNumero('7');cambio_teclado()">7</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('8');cambio_teclado()">8</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('9');cambio_teclado()">9</button></td>
-                      </tr>
-                      <tr>
-                        <td><button class="teclado-button" onclick="agregarNumero('0');cambio_teclado()">0</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('00');cambio_teclado()">00</button></td>
-                        <td><button class="teclado-button" onclick="agregarNumero('000');cambio_teclado()">000</button></td>
-                      </tr>
-                    </table> 
-                  </div>
-                </div>
-
-
-
-
-
-              </div>
-            </div>
-          </div>
-        </div> -->
+       
         </div>
       </div>
     </div>

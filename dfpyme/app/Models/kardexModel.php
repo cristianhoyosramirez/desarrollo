@@ -12,7 +12,7 @@ class kardexModel extends Model
     protected $allowedFields = [
         'idcompra', 'codigo', 'idusuario', 'idconcepto', 'numerodocumento', 'fecha', 'hora',
         'cantidad', 'valor', 'total', 'fecha_y_hora_factura_venta', 'id_categoria', 'id_apertura', 'valor_unitario', 'id_factura', 'costo',
-        'ico', 'iva', 'id_estado', 'valor_ico', 'valor_iva', 'aplica_ico'
+        'ico', 'iva', 'id_estado', 'valor_ico', 'valor_iva', 'aplica_ico','id_pedido'
     ];
 
     public function get_productos($id_apertura)
@@ -147,6 +147,13 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+    /*   public function ventas_contado_electronicas($id_apertura)
+    {
+        $datos = $this->db->query("
+        select sum(total) as total  from kardex where id_apertura=$id_apertura and id_estado=8
+        ");
+        return $datos->getResultArray();
+    } */
     public function ventas_contado_electronicas($id_apertura)
     {
         $datos = $this->db->query("
@@ -157,13 +164,6 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-   /*  public function ventas_contado_electronicas($id_apertura)
-    {
-        $datos = $this->db->query("
-        select sum(total) as total  from kardex where id_apertura=$id_apertura and id_estado=8
-        ");
-        return $datos->getResultArray();
-    } */
     public function ventas_contado($id_apertura)
     {
         $datos = $this->db->query("

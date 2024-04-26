@@ -553,6 +553,8 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->get('tipos_de_factura', 'Configuracion::tipos_de_factura');
     $routes->post('actualizar_estado', 'Configuracion::actualizar_estado');
     $routes->post('consulta_factura_electronica', 'Configuracion::consulta_factura_electronica');
+    $routes->get('borrar_remisiones', 'Configuracion::borrar_remisiones');
+    $routes->post('actualizar_remisiones', 'Configuracion::actualizar_remisiones');
 });
 
 /*

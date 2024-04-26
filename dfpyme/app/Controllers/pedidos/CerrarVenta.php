@@ -18,21 +18,19 @@ class CerrarVenta extends BaseController
     public function cerrar_venta()
     {
 
-
-
-
-        /*       $id_mesa = 4;
+        /* 
+        $id_mesa = 1;
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
         $efectivo = 500;
         $transaccion = 0;
         $valor_venta = 500;
-        $nit_cliente = '22222222';
+        $nit_cliente = '222222222';
         $id_usuario = 6;
-        $estado = 1;
+        $estado = 7;
         $propina = 0;
         $descuento = 0;
-        $tipo_pago = 1;   */
+        $tipo_pago = 1; */
 
         // var_dump($this->request->getPost()); exit();
 
@@ -63,6 +61,20 @@ class CerrarVenta extends BaseController
             $fecha_dian  = model('dianModel')->select('vigencia')->where('iddian', $id_dian['numeroconsecutivo'])->first();
             $prefijo_factura = model('dianModel')->select('inicialestatica')->where('iddian', $id_dian['numeroconsecutivo'])->first();
             $serie = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', '14')->first();
+
+            if ($estado == 1) {
+                $serie_update  = $serie['numeroconsecutivo'] + 1;
+                $incremento = model('consecutivosModel')->update_serie($serie_update);
+                $numeracion_factura = $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'];
+            }
+            if ($estado == 7) {
+
+                $consectivo_remision = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', 11)->first();
+                $serie_remision  = $consectivo_remision['numeroconsecutivo'] + 1;
+                $incremento_remision = model('consecutivosModel')->actualizar_consecutivos($serie_remision);
+                $numeracion_factura = $consectivo_remision['numeroconsecutivo'];
+            }
+
 
 
             $id_apertura = model('aperturaRegistroModel')->select('numero')->first();
@@ -120,14 +132,8 @@ class CerrarVenta extends BaseController
 
             if ($numero_facturas['numeroconsecutivo'] <= $rango_final['rangofinaldian'] and $diferencia_fecha->format('%R%a') >= 0) {  // Se puede facturar esta bien la fecha y la numeracion
 
-                $serie_update  = $serie['numeroconsecutivo'] + 1;
-                $incremento = model('consecutivosModel')->update_serie($serie_update);
-
-
-
-
                 $factura_venta = model('facturaVentaModel')->factura_venta(
-                    $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'],
+                    $numeracion_factura,
                     $nit_cliente,
                     $id_usuario,
                     $estado,
@@ -169,6 +175,7 @@ class CerrarVenta extends BaseController
                 $propina_factura = model('FacturaPropinaModel')->insert($data);
 
                 $consecutivo = ['numeroconsecutivo' => $numero_facturas['numeroconsecutivo'] + 1];
+                //$numero_factura = ['numero_factura' => $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo']];
                 $numero_factura = ['numero_factura' => $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo']];
 
                 $actualiar_pedido_consecutivos =   model('cerrarVentaModel')->actualiar_pedido_consecutivos($numero_pedido, $numero_factura, $consecutivo);
@@ -300,33 +307,37 @@ class CerrarVenta extends BaseController
                 $numero_pedido = $pedido['id'];
                 $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $numero_pedido)->first();
 
+                $id_pedido = model('pagosModel')->select('id_pedido')->where('id_pedido', $numero_pedido)->first();
 
+                if (empty($id_pedido['id_pedido'])) {
 
-                $pagos = [
+                    $pagos = [
 
-                    'fecha' => date('Y-m-d'),
-                    'hora' => date("H:i:s"),
-                    'documento' => $numero_factura,
-                    'valor' => $valor_venta - $propina,
-                    'propina' => $propina,
-                    'total_documento' => $valor_venta,
-                    'efectivo' => $valor_pago_efectivo,
-                    'transferencia' => $valor_pago_transferencia,
-                    'total_pago' => $efectivo + $transaccion,
-                    'id_usuario_facturacion' => $id_usuario,
-                    'id_mesero' => $id_mesero['fk_usuario'],
-                    'id_estado' => $estado,
-                    'id_apertura' => $id_apertura['numero'],
-                    'cambio' => $cambio,
-                    'recibido_efectivo' => $recibido_efectivo,
-                    'recibido_transferencia' => $recibido_transaccion,
-                    'id_factura' => $factura_venta,
-                    'saldo' => $saldo,
-                    'nit_cliente' => $nit_cliente
+                        'fecha' => date('Y-m-d'),
+                        'hora' => date("H:i:s"),
+                        'documento' => $numeracion_factura,
+                        'valor' => $valor_venta - $propina,
+                        'propina' => $propina,
+                        'total_documento' => $valor_venta,
+                        'efectivo' => $valor_pago_efectivo,
+                        'transferencia' => $valor_pago_transferencia,
+                        'total_pago' => $efectivo + $transaccion,
+                        'id_usuario_facturacion' => $id_usuario,
+                        'id_mesero' => $id_mesero['fk_usuario'],
+                        'id_estado' => $estado,
+                        'id_apertura' => $id_apertura['numero'],
+                        'cambio' => $cambio,
+                        'recibido_efectivo' => $recibido_efectivo,
+                        'recibido_transferencia' => $recibido_transaccion,
+                        'id_factura' => $factura_venta,
+                        'saldo' => $saldo,
+                        'nit_cliente' => $nit_cliente,
+                        'id_pedido' => $numero_pedido
 
-                ];
+                    ];
 
-                $pagos = model('pagosModel')->insert($pagos);
+                    $pagos = model('pagosModel')->insert($pagos);
+                }
 
                 if ($tipo_pago == 1) {  // si el tipo de pago es 1 quiere decir que se factura el pedido completo 
                     // borrar productos del pedido 

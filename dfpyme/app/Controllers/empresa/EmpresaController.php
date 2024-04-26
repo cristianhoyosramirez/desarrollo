@@ -12,12 +12,14 @@ class EmpresaController extends BaseController
         $departamentos = model('departamentoModel')->select('*')->where('idpais', 49)->findAll();
         $municipios = model('ciudadModel')->findAll();
         $datos_empresa = model('empresaModel')->findAll();
+        $tipo_empresa=model('tipoEmpresaModel')->findAll();
 
         return view('empresa/datos', [
             'regimen' => $regimen,
             'departamentos' => $departamentos,
             'datos_empresa' => $datos_empresa,
-            'municipios' => $municipios
+            'municipios' => $municipios,
+            'tipo_empresa'=>$tipo_empresa
         ]);
     }
 
@@ -43,7 +45,9 @@ class EmpresaController extends BaseController
             'direccionempresa' => $this->request->getPost('direccion'),
             'estadoempresa' => 'true',
             'descripcion' => '0',
-            'recauda_iva' => 'false'
+            'recauda_iva' => 'false',
+            'fk_tipo_empresa'=>$this->request->getPost('tipo_empresa')
+
         ];
 
         $empresa = model('empresaModel');

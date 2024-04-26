@@ -1150,6 +1150,7 @@ class cajaDiariaController extends BaseController
     function reporte_de_ventas()
     {
 
+        $truncate = model('reporteProductoModel')->truncate();
         // $id_apertura = 851;
         $id_apertura = $this->request->getPost('id_apertura');
 
@@ -1935,7 +1936,7 @@ class cajaDiariaController extends BaseController
 
 
         $id_apertura = $this->request->getPost('id_apertura');
-        //$id_apertura = 1176;
+        //$id_apertura = 1131;
 
         //$id_apertura = 41;
         $fecha_y_hora_cierre = "";
@@ -2014,7 +2015,6 @@ class cajaDiariaController extends BaseController
          */
 
         $iva = model('pagosModel')->fiscal_iva($id_apertura);
-      
         $array_iva = array();
 
 
@@ -2081,6 +2081,8 @@ class cajaDiariaController extends BaseController
         //$vantas_contado = model('facturaVentaModel')->venta_contado($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
         // $vantas_contado = model('productoFacturaVentaModel')->get_total_venta($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);
         $vantas_contado = model('kardexModel')->ventas_contado_electronicas($id_apertura);
+
+
 
 
         $venta_credito = model('facturaVentaModel')->venta_credito($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_cierre);

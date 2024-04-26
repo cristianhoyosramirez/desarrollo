@@ -21,6 +21,10 @@ function pagar() {
     let pago_total = parseInt(efectivo) + parseInt(transaccion);
     let tipo_pago = document.getElementById("tipo_pago").value; // Tipo de pago 1 = pago completo; 2 pago parcial
 
+
+
+
+
     let valor_venta = "";
 
     if (tipo_pago == 1) {
@@ -66,8 +70,10 @@ function pagar() {
 
 
 
-        } else if (estado == 1 || estado == 7 ) {
+        } else if (estado == 1 || estado == 7) {
 
+            let button = document.querySelector("#btn_pagar");
+            button.disabled = true; // Habilitar el botón
 
             if (pago_total >= parseInt(valor_venta)) {
                 $.ajax({
@@ -89,6 +95,9 @@ function pagar() {
                         var resultado = JSON.parse(resultado);
                         if (resultado.resultado == 1) {
 
+                            let button = document.querySelector("#btn_pagar");
+                            button.disabled = false; // Habilitar el botón
+
                             $('#finalizar_venta').modal('hide');
                             $('#todas_las_mesas').html(resultado.mesas)
                             $('#lista_completa_mesas').html(resultado.mesas)
@@ -97,8 +106,7 @@ function pagar() {
                             $('#propina_pesos_final').val(0)
                             $('#total_propina').val(0)
                             $('#tipo_pago').val(1)
-
-
+                        
                             if (resultado.valor_pedio == '$ 0') {
                                 $('#mesa_pedido').html('')
                                 $('#pedido_mesa').html('Pedido')
@@ -121,6 +129,7 @@ function pagar() {
                                 $('#propina_pesos').val(0)
                                 $('#propina_pesos_final').val(0)
                                 $('#total_propina').val(0)
+                                btnPagar.setAttribute("disabled", "false");
 
                             }
                             let mesas = document.getElementById("todas_las_mesas");

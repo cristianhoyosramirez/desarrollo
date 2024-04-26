@@ -195,19 +195,16 @@ class Boletas extends BaseController
         $id_producto = $this->request->getPost('id_producto_pedido');
         $precio  = $this->request->getPost('valor');
 
-
-
-
-
         if ($precio >= 0) {
 
 
             $cantidad = model('productoPedidoModel')->select('cantidad_producto')->where('id', $id_producto)->first();
 
+            $total_producto=$precio * $cantidad['cantidad_producto'];
 
             $model = model('productoPedidoModel');
             $actualizar = $model->set('valor_unitario', $precio);
-            $actualizar = $model->set('valor_total', $precio * $cantidad['cantidad_producto']);
+            $actualizar = $model->set('valor_total',$total_producto );
             $actualizar = $model->where('id', $id_producto);
             $actualizar = $model->update();
 
@@ -222,7 +219,10 @@ class Boletas extends BaseController
 
             $returnData = array(
                 "resultado" => 1, //Falta plata 
-                "precio_producto" => number_format($precio, 0, ',', '.')
+                "precio_producto" => number_format($precio, 0, ',', '.'),
+                "total_pedido"=>number_format($total_pedido[0]['valor_total'], 0, ',', '.'),
+                "id"=>$id_producto,
+                "total_producto"=>number_format($total_producto, 0, ',', '.')
             );
             echo  json_encode($returnData);
         }

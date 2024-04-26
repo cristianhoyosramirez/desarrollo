@@ -41,18 +41,31 @@ MOVIMIENTO DE CAJA
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
-                   <!--  <span class="d-none d-sm-inline">
+                    <!--  <span class="d-none d-sm-inline">
                     <form action="<?= base_url('consultas_y_reportes/reporte_de_ventas_excel') ?>" method="POST" target="_blank">
                             
                             <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_apertura">
                             <button type="submit" class="btn btn-outline-success btn-icon"  title="Exportar a excel " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Excel </button>
                         </form>
                     </span> -->
+
+                    <?php $borrar_remisiones = model('configuracionPedidoModel')->select('borrar_remisiones')->first(); ?>
+                    <?php if ($borrar_remisiones['borrar_remisiones'] == 't') : ?>
+                    
+                        <span class="d-none d-sm-inline">
+                            <a href="#" class="btn btn-outline-cyan" onclick="borrar_remisiones(<?php echo $id_apertura ?>)" title="Borrar remisiones " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                Borrar remisiones
+                            </a>
+                        </span>
+                    <?php endif ?>
+
+
                     <span class="d-none d-sm-inline">
                         <a href="#" class="btn btn-outline-indigo" onclick="consolidado_ventas()" title="Consolidado de ventas pos y electrónicas  " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             Consolidado
                         </a>
                     </span>
+
                     <span class="d-none d-sm-inline">
                         <a href="#" class="btn btn-outline-green" onclick="imprimir_movimientos(<?php echo $id_apertura ?>)" title="Imprimir el reporte de caja " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
                             Imprimir

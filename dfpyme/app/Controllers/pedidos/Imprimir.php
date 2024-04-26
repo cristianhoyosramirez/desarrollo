@@ -646,7 +646,7 @@ class Imprimir extends BaseController
 
             $printer->feed(1);
             $printer->cut();
-
+            $printer->pulse();
             $printer->close();
 
             $movimientos_transaccion = model('facturaformaPagoModel')->valor_pago_transaccion($id_factura);
@@ -715,8 +715,7 @@ class Imprimir extends BaseController
     {
 
 
-         $id_apertura = $this->request->getPost('id_apertura'); 
-         //$id_apertura = 1176; 
+        $id_apertura = $this->request->getPost('id_apertura');
 
         $imp = new impresion();
 

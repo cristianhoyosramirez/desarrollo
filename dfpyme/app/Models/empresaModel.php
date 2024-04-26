@@ -24,7 +24,9 @@ class empresaModel extends Model
     'direccionempresa',
     'estadoempresa',
     'descripcion',
-    'recauda_iva'];
+    'recauda_iva',
+    'fk_tipo_empresa'
+];
 
     public function datosEmpresa()
     {

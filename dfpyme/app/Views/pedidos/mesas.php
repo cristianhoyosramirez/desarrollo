@@ -11,7 +11,10 @@ Bienvenido DFpyme
 
 
         <?= $this->include('layout/header_mesas') ?>
-      
+
+        <?php $id_tipo = model('empresaModel')->select('fk_tipo_empresa')->first() ?>
+
+
 
     </div>
     <div id="header_oculto" class="container" style="display:none">
@@ -109,7 +112,7 @@ Bienvenido DFpyme
                     </div>
                 </div>
 
-                <?php $alturaCalc = "37rem + 10px"; // Calcula la altura 
+                <?php $alturaCalc = "25rem + 10px"; // Calcula la altura 
                 ?>
 
                 <!--Productos-->
@@ -152,14 +155,25 @@ Bienvenido DFpyme
                                     <table>
                                         <tr>
                                             <td tyle="width: 25%;">
-                                                <p id="mesa_pedido" class="text-warning "> Mesa:</p>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                                    <p id="mesa_pedido" class="text-warning "> Mesa:</p>
+                                                <?php endif ?>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                                    <p id="mesa_pedido" class="text-warning "> Venta:</p>
+                                                <?php endif ?>
                                             </td>
                                             <td yle="width: 25%;">
-                                                <p id="pedido_mesa">Pedio: </p>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                                    <p id="pedido_mesa">Pedio: </p>
+                                                <?php endif ?>
                                             </td>
                                             <td tyle="width: 50%;">
-                                                <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
-
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                                    <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
+                                                <?php endif ?>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                                    <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Vendedor </p>
+                                                <?php endif ?>
                                             </td>
 
                                         </tr>
@@ -173,23 +187,40 @@ Bienvenido DFpyme
 
                         </div>
 
+
                         <div class="container">
                             <div class="row mb-2"> <!-- Fila para los botones -->
-                                <div class="col-md-4">
-                                    <a href="#" class="btn btn-outline-indigo w-100" onclick="cambiar_mesas()">
-                                        Cambio de mesa
-                                    </a>
-                                </div>
-                                <div class="col-md-4">
-                                    <a href="#" class="btn btn-outline-purple w-100" onclick="imprimir_comanda()">
-                                        Comanda
-                                    </a>
-                                </div>
-                                <div class="col-md-4">
-                                    <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
-                                        Eliminar pedido
-                                    </a>
-                                </div>
+
+                                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                    <div class="col-md-4">
+                                        <a href="#" class="btn btn-outline-indigo w-100" onclick="cambiar_mesas()">
+                                            Cambio de mesa
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="#" class="btn btn-outline-purple w-100" onclick="imprimir_comanda()">
+                                            Comanda
+                                        </a>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
+                                            Eliminar pedido
+                                        </a>
+                                    </div>
+                                <?php endif ?>
+                                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+
+
+                                    <div class="col-md-8">
+
+                                    </div>
+                                    <div class="col-md-4 text-start">
+                                        <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
+                                            Eliminar pedido
+                                        </a>
+                                    </div>
+                                <?php endif ?>
                             </div>
                             <div class="row"> <!-- Fila para el textarea -->
                                 <div class="col-md-12 mb-2">
@@ -208,7 +239,12 @@ Bienvenido DFpyme
                             <div class="card-title">
                                 <div class="row align-items-start">
                                     <div class="col">
-                                        <p id="pedido_mesa">Valor pedido </p>
+                                        <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                            <p id="pedido_mesa">Valor pedido </p>
+                                        <?php endif ?>
+                                        <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                            <p id="pedido_mesa">Valor venta </p>
+                                        <?php endif ?>
                                     </div>
                                 </div>
                             </div>
@@ -216,17 +252,18 @@ Bienvenido DFpyme
                         <div class="card-body ">
 
                             <form>
-                                <div class="row mb-3">
-                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Subtotal</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="subtotal_pedido" disabled="">
+                                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                    <div class="row mb-3">
+                                        <label for="inputEmail3" class="col-sm-4 col-form-label">Subtotal</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="subtotal_pedido" disabled="">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row mb-2 gy-2">
-                                    <div class="col-sm-12">
-                                        <div class="input-group">
-                                            <!-- 
+                                    <div class="row mb-2 gy-2">
+                                        <div class="col-sm-12">
+                                            <div class="input-group">
+                                                <!-- 
                                             <select class="form-select" aria-label="Default select example" id="criterio_propina" style="width: 90px;">
                                                 <option value="1">Propina %</option>
                                                 <option value="2">Propina $</option>
@@ -235,32 +272,38 @@ Bienvenido DFpyme
 
 
 
-                                            <a href="#" class="btn btn-outline-green  col-sm-4" onclick="calculo_propina()" title="Propina" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <circle cx="12" cy="12" r="9" />
-                                                    <line x1="9" y1="9" x2="9.01" y2="9" />
-                                                    <line x1="15" y1="9" x2="15.01" y2="9" />
-                                                    <path d="M8 13a4 4 0 1 0 8 0m0 0h-8" />
-                                                </svg></a>
+                                                <a href="#" class="btn btn-outline-green  col-sm-4" onclick="calculo_propina()" title="Propina" style="width: 100px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <circle cx="12" cy="12" r="9" />
+                                                        <line x1="9" y1="9" x2="9.01" y2="9" />
+                                                        <line x1="15" y1="9" x2="15.01" y2="9" />
+                                                        <path d="M8 13a4 4 0 1 0 8 0m0 0h-8" />
+                                                    </svg></a>
 
 
-                                            <input type="text" aria-label="Last name" class="form-control w-1" style="width: 50px;" value=0 onkeyup="calcular_propina(this.value)" id="propina_pesos" placeholder="%">
-                                            <input type="text" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
-                                            <a href="#" class="btn btn-outline-warning text-center" onclick="borrar_propina()" title="Eliminar propina" style="width: 1px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
-                                                <!-- Download SVG icon from http://tabler-icons.io/i/trash -->&nbsp;&nbsp;
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon text-center" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <line x1="4" y1="7" x2="20" y2="7" />
-                                                    <line x1="10" y1="11" x2="10" y2="17" />
-                                                    <line x1="14" y1="11" x2="14" y2="17" />
-                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                </svg></a>
+                                                <input type="text" aria-label="Last name" class="form-control w-1" style="width: 50px;" value=0 onkeyup="calcular_propina(this.value)" id="propina_pesos" placeholder="%">
+                                                <input type="text" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
+                                                <a href="#" class="btn btn-outline-warning text-center" onclick="borrar_propina()" title="Eliminar propina" style="width: 1px;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom"> <!-- Download SVG icon from http://tabler-icons.io/i/mood-happy -->
+                                                    <!-- Download SVG icon from http://tabler-icons.io/i/trash -->&nbsp;&nbsp;
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon text-center" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <line x1="4" y1="7" x2="20" y2="7" />
+                                                        <line x1="10" y1="11" x2="10" y2="17" />
+                                                        <line x1="14" y1="11" x2="14" y2="17" />
+                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                    </svg></a>
+                                            </div>
+
                                         </div>
-
                                     </div>
-                                </div>
+                                <?php endif ?>
+
+                                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                    <input type="hidden" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
+                                    <?php endif ?>
+
                                 <div class="row mb-3">
                                     <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Total</label>
                                     <div class="col-sm-8">
@@ -278,26 +321,30 @@ Bienvenido DFpyme
                             <div class="row mb-2 gy-2"> <!-- Fila para los botones -->
                                 <div class="col-md-6">
 
-
-                                    <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
-                                        Orden de pedido
-                                    </a>
+                                    <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                        <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
+                                            Orden de pedido
+                                        </a>
+                                    <?php endif ?>
                                 </div>
                                 <?php if ($user_session->tipo != 3) : ?>
+
                                     <div class="col-md-6">
                                         <a class="btn btn-outline-muted w-100" onclick="retiro_dinero()">
                                             Retirar dinero</a>
                                     </div>
-                                    <div class="col-md-6">
-                                        <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">
-                                            Devolución
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a href="#" class="btn btn-outline-azure w-100" onclick="pago_parcial()">
-                                            Pago parcial
-                                        </a>
-                                    </div>
+                                    <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                        <div class="col-md-6">
+                                            <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">
+                                                Devolución
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="#" class="btn btn-outline-azure w-100" onclick="pago_parcial()">
+                                                Pago parcial
+                                            </a>
+                                        </div>
+                                    <?php endif ?>
                                 <?php endif ?>
                             </div>
 

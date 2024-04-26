@@ -37,6 +37,14 @@ PRODUCTO
           <p class="text-green h3">Datos empresa</p>
         </div>
         <div class="col-md-2">
+          <label for="inputEmail4" class="form-label">Tipo empresa</label>
+          <select class="form-select" id="tipo_empresa" name="tipo_empresa">
+            <?php foreach ($tipo_empresa as $detalle) : ?>
+              <option value="<?php echo $detalle['id'] ?>" <?php if ($detalle['id'] == $datos_empresa[0]['fk_tipo_empresa']) : ?>selected <?php endif; ?>><?php echo $detalle['nombre'] ?> </option>
+            <?php endforeach ?>
+          </select>
+        </div>
+        <div class="col-md-2">
           <label for="inputEmail4" class="form-label">Nit</label>
           <input type="text" class="form-control" name="nit_empresa" autofocus value="<?php echo $datos_empresa[0]['nitempresa'] ?>">
         </div>
@@ -57,11 +65,11 @@ PRODUCTO
           <label for="inputAddress2" class="form-label">Razón social</label>
           <input type="text" class="form-control" name="razon_social" value="<?php echo $datos_empresa[0]['nombrejuridicoempresa'] ?>">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="inputCity" class="form-label">Nombre comercial</label>
           <input type="text" class="form-control" name="nombre_comercial" value="<?php echo $datos_empresa[0]['nombrecomercialempresa'] ?>">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="inputState" class="form-label">Télefono</label>
           <input type="text" class="form-control" name="telefono" value="<?php echo $datos_empresa[0]['telefonoempresa'] ?>">
         </div>

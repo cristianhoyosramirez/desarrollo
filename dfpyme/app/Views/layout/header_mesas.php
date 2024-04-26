@@ -62,6 +62,9 @@
         </div>
       </div>
     </div>
+    <?php $id_tipo = model('empresaModel')->select('fk_tipo_empresa')->first() ?>
+
+
     <div class="collapse navbar-collapse" id="navbar-menu">
       <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
         <ul class="navbar-nav">
@@ -81,26 +84,57 @@
               </a>
               <div class="dropdown-menu">
 
-                <a class="dropdown-item" href="<?= base_url() ?>/salones/list">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/building-pavilon -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M3 21h7v-3a2 2 0 0 1 4 0v3h7" />
-                    <line x1="6" y1="21" x2="6" y2="12" />
-                    <line x1="18" y1="21" x2="18" y2="12" />
-                    <path d="M6 12h12a3 3 0 0 0 3 -3a9 8 0 0 1 -9 -6a9 8 0 0 1 -9 6a3 3 0 0 0 3 3" />
-                  </svg> Salones
-                </a>
-                <a class="dropdown-item" href="<?= base_url() ?>/mesas/list">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/cup -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M5 11h14v-3h-14z" />
-                    <path d="M17.5 11l-1.5 10h-8l-1.5 -10" />
-                    <path d="M6 8v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1" />
-                    <path d="M15 5v-2" />
-                  </svg> Mesas
-                </a>
+                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+
+                  <a class="dropdown-item" href="<?= base_url() ?>/salones/list">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/building-pavilon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M3 21h7v-3a2 2 0 0 1 4 0v3h7" />
+                      <line x1="6" y1="21" x2="6" y2="12" />
+                      <line x1="18" y1="21" x2="18" y2="12" />
+                      <path d="M6 12h12a3 3 0 0 0 3 -3a9 8 0 0 1 -9 -6a9 8 0 0 1 -9 6a3 3 0 0 0 3 3" />
+                    </svg> Salones
+                  </a>
+                <?php endif ?>
+                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+
+                  <a class="dropdown-item" href="<?= base_url() ?>/salones/list">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/building-pavilon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M3 21h7v-3a2 2 0 0 1 4 0v3h7" />
+                      <line x1="6" y1="21" x2="6" y2="12" />
+                      <line x1="18" y1="21" x2="18" y2="12" />
+                      <path d="M6 12h12a3 3 0 0 0 3 -3a9 8 0 0 1 -9 -6a9 8 0 0 1 -9 6a3 3 0 0 0 3 3" />
+                    </svg> Zonas
+                  </a>
+                <?php endif ?>
+
+                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                  <a class="dropdown-item" href="<?= base_url() ?>/mesas/list">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/cup -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M5 11h14v-3h-14z" />
+                      <path d="M17.5 11l-1.5 10h-8l-1.5 -10" />
+                      <path d="M6 8v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1" />
+                      <path d="M15 5v-2" />
+                    </svg> Mesas
+                  </a>
+                <?php endif ?>
+                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                  <a class="dropdown-item" href="<?= base_url() ?>/mesas/list">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/cup -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M5 11h14v-3h-14z" />
+                      <path d="M17.5 11l-1.5 10h-8l-1.5 -10" />
+                      <path d="M6 8v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1" />
+                      <path d="M15 5v-2" />
+                    </svg> Zonas facturación
+                  </a>
+                <?php endif ?>
                 <a class="dropdown-item" href="<?= base_url() ?>/usuarios/list">
                   <!-- Download SVG icon from http://tabler-icons.io/i/user-circle -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -251,15 +285,14 @@
                   </svg>
                   Comprobante de transferencia electrónica
                 </a>
-                <a class="dropdown-item" href="<?= base_url() ?>/administracion_impresora/configuracion_pedido">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/file -->
+                <!-- <a class="dropdown-item" href="<?= base_url() ?>/administracion_impresora/configuracion_pedido">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M14 3v4a1 1 0 0 0 1 1h4" />
                     <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
                   </svg>
                   Configuración de toma pedido
-                </a>
+                </a>-->
                 <a class="dropdown-item" href="<?= base_url() ?>/configuracion/mesero">
                   <!-- Download SVG icon from http://tabler-icons.io/i/hand-click -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -273,17 +306,19 @@
                     <path d="M14 3l1 -1" />
                     <path d="M15 6h1" />
                   </svg>
-                  Asignación de mesero a pedido
+                  Asignación de usuario a venta
                 </a>
-                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/propina">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" />
-                    <path d="M12 3v3m0 12v3" />
-                  </svg>
-                  Calculo propina
-                </a>
+                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                  <a class="dropdown-item" href="<?= base_url() ?>/configuracion/propina">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/currency-dollar -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" />
+                      <path d="M12 3v3m0 12v3" />
+                    </svg>
+                    Calculo propina
+                  </a>
+                <?php endif ?>
                 <!--  <a class="dropdown-item" href="<?= base_url() ?>/configuracion/sub_categoria">
                  Download SVG icon from http://tabler-icons.io/i/check 
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -304,28 +339,54 @@
                   </svg>
                   Tipos de factura
                 </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/borrar_remisiones">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/eraser -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M19 19h-11l-4 -4a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41l-9 9" />
+                    <line x1="18" y1="12.3" x2="11.7" y2="6" />
+                  </svg>
+                  Borrar remisiones
+                </a>
               </div>
           </li>
         <?php } ?>
 
         <?php if ($user_session->tipo == 0 || $user_session->tipo == 1) { ?>
           <li class="nav-item dropdown">
-            <a class="nav-link " href="<?= base_url() ?>/pedidos/mesas">
-              <span class="text-blue">
-                <!-- Download SVG icon from http://tabler-icons.io/i/coffee -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M3 14c.83 .642 2.077 1.017 3.5 1c1.423 .017 2.67 -.358 3.5 -1c.83 -.642 2.077 -1.017 3.5 -1c1.423 -.017 2.67 .358 3.5 1" />
-                  <path d="M8 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
-                  <path d="M12 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
-                  <path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5z" />
-                  <path d="M16.746 16.726a3 3 0 1 0 .252 -5.555" />
-                </svg>
-              </span>
-              <span class="nav-link-title">
-                Pedidos
-              </span>
-            </a>
+
+            <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+              <a class="nav-link " href="<?= base_url() ?>/pedidos/mesas">
+                <span class="text-blue">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/coffee -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M3 14c.83 .642 2.077 1.017 3.5 1c1.423 .017 2.67 -.358 3.5 -1c.83 -.642 2.077 -1.017 3.5 -1c1.423 -.017 2.67 .358 3.5 1" />
+                    <path d="M8 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
+                    <path d="M12 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2" />
+                    <path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5z" />
+                    <path d="M16.746 16.726a3 3 0 1 0 .252 -5.555" />
+                  </svg>
+                </span>
+                <span class="nav-link-title">
+                  Pedidos
+                </span>
+              </a>
+            <?php endif ?>
+            <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+              <a class="nav-link " href="<?= base_url() ?>/pedidos/mesas">
+                <span class="text-blue">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
+                    <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
+                  </svg>
+                </span>
+                <span class="nav-link-title">
+                  Vender
+                </span>
+              </a>
+            <?php endif ?>
             <div class="dropdown-menu">
 
               <a class="dropdown-item" href="<?= base_url() ?>/pedidos/mesas">
@@ -465,7 +526,7 @@
 
 
                   <div class="dropend">
-                   <!--  <a class="dropdown-item dropdown-toggle" href="#sidebar-error" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+                    <!--  <a class="dropdown-item dropdown-toggle" href="#sidebar-error" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
 
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -660,7 +721,7 @@
                       <path d="M6 5l14 1l-1 7h-13" />
                     </svg> Por Producto</a>
 
-  
+
                   <!--  -->
                   <!--  <a href="<?= base_url() ?>/consultas_y_reportes/consulta_cartera" class="dropdown-item">
 

@@ -28,7 +28,8 @@ class pagosModel extends Model
         'cambio',
         'id_factura',
         'saldo',
-        'nit_cliente'
+        'nit_cliente',
+        'id_pedido'
     ];
 
     public function set_ventas_pos($id_apertura)

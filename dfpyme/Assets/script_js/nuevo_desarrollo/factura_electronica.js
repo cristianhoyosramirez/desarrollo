@@ -2,6 +2,8 @@ let invoice = { id: 0, dian_status: "", order_reference: "" }
 let erroresp = { errors: [] };
 let Error = { error: "" };
 
+
+
 async function sendInvoice(iddoc) {
     invoice.id = iddoc;
     $("#id_de_factura").val(iddoc);
@@ -54,6 +56,8 @@ async function sendInvoice(iddoc) {
 }
 
 function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario, propina_format) {
+    let button = document.querySelector("#btn_pagar");
+    button.disabled = true; // Habilitar el botón
 
     if (pago_total >= parseInt(valor_venta)) {
         $.ajax({
@@ -81,7 +85,10 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                         confirmButtonColor: "#2AA13D",
                     });
                 }
-                if (resultado.resultado == 1) {
+                if (resultado.resultado == 1) {let button = document.querySelector("#btn_pagar");
+                button.disabled = false; // Habilitar el botón
+
+
 
                     limpiar_todo();
                     var mesas = document.getElementById("todas_las_mesas");
@@ -102,8 +109,7 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     $('#nombre_mesero').html("Mesero: ")
                     $('#tipo_pago').val(1)
 
-
-
+                    
 
                     let lista_categorias = document.getElementById("lista_categorias");
                     lista_categorias.style.display = "none";
@@ -180,6 +186,8 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                                 success: function (resultado) {
                                     var resultado = JSON.parse(resultado);
                                     if (resultado.resultado == 1) {
+
+                                        btnPagar.setAttribute("disabled", "true");
 
                                         let mesas = document.getElementById("todas_las_mesas");
                                         mesas.style.display = "block"
