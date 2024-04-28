@@ -44,7 +44,7 @@ class pagosModel extends Model
     ");
         return $datos->getResultArray();
     }
-  /*   public function set_ventas_electronicas($id_apertura)
+    /*   public function set_ventas_electronicas($id_apertura)
     {
         $datos = $this->db->query("
     SELECT
@@ -56,7 +56,7 @@ class pagosModel extends Model
     ");
         return $datos->getResultArray();
     } */
- public function set_ventas_electronicas($id_apertura)
+    public function set_ventas_electronicas($id_apertura)
     {
         $datos = $this->db->query("
         SELECT
@@ -67,7 +67,7 @@ class pagosModel extends Model
             id_apertura = $id_apertura AND id_estado = 8
     ");
         return $datos->getResultArray();
-    } 
+    }
 
     function get_id($fecha_inicial, $fecha_final)
     {
@@ -381,7 +381,7 @@ class pagosModel extends Model
                                  ");
         return $datos->getResultArray();
     }
-    
+
     public function ventas_contado($id_apertura)
     {
 
@@ -393,5 +393,56 @@ class pagosModel extends Model
         id_apertura = $id_apertura AND id_estado = 1
                                  ");
         return $datos->getResultArray();
+    }
+    public function pago_transferencia($id_factura)
+    {
+
+        $datos = $this->db->query("
+        SELECT
+        *
+    FROM
+        pagos
+    WHERE
+        id_factura = $id_factura AND recibido_transferencia > 0
+                                 ");
+        return $datos->getResultArray();
+    }
+    public function pago_efectivo($id_factura)
+    {
+
+        $datos = $this->db->query("
+        SELECT
+        *
+    FROM
+        pagos
+    WHERE
+        id_factura = $id_factura
+                                 ");
+        return $datos->getResultArray();
+    }
+    public function borrar_remisiones($id_apertura)
+    {
+        try {
+            $this->db->transStart(); // Iniciar transacción
+
+            $this->db->query("
+                DELETE FROM pagos WHERE id_apertura = $id_apertura AND id_estado = 7; 
+                DELETE FROM kardex WHERE id_apertura = $id_apertura AND id_estado = 7; 
+            ");
+
+            $this->db->transComplete(); // Finalizar transacción
+
+            if ($this->db->transStatus() === false) {
+                // La transacción falló, por lo que se revierte
+                $this->db->transRollback();
+                return false;
+            } else {
+                // La transacción se completó con éxito
+                return true;
+            }
+        } catch (\Exception $e) {
+            // Captura cualquier excepción
+            return false;
+        }
     }
 }

@@ -51,12 +51,14 @@ MOVIMIENTO DE CAJA
 
                     <?php $borrar_remisiones = model('configuracionPedidoModel')->select('borrar_remisiones')->first(); ?>
                     <?php if ($borrar_remisiones['borrar_remisiones'] == 't') : ?>
-                    
-                        <span class="d-none d-sm-inline">
-                            <a href="#" class="btn btn-outline-cyan" onclick="borrar_remisiones(<?php echo $id_apertura ?>)" title="Borrar remisiones " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
-                                Borrar remisiones
-                            </a>
-                        </span>
+                        <form action="<?= base_url('configuracion/borrado_de_remisiones') ?>" method="POST">
+                            <input type="hidden" name="id_apertura" value="<?php echo $id_apertura ?>" id="id_apertura">
+                            <span class="d-none d-sm-inline">
+                                <button type="submit" class="btn btn-outline-cyan" title="Borrar remisiones " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                    Borrar remisiones
+                                </button>
+                            </span>
+                        </form>
                     <?php endif ?>
 
 

@@ -555,6 +555,7 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->post('consulta_factura_electronica', 'Configuracion::consulta_factura_electronica');
     $routes->get('borrar_remisiones', 'Configuracion::borrar_remisiones');
     $routes->post('actualizar_remisiones', 'Configuracion::actualizar_remisiones');
+    $routes->post('borrado_de_remisiones', 'Configuracion::borrado_de_remisiones');
 });
 
 /*

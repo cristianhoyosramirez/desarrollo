@@ -134,11 +134,11 @@ class Configuracion extends BaseController
 
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
-       
+
 
         $id_categorias = model('categoriasModel')->sub_categorias();
 
-      
+
 
         return view('configuracion/sub_categoria', [
             'id_categorias' => $id_categorias,
@@ -254,7 +254,7 @@ class Configuracion extends BaseController
             'descripcionestado' => $descripcion,
             'estado' => $estado,
             'orden' => $orden,
-            'consulta'=>$consulta
+            'consulta' => $consulta
         ];
 
         //var_dump($data);  exit();
@@ -566,32 +566,49 @@ class Configuracion extends BaseController
         echo  json_encode($json_data);
     }
 
-    function borrar_remisiones(){
-        $remsiones=model('configuracionPedidoModel')->select('borrar_remisiones')->first();
+    function borrar_remisiones()
+    {
+        $remsiones = model('configuracionPedidoModel')->select('borrar_remisiones')->first();
 
         return view('configuracion/remisiones', [
-            'remisiones'=>$remsiones['borrar_remisiones']
+            'remisiones' => $remsiones['borrar_remisiones']
         ]);
     }
 
-    function actualizar_remisiones(){
-        
+    function actualizar_remisiones()
+    {
+
         $valor = $this->request->getPost('valor');
 
-        if ($valor== 1){
-            $permitir=true;
+        if ($valor == 1) {
+            $permitir = true;
         }
-        if ($valor== 0){
-            $permitir=false;
+        if ($valor == 0) {
+            $permitir = false;
         }
 
-        $actualizar = model('configuracionPedidoModel')->set('borrar_remisiones',$permitir)->update();
+        $actualizar = model('configuracionPedidoModel')->set('borrar_remisiones', $permitir)->update();
 
         $returnData = array(
-            
+
             "resultado" => 1
         );
         echo  json_encode($returnData);
+    }
+
+    function borrado_de_remisiones()
+    {
+        $id_apertura = $this->request->getPost('id_apertura');
+
+        $borrar_remisiones = model('pagosModel')->borrar_remisiones($id_apertura);
+       
+
+        if ($borrar_remisiones  ){
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'success');
+            return redirect()->to(base_url('consultas_y_reportes/consultas_caja'))->with('mensaje', 'Borrado éxitoso ');
+        }
+
 
     }
 }

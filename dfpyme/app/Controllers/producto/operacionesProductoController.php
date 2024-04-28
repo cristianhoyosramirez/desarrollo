@@ -502,8 +502,8 @@ class operacionesProductoController extends BaseController
                     'aplica_descuento' => $aplica_descuento,
                     'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
                     'valor_impuesto_saludable' => $valorImpuestoSaludable,
-                    'id_subcategoria' => $this->request->getPost('sub_categoria')
-                    //'id_subcategoria' => 1
+                    //'id_subcategoria' => $this->request->getPost('sub_categoria')
+                    'id_subcategoria' => 1
                 ];
 
                 $insert = model('productoModel')->insert($data);

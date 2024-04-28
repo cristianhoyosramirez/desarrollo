@@ -108,13 +108,15 @@ class FacturaElectronica extends BaseController
 
         $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $id_mesa)->first();
 
+      
+
         $mesero = "";
 
         if (empty($id_mesero)) {
             $mesero = 0;
         }
         if (!empty($id_mesero)) {
-            $mesero = $id_mesero['id_mesero'];
+            $mesero = $id_mesero['fk_usuario'];
         }
 
 

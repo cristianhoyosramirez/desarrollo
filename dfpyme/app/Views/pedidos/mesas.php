@@ -321,11 +321,11 @@ Bienvenido DFpyme
                             <div class="row mb-2 gy-2"> <!-- Fila para los botones -->
                                 <div class="col-md-6">
 
-                                    <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                    
                                         <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
                                             Orden de pedido
                                         </a>
-                                    <?php endif ?>
+                                   
                                 </div>
                                 <?php if ($user_session->tipo != 3) : ?>
 
@@ -333,7 +333,7 @@ Bienvenido DFpyme
                                         <a class="btn btn-outline-muted w-100" onclick="retiro_dinero()">
                                             Retirar dinero</a>
                                     </div>
-                                    <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                    
                                         <div class="col-md-6">
                                             <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">
                                                 Devolución
@@ -344,7 +344,7 @@ Bienvenido DFpyme
                                                 Pago parcial
                                             </a>
                                         </div>
-                                    <?php endif ?>
+                                    
                                 <?php endif ?>
                             </div>
 

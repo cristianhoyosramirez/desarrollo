@@ -14,9 +14,14 @@ class estadoModel extends Model
     public function estados()
     {
         $datos = $this->db->query("
-       SELECT *
-        FROM estado
-        WHERE estado = 'true'
+        SELECT
+            *
+         FROM
+            estado
+        WHERE
+            estado = TRUE
+        ORDER BY
+            orden ASC
 
        ");
         return $datos->getResultArray();

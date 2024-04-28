@@ -49,7 +49,7 @@
         <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
 
 
-   
+
 
         <script>
             $('#creacion_cliente_electronico').submit(function(e) {
@@ -118,6 +118,8 @@
         <script>
             function nuevo_cliente() {
                 $("#crear_cliente").modal("show");
+
+
 
             }
         </script>
@@ -241,11 +243,14 @@
                         var resultado = JSON.parse(resultado);
 
                         if (resultado.resultado == 1) {
-                            $('#modal_editar_cliente').html(resultado.datos_cliente)
+                            $('#datos_editar_cliente').html(resultado.datos_cliente)
+                            
                             myModal = new bootstrap.Modal(
                                 document.getElementById("editar_cliente"), {}
                             );
                             myModal.show();
+
+
 
                             /* const Toast = Swal.mixin({
                                  toast: true,

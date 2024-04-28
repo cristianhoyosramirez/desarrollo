@@ -35,7 +35,7 @@
                     </td>
                     <td>
                         <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
-                            <input type="text" class="form-control text-center" inputmode="numeric" value="<?php echo  number_format($detalle['valor_unitario'], 0, ",", ".")  ?>" placeholder="Valor unitario " onkeyup="cambiar_precio(this.value,<?php echo $detalle['id'] ?>),pasar_id(<?php echo $detalle['id'] ?>)" id="input<?php echo $detalle['id'] ?>">
+                            <input type="text" class="form-control text-center" inputmode="numeric" value="<?php echo  number_format($detalle['valor_unitario'], 0, ",", ".")  ?>" placeholder="Valor unitario " onkeyup="cambiar_precio(this.value,<?php echo $detalle['id'] ?>)" id="input<?php echo $detalle['id'] ?>">
                         <?php endif ?>
                     </td>
                     <td>
@@ -117,7 +117,7 @@
 </script> -->
 
 
-<script>
+<!-- <script>
     function formatNumber(id) {
         const input = document.querySelector("#input" + id);
         // Verificar si se encontró el input
@@ -141,13 +141,16 @@
     }
 </script>
 
-<script>
+ <script>
     function pasar_id(id) {
+
+        console.log(id)
+        
         const dynamicId = id;
         formatNumber(dynamicId);
     }
 </script>
-
+ -->
 
 <script>
     function cambiar_precio(valor, id_producto) {
@@ -157,7 +160,7 @@
 
         valor = valor.trim() === '' ? 0 : parseInt(valor.replace(/\./g, ''));
 
-        cambio_precio(url, valor, id_producto_pedido);
+        //cambio_precio(url, valor, id_producto_pedido);
 
         $.ajax({
             data: {
@@ -176,6 +179,7 @@
 
                     // Asigna el valor con separador de miles al elemento con id "descuento_manual"
                     $('#total_producto' + resultado.id).html(resultado.total_producto);
+                    $('#input' + resultado.id).val(resultado.precio_producto);
                     $('#valor_pedido').html(resultado.total_pedido);
 
 

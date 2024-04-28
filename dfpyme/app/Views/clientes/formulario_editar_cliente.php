@@ -117,12 +117,11 @@
     <div class="col-md-3">
         <label for="inputCity" class="form-label">Ciudad
         </label>
-        <?php $ciudad = model('ciudadModel')->orderBy('iddepartamento', 'asc')->findAll();  ?>
+        <?php $ciudad = model('ciudadModel')->where('iddepartamento', $id_departamento)->orderBy('nombreciudad', 'asc')->findAll();  ?>
 
         <select class="form-select" id="ciudad_cliente_edicion" name="ciudad_edicion">
             <?php foreach ($ciudad as $detalle) : ?>
 
-                <option value=""><?php echo $detalle['nombreciudad'] ?></option>
                 <option value="<?php echo $detalle['idciudad'] ?>" <?php if ($detalle['idciudad'] == $datos_cliente['idciudad']) : ?>selected <?php endif; ?>><?php echo $detalle['nombreciudad']   ?> </option>
             <?php endforeach ?>
 
@@ -224,10 +223,11 @@
 
 </form>
 
-<script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/departamentoCiudad.js"></script>
 
-<!-- JQuery -->
-<script src="<?= base_url() ?>/Assets/js/jquery-3.5.1.js"></script>
+
+<!-- JQuery 
+<script src="<?= base_url() ?>/Assets/js/jquery-3.5.1.js"></script>-->
+<script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/departamentoCiudad.js"></script>
 <!--select2 -->
 <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
@@ -355,7 +355,7 @@
 </script>
 
 
-<!--Actualizar los datos de las resolucion de facturacion -->
+
 <script>
     $('#edicion_cliente_electronico').submit(function(e) {
         e.preventDefault();

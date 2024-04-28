@@ -1,6 +1,6 @@
 function cambio_precio(url, valor, id) {
 
-    console.log(valor)
+    //console.log(valor)
 
    /*  $.ajax({
         data: {
