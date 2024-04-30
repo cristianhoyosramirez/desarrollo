@@ -183,10 +183,9 @@ Reporte de costos
     <table class="table">
         <thead class="table-dark">
             <tr>
-
+                <td>Costo</td>
                 <td scope="col">BASE IVA 0 </td>
                 <td scope="col">IVA 0</td>
-
                 <td scope="col">BASE IVA 19 </td>
                 <td scope="col">IVA 19</td>
                 <td scope="col">BASE IVA 5</td>
@@ -199,6 +198,7 @@ Reporte de costos
         </thead>
         <tbody>
             <tr>
+                <td id="costo"></td>
                 <td>0</td>
                 <td>0</td>
                 <td>
@@ -337,6 +337,7 @@ Reporte de costos
                     $('#valor_venta').html(json.total_venta);
                     $('#base_inc').html(json.base_inc);
                     $('#inc').html(json.inc);
+                    $('#costo').html(json.costo);
                     return json.data;
                 },
             },

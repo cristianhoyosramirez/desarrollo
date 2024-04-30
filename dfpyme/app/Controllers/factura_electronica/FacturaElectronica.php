@@ -222,7 +222,7 @@ class FacturaElectronica extends BaseController
                             'id_apertura' => $apertura['numero'],
                             'valor_unitario' => $detalle['valor_unitario'],
                             'id_factura' => $id_factura,
-                            'costo' => round($costo['precio_costo']),
+                            'costo' => round($costo['precio_costo']* $detalle['cantidad_producto']),
                             'ico' => $calculo[0]['ico'],
                             'iva' => $calculo[0]['iva'],
                             'id_estado' => 8,

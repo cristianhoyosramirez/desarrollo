@@ -445,4 +445,20 @@ class pagosModel extends Model
             return false;
         }
     }
+
+    public function total_costo($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        SELECT
+        SUM(costo) AS costo
+    FROM
+        kardex
+    WHERE
+        id_apertura = $id_apertura;
+                                 ");
+        return $datos->getResultArray();
+    }
+
+
 }

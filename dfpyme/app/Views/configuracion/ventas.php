@@ -113,7 +113,7 @@ Reporte de costos
                     <td>Documento</th>
                     <td>Valor</th>
                     <td>Tipo documento</th>
-                    <td>Valor</th>
+                    
                     <td>IVA</th>
                     <td>INC</th>
                     <td>Venta</th>
@@ -176,7 +176,7 @@ Reporte de costos
                 }
             },
             ajax: {
-                url: '<?php echo base_url() ?>' + "/reportes/data_table_reporte_costo",
+                url: '<?php echo base_url() ?>' + "/reportes/data_table_ventas",
                 data: function(d) {
                     return $.extend({}, d, {
                         // documento: documento,

@@ -177,6 +177,7 @@ class cerrarVentaModel extends Model
                     'id_apertura' => $id_apertura,
                     'valor_unitario' => $detalle['valor_unitario'],
                     'id_factura' => $factura_venta,
+                    //'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
                     'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
                     'ico' => $calculo[0]['ico'],
                     'iva' => $calculo[0]['iva'],

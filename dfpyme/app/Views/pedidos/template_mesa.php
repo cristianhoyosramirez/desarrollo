@@ -224,6 +224,107 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/nueva_factura.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_precio.js"></script>
 
+
+    <!--   <script>
+        function formatNumber(id) {
+            const input = document.querySelector("#input" + id);
+            // Verificar si se encontró el input
+            if (!input) {
+                console.error("Input con ID '" + id + "' no encontrado.");
+                return;
+            }
+            // Definir la función para formatear el número
+            function format(n) {
+                // Elimina cualquier carácter que no sea un número
+                n = n.replace(/\D/g, "");
+                // Formatea el número
+                return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+            }
+            // Agregar el evento "input" al input
+            input.addEventListener("input", (e) => {
+                const element = e.target;
+                const value = element.value;
+                element.value = format(value);
+            });
+        }
+    </script> -->
+
+    <!-- <script>
+    function pasar_id(id) {
+
+        console.log(id)
+        
+        const dynamicId = id;
+        formatNumber(dynamicId);
+    }
+</script>
+ -->
+
+    <script>
+        function cambiar_precio(valor, id_producto) {
+
+            var url = document.getElementById("url").value;
+            var id_producto_pedido = id_producto;
+
+            valor = valor.trim() === '' ? 0 : parseInt(valor.replace(/\./g, ''));
+
+            //cambio_precio(url, valor, id_producto_pedido);
+
+
+
+            const dynamicId = id_producto;
+            // formatNumber(dynamicId);
+
+
+            const input = document.querySelector("#input" + dynamicId);
+            // Verificar si se encontró el input
+            if (!input) {
+                console.error("Input con ID '" + id + "' no encontrado.");
+                return;
+            }
+            // Definir la función para formatear el número
+            function format(n) {
+                // Elimina cualquier carácter que no sea un número
+                n = n.replace(/\D/g, "");
+                // Formatea el número
+                return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+            }
+            // Agregar el evento "input" al input
+            input.addEventListener("input", (e) => {
+                const element = e.target;
+                const value = element.value;
+                element.value = format(value);
+            });
+
+
+            $.ajax({
+                data: {
+                    valor,
+                    id_producto_pedido
+                },
+                url: url +
+                    "/" +
+                    "eventos/editar_precio_producto",
+                type: "post",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+                        var precioConSeparador = resultado.precio_producto.toLocaleString();
+
+                        // Asigna el valor con separador de miles al elemento con id "descuento_manual"
+                        $('#total_producto' + resultado.id).html(resultado.total_producto);
+                        //$('#input' + resultado.id).val(resultado.precio_producto);
+                        $('#valor_pedido').html(resultado.total_pedido);
+
+
+                    }
+                },
+            });
+        }
+    </script>
+
+
     <script>
         $(document).ready(function() {
             // Resaltar el input al hacer clic
@@ -314,7 +415,7 @@
         }
     </script> -->
 
-    
+
 
 
     <script>

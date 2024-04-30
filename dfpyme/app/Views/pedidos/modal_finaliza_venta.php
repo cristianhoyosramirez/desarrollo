@@ -202,7 +202,7 @@
 
                     <div class="col-5">
                       <div class="form-floating ">
-                        <input type="text" class="form-control" id="efectivo" value="0" autocomplete="off" onkeyup="cambio(this.value),saltar_factura_pos(event,'transaccion')" onfocus="guardarCampoActual(this)" />
+                        <input type="text" class="form-control" id="efectivo" value="0" autocomplete="off" onkeyup="cambio(this.value);saltar_factura_pos(event,'transaccion')" onfocus="guardarCampoActual(this)" />
                         <label>Valor efectivo</label>
                       </div>
                     </div>
