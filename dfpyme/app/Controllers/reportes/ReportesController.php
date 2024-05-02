@@ -80,14 +80,16 @@ class ReportesController extends BaseController
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
             $sub_array[] = $detalle['documento'];
-            $sub_array[] = "$ " . number_format($detalle['total_documento'], 0, ",", ".");
+           
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $tipo_documento['descripcionestado'];
-            $sub_array[] = "$ " . number_format($costo[0]['costo'], 0, ",", ".");
             $sub_array[] = number_format($detalle['total_documento'] - ($iva[0]['iva'] + $inc[0]['ico']), 0, ",", ".");
-            $sub_array[] = number_format($iva[0]['iva'], 0, ",", ".");
+            $sub_array[] = "$ " . number_format($iva[0]['iva'], 0, ",", ".");
+           // $sub_array[] = number_format($detalle['total_documento'] - ($iva[0]['iva'] + $inc[0]['ico']), 0, ",", ".");
+            //$sub_array[] = number_format($iva[0]['iva'], 0, ",", ".");
             $sub_array[] = number_format($inc[0]['ico'], 0, ",", ".");
+            $sub_array[] = number_format($detalle['total_documento'], 0, ",", ".");
 
 
             $data[] = $sub_array;

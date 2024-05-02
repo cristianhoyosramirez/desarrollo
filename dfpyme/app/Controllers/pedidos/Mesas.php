@@ -42,19 +42,18 @@ class Mesas extends BaseController
 
         $subcategorias = model('configuracionPedidoModel')->select('sub_categoria')->first();
         $id_categoria = $_POST['id_categoria'];
-        //$id_categoria = 7;
+        //$id_categoria = 2;
 
-        $tipo_pedido = $_POST['tipo_pedido'];
+        //$tipo_pedido = $_POST['tipo_pedido'];
 
-        //$tipo_pedido = "movil";
+        $tipo_pedido = "computador";
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
 
 
         $id_subcategorias = model('productoCategoriaModel')->id_categorias($id_categoria);
 
-
-
+    
         if (!empty($id_subcategorias)) {
 
             if ($tipo_pedido == "computador") {

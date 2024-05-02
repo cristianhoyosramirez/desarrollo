@@ -177,19 +177,25 @@ class categoriaController extends BaseController
 
     function actualizar_nombre()
     {
+        $nombre_categoria=$this->request->getPost('nombre_categoria');
+        $codigo_categoria= $this->request->getPost('codigo_categoria');
         $data = [
-            'nombrecategoria' => $this->request->getPost('nombre_categoria')
+            'nombrecategoria' => $nombre_categoria
         ];
 
         $model = model('categoriasModel');
         $categorias = $model->set($data);
-        $categorias = $model->where('codigocategoria', $this->request->getPost('codigo_categoria'));
+        $categorias = $model->where('codigocategoria',$codigo_categoria);
         $categorias = $model->update();
+
+
+        $sub_categoria=model('subCategoriaModel')->where('id_categoria',$codigo_categoria)->first();
 
         if ($categorias) {
             $categorias = model('categoriasModel')->select('codigocategoria');
             $categorias = model('categoriasModel')->select('permitir_categoria');
             $categorias = model('categoriasModel')->select('impresora');
+            $categorias = model('categoriasModel')->select('subcategoria');
             $categorias = model('categoriasModel')->select('nombrecategoria')->orderBy('codigocategoria', 'asc')->find();
             $impresoras = model('impresorasModel')->select('*')->find();
             $returnData = array(

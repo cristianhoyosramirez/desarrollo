@@ -22,7 +22,7 @@ class inventarioModel extends Model
     FROM
         producto
     WHERE
-        nombreproducto ILIKE '%$valor%' order by nombreproducto asc;
+        nombreproducto ILIKE '%$valor%' and estadoproducto = 'true' order by nombreproducto asc;
          ");
         return $datos->getResultArray();
     }

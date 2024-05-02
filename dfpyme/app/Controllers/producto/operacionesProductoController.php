@@ -687,9 +687,12 @@ class operacionesProductoController extends BaseController
 
             if ($this->request->getPost('informacion_tributaria') == 1) {
                 $aplica_ico = "t";
+                $id_iva=31;
+
             }
             if ($this->request->getPost('informacion_tributaria') == 2) {
                 $aplica_ico = "f";
+                $id_iva=$this->request->getPost('valor_iva');
             }
 
             $temp_precio_2 = $this->request->getPost('precio_2');
@@ -702,12 +705,12 @@ class operacionesProductoController extends BaseController
                 'nombreproducto' => $this->request->getPost('crear_producto_nombre'),
                 'codigocategoria' => $this->request->getPost('edicion_de_categoria_producto'),
                 'idmarca' => $this->request->getPost('editar_marca_producto'),
-                'idiva' => 31,
+                'idiva' => $id_iva,
                 'valorventaproducto' =>  str_replace('.', '', $this->request->getPost('editar_valor_venta_producto')),
                 'precio_costo' =>  str_replace('.', '', $this->request->getPost('edicion_de_valor_costo_producto')),
                 'descto_mayor' => $precio_2,
                 'se_imprime' => $imprimir_comanda,
-                'se_imprime' => $imprimir_comanda,
+                //'se_imprime' => $imprimir_comanda,
                 'id_ico_producto' => $this->request->getPost('valor_ico'),
                 'aplica_ico' => $aplica_ico,
                 'aplica_descuento' => $permite_descuento,

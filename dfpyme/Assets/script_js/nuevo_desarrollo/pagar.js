@@ -71,10 +71,9 @@ function pagar() {
 
 
         } else if (estado == 1 || estado == 7) {
-
             let button = document.querySelector("#btn_pagar");
-            button.disabled = true; // Habilitar el botón
-
+            button.disabled = true; // Deshabilitar el botón de pagar
+        
             if (pago_total >= parseInt(valor_venta)) {
                 $.ajax({
                     data: {
@@ -87,56 +86,48 @@ function pagar() {
                         id_usuario,
                         propina_Format,
                         tipo_pago
-
                     },
                     url: url + "/" + "pedidos/cerrar_venta",
                     type: "POST",
                     success: function (resultado) {
                         var resultado = JSON.parse(resultado);
                         if (resultado.resultado == 1) {
-
-                            let button = document.querySelector("#btn_pagar");
-                            button.disabled = false; // Habilitar el botón
-
+                            
+                            $("#btn_pagar").prop("disabled", false); // Habilitar el botón de pagar
                             $('#finalizar_venta').modal('hide');
-                            $('#todas_las_mesas').html(resultado.mesas)
-                            $('#lista_completa_mesas').html(resultado.mesas)
-                            $('#efectivo').val(0)
-                            $('#transaccion').val(0)
-                            $('#propina_pesos_final').val(0)
-                            $('#total_propina').val(0)
-                            $('#tipo_pago').val(1)
-                        
+                            $('#todas_las_mesas').html(resultado.mesas);
+                            $('#lista_completa_mesas').html(resultado.mesas);
+                            $('#efectivo').val(0);
+                            $('#transaccion').val(0);
+                            $('#propina_pesos_final').val(0);
+                            $('#total_propina').val(0);
+                            $('#tipo_pago').val(1);
+        
                             if (resultado.valor_pedio == '$ 0') {
-                                $('#mesa_pedido').html('')
-                                $('#pedido_mesa').html('Pedido')
-
+                                $('#mesa_pedido').html('');
+                                $('#pedido_mesa').html('Pedido');
                             }
-
+        
                             if (resultado.tipo_pago == 1) {
                                 limpiar_todo();
-                                //$('#efectivo').val(0)
                             }
+        
                             if (resultado.tipo_pago == 0) {
-                                $('#mesa_productos').html(resultado.productos)
-                                //$('#mesa_pedido').html(resultado.nombre_mesa)
-                                //$('#pedido_mesa').html('Pedido: ' + resultado.pedido)
-                                $('#valor_pedido').html(resultado.valor_pedio)
-                                $('#subtotal_pedido').val(resultado.valor_pedio)
-                                $('#productos_categoria').html('')
-                                $('#pago').html('Valor pago: 0')
-                                $('#cambio').html('Cambio: 0')
-                                $('#propina_pesos').val(0)
-                                $('#propina_pesos_final').val(0)
-                                $('#total_propina').val(0)
-                                btnPagar.setAttribute("disabled", "false");
-
+                                $('#mesa_productos').html(resultado.productos);
+                                $('#valor_pedido').html(resultado.valor_pedio);
+                                $('#subtotal_pedido').val(resultado.valor_pedio);
+                                $('#productos_categoria').html('');
+                                $('#pago').html('Valor pago: 0');
+                                $('#cambio').html('Cambio: 0');
+                                $('#propina_pesos').val(0);
+                                $('#propina_pesos_final').val(0);
+                                $('#total_propina').val(0);
+                                $("#btn_pagar").prop("disabled", false); // Habilitar el botón de pagar
                             }
+        
                             let mesas = document.getElementById("todas_las_mesas");
-                            mesas.style.display = "block"
-
-
-
+                            mesas.style.display = "block";
+        
                             Swal.fire({
                                 title: 'Resumen',
                                 showDenyButton: true,
@@ -162,19 +153,14 @@ function pagar() {
                                     '</div>' +
                                     '<hr class="custom-hr">' + // Línea de separación personalizada
                                     '</div>',
-
                                 confirmButtonColor: '#58C269',
                                 denyButtonColor: '#6782EF',
-
                             }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
-
                                     let categorias = document.getElementById("lista_categorias");
-                                    categorias.style.display = "block"
-
-                                    let numero_de_factura = resultado.id_factura
-
+                                    categorias.style.display = "block";
+                                    let numero_de_factura = resultado.id_factura;
+        
                                     $.ajax({
                                         data: {
                                             numero_de_factura,
@@ -184,27 +170,17 @@ function pagar() {
                                         success: function (resultado) {
                                             var resultado = JSON.parse(resultado);
                                             if (resultado.resultado == 1) {
-
-
                                                 let mesas = document.getElementById("todas_las_mesas");
-                                                mesas.style.display = "block"
-
+                                                mesas.style.display = "block";
                                                 let lista_categorias = document.getElementById("lista_categorias");
                                                 lista_categorias.style.display = "none";
-                                                /**
-                                                 * Aca llamo a la funcion sweet alert y se le pasan los parametros.
-                                                 */
-                                                sweet_alert('success', 'Impresión de factura correcto  ');
+                                                sweet_alert('success', 'Impresión de factura correcto');
                                             }
                                         },
                                     });
-
-
-
-
                                 } else if (result.isDenied) {
-                                    let id_factura = resultado.id_factura
-
+                                    let id_factura = resultado.id_factura;
+        
                                     $.ajax({
                                         data: {
                                             id_factura,
@@ -214,22 +190,16 @@ function pagar() {
                                         success: function (resultado) {
                                             var resultado = JSON.parse(resultado);
                                             if (resultado.resultado == 1) {
-
                                                 let mesas = document.getElementById("todas_las_mesas");
-                                                mesas.style.display = "block"
-
+                                                mesas.style.display = "block";
                                                 let lista_categorias = document.getElementById("lista_categorias");
                                                 lista_categorias.style.display = "none";
-
-                                                /**
-                                                 * Aca llamo a la funcion sweet alert y se le pasan los parametros.
-                                                 */
-                                                sweet_alert('success', 'Se ha finalizado la venta ');
+                                                sweet_alert('success', 'Se ha finalizado la venta');
                                             }
                                         },
                                     });
                                 }
-                            })
+                            });
                         }
                         if (resultado.resultado == 0) {
                             Swal.fire({
@@ -238,16 +208,14 @@ function pagar() {
                                 confirmButtonColor: "#ff0000", // Color rojo en formato hexadecimal
                                 confirmButtonText: "Aceptar" // Texto personalizado para el botón de aceptar
                             });
-
                         }
-
-
                     },
                 });
             } else if (pago_total < parseInt(valor_venta)) {
-                $('#valor_pago_error').html('¡ Pago insuficiente !')
+                $('#valor_pago_error').html('¡ Pago insuficiente !');
             }
         }
+        
 
 
         if (estado == 2) {
