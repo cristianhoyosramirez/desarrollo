@@ -68,6 +68,88 @@
         <script src="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.js"></script>
 
 
+
+
+        <script>
+            function estado_dian(id_estado) {
+
+                if ($.fn.DataTable.isDataTable('#consulta_ventas')) {
+                    $('#consulta_ventas').DataTable().destroy();
+                }
+
+                $('#consulta_ventas').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    searching: false,
+                    order: [
+                        [0, 'desc']
+                    ],
+                    language: {
+                        decimal: "",
+                        emptyTable: "No hay datos",
+                        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                        infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                        infoFiltered: "(Filtro de _MAX_ total registros)",
+                        infoPostFix: "",
+                        thousands: ",",
+                        lengthMenu: "Mostrar _MENU_ registros",
+                        loadingRecords: "Cargando...",
+                        processing: "Procesando...",
+                        search: "Buscar",
+                        zeroRecords: "No se encontraron coincidencias",
+                        paginate: {
+                            first: "Primero",
+                            last: "Ultimo",
+                            next: "Próximo",
+                            previous: "Anterior"
+                        },
+                        aria: {
+                            sortAscending: ": Activar orden de columna ascendente",
+                            sortDescending: ": Activar orden de columna desendente"
+                        }
+                    },
+                    ajax: {
+                        url: '<?php echo base_url() ?>' + "/reportes/estado_dian",
+                        data: function(d) {
+                            return $.extend({}, d, {
+                                 estado_dian: id_estado,
+                                // fecha_inicial: fecha_inicial,
+                                // fecha_final: fecha_final
+                            });
+                        },
+                        dataSrc: function(json) {
+                            //$('#saldo_total').html(json.total);
+                            $('#saldo').html(json.saldo_pendiente_por_cobrar);
+                            $('#abonos').html(json.abonos);
+                            $('#total_documentos').html(json.total);
+                            $('#total_ventas').html(json.titulo);
+                            $('#dian_no_enviado').html(json.dian_no_enviado);
+                            $('#dian_aceptado').html(json.dian_aceptado);
+                            $('#dian_rechazado').html(json.dian_rechazado);
+                            $('#dian_error').html(json.dian_error);
+
+                            if (json.abonos_sin_punto > 0) {
+                                var div = document.getElementById("pagos_recibidos");
+                                div.style.display = "block";
+                            }
+                            if (json.saldo_pendiente_por_cobrar_sin_punto > 0) {
+                                var div = document.getElementById("saldo_pendiente_pago");
+                                div.style.display = "block";
+                            }
+
+
+                            return json.data;
+                        }
+                    },
+                    columnDefs: [{
+                        targets: [4],
+                        orderable: false
+                    }]
+                });
+            }
+        </script>
+
+
         <script>
             function limpiar() {
                 document.getElementById("abono_factura_credito").addEventListener("keydown", function(event) {
@@ -491,6 +573,10 @@
                             $('#abonos').html(json.abonos);
                             $('#total_documentos').html(json.total);
                             $('#total_ventas').html(json.titulo);
+                            $('#dian_no_enviado').html(json.dian_no_enviado);
+                            $('#dian_aceptado').html(json.dian_aceptado);
+                            $('#dian_rechazado').html(json.dian_rechazado);
+                            $('#dian_error').html(json.dian_error);
 
                             if (json.abonos_sin_punto > 0) {
                                 var div = document.getElementById("pagos_recibidos");

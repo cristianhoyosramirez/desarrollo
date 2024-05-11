@@ -42,18 +42,20 @@ class Mesas extends BaseController
 
         $subcategorias = model('configuracionPedidoModel')->select('sub_categoria')->first();
         $id_categoria = $_POST['id_categoria'];
-        //$id_categoria = 2;
+        //$id_categoria = 7;
 
-        //$tipo_pedido = $_POST['tipo_pedido'];
+        $tipo_pedido = $_POST['tipo_pedido'];
 
-        $tipo_pedido = "computador";
+        //$tipo_pedido = "computador";
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
 
 
         $id_subcategorias = model('productoCategoriaModel')->id_categorias($id_categoria);
 
-    
+        //dd($id_subcategorias);
+
+
         if (!empty($id_subcategorias)) {
 
             if ($tipo_pedido == "computador") {
@@ -118,6 +120,8 @@ class Mesas extends BaseController
                     'productos' => $productos,
                 ]);
 
+               
+
                 $returnData = array(
                     "resultado" => 1,
                     "productos" => $items,
@@ -125,6 +129,7 @@ class Mesas extends BaseController
                         'categorias' => $categorias,
                         'id_categoria' => $id_categoria
                     ]),
+                    
                 );
                 echo  json_encode($returnData);
             }
@@ -484,6 +489,9 @@ class Mesas extends BaseController
             $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $ultimo_id_pedido)->first();
             $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $ultimo_id_pedido)->first();
 
+           // $ultimo_id_producto = model('productoPedidoModel')->insertID;
+            $ultimo_id_producto = model('productoPedidoModel')->selectMax('id')->find();
+
             $returnData = array(
                 "resultado" => 1,
                 "id_mesa" => $id_mesa,
@@ -492,7 +500,8 @@ class Mesas extends BaseController
                     "productos" => $productos_pedido,
                 ]),
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
-                "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
+                "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
+                "id"=>$ultimo_id_producto[0]['id']
 
             );
             echo  json_encode($returnData);
@@ -544,14 +553,17 @@ class Mesas extends BaseController
                     $total = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
                     $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido)->first();
                     $nota_pedido = model('pedidoModel')->select('nota_pedido')->where('id', $numero_pedido)->first();
-
+                    $ultimo_id_producto = model('productoPedidoModel')->insertID;
                     $returnData = array(
                         "resultado" => 1,
                         "id_mesa" => $id_mesa,
                         "numero_pedido" => $numero_pedido['id'],
                         "productos_pedido" => $productos_del_pedido,
                         "total_pedido" =>  "$" . number_format($total['valor_total'], 0, ',', '.'),
-                        "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
+                        "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
+                        "id"=>$ultimo_id_producto
+
+
 
                     );
                     echo  json_encode($returnData);
@@ -633,6 +645,8 @@ class Mesas extends BaseController
                 $total_pedido = $model->select('valor_total')->where('id', $numero_pedido['id'])->first();
 
 
+                $ultimo_id_producto = model('productoPedidoModel')->insertID;
+
                 $returnData = array(
                     "resultado" => 1,
                     "id_mesa" => $id_mesa,
@@ -642,7 +656,7 @@ class Mesas extends BaseController
                     ]),
                     "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                     //"cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
-
+                    "id"=>$ultimo_id_producto
                 );
                 echo  json_encode($returnData);
             }

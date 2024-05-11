@@ -59,3 +59,30 @@ async function sendInvoice(iddoc) {
     }
 
 }
+
+
+function sendInvoiceDian(id_fact) {
+
+    var url = document.getElementById("url").value;
+
+    $.ajax({
+        data: {
+            id_fact
+        },
+        url: url +
+            "/" +
+            "reportes/retrasmistir",
+        type: "post",
+        success: function(resultado) {
+            var resultado = JSON.parse(resultado);
+            if (resultado.resultado == 1) {
+
+                $('#resultado_consultado').html(resultado.datos)
+
+
+
+            }
+        },
+    });
+    
+}

@@ -424,7 +424,8 @@
             let id_mesa = document.getElementById("id_mesa_pedido").value;
             let id_usuario = document.getElementById("id_usuario").value;
             let mesero = document.getElementById("mesero").value;
-            let cantidad = document.getElementById(id_input).value;
+            //let cantidad = document.getElementById(id_input).value;
+            let cantidad = 1;
 
             $.ajax({
                 data: {
@@ -463,6 +464,9 @@
                         $('#subtotal_pedido').val(resultado.total_pedido)
                         $('#input_cantidad').val(1)
                         $('#' + resultado.id).val(1)
+                        $('#producto').val('')
+                        //$('#productos_categoria').empty()
+                        //$('#canva_producto').show()
                     }
                 },
             });

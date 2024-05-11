@@ -917,6 +917,8 @@ class Boletas extends BaseController
 
         $accion = new data_table();
 
+
+
         foreach ($datos as $detalle) {
             $sub_array = array();
 
@@ -924,7 +926,17 @@ class Boletas extends BaseController
             $sub_array[] = $detalle['fecha'];
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
-            $sub_array[] = $detalle['documento'];
+
+            if ($detalle['id_estado']==8){
+                $documento=model('facturaElectronicaModel')->select('numero')->where('id',$detalle['id_factura'])->first();
+                $numero_documento=$documento['numero'];
+            }
+
+            if($detalle['id_estado']!=8){
+                $numero_documento=$detalle['documento'];
+
+            }
+            $sub_array[] = $numero_documento;
             $sub_array[] = "$ " . number_format($detalle['total_documento'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
@@ -951,6 +963,10 @@ class Boletas extends BaseController
         }
         $total_ventas = model('pagosModel')->total_venta($id_apertura[0]['id']);
 
+        $dian_aceptado=model('facturaElectronicaModel')->dian_ceptado($id_apertura[0]['id']);
+        $dian_no_enviado=model('facturaElectronicaModel')->dian_no_enviado($id_apertura[0]['id']);
+        $dian_rechazado=model('facturaElectronicaModel')->dian_rechazado($id_apertura[0]['id']);
+        $dian_error=model('facturaElectronicaModel')->dian_error($id_apertura[0]['id']);
 
         $json_data = [
             'draw' => intval($this->request->getGEt(index: 'draw')),
@@ -963,6 +979,10 @@ class Boletas extends BaseController
             'abonos_sin_punto' => $abonos,
             'saldo_pendiente_por_cobrar' => "$ " . number_format($saldo[0]['saldo'], 0, ",", "."),
             'saldo_pendiente_por_cobrar_sin_punto' => $saldo[0]['saldo'],
+            'dian_aceptado'=> $dian_aceptado[0]['dian_aceptado'],
+            'dian_no_enviado'=> $dian_no_enviado[0]['dian_no_enviado'],
+            'dian_rechazado'=> $dian_rechazado[0]['dian_rechazado'],
+            'dian_error'=> $dian_error[0]['dian_error'],
         ];
 
         echo  json_encode($json_data);

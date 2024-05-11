@@ -535,6 +535,9 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->get('pedidos_borrados', 'Ventas::pedidos_borrados');
     $routes->post('cambiar_valor_cierre_efectivo', 'Ventas::cambiar_valor_cierre_efectivo');
     $routes->get('data_table_ventas', 'ReportesController::data_table_ventas');
+    //$routes->post('retrasmistir', 'ReportesController::retrasmistir');
+    $routes->get('retrasmistir', 'ReportesController::sendDian');
+    $routes->get('estado_dian', 'ReportesController::estado_dian');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {

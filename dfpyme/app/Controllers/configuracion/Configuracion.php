@@ -130,14 +130,15 @@ class Configuracion extends BaseController
 
     function crear_sub_categoria()
     {
-        $sub_categorias = model('subCategoriaModel')->find();
+        $sub_categorias = model('subCategoriaModel')->findAll();
 
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
 
 
-
         $id_categorias = model('categoriasModel')->sub_categorias();
 
+
+        //dd($id_categorias);
 
 
         return view('configuracion/sub_categoria', [

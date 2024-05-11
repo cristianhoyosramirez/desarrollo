@@ -44,10 +44,74 @@ class facturaElectronicaModel extends Model
         'nota'
     ];
 
-    public function insertar($datos) {
+    public function insertar($datos)
+    {
         $Nombres = $this->db->table('documento_electronico');
         $Nombres->insert($datos);
 
-        return $this->db->insertID(); 
+        return $this->db->insertID();
+    }
+
+    public function  dian_ceptado($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT
+        COUNT(id) AS dian_aceptado
+        FROM
+                documento_electronico
+        WHERE
+        id_apertura = $id_apertura AND id_status = 2
+    ");
+        return $datos->getResultArray();
+    }
+    public function  dian_no_enviado($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT
+        COUNT(id) AS dian_no_enviado
+        FROM
+                documento_electronico
+        WHERE
+        id_apertura = $id_apertura AND id_status = 1
+    ");
+        return $datos->getResultArray();
+    }
+    public function  dian_rechazado($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT
+        COUNT(id) AS dian_rechazado
+        FROM
+                documento_electronico
+        WHERE
+        id_apertura = $id_apertura AND id_status = 3
+    ");
+        return $datos->getResultArray();
+    }
+    public function  dian_error($id_apertura)
+    {
+        $datos = $this->db->query("
+        SELECT
+        COUNT(id) AS dian_error
+        FROM
+                documento_electronico
+        WHERE
+        id_apertura = $id_apertura AND id_status = 4
+    ");
+        return $datos->getResultArray();
+    }
+    public function  dian_estado_error($id_estado)
+    {
+        $datos = $this->db->query("
+        SELECT fecha,
+            nit_cliente,
+            numero,
+            neto,
+            cliente.nombrescliente
+        FROM documento_electronico
+        INNER JOIN cliente ON documento_electronico.nit_cliente = cliente.nitcliente
+        WHERE id_status= $id_estado
+    ");
+        return $datos->getResultArray();
     }
 }

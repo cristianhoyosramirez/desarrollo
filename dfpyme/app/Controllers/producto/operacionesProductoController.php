@@ -150,125 +150,7 @@ class operacionesProductoController extends BaseController
 
 
 
-    /*      function creacion_producto()
-    {
-        $this->request->getPost('impresion_en_comanda');
-    
-
-           
-
-        
-
-
   
-
-
-        
-
-         
-
-            
-
-          
-
-                $data = [
-                    'codigointernoproducto' => '917',
-                    'codigobarrasproducto' => '',
-                    'referenciaproducto' => '',
-                    'nombreproducto' =>'pr',
-                    'descripcionproducto' => '',
-                    'codigocategoria' => '1',
-                    'idmarca' => $this->request->getPost('marca_producto'),
-                    'utilidadporcentualproducto' => 1,
-                    'valorventaproducto' => 1000,
-                    'aplicaprecioporcentaje' => false,
-                    //'idiva' => $this->request->getPost('valor_iva'),
-                    'idiva' => 1,
-                    'unidadventaproducto' => 1,
-                    'cantidadminimaproducto' => 0,
-                    'cantidadmaximaproducto' => 0,
-                    'estadoproducto' => true,
-                    'aplicatalla' => false,
-                    'aplicacolor' => false,
-                    'cantidad_decimal' => false,
-                    'precio_costo' => 1000,
-                    'descto_mayor' => 0,
-                    'descto_distribuidor' => 0,
-                    'idiva_temp' => 1,
-                    'utilidad_2' => 0,
-                    'utilidad_3' => 0,
-                    'codigo_2' => '',
-                    'codigo_3' => '',
-                    'codigo_4' => '',
-                    'codigo_5' => '',
-                    'codigo_6' => '',
-                    'codigo_7' => '',
-                    'descto_3' => 0,
-                    'inicial' => true,
-                    'impoconsumo' => 0,
-                    'id_tipo_inventario' => 1,
-                    'id_ico_producto' => 1,
-                    'aplica_ico' => true,
-                    'se_imprime' => true,
-                    'aplica_descuento' => true,
-                    'id_impuesto_saludable' => 1,
-                    'valor_impuesto_saludable' => 0,
-                    //'id_subcategoria'=>$this->request->getPost('sub_categoria')
-                    'id_subcategoria' => 1
-                ];
-
-                $insert = model('productoModel')->insert($data);
-
-
-
-                if ($insert) {
-
-                    $consecutivo_producto = model('consecutivosModel')->select('numeroconsecutivo')->where(' idconsecutivos', 2)->first();
-
-                    $codigo_producto = [
-                        'numeroconsecutivo' => $consecutivo_producto['numeroconsecutivo'] + 1
-                    ];
-
-                    $model = model('consecutivosModel');
-                    $actualizar = $model->set($codigo_producto);
-                    $actualizar = $model->where(' idconsecutivos', 2);
-                    $actualizar = $model->update();
-
-                    $producto_medida = [
-                        'codigointernoproducto' => '917',
-                        'idvalor_unidad_medida' => 3
-
-                    ];
-
-                    $insertar = model('productoMedidaModel')->insert($producto_medida);
-
-                    $inventario = [
-                        'codigointernoproducto' => '917',
-                        'idvalor_unidad_medida' => 3,
-                        'idcolor' => 0,
-                        'cantidad_inventario' => 0
-
-                    ];
-
-                    $inventario = model('inventarioModel')->insert($inventario);
-
-                    echo json_encode(['code' => 1, 'msg' => 'Usuario creado']);
-                } else {
-                    echo json_encode(['code' => 0, 'msg' => 'No se pudo crear ']);
-                }
-            
-           
-
-            if (!empty($this->request->getPost('sub_categoria'))) {
-                $data_producto = [
-                    'id_categoria' => $this->request->getPost('categoria_producto'),
-                    'id_sub_categoria' => $this->request->getPost('sub_categoria')
-                ];
-
-                $insercion = model('productoCategoriaModel')->insert($data_producto);
-            }
-        
-    }  */
     function creacion_producto()
     {
         $this->request->getPost('impresion_en_comanda');
@@ -339,14 +221,26 @@ class operacionesProductoController extends BaseController
                 $aplica_descuento = 'true';
             }
 
-            $valor_venta_producto = str_replace('.', '', $this->request->getPost('valor_venta_producto'));
+            //$valor_venta_producto = str_replace('.', '', $this->request->getPost('valor_venta_producto'));
+            $valor_venta = str_replace('.', '', $this->request->getPost('valor_venta_producto'));
+
+            if ($valor_venta==0){
+                $val_venta_producto=1;
+                $valor_venta_producto=0;
+            }
+            if ($valor_venta > 0){
+                $valor_venta_producto=$valor_venta;
+            }
+
+
+            
             $precio_costo = str_replace('.', '', $this->request->getPost('valor_costo_producto'));
 
             $aplica_ico = '';
 
             $temp_precio_2 = $this->request->getPost('precio_2');
 
-            $pre_2 = (str_replace('.', '', $this->request->getPost('precio_2')) * 100) / $valor_venta_producto;
+            $pre_2 = (str_replace('.', '', $this->request->getPost('precio_2')) * 100) / $val_venta_producto;
             $precio_2 = 100 - $pre_2;
 
 

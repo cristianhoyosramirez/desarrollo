@@ -55,6 +55,35 @@ async function sendInvoice(iddoc) {
 
 }
 
+
+/* async function sendInvoiceDian(id_trans) {
+    try {
+        let url = new URL("https://api.dataico.com/direct/dataico_api/v2/invoices");
+        url.search = new URLSearchParams({ uuid: "018d6fb8-f3e9-85ca-ab55-79a6b8282af1" });
+
+        const response = await fetch(url, {
+          method: "PUT", // or 'PUT'
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token" : "4facc5070884f0e15d9dc05c3ee4fb6b"
+          },
+          body: JSON.stringify(
+            {
+                "send_dian": true,
+                "send_email": true,
+                "email": "alejandro.murillo4@gmail.com"
+            }
+          ),
+        });
+    
+        const result = await response.json();
+        console.log("Success:", result);
+      } catch (error) {
+        console.error("Error:", error);
+    }
+} */
+
+
 function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago_total, valor_venta, tipo_pago, efectivo, transaccion, id_usuario, propina_format) {
     let button = document.querySelector("#btn_pagar");
     button.disabled = true; // Habilitar el botón

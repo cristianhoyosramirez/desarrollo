@@ -5,7 +5,74 @@
 <?= $this->section('title') ?>
 Ventas
 <?= $this->endSection('title') ?>
+<style>
+    .custom-select {
+        position: relative;
+        width: 200px;
+        font-family: Arial, sans-serif;
+    }
 
+    .custom-select select {
+        display: none;
+        /* Oculta el elemento <select> */
+    }
+
+    .custom-select .select-selected {
+        background-color: #eee;
+        padding: 8px 20px 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .custom-select .select-selected::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid #000;
+    }
+
+    .custom-select .select-items {
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        overflow-y: auto;
+        max-height: 200px;
+        z-index: 1;
+        display: none;
+    }
+
+    .custom-select .select-items div {
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+
+    .custom-select .select-items div:hover {
+        background-color: #f3f3f3;
+    }
+
+    .custom-select.open .select-items {
+        display: block;
+    }
+
+    .custom-select.open .select-selected::after {
+        border-top: none;
+        border-bottom: 6px solid #000;
+    }
+
+    /* Agrega el ícono SVG */
+    .custom-select .select-selected svg {
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+</style>
 <?= $this->section('content') ?>
 
 <div class="card container">
@@ -27,7 +94,7 @@ Ventas
 
             <div class="col" style="display:block" id="tipo_de_documento">
                 <label for="" class="form-label">Tipo de documento </label>
-                <select name="tipo_documento" id="tipo_documento" class="form-select" onchange="limpiar_error_documento()">
+                <select name="tipo_documento" id="tipo_documento" class="form-select" onchange="limpiar_error_documento(this.value)">
 
                     <?php foreach ($estado as $detalle) : ?>
                         <option value="<?php echo $detalle['idestado'] ?>" <?php if ($detalle['idestado'] == 5) : ?>selected <?php endif; ?>><?php echo $detalle['descripcionestado'] ?> </option>
@@ -38,6 +105,17 @@ Ventas
 
 
             </div>
+
+            <div class="col" id="estado_dian" style="display:none">
+                <label for="" class="form-label">Estado Dian </label>
+                <select name="" id="" class="form-select" onchange="estado_dian(this.value)">
+                    <option value="1">DIAN NO ENVIADO </option>
+                    <option value="2">DIAN ACEPTADO </option>
+                    <option value="3">DIAN RECHAZADO</option>
+                    <option value="4">DIAN ERROR </option>
+                </select>
+            </div>
+
 
             <div class="col" id="numero" style="display:none">
                 <label for="" class="form-label">Numero </label>
@@ -65,7 +143,7 @@ Ventas
             </div>
 
 
-          <!--   <div class="col">
+            <div class="col" style="display: none;">
 
                 <label for="" class="form-label">Período</label>
                 <select name="" id="periodo_tiempo" name="periodo" class="form-select" onchange="criterio_fecha(this.value)">
@@ -75,9 +153,9 @@ Ventas
                     <option value="3">Período </option>
                 </select>
 
-            </div> -->
+            </div>
 
-            <div class="col" style="display:dispaly" id="periodo">
+            <div class="col" style="display:block" id="periodo">
                 <div class="row">
 
                     <div class="col">
@@ -106,6 +184,88 @@ Ventas
                 <label for="" class="form-label text-light">Periodo </label>
                 <button type="button" class="btn btn-primary" onclick="buscar()">Buscar</button>
             </div>
+        </div><br>
+        <div class="row">
+            <div class="col-3">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium text-center">
+                                    DIAN NO ENVIADO
+                                </div>
+                                <div class="text-muted text-center">
+                                    <span id="dian_no_enviado"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium text-center">
+                                    DIAN ACEPTADO
+                                </div>
+                                <div class="text-muted text-center">
+                                    <span id="dian_aceptado"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium text-center">
+                                    DIAN RECHAZADO
+                                </div>
+                                <div class="text-muted text-center">
+                                    <span id="dian_rechazado"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium text-center">
+                                    DIAN ERROR
+                                </div>
+                                <div class="text-muted text-center">
+                                    <span id="dian_error"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <br>
 
@@ -125,7 +285,7 @@ Ventas
                         <td>Acción </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="estados_dian">
 
 
                 </tbody>
@@ -178,7 +338,7 @@ Ventas
                 </div>
             </div>
 
-            <div class="col-md-3 col-lg-3" style="display: none;" id = "saldo_pendiente_pago" >
+            <div class="col-md-3 col-lg-3" style="display: none;" id="saldo_pendiente_pago">
                 <div class="card card-sm">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -231,6 +391,63 @@ Ventas
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/f_e.js"></script>
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/imprimir_electronica.js"></script>
 
+<!-- <script>
+    function estado_dian(id_estado){
+
+        var url = document.getElementById("url").value;
+
+      /*   $.ajax({
+            data: {
+                id_estado,
+            },
+            url: url + "/" + "reportes/estado_dian",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+                   
+
+                    
+                }
+                
+            },
+        }); */
+
+        $.ajax({
+    data: {
+        id_estado: id_estado, // Asegúrate de pasar el ID de estado correctamente
+    },
+    url: url + "/" + "reportes/estado_dian",
+    type: "POST",
+    success: function(resultado) {
+        var resultado = JSON.parse(resultado);
+        if (resultado.resultado == 1) {
+            // Limpiar el contenido previo de la tabla
+            $('#estado_dian').empty();
+            
+            // Iterar sobre los datos obtenidos y agregarlos a la tabla
+            $.each(resultado.datos, function(index, item) {
+                $('#estado_dian').append(
+                    '<tr>' +
+                    '<td>' + item.fecha + '</td>' +
+                    '<td>' + item.nit_cliente + '</td>' +
+                    '<td>' + item.numero + '</td>' +
+                    '<td>' + item.neto + '</td>' +
+                    '<td>' + item.nombrescliente + '</td>' +
+                    '</tr>'
+                );
+            });
+        } else {
+            // Manejar el caso en que no se encontraron resultados
+            $('#estado_dian').html('<tr><td colspan="5">No se encontraron resultados.</td></tr>');
+        }
+    },
+    error: function() {
+        alert('Error al obtener los datos del servidor.');
+    }
+});
+    }
+</script> -->
 
 <script>
     function criterio_fecha(criterio) {
@@ -545,8 +762,18 @@ Ventas
 
 
 <script>
-    function limpiar_error_documento() {
+    function limpiar_error_documento(documento) {
         $('#error_tipo_documento').html('')
+
+        if (documento == 8) {
+            var div = document.getElementById("estado_dian");
+            div.style.display = "block";
+        }
+
+        if (documento != 8) {
+            var div = document.getElementById("estado_dian");
+            div.style.display = "none";
+        }
     }
 </script>
 

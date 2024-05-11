@@ -15,6 +15,7 @@ class categoriaController extends BaseController
         $categorias = model('categoriasModel')->select('subcategoria');
         $categorias = model('categoriasModel')->select('nombrecategoria')->orderBy('codigocategoria', 'asc')->find();
         $impresoras = model('impresorasModel')->select('*')->find();
+
         return view('categoria/categoria', [
             'categorias' => $categorias,
             'impresoras' => $impresoras

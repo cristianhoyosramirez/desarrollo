@@ -41,6 +41,7 @@ function agregar_al_pedido(id_producto) {
                 $('#val_pedido').html(resultado.total_pedido)
                 $('#pedido_mesa').html('Pedido: ' + resultado.numero_pedido)
                 $('#subtotal_pedido').val(resultado.total_pedido)
+                $("#input"+resultado.id).select()
             }
         },
     }); 
