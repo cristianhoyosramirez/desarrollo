@@ -80,6 +80,8 @@ BUSCAR PEDIDOS BORRADOS
                     <td scope="col">Valor pedido</th>
                     <td scope="col">Usuario creación</th>
                     <td scope="col">Usuario eliminación</th>
+                    <td scope="col">Accion
+                        </th>
                 </tr>
             </thead>
             <tbody>
@@ -115,6 +117,23 @@ BUSCAR PEDIDOS BORRADOS
             </div>
         </div>
 
+    </div>
+</div>
+
+<input type="hidden" value="<?php  echo base_url() ?>" id="url">
+<!-- Modal -->
+<div class="modal fade" id="productos_borrados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Productos borrados </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="resultado_productos_borrados"></div>
+            </div>
+           
+        </div>
     </div>
 </div>
 

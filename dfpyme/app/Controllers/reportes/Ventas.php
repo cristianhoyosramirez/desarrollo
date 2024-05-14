@@ -1139,7 +1139,7 @@ class Ventas extends BaseController
         $base_iva_19 = model('kardexModel')->selectSum('iva')->where('valor_iva', 19)->findAll();
         $base_iva_5 = model('kardexModel')->selectSum('iva')->where('valor_iva', 5)->findAll();
 
-        $total_venta_inc = model('kardexModel')->total_venta_inc($apertura);
+        $total_venta_inc = model('kardexModel')->total_venta_inc($apertura, 8);
         $venta_inc = model('kardexModel')->venta_inc($apertura);
 
         if (empty($base_iva_19[0]['iva'])) {
@@ -1240,6 +1240,12 @@ class Ventas extends BaseController
             $sub_array[] =  $nombre_mesero['nombresusuario_sistema'];
 
             $sub_array[] = $usuario_eliminacion['nombresusuario_sistema'];
+            $sub_array[] = '<a  class="btn btn-outline-success btn-icon " title="Ver productos eliminados() " onclick="productos_borrados(' . $detalle['numero_pedido'] . ')" >
+       
+                            
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>       
+            
+            </a> ';
 
             $data[] = $sub_array;
         }

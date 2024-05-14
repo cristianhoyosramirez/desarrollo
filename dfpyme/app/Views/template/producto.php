@@ -490,9 +490,9 @@
                     placeholder: "% De impuesto al consumo",
                     language: "es",
                     theme: "bootstrap-5",
-                    allowClear: true,
+                    allowClear: false,
                     dropdownParent: $('#crear_producto'),
-                    //minimumResultsForSearch: -1,
+                    minimumResultsForSearch: -1,
                     language: {
                         noResults: function() {
                             return "No hay resultado";

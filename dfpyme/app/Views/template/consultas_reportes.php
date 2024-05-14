@@ -117,6 +117,35 @@
     <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
     <!-- Calendario -->
     <script src="<?= base_url() ?>/Assets/plugin/calendario/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+
+
+    <script>
+      function productos_borrados(id_pedido) {
+        var url = document.getElementById("url").value;
+        $.ajax({
+          data: {
+            id_pedido,
+          },
+          url: url + "/" + "inventario/productos_borrados",
+          type: "POST",
+          success: function(resultado) {
+            var resultado = JSON.parse(resultado);
+            if (resultado.resultado == 1) {
+
+              $('#resultado_productos_borrados').html(resultado.productos)
+              
+              myModal = new bootstrap.Modal(
+                document.getElementById("productos_borrados"), {}
+              );
+              myModal.show();
+            }
+          },
+        });
+      }
+    </script>
+
+
+
     <script>
       $("#periodo_fechas").select2({
         width: "100%",
@@ -187,7 +216,7 @@
             },
             dataSrc: function(json) {
               $('#total_pedidos').html(json.total_venta);
-           
+
               return json.data;
             },
           },
