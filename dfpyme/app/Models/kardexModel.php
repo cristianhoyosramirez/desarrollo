@@ -329,10 +329,10 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function total_venta_inc($id_apertura)  //Total de la venta con impuestos 
+    public function total_venta_inc($id_apertura,$inc)  //Total de la venta con impuestos 
     {
         $datos = $this->db->query("
-        select sum (total )as total from kardex where valor_ico= 8 and id_apertura =  $id_apertura and aplica_ico='true'
+        select sum (total )as total from kardex where valor_ico= $inc and id_apertura =  $id_apertura and aplica_ico='true'
         ");
         return $datos->getResultArray();
     }
@@ -411,6 +411,26 @@ class kardexModel extends Model
         AND total = $valor_unitario
         AND codigo = '$codigointernoproducto' 
         GROUP BY kardex.total
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_iva_reportes($apertura)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT valor_iva AS iva
+        FROM   kardex
+        WHERE  aplica_ico = 'false'
+        AND id_apertura = $apertura
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_inc_reportes($apertura)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT valor_ico AS inc
+        FROM   kardex
+        WHERE  aplica_ico = 'true'
+        AND id_apertura = $apertura
         ");
         return $datos->getResultArray();
     }

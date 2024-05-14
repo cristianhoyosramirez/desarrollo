@@ -32,7 +32,7 @@ class empresaModel extends Model
     {
         $datos = $this->db->query("
         SELECT
-        nombreregimen,
+        regimen.descripcion as nombreregimen,
         nitempresa,
         nombrecomercialempresa,
         telefonoempresa,

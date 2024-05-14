@@ -21,7 +21,7 @@
          <div class="row">
           
              <div class="col">
-                 <div class="text-truncate">
+                 <div class="text-truncate" title="<?php echo $valor['nombreproducto'] ?>">
                      <strong><?php echo $valor['nombreproducto'] ?></strong>
                  </div>
                  <div class="text-muted"><?php echo "$" . number_format($valor['valorventaproducto'], 0, ",", ".") ?></div>

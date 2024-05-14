@@ -1102,7 +1102,7 @@ class Ventas extends BaseController
 
         $total_count = $this->db->query($sql_count)->getRow();
 
-        // $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
+        $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
 
         $datos = $this->db->query($sql_data)->getResultArray();
         $data = [];
@@ -1174,7 +1174,7 @@ class Ventas extends BaseController
             'iva_5' => number_format($iva_5, 0, ",", "."),
             'inc' => number_format($venta_inc[0]['inc'], 0, ",", "."),
             'base_inc' => number_format($total_venta_inc[0]['total'] - $venta_inc[0]['inc'], 0, ",", "."),
-            'costo'=>number_format($costo[0]['costo'], 0, ",", ".")
+            'costo' => number_format($costo[0]['costo'], 0, ",", ".")
         ];
 
         echo  json_encode($json_data);
@@ -1331,7 +1331,7 @@ class Ventas extends BaseController
             'recordsFiltered' => $total_count->total,
             'data' => $data,
             'total_venta' => number_format($total_venta[0]['valor_pedido'], 0, ",", "."),
-            'costo'=>number_format($costo[0]['costo'], 0, ",", ".")
+            'costo' => number_format($costo[0]['costo'], 0, ",", ".")
         ];
 
         echo  json_encode($json_data);

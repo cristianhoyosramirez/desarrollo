@@ -150,7 +150,7 @@ class operacionesProductoController extends BaseController
 
 
 
-  
+
     function creacion_producto()
     {
         $this->request->getPost('impresion_en_comanda');
@@ -214,7 +214,6 @@ class operacionesProductoController extends BaseController
                 $impresion_comanda = 'true';
             }
 
-            $aplica_descuento = "";
             if (empty($this->request->getPost('permitir_descuento'))) {
                 $aplica_descuento = 'false';
             } else if (!empty($this->request->getPost('permitir_descuento'))) {
@@ -222,25 +221,25 @@ class operacionesProductoController extends BaseController
             }
 
             //$valor_venta_producto = str_replace('.', '', $this->request->getPost('valor_venta_producto'));
+
             $valor_venta = str_replace('.', '', $this->request->getPost('valor_venta_producto'));
 
-            if ($valor_venta==0){
-                $val_venta_producto=1;
-                $valor_venta_producto=0;
+            if ($valor_venta == 0) {
+                $val_venta_producto = 1;
+                $valor_venta_producto = 0;
             }
-            if ($valor_venta > 0){
-                $valor_venta_producto=$valor_venta;
+            if ($valor_venta > 0) {
+                $valor_venta_producto = $valor_venta;
             }
 
-
-            
             $precio_costo = str_replace('.', '', $this->request->getPost('valor_costo_producto'));
 
             $aplica_ico = '';
 
             $temp_precio_2 = $this->request->getPost('precio_2');
 
-            $pre_2 = (str_replace('.', '', $this->request->getPost('precio_2')) * 100) / $val_venta_producto;
+
+            $pre_2 = (str_replace('.', '', $this->request->getPost('precio_2')) * 100) / $valor_venta_producto;
             $precio_2 = 100 - $pre_2;
 
 
@@ -439,12 +438,17 @@ class operacionesProductoController extends BaseController
             }
 
             if (!empty($this->request->getPost('sub_categoria'))) {
-                $data_producto = [
-                    'id_categoria' => $this->request->getPost('categoria_producto'),
-                    'id_sub_categoria' => $this->request->getPost('sub_categoria')
-                ];
 
-                $insercion = model('productoCategoriaModel')->insert($data_producto);
+                $productos_cat_sub = model('productoCategoriaModel')->sub_categorias($this->request->getPost('categoria_producto'), $this->request->getPost('sub_categoria'));
+
+                if (empty($productos_cat_sub)) {
+                    $data_producto = [
+                        'id_categoria' => $this->request->getPost('categoria_producto'),
+                        'id_sub_categoria' => $this->request->getPost('sub_categoria')
+                    ];
+
+                    $insercion = model('productoCategoriaModel')->insert($data_producto);
+                }
             }
         }
     }
@@ -476,9 +480,9 @@ class operacionesProductoController extends BaseController
         $sub_categoria = model('categoriasModel')->select('subcategoria')->where('codigocategoria', $id_categoria['codigocategoria'])->first();
 
 
-        $sub_categorias=model('subCategoriaModel')->findAll();
+        $sub_categorias = model('subCategoriaModel')->findAll();
 
-    
+
         $returnData = array(
             "resultado" => 1,
             "edicion_producto" => view('producto/editar_producto', [
@@ -501,7 +505,7 @@ class operacionesProductoController extends BaseController
                 'valor_impuesto_saludable' => number_format($valor_impuesto_saludable['valor_impuesto_saludable'], 0, ",", "."),
                 'codigo_barras' => $codigo_barras['codigobarrasproducto'],
                 'sub_categoria' => $sub_categoria['subcategoria'],
-                'sub_categorias'=>$sub_categorias
+                'sub_categorias' => $sub_categorias
 
             ])
         );
@@ -581,12 +585,11 @@ class operacionesProductoController extends BaseController
 
             if ($this->request->getPost('informacion_tributaria') == 1) {
                 $aplica_ico = "t";
-                $id_iva=31;
-
+                $id_iva = 31;
             }
             if ($this->request->getPost('informacion_tributaria') == 2) {
                 $aplica_ico = "f";
-                $id_iva=$this->request->getPost('valor_iva');
+                $id_iva = $this->request->getPost('valor_iva');
             }
 
             $temp_precio_2 = $this->request->getPost('precio_2');

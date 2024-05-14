@@ -560,6 +560,8 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->get('borrar_remisiones', 'Configuracion::borrar_remisiones');
     $routes->post('actualizar_remisiones', 'Configuracion::actualizar_remisiones');
     $routes->post('borrado_de_remisiones', 'Configuracion::borrado_de_remisiones');
+    $routes->get('abrir_cajon', 'Configuracion::abrir_cajon');
+    $routes->get('admin_imp', 'Configuracion::admin_imp');
 });
 
 /*

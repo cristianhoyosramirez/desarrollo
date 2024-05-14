@@ -66,7 +66,7 @@ class ReportesController extends BaseController
 
         $total_count = $this->db->query($sql_count)->getRow();
 
-        // $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
+        $sql_data .= " ORDER BY " . $table_map[$_GET['order'][0]['column']] . " " . $_GET['order'][0]['dir'] . " " . "LIMIT " . $_GET['length'] . " OFFSET " . $_GET['start'];
 
         $datos = $this->db->query($sql_data)->getResultArray();
         $data = [];
@@ -98,7 +98,7 @@ class ReportesController extends BaseController
             $data[] = $sub_array;
         }
         $total_venta = model('pagosModel')->selectSum('total_documento')->where('id_apertura', $apertura)->findAll();
-        $total_venta_iva_5 = model('kardexModel')->total_venta_iva_5($apertura);  //Total de la venta con impuestos 
+        /*  $total_venta_iva_5 = model('kardexModel')->total_venta_iva_5($apertura);  //Total de la venta con impuestos 
         $venta_iva_5 = model('kardexModel')->venta_iva_5($apertura);  // Total del valor del iva 5 % 
 
 
@@ -124,7 +124,11 @@ class ReportesController extends BaseController
             //$base_iva_5 = $total_venta_iva_5[0]['total'] - $base_iva_5[0]['iva'];
             $base_iva_5 = $total_venta_iva_5[0]['total'] - $venta_iva_5[0]['iva'];
             $iva_5 = $venta_iva_5[0]['iva'];
-        }
+        } */
+
+        $iva = model('kardexModel')->get_iva_reportes($apertura);
+        $inc = model('kardexModel')->get_inc_reportes($apertura);
+
 
 
         $costo = model('pagosModel')->total_costo($apertura);
@@ -134,13 +138,18 @@ class ReportesController extends BaseController
             'recordsFiltered' => $total_count->total,
             'data' => $data,
             'total_venta' => number_format($total_venta[0]['total_documento'], 0, ",", "."),
-            'base_iva_19' => number_format($base_iva_019, 0, ",", "."),
+            'impuestos' => view('impuestos/impuestos', [
+                'iva' => $iva,
+                'inc'=>$inc,
+                'apertura'=>$apertura
+            ])
+            /* 'base_iva_19' => number_format($base_iva_019, 0, ",", "."),
             'iva_19' => 0,
             'base_iva_5' => number_format($base_iva_5, 0, ",", "."),
             'iva_5' => number_format($iva_5, 0, ",", "."),
             'inc' => number_format($venta_inc[0]['inc'], 0, ",", "."),
             'base_inc' => number_format($total_venta_inc[0]['total'] - $venta_inc[0]['inc'], 0, ",", "."),
-            'costo' => number_format($costo[0]['costo'], 0, ",", ".")
+            'costo' => number_format($costo[0]['costo'], 0, ",", ".") */
         ];
 
         echo  json_encode($json_data);

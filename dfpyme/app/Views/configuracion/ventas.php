@@ -103,7 +103,7 @@ Reporte de costos
 
 
     <div class="my-3"></div> <!-- Added space between the buttons and the table -->
-    <div class="table-responsive">
+   
         <table class="table table-striped table-hover" id="reporte_ventas">
             <thead class="table-dark">
                 <tr>
@@ -111,7 +111,7 @@ Reporte de costos
                     <td>Nit cliente </th>
                     <td>Cliente</th>
                     <td>Documento</th>
-                    
+
                     <td>Tipo documento</th>
                     <td>Base</td>
                     <td>IVA</th>
@@ -125,7 +125,11 @@ Reporte de costos
         </table>
         <br>
         <p class="text-primary h1 text-center " id="no_hay_datos"> </p>
-    </div>
+
+        <div id="impuestos"></div>
+
+</div>
+x
 </div>
 
 <!-- jQuery -->
@@ -185,9 +189,10 @@ Reporte de costos
                     });
                 },
                 dataSrc: function(json) {
-                    $('#saldo_total').html(json.total);
+                    /* $('#saldo_total').html(json.total);
                     $('#saldo_cliente').html(json.saldo);
-                    $('#pagos_factura').html(json.pagos);
+                    $('#pagos_factura').html(json.pagos); */
+                    $('#impuestos').html(json.impuestos);
                     return json.data;
                 }
             },

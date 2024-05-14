@@ -20,5 +20,16 @@ class productoCategoriaModel extends Model
         ");
         return $datos->getResultArray();
     }
+
+    public function sub_categorias($codigo_categoria, $id_sub_categoria)
+    {
+        $datos = $this->db->query("
+        SELECT *
+        FROM producto_catego_sub
+        WHERE id_categoria = '$codigo_categoria'
+          AND id_sub_categoria= $id_sub_categoria
+        ");
+        return $datos->getResultArray();
+    }
    
 }

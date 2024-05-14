@@ -886,7 +886,7 @@ class Boletas extends BaseController
                     id,
                     fecha,
                     documento,
-                    total_documento,
+                    valor as total_documento,
                     id_factura,
                     id_estado,
                     nit_cliente,

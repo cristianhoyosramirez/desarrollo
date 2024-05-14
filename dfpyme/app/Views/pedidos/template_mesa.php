@@ -223,6 +223,7 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/nueva_factura.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_precio.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/abrir_cajon.js"></script>
 
 
     <!--   <script>

@@ -3,6 +3,12 @@
 namespace App\Controllers\configuracion;
 
 use App\Controllers\BaseController;
+require APPPATH . "Controllers/mike42/autoload.php";
+
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+
 
 class Configuracion extends BaseController
 {
@@ -611,5 +617,29 @@ class Configuracion extends BaseController
         }
 
 
+    }
+
+    function abrir_cajon(){
+        $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
+        $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
+        $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
+        $printer = new Printer($connector); 
+        
+        //$printer->feed(1);
+        //$printer->cut();
+        $printer->pulse();
+        $printer->close();
+
+        if ($printer){
+            $returnData = array(
+                "resultado" => 1
+            );
+            echo  json_encode($returnData);
+        }
+
+    }
+
+    function admin_imp(){
+        return view('configuracion/impresora');
     }
 }

@@ -32,12 +32,6 @@ MOVIMIENTO DE CAJA
                     Cuadre de caja
                 </h2>
             </div>
-            <div class="col">
-                <p id="fecha_apertura">Fecha apertura: <?php echo $fecha_apertura ?></p>
-            </div>
-            <div class="col">
-                <p id="fecha_cierre">Fecha cierre: <?php echo $fecha_cierre ?></p>
-            </div>
             <!-- Page title actions -->
             <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
@@ -89,6 +83,16 @@ MOVIMIENTO DE CAJA
                         <button type="button" class="btn btn-outline-dark btn-icon" target="_blank" onclick="fiscal_electronico()" title="Informe fiscal de ventas " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Fiscal electrónico </button>
                     </form>
                 </div>
+            </div>
+        </div>
+        <br>
+        <div class="row justify-content-end align-items-end">
+            <div class="col-8"></div>
+            <div class="col-2">
+                <p id="fecha_apertura">Fecha apertura: <?php echo $fecha_apertura ?></p>
+            </div>
+            <div class="col-2 text-end">
+                <p id="fecha_cierre">Fecha cierre: <?php echo $fecha_cierre ?></p>
             </div>
         </div>
 

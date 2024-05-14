@@ -192,18 +192,23 @@ Bienvenido DFpyme
                             <div class="row mb-2"> <!-- Fila para los botones -->
 
                                 <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <a href="#" class="btn btn-outline-azure w-100" onclick="abrir_cajon()">
+                                            Abrir cajon
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3">
                                         <a href="#" class="btn btn-outline-indigo w-100" onclick="cambiar_mesas()">
                                             Cambio de mesa
                                         </a>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <a href="#" class="btn btn-outline-purple w-100" onclick="imprimir_comanda()">
                                             Comanda
                                         </a>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
                                             Eliminar pedido
                                         </a>
@@ -211,14 +216,17 @@ Bienvenido DFpyme
                                 <?php endif ?>
                                 <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
 
-
-                                    <div class="col-md-8">
-
-                                    </div>
-                                    <div class="col-md-4 text-start">
-                                        <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
-                                            Eliminar pedido
-                                        </a>
+                                    <div class="row justify-content-end">
+                                        <div class="col-md-3">
+                                            <a href="#" class="btn btn-outline-azure w-100" onclick="abrir_cajon()">
+                                                Abrir cajon
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3 text-start">
+                                            <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
+                                                Eliminar pedido
+                                            </a>
+                                        </div>
                                     </div>
                                 <?php endif ?>
                             </div>
@@ -302,7 +310,7 @@ Bienvenido DFpyme
 
                                 <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
                                     <input type="hidden" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
-                                    <?php endif ?>
+                                <?php endif ?>
 
                                 <div class="row mb-3">
                                     <label for="inputPassword3" class="col-sm-4 col-form-label  h2">Total</label>
@@ -321,11 +329,11 @@ Bienvenido DFpyme
                             <div class="row mb-2 gy-2"> <!-- Fila para los botones -->
                                 <div class="col-md-6">
 
-                                    
-                                        <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
-                                            Orden de pedido
-                                        </a>
-                                   
+
+                                    <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
+                                        Orden de pedido
+                                    </a>
+
                                 </div>
                                 <?php if ($user_session->tipo != 3) : ?>
 
@@ -333,18 +341,18 @@ Bienvenido DFpyme
                                         <a class="btn btn-outline-muted w-100" onclick="retiro_dinero()">
                                             Retirar dinero</a>
                                     </div>
-                                    
-                                        <div class="col-md-6">
-                                            <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">
-                                                Devolución
-                                            </a>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <a href="#" class="btn btn-outline-azure w-100" onclick="pago_parcial()">
-                                                Pago parcial
-                                            </a>
-                                        </div>
-                                    
+
+                                    <div class="col-md-6">
+                                        <a href="#" class="btn btn-outline-yellow w-100" data-bs-toggle="modal" data-bs-target="#devolucion">
+                                            Devolución
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="btn btn-outline-azure w-100" onclick="pago_parcial()">
+                                            Pago parcial
+                                        </a>
+                                    </div>
+
                                 <?php endif ?>
                             </div>
 

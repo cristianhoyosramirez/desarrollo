@@ -36,7 +36,7 @@ class pagosModel extends Model
     {
         $datos = $this->db->query("
     SELECT
-    SUM(total_documento) as valor
+    SUM(valor) as valor
     FROM
         pagos
     WHERE
@@ -60,7 +60,7 @@ class pagosModel extends Model
     {
         $datos = $this->db->query("
         SELECT
-        SUM(total_documento) as valor
+        SUM(valor) as valor
         FROM
             pagos
         WHERE
@@ -306,7 +306,7 @@ class pagosModel extends Model
     public function total_venta($id_apertura)
     {
         $datos = $this->db->query("
-        select sum(total_documento) as total from pagos where id_apertura= $id_apertura
+        select sum(valor) as total from pagos where id_apertura= $id_apertura
         ");
         return $datos->getResultArray();
     }
