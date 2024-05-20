@@ -6,6 +6,12 @@ use App\Controllers\BaseController;
 use \DateTime;
 use \DateTimeZone;
 
+require APPPATH . "Controllers/mike42/autoload.php";
+
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+
 
 
 class CerrarVenta extends BaseController
@@ -17,6 +23,19 @@ class CerrarVenta extends BaseController
 
     public function cerrar_venta()
     {
+
+        $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
+        $datos_empresa = model('empresaModel')->datosEmpresa();
+
+        $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
+
+        $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
+        $printer = new Printer($connector);
+
+        
+        $printer->pulse();
+        $printer->close();
+    
 
         /* 
         $id_mesa = 1;

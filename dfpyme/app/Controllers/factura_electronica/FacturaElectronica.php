@@ -8,6 +8,12 @@ use App\Libraries\Inventario;
 use \DateTime;
 use \DateTimeZone;
 
+require APPPATH . "Controllers/mike42/autoload.php";
+
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+
 class FacturaElectronica extends BaseController
 {
     public function index()
@@ -17,6 +23,19 @@ class FacturaElectronica extends BaseController
 
     function pre_factura()
     {
+
+        $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
+        $datos_empresa = model('empresaModel')->datosEmpresa();
+
+        $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
+
+        $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
+        $printer = new Printer($connector);
+
+        
+        $printer->pulse();
+        $printer->close();
+
         $impuestos = new Impuestos();
         $inventario = new Inventario();
         //var_dump($this->request->getPost());

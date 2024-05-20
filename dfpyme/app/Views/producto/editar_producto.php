@@ -45,7 +45,7 @@
     <div class="row g-1">
         <div class="col-md-3">
             <label for="">Categoria</label>
-            <select class="form-select" id="editar_categoria_producto" name="edicion_de_categoria_producto" onkeyup="saltar_creacion_producto(event,'marca_producto')">
+            <select class="form-select" id="editar_categoria_producto" name="edicion_de_categoria_producto" onkeyup="saltar_creacion_producto(event,'marca_producto')" onchange="categoria(this.value)">
 
                 <?php foreach ($categorias as $detalle) { ?>
 

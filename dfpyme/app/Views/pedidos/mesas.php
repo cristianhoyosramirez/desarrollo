@@ -112,7 +112,7 @@ Bienvenido DFpyme
                     </div>
                 </div>
 
-                <?php $alturaCalc = "25rem + 10px"; // Calcula la altura 
+                <?php $alturaCalc = "37rem + 10px"; // Calcula la altura 
                 ?>
 
                 <!--Productos-->

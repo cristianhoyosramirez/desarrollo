@@ -19,8 +19,8 @@ class impresion
     {
 
 
-        $id_apertura = $id_apertura;
-        //$id_apertura = 1053;
+        //$id_apertura = $id_apertura;
+        $id_apertura = 19;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -936,7 +936,7 @@ class impresion
 
             $printer->feed(1);
             $printer->cut();
-            $printer->pulse();
+            //$printer->pulse();
             $printer->close();
 
             $returnData = array(

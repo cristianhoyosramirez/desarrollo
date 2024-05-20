@@ -426,6 +426,7 @@
             let id_usuario = document.getElementById("id_usuario").value;
             let mesero = document.getElementById("mesero").value;
             //let cantidad = document.getElementById(id_input).value;
+
             let cantidad = 1;
 
             $.ajax({
