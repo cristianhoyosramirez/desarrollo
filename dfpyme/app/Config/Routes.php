@@ -451,7 +451,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('todas_las_mesas', 'Mesas::todas_las_mesas');
     $routes->post('actualizar_mesero', 'CerrarVenta::actualizar_mesero');
     $routes->post('buscar_mesas', 'Mesas::buscar_mesas');
-    $routes->get('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
+    $routes->post('imprimir_movimiento_caja', 'Imprimir::imprimir_movimiento_caja');
     $routes->post('crear_mesero', 'Mesas::crear_mesero');
     $routes->get('gestion_pedidos', 'TomaPedidosController::index');
     $routes->post('buscar_mesero', 'Mesas::buscar_mesero');

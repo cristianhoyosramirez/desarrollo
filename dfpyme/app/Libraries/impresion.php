@@ -19,8 +19,8 @@ class impresion
     {
 
 
-        //$id_apertura = $id_apertura;
-        $id_apertura = 19;
+        $id_apertura = $id_apertura;
+        //$id_apertura = 19;
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $datos_empresa = model('empresaModel')->datosEmpresa();
@@ -234,12 +234,13 @@ class impresion
 
         $printer->text("\n");
 
-        if ($total_en_caja > $cierre_usuario) {
+      /*   if ($total_en_caja > $cierre_usuario) {
             $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($total_en_caja) - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
         }
         if ($total_en_caja < $cierre_usuario) {
             $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($cierre_usuario ) - $total_en_caja ) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
-        }
+        } */
+        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($total_en_caja) - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
         $printer->text("\n");
 
         $printer->feed(1);

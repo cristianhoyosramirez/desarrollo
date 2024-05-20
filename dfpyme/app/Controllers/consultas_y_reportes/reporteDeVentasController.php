@@ -429,7 +429,8 @@ class reporteDeVentasController extends BaseController
                 $saldo = 0;
 
                 //$diferencia = ($efectivo_cierre + $transaccion_cierre) - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
-                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+                //$diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+                $diferencia =  - (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones));
             }
             if (!empty($tiene_cierre)) {
 
@@ -446,7 +447,7 @@ class reporteDeVentasController extends BaseController
                 }
 
                 $transaccion = model('pagosModel')->selectSum('transferencia')->where('id_apertura', $ultimo_id)->findAll();
-                
+
                 if (empty($transaccion)) {
                     $ingresos_transaccion = 0;
                 } else if (!empty($transaccion)) {
@@ -490,7 +491,20 @@ class reporteDeVentasController extends BaseController
 
                 $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_id)->findAll();
                 $propinas = $temp_propinas[0]['propina'];
-                $diferencia =  (($ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor']) - ($retiros + $devoluciones)) - ($efectivo_cierre + $transaccion_cierre);
+
+                $total_ingresos = $ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'];
+                $retiros_dinero = $retiros + $devoluciones;
+                $cierre_usuario = $efectivo_cierre + $transaccion_cierre;
+
+
+                if ($cierre_usuario >= $total_ingresos) {
+
+                    $diferencia =  (($total_ingresos) - ($retiros_dinero)) - ($cierre_usuario);
+                }
+                if ($cierre_usuario < $total_ingresos) {
+
+                    $diferencia = $cierre_usuario -($total_ingresos -($retiros_dinero)) ;
+                }
             }
 
 

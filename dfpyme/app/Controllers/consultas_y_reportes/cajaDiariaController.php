@@ -1120,7 +1120,14 @@ class cajaDiariaController extends BaseController
             $ingresos = $ingresos_transaccion + $ingresos_efectivo + $valor_apertura['valor'];
             $egresos = $retiros + $devoluciones;
             $saldo_caja = $ingresos - $egresos;
-            $diferencia = $cierre - $saldo_caja;
+           // $diferencia = $cierre - $saldo_caja;
+           if ($cierre >= $saldo_caja ){
+            $diferencia = $saldo_caja - $cierre  ;
+           }
+           if ($cierre < $saldo_caja ){
+            $diferencia = $cierre- $saldo_caja;
+           }
+
         }
         $temp_propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $ultimo_apertura)->findAll();
         $propinas = $temp_propinas[0]['propina'];
