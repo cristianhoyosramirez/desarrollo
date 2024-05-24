@@ -226,40 +226,6 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/abrir_cajon.js"></script>
 
 
-    <!--   <script>
-        function formatNumber(id) {
-            const input = document.querySelector("#input" + id);
-            // Verificar si se encontró el input
-            if (!input) {
-                console.error("Input con ID '" + id + "' no encontrado.");
-                return;
-            }
-            // Definir la función para formatear el número
-            function format(n) {
-                // Elimina cualquier carácter que no sea un número
-                n = n.replace(/\D/g, "");
-                // Formatea el número
-                return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
-            }
-            // Agregar el evento "input" al input
-            input.addEventListener("input", (e) => {
-                const element = e.target;
-                const value = element.value;
-                element.value = format(value);
-            });
-        }
-    </script> -->
-
-    <!-- <script>
-    function pasar_id(id) {
-
-        console.log(id)
-        
-        const dynamicId = id;
-        formatNumber(dynamicId);
-    }
-</script>
- -->
 
     <script>
         function cambiar_precio(valor, id_producto) {
@@ -425,9 +391,9 @@
             let id_mesa = document.getElementById("id_mesa_pedido").value;
             let id_usuario = document.getElementById("id_usuario").value;
             let mesero = document.getElementById("mesero").value;
-            //let cantidad = document.getElementById(id_input).value;
+            let cantidad = document.getElementById(id_input).value;
 
-            let cantidad = 1;
+            //let cantidad = 1;
 
             $.ajax({
                 data: {
@@ -890,9 +856,9 @@
                     if (resultado.resultado == 1) {
 
 
-                        //sweet_alert('success', 'Asignación de precio correcta ')
+                        sweet_alert('success', 'Asignación de precio correcta ')
 
-
+                        $("#agregar_nota").modal("hide");
                     }
                 },
             });
@@ -1015,36 +981,7 @@
 
     <script>
         function cortesia() {
-            /*  var operaciones = document.getElementById("operaciones");
-             operaciones.style.display = "none";
-
-             var url = document.getElementById("url").value;
-             var id_producto_pedido = document.getElementById("id_producto_pedido").value;
-
-
-             $.ajax({
-                 data: {
-                     id_producto_pedido
-                 },
-                 url: url +
-                     "/" +
-                     "eventos/cortesia",
-                 type: "post",
-                 success: function(resultado) {
-                     var resultado = JSON.parse(resultado);
-                     if (resultado.resultado == 1) {
-
-                         var lista_precios = document.getElementById("lista_precios");
-                         lista_precios.style.display = "block";
-
-
-                     }
-                 },
-             });
-
-
-             var manual = document.getElementById("lista_precios");
-             manual.style.display = "block"; */
+           
 
             var url = document.getElementById("url").value;
             var id_producto_pedido = document.getElementById("id_producto_pedido").value;

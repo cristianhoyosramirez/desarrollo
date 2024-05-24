@@ -124,6 +124,7 @@ $routes->group('producto', ['namespace' => 'App\Controllers\producto', 'filter' 
     $routes->post('actualizacion_cantidades', 'productoController::actualizacion_cantidades');
     $routes->post('autorizacion_pin', 'operacionesProductoController::autorizacion_pin');
     $routes->post('eliminar_pedido_usuario', 'operacionesProductoController::eliminar_pedido_usuario');
+    $routes->post('entrada_salida', 'operacionesProductoController::entrada_salida');
 });
 
 $routes->group('impresora', ['namespace' => 'App\Controllers\impresora', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -360,6 +361,8 @@ $routes->group('devolucion', ['namespace' => 'App\Controllers\devolucion', 'filt
     $routes->post('cuenta_rubro', 'RetiroController::cuenta_rubro');
     $routes->post('editar_rubro', 'RetiroController::editar_rubro');
     $routes->post('actualizar_rubro', 'RetiroController::actualizar_rubro');
+    $routes->post('editar_retiro', 'devolucionController::editar_retiro');
+    $routes->post('actualizar_retiro', 'devolucionController::actualizar_retiro');
 });
 $routes->group('caja', ['namespace' => 'App\Controllers\caja', 'filter' => \App\Filters\Auth::class], function ($routes) {
     $routes->get('apertura', 'cajaController::apertura');
@@ -538,6 +541,8 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     //$routes->post('retrasmistir', 'ReportesController::retrasmistir');
     $routes->get('retrasmistir', 'ReportesController::sendDian');
     $routes->get('estado_dian', 'ReportesController::estado_dian');
+    $routes->post('actualizar_pagos', 'ReportesController::actualizar_pagos');
+    $routes->post('datos_pagos', 'ReportesController::datos_pagos');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -562,6 +567,7 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->post('borrado_de_remisiones', 'Configuracion::borrado_de_remisiones');
     $routes->get('abrir_cajon', 'Configuracion::abrir_cajon');
     $routes->get('admin_imp', 'Configuracion::admin_imp');
+    $routes->get('comanda', 'Configuracion::comanda');
 });
 
 /*

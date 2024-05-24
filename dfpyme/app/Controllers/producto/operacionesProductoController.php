@@ -751,71 +751,7 @@ class operacionesProductoController extends BaseController
             echo  json_encode($returnData);
         }
     }
-    /*  public function eliminacion_de_pedido_desde_pedido()
-    {
-        // $numero_pedido = 30361;
-        $numero_pedido = $_POST['numero_pedido'];
-
-        // $id_usuario = 8;
-        $id_usuario = $_POST['usuario_eliminacion'];
-
-        
-         //* Consultar si el usuario tiene el permiso 92 que corresponde a que puede borrar el pedido 
-         
-        $permiso_eliminar = model('tipoPermisoModel')->tipo_permiso($id_usuario);
-
-
-        if (!empty($permiso_eliminar)) {
-
-            $id_mesa = model('pedidoModel')->select('fk_mesa')->where('id', $numero_pedido)->first();
-
-            $datos_pedido = model('pedidoModel')->select('*')->where('id', $numero_pedido)->first();
-
-            $data = [
-                'numero_pedido' => $numero_pedido,
-                'valor_pedido' => $datos_pedido['valor_total'],
-                'fecha_eliminacion' => date('Y-m-d'),
-                'hora_eliminacion' => date("h:i:s"),
-                'fecha_creacion' => $datos_pedido['fecha_creacion'],
-                'usuario_eliminacion' => $id_usuario
-            ];
-
-            $datos_pedido = model('eliminacionPedidosModel')->insert($data);
-
-
-            $model = model('productoPedidoModel');
-            $borrarPedido = $model->where('numero_de_pedido', $numero_pedido);
-            $borrarPedido = $model->delete();
-
-            $model = model('pedidoModel');
-            $borrar = $model->where('id', $numero_pedido);
-            $borrar = $model->delete();
-
-            if ($borrarPedido && $borrar) {
-                $data = [
-                    'estado' => 0,
-                    'valor_pedido' => 0,
-                    'fk_usuario' => 8
-                ];
-
-                $model = model('mesasModel');
-                $numero_factura = $model->set($data);
-                $numero_factura = $model->where('id', $id_mesa['fk_mesa']);
-                $numero_factura = $model->update();
-                $returnData = array(
-                    "resultado" => 1
-                );
-                echo  json_encode($returnData);
-            } else {
-                echo 0;
-            }
-        } else {
-            $returnData = array(
-                "resultado" => 0
-            );
-            echo  json_encode($returnData);
-        }
-    } */
+   
 
     function autorizacion_pin()
     {
@@ -903,6 +839,54 @@ class operacionesProductoController extends BaseController
                 "resultado" => 1,
             );
             echo  json_encode($returnData);
+        }
+    }
+
+    public function entrada_salida()
+    {
+        $returnData = array();
+        $valor = $this->request->getVar('term');
+        //$valor = 'a';
+
+        $resultado = model('productoModel')->inventario($valor);
+
+        if (!empty($resultado)) {
+            foreach ($resultado as $row) {
+                $cantidad_producto = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $row['codigointernoproducto'])->first();
+
+
+                if (empty($cantidad_producto)) {
+                    $inventario = [
+                        'codigointernoproducto' => $row['codigointernoproducto'],
+                        'idvalor_unidad_medida' => 3,
+                        'idcolor' => 0,
+                        'cantidad_inventario' => 0
+                    ];
+
+                    $insert = model('inventarioModel')->insert($inventario);
+
+                    $cantidad = 0;
+                }
+
+                if (!empty($cantidad_producto)) {
+                    $cantidad = $cantidad_producto['cantidad_inventario'];
+                }
+
+
+                $data['value'] =  $row['codigointernoproducto'] . " " . "/" . " " . $row['nombreproducto'];
+                $data['id_producto'] = $row['codigointernoproducto'];
+                $data['nombre_producto'] = $row['nombreproducto'];
+                $data['valor_venta'] = $row['valorventaproducto'];
+                //$data['cantidad'] = $cantidad_producto['cantidad_inventario'];
+                $data['cantidad'] = $cantidad;
+                // $data=['cantidad']=$cantidad_producto['cantidad_inventario'];
+                array_push($returnData, $data);
+            }
+            echo json_encode($returnData);
+        } else {
+            $data['value'] = "No hay resultados";
+            array_push($returnData, $data);
+            echo json_encode($returnData);
         }
     }
 }

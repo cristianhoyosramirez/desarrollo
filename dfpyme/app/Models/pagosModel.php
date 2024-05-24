@@ -460,5 +460,14 @@ class pagosModel extends Model
         return $datos->getResultArray();
     }
 
+    public function pagos($id)
+    {
+
+        $datos = $this->db->query("
+        select efectivo , transferencia from pagos where id = $id
+                                 ");
+        return $datos->getResultArray();
+    }
+
 
 }

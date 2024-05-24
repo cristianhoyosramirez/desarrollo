@@ -7,6 +7,7 @@ require APPPATH . "Controllers/mike42/autoload.php";
 use App\Controllers\BaseController;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Libraries\PedidosBorrados;
 
 class Ventas extends BaseController
 {
@@ -1183,11 +1184,45 @@ class Ventas extends BaseController
     public function pedidos_borrados()
     {
         //$valor_buscado = $_GET['search']['value'];
-        $id_apertura = model('aperturaModel')->selectMax('id')->findAll();
-        $apertura = $id_apertura[0]['id'];
+
+        $fecha_inicial = $this->request->getGET('fecha_inicial');
+        $fecha_final = $this->request->getGET('fecha_final');
+
+
+
+        if (empty($fecha_inicial) and empty($fecha_final)) {  // Criterio de busqueda desde el inicio 
+            $id_min = model('pagosModel')->selectMin('id')->first();
+            $id_max = model('pagosModel')->selectMax('id')->first();
+
+            $temp_incial = model('pagosModel')->select('fecha')->where('id', $id_min['id'])->first();
+            $temp_final = model('pagosModel')->select('fecha')->where('id', $id_max['id'])->first();
+
+            $inicial = $temp_incial['fecha'];
+            $final = $temp_final['fecha'];
+        }
+
+        if (!empty($fecha_inicial) and empty($fecha_final)) {  // Criterio de busqueda por una fecha 
+
+            $inicial = $fecha_inicial;
+            $final = $fecha_inicial;
+        }
+        if (!empty($fecha_inicial) and !empty($fecha_final)) {  // Criterio de busqueda por una fecha 
+
+            $inicial = $fecha_inicial;
+            $final = $fecha_final;
+        }
+
+
+        $temp_pedido = new PedidosBorrados();
+        $pedidos = $temp_pedido->get_pedidos_borrados($inicial, $final);
 
         $sql_count = '';
         $sql_data = '';
+
+        $sql_count = "SELECT
+        count(id) as total from pedidos_borrados where fecha_eliminacion between '$inicial'  and '$final' ";
+
+        $sql_data = "select * from pedidos_borrados where fecha_eliminacion between '$inicial'  and '$final' ";
 
         $table_map = [
             0 => 'id',
@@ -1199,10 +1234,7 @@ class Ventas extends BaseController
 
         ];
 
-        $sql_count = "SELECT
-                            count(id) as total from pedidos_borrados ";
 
-        $sql_data = "select * from pedidos_borrados ";
 
         $condition = "";
 
@@ -1230,7 +1262,16 @@ class Ventas extends BaseController
 
 
             $sub_array[] = $detalle['fecha_eliminacion'];
-            $sub_array[] = $detalle['hora_eliminacion'];
+            //$sub_array[] = $detalle['hora_eliminacion'];
+
+            $hora_eliminacion = $detalle['hora_eliminacion'];
+
+            // Convert the time to 12-hour format with AM/PM
+            $hora_eliminacion_12hr = date("g:i A", strtotime($hora_eliminacion));
+
+            // Add to the $sub_array
+            $sub_array[] = $hora_eliminacion_12hr;
+
             $sub_array[] =  $detalle['fecha_creacion'];
             $sub_array[] = $detalle['numero_pedido'];
             $sub_array[] = "$ " . number_format($detalle['valor_pedido'], 0, ",", ".");
@@ -1249,7 +1290,7 @@ class Ventas extends BaseController
 
             $data[] = $sub_array;
         }
-        $total_venta = model('eliminacionPedidosModel')->selectSum('valor_pedido')->findAll();
+        $total_venta = model('eliminacionPedidosModel')->get_total_eliminados($inicial, $final);
 
 
 
@@ -1258,7 +1299,7 @@ class Ventas extends BaseController
             'recordsTotal' => $total_count->total,
             'recordsFiltered' => $total_count->total,
             'data' => $data,
-            'total_venta' => number_format($total_venta[0]['valor_pedido'], 0, ",", ".")
+            'total_venta' => number_format($total_venta[0]['total'], 0, ",", ".")
         ];
 
         echo  json_encode($json_data);

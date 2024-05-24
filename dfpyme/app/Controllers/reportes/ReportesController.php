@@ -140,8 +140,8 @@ class ReportesController extends BaseController
             'total_venta' => number_format($total_venta[0]['total_documento'], 0, ",", "."),
             'impuestos' => view('impuestos/impuestos', [
                 'iva' => $iva,
-                'inc'=>$inc,
-                'apertura'=>$apertura
+                'inc' => $inc,
+                'apertura' => $apertura
             ])
             /* 'base_iva_19' => number_format($base_iva_019, 0, ",", "."),
             'iva_19' => 0,
@@ -395,5 +395,47 @@ class ReportesController extends BaseController
         ];
 
         echo  json_encode($json_data);
+    }
+
+    function actualizar_pagos()
+    {
+
+        $efectivo = $this->request->getPost('efectivo_factura');
+        $transferencia = $this->request->getPost('transferencia_factura');
+
+        $efectivo = str_replace('.', '', $efectivo);
+        $transferencia = str_replace('.', '', $transferencia);
+
+        $id = $this->request->getPost('id');
+
+        $pagos = [
+            'efectivo' => $efectivo,
+            'transferencia' => $transferencia,
+            'total_pago' => $efectivo + $transferencia,
+            'recibido_efectivo' => $efectivo,
+            'recibido_transferencia' => $transferencia,
+        ];
+        $pagos = model('pagosModel')->set($pagos)->where('id', $id)->update();
+
+        if ($pagos) {
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'success');
+            return redirect()->to(base_url('consultas_y_reportes/consultas_caja'))->with('mensaje', 'Actualización correcta ');
+        }
+    }
+
+    function datos_pagos()
+    {
+        $id = $this->request->getPost('id');
+        $pagos = model('pagosModel')->pagos($id);
+
+        $returnData = array(
+            "resultado" => 1,
+            "efectivo" => number_format($pagos[0]['efectivo'], 0, ",", "."),
+            "transferencia" => number_format($pagos[0]['transferencia'], 0, ",", "."),
+            "id" => $id,
+
+        );
+        echo  json_encode($returnData);
     }
 }

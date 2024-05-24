@@ -482,6 +482,49 @@ MOVIMIENTO DE CAJA
 <?= $this->include('consultas/modal_devoluciones') ?>
 
 <!-- Modal -->
+<div class="modal fade" id="modal_editar_retiro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Editar retiro de dinero </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url() ?>/devolucion/actualizar_retiro" method="post">
+
+                    <input type="hidden" id="id" name="id">
+                    <div class="row">
+                        <div class="col">
+                            <label for="inputPassword4" class="form-label">Valor</label>
+                            <input type="text" class="form-control" id="valor" name="valor" onclick="seleccionar()">
+                        </div>
+                        <div class="col">
+                            <label for="inputPassword4" class="form-label">Concepto</label>
+                            <textarea class="form-control" id="concepto" name="concepto"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-8"></div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-outline-success">
+                                Aceptar
+                            </button>
+                        </div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
 <div class="modal fade" id="cambiar_apertura" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content modal-lg">
@@ -556,7 +599,91 @@ MOVIMIENTO DE CAJA
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="editar_pagos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Editar_pagos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url() ?>/reportes/actualizar_pagos" method="POST">
+                    <input type="hidden" id="id_factura" name="id">
+                    <div class="row">
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Efectivo</label>
+                            <input type="text" class="form-control" name="efectivo_factura" id="efectivo_factura" onclick="seleccionar()">
+                        </div>
+                        <div class="col">
+                            <label for="inputEmail4" class="form-label">Transferencia</label>
+                            <input type="text" class="form-control" name="transferencia_factura" id="transferencia_factura" onclick="seleccionar('transferencia_factura')">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-7"></div>
+                        <div class="col-3 text-end"><button type="submit" class="btn btn-outline-success">Actualizar</button></div>
+                        <div class="col-2"> <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button></div>
+
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
+
+<script>
+    function seleccionar(){
+        //$('#'+id).select()
+        console.log('Gg')
+    }
+
+</script>
+
+<script>
+    const efectivo = document.querySelector("#efectivo_factura");
+
+    function formatNumber(n) {
+        // Elimina cualquier carácter que no sea un número
+        n = n.replace(/\D/g, "");
+        // Formatea el número
+        return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+    }
+
+    efectivo.addEventListener("input", (e) => {
+        const element = e.target;
+        const value = element.value;
+        element.value = formatNumber(value);
+    });
+</script>
+
+<script>
+    const transferencia = document.querySelector("#transferencia_factura");
+
+    function formatNumber(n) {
+        // Elimina cualquier carácter que no sea un número
+        n = n.replace(/\D/g, "");
+        // Formatea el número
+        return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+    }
+
+    transferencia.addEventListener("input", (e) => {
+        const element = e.target;
+        const value = element.value;
+        element.value = formatNumber(value);
+    });
+</script>
+
+<script>
+    function seleccionar() {
+        $('#valor').select()
+    }
+</script>
 
 <script>
     function editar_cierre_efectivo() {

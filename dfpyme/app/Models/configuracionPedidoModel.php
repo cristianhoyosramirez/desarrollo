@@ -10,5 +10,5 @@ class configuracionPedidoModel extends Model
     // Uncomment below if you want add primary key
     // protected $primaryKey = 'id';
     protected $allowedFields = ['agregar_item','propina','mesero_pedido',
-    'valor_defecto_propina','sub_categoria','borrar_remisiones'];
+    'valor_defecto_propina','sub_categoria','borrar_remisiones','partir_comanda'];
 }

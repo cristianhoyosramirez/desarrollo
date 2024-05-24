@@ -106,7 +106,7 @@
         <label for="inputCity" class="form-label">Departamento
         </label>
         <?php $departamento = model('departamentoModel')->where('idpais', 49)->findAll(); ?>
-        <select class="form-select" name="departamento" id="departamento_cliente" onchange="departamentoCiudad()">
+        <select class="form-select" name="departamento" id="departamento_cliente" onchange="departamentoCiudadEditar()">
             <?php foreach ($departamento as $detalle) : ?>
 
                 <option value="<?php echo $detalle['iddepartamento'] ?>" <?php if ($detalle['iddepartamento'] == $id_departamento) : ?>selected <?php endif; ?>><?php echo $detalle['nombredepartamento'] . "-" . $detalle['code']  ?> </option>
@@ -232,6 +232,44 @@
 <script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/select_2.js"></script>
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/departamentoCiudad.js"></script>
+
+<script>
+    function departamentoCiudadEditar() {
+
+var url = document.getElementById("url").value;
+var valorSelect1 = document.getElementById("departamento_cliente").value;
+
+
+$.ajax({
+  data: {
+    valorSelect1
+
+  },
+  url: url +
+    "/" +
+    "eventos/municipios",
+  type: "post",
+  success: function(resultado) {
+    var resultado = JSON.parse(resultado);
+    if (resultado.resultado == 1) {
+
+       
+       $('#ciudad_cliente_edicion').html(resultado.ciudad)
+       $('#confirmar_municipios_cliente').html(resultado.ciudad)
+       //$('#municipios').html(resultado.municipios)
+
+    }
+
+    if (resultado.resultado == 0) {
+      alert('No se puede actualizar ')
+    }
+  },
+});
+
+
+
+}
+</script>
 
 
 <script>

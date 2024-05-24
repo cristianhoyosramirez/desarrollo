@@ -43,9 +43,9 @@ class impresion
         $fecha_apertura = model('aperturaModel')->select('fecha')->where('id', $id_apertura)->first();
         $hora_apertura = model('aperturaModel')->select('hora')->where('id', $id_apertura)->first();
 
-        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("**CUADRE DE CAJA** \n");
-
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text("Fecha apertura:  " . $fecha_apertura['fecha'] . " " . date("g:i a", strtotime($hora_apertura['hora'])) . "\n");
 
 
@@ -222,15 +222,17 @@ class impresion
         $printer->text("Cierre efectivo  " . "       $ " .  number_format($cierre_usuario, 0, ",", ".") .  "\n");
         $printer->text("Cierre transacciones  " . "  $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n\n");
 
-        if ($total_en_caja > $cierre_usuario) {
+        $printer->text("Diferencia efectivo  " . "   $ " . number_format(($cierre_usuario ) - $total_en_caja, 0, ",", ".") . "\n");
+    
+       /*  if ($total_en_caja > $cierre_usuario) {
         $printer->text("Diferencia efectivo  " . "   $ " . number_format(($total_en_caja) - $cierre_usuario, 0, ",", ".") . "\n");
-        }
-        if ($total_en_caja < $cierre_usuario) {
+        } */
+      /*   if ($total_en_caja < $cierre_usuario) {
         $printer->text("Diferencia efectivo  " . "   $ " . number_format(($cierre_usuario) - $total_en_caja , 0, ",", ".") . "\n");
-        }
+        } */
 
 
-        $printer->text("Diferencia transaccion  " . "$ " . number_format($transaccion - $valor_cierre_transaccion_usuario, 0, ",", ".") . "\n");
+        $printer->text("Diferencia transaccion  " . "$ " . number_format($valor_cierre_transaccion_usuario -  $transaccion , 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -240,7 +242,7 @@ class impresion
         if ($total_en_caja < $cierre_usuario) {
             $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($cierre_usuario ) - $total_en_caja ) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
         } */
-        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($total_en_caja) - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
+        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((( $cierre_usuario ) - $total_en_caja ) + ($valor_cierre_transaccion_usuario  - $transaccion ), 0, ",", ".") . "\n");
         $printer->text("\n");
 
         $printer->feed(1);
@@ -1009,4 +1011,13 @@ class impresion
         $printer->pulse();
         $printer->close();
     }
+
+
+    function imprimir_comanda(){
+        
+    }
+
+
+
+
 }

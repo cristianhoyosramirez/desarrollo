@@ -42,4 +42,14 @@ class retiroFormaPagoModel extends Model
          ");
         return $datos->getResultArray();
     }
+    public function retiros_forma_pago($id_retiro)
+    {
+        $datos = $this->db->query("
+        SELECT valor,
+            concepto
+        FROM retiro_forma_pago
+        WHERE idretiro=$id_retiro 
+         ");
+        return $datos->getResultArray();
+    }
 }

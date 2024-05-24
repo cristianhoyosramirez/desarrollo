@@ -118,6 +118,97 @@
     <!-- Calendario -->
     <script src="<?= base_url() ?>/Assets/plugin/calendario/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 
+    <script>
+      function buscar_pedidos_borrados() {
+
+        let url = document.getElementById("url").value;
+        let fecha_inicial = document.getElementById("fecha_inicial").value;
+        let fecha_final = document.getElementById("fecha_final").value;
+        let criterio_seleccion = document.getElementById("periodo_fechas").value;
+
+        if (criterio_seleccion == "") {
+          sweet_alert_start('error', 'No hay rango seleccionado')
+          return; // Agregar return para detener la ejecución si no hay rango seleccionado
+        }
+
+        if ($.fn.DataTable.isDataTable('#pedidos_borrados')) {
+          $('#pedidos_borrados').DataTable().destroy();
+        }
+
+        $('#pedidos_borrados').DataTable({
+          serverSide: true,
+          processing: true,
+          searching: false,
+          dom: 'Bfrtip',
+          buttons: [
+            'excelHtml5' // Agregar el botón de exportar a Excel
+          ],
+          order: [
+            [0, 'desc']
+          ],
+          language: {
+            decimal: "",
+            emptyTable: "No hay datos",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 a 0 de 0 registros",
+            infoFiltered: "(Filtro de _MAX_ total registros)",
+            infoPostFix: "",
+            thousands: ",",
+            lengthMenu: "Mostrar _MENU_ registros",
+            loadingRecords: "Cargando...",
+            processing: "Procesando...",
+            search: "Buscar",
+            zeroRecords: "No se encontraron coincidencias",
+            paginate: {
+              first: "Primero",
+              last: "Ultimo",
+              next: "Próximo",
+              previous: "Anterior"
+            },
+            aria: {
+              sortAscending: ": Activar orden de columna ascendente",
+              sortDescending: ": Activar orden de columna desendente"
+            }
+          },
+          ajax: {
+            url: '<?php echo base_url() ?>' + "/reportes/pedidos_borrados",
+            type: 'GET',
+            data: {
+              fecha_inicial: fecha_inicial,
+              fecha_final: fecha_final
+            },
+            dataSrc: function(json) {
+              $('#total_pedidos').html(json.total_venta);
+              return json.data;
+            }
+          },
+          columnDefs: [{
+            targets: [4],
+            orderable: false
+          }]
+        });
+      }
+    </script>
+
+    <script>
+      function periodo(id) {
+
+        if (id == 1) {
+          document.getElementById("inicial").style.display = "none";
+          document.getElementById("final").style.display = "none";
+        }
+        if (id == 2) {
+          document.getElementById("inicial").style.display = "block";
+          document.getElementById("final").style.display = "none";
+        }
+        if (id == 3) {
+          document.getElementById("inicial").style.display = "block";
+          document.getElementById("final").style.display = "block";
+        }
+
+      }
+    </script>
+
 
     <script>
       function productos_borrados(id_pedido) {
@@ -133,7 +224,7 @@
             if (resultado.resultado == 1) {
 
               $('#resultado_productos_borrados').html(resultado.productos)
-              
+
               myModal = new bootstrap.Modal(
                 document.getElementById("productos_borrados"), {}
               );
@@ -145,18 +236,18 @@
     </script>
 
 
-
     <script>
       $("#periodo_fechas").select2({
         width: "100%",
-        //placeholder: "Filtrar productos por categoria",
+        placeholder: "Selecciona un rango ",
         language: "es",
         theme: "bootstrap-5",
         allowClear: false,
-
-        closeOnSelect: true
+        closeOnSelect: true,
+        minimumResultsForSearch: Infinity
       });
     </script>
+
 
     <script>
       $(document).ready(function() {

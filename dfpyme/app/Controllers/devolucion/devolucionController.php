@@ -608,4 +608,44 @@ class devolucionController extends BaseController
             echo  json_encode($returnData);
         }
     }
+
+    function editar_retiro()
+    {
+
+        $id = $this->request->getPost('id_retiro');
+        //$id= 32;
+
+        $datos_retiro = model('retiroFormaPagoModel')->retiros_forma_pago($id);
+
+
+        $returnData = array(
+            "resultado" => 1,
+            'valor' => number_format($datos_retiro[0]['valor'], 0, ",", "."),
+            'concepto' => $datos_retiro[0]['concepto'],
+            'id' => $id
+        );
+        echo  json_encode($returnData);
+    }
+
+    function actualizar_retiro()
+    {
+
+        $id = $this->request->getPost('id');
+        $concepto = $this->request->getPost('concepto');
+        $valor = $this->request->getPost('valor');
+        $valor = str_replace('.', '', $valor);
+
+        $data = [
+            'concepto' => $concepto,
+            'valor' => $valor
+        ];
+
+        $update = model('retiroFormaPagoModel')->set($data)->where('idretiro', $id)->update();
+
+        if ($update) {
+            $session = session();
+            $session->setFlashdata('iconoMensaje', 'success');
+            return redirect()->to(base_url('consultas_y_reportes/consultas_caja'))->with('mensaje', 'Actualizacion exitosa  ');
+        }
+    }
 }

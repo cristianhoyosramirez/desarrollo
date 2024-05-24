@@ -11,59 +11,39 @@ BUSCAR PEDIDOS BORRADOS
         </div>
     </div>
 </div>
-<br>
-<!--Sart row-->
-<div class="container">
-    <div class="row text-center align-items-center flex-row-reverse">
-        <div class="col-lg-auto ms-lg-auto">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Salones</a></li>
-                    <li class="breadcrumb-item"><a href="#">Mesas</a></li>
-                    <li class="breadcrumb-item"><a href="#">Usuarios</a></li>
-                    <li class="breadcrumb-item"><a href="#">Empresa</a></li>
-                </ol>
-            </nav>
-        </div>
 
-        <div class="col-lg-auto ms-lg-auto">
-            <p class="text-primary h3">BUSCAR PEDIDOS BORRADOS EN UN PERIODO DE TIEMPO </p>
-        </div>
-        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
-            <a class="nav-link"><img style="cursor:pointer;" src="<?php echo base_url(); ?>/Assets/img/atras.png" width="20" height="20" onClick="history.go(-1);" title="Sección anterior"></a>
-        </div>
-    </div>
+<div class="container">
+    <p class="text-center h2 text-primary">PEDIDOS ELIMINADOS</p>
 </div>
+<br>
 <div class="card container">
 
-    <br>
     <div class="card-body">
 
-        <!--  <form class="row g-3" id="formulario_movimiento_caja" action="<?= base_url('consultas_y_reportes/pedidos_borrados') ?>" method="POST">
-            <div class="col-3">
-
-                <input type="date" class="form-control" value="<?php echo date('Y-m-d') ?>" name="fecha_inicial">
-            </div>
-            <div class="col-3">
-
-                <input type="date" class="form-control" value="<?php echo date('Y-m-d') ?>" name="fecha_final">
-            </div>
-
-            <div class="col-3">
-                <button type="submit" class="btn btn-primary">Buscar </button>
-            </div>
-
-
-        </form> -->
         <div class="row">
-            <label for="" class="form-label">Período</label>
-            <div class="col-2">
-                <select class="form-select" id="periodo_fechas">
-
+            <div class="col-3">
+                <label for="" class="form-label">Período</label>
+                <select class="form-select" id="periodo_fechas" onchange="periodo(this.value)">
+                    <option value=""></option>
                     <option value="1">Desde el inicio </option>
                     <option value="2">Fecha </option>
                     <option value="3">Periodo </option>
                 </select>
+            </div>
+
+            <div class="col-3" id="inicial" style="display:none">
+                <label for="" class="form-label">Fecha inicial </label>
+                <input type="date" class="form-control" value="<?php echo date('Y-m-d') ?>" name="fecha_inicial" id="fecha_inicial">
+                <span class="text-danger" id="error_fecha_inicial"></span>
+            </div>
+            <div class="col-3" id="final" style="display:none">
+                <label for="" class="form-label">Fecha final </label>
+                <input type="date" class="form-control" value="<?php echo date('Y-m-d') ?>" name="fecha_final" id="fecha_final">
+            </div>
+
+            <div class="col-3">
+                <label for="" class="form-label text-light">Período</label>
+                <button type="submit" class="btn btn-outline-primary" onclick="buscar_pedidos_borrados()">Buscar </button>
             </div>
 
         </div>
@@ -120,7 +100,7 @@ BUSCAR PEDIDOS BORRADOS
     </div>
 </div>
 
-<input type="hidden" value="<?php  echo base_url() ?>" id="url">
+<input type="hidden" value="<?php echo base_url() ?>" id="url">
 <!-- Modal -->
 <div class="modal fade" id="productos_borrados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -132,7 +112,7 @@ BUSCAR PEDIDOS BORRADOS
             <div class="modal-body">
                 <div id="resultado_productos_borrados"></div>
             </div>
-           
+
         </div>
     </div>
 </div>

@@ -31,4 +31,24 @@ class subCategoriaModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function get_productos_sub_categoria($id_subcategoria)
+    {
+        $datos = $this->db->query("
+        SELECT
+        id,
+        codigointernoproducto,
+        nombreproducto,
+        valorventaproducto,
+        estadoproducto,
+        codigocategoria,
+        id_tipo_inventario
+    FROM
+        producto
+    WHERE
+    id_subcategoria = '$id_subcategoria' AND estadoproducto = 'true'   
+    ORDER BY
+        nombreproducto ASC
+        ");
+        return $datos->getResultArray();
+    }
 }

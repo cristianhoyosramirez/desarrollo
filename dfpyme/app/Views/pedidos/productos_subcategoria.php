@@ -30,11 +30,14 @@
                                                 echo $nombre_subcategoria['nombre']
                                                 ?></p>
                   </button>
-
-              </h2>
+                  
+              </h2>  
+              
               <div id="<?php echo $detalle['id_sub_categoria'] ?>" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
-                  <div class="accordion-body">
-                      <?php $productos = model('subCategoriaModel')->get_productos($detalle['id_sub_categoria']) ?>
+              
+              <div class="accordion-body">
+                      <?php $productos = model('subCategoriaModel')->get_productos_sub_categoria($detalle['id_sub_categoria']) ?>
+                      
                       <?php foreach ($productos as $valor) : ?>
 
                           <div class="cursor-pointer  elemento " onclick="agregar_al_pedido(<?php echo $valor['codigointernoproducto'] ?>)">

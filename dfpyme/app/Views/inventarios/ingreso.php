@@ -206,7 +206,7 @@
                 var url = document.getElementById("url").value;
                 $.ajax({
                     type: "POST",
-                    url: url + "/" + "producto/pedido",
+                    url: url + "/" + "producto/entrada_salida",
                     data: request,
                     success: response,
                     dataType: "json",

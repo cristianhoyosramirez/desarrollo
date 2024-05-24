@@ -42,7 +42,7 @@ class Mesas extends BaseController
 
         $subcategorias = model('configuracionPedidoModel')->select('sub_categoria')->first();
         $id_categoria = $_POST['id_categoria'];
-        //$id_categoria = 7;
+        //$id_categoria = 15;
 
         $tipo_pedido = $_POST['tipo_pedido'];
 
@@ -53,7 +53,6 @@ class Mesas extends BaseController
 
         $id_subcategorias = model('productoCategoriaModel')->id_categorias($id_categoria);
 
-        //dd($id_subcategorias);
 
 
         if (!empty($id_subcategorias)) {
@@ -120,7 +119,7 @@ class Mesas extends BaseController
                     'productos' => $productos,
                 ]);
 
-               
+
 
                 $returnData = array(
                     "resultado" => 1,
@@ -129,7 +128,7 @@ class Mesas extends BaseController
                         'categorias' => $categorias,
                         'id_categoria' => $id_categoria
                     ]),
-                    
+
                 );
                 echo  json_encode($returnData);
             }
@@ -489,7 +488,7 @@ class Mesas extends BaseController
             $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $ultimo_id_pedido)->first();
             $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $ultimo_id_pedido)->first();
 
-           // $ultimo_id_producto = model('productoPedidoModel')->insertID;
+            // $ultimo_id_producto = model('productoPedidoModel')->insertID;
             $ultimo_id_producto = model('productoPedidoModel')->selectMax('id')->find();
 
             $returnData = array(
@@ -501,7 +500,7 @@ class Mesas extends BaseController
                 ]),
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                 "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                "id"=>$ultimo_id_producto[0]['id']
+                "id" => $ultimo_id_producto[0]['id']
 
             );
             echo  json_encode($returnData);
@@ -561,7 +560,7 @@ class Mesas extends BaseController
                         "productos_pedido" => $productos_del_pedido,
                         "total_pedido" =>  "$" . number_format($total['valor_total'], 0, ',', '.'),
                         "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                        "id"=>$ultimo_id_producto
+                        "id" => $ultimo_id_producto
 
 
 
@@ -656,7 +655,7 @@ class Mesas extends BaseController
                     ]),
                     "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                     //"cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
-                    "id"=>$ultimo_id_producto
+                    "id" => $ultimo_id_producto
                 );
                 echo  json_encode($returnData);
             }

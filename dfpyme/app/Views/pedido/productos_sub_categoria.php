@@ -1,27 +1,26 @@
 <div class="row">
-    <?php
-    foreach ($productos as $valor) :
-    ?>
+    <?php foreach ($productos as $valor) : ?>
+
+        
+      <!--   <div class="col-12 col-md-4 col-lg-4 mb-4"> -->
         <div class="col-12 col-sm-6 col-lg-4 col-xl-4">
-            <div class="cursor-pointer mb-1 elemento">
-                <div class="card bg-azure-lt">
-                    <div class="row g-0">
+            <br>
+            <div class="card card-sm bg-azure-lt">
+                <div class="card-body">
+                    <div class="row align-items-center">
                         <div class="col-auto">
-                            <div class="card-body"></div>
+                            <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
                         </div>
                         <div class="col">
-                            <div class="card-body ps-0">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 ">
-                                        <h3 class="mb-0"><a href="#"><?php echo $valor['nombreproducto'] ?></a></h3>
-                                        <div class="mt-3 list-inline list-inline-dots mb-0 text-muted">
-                                            <?php echo "$ " . number_format($valor['valorventaproducto'], 0, ",", ".") ?>
-                                        </div>
-                                    </div>
+                            <div class="font-weight-medium text-center">
+                                <?php echo $valor['nombreproducto'] ?>
+                            </div>
+                            <div class="text-muted text-center">
+                                <span id="saldo"><?php echo "$ " . number_format($valor['valorventaproducto'], 0, ",", ".") ?></span>
+                                <div class="row">
                                     <div class="col-md">
                                         <div class="input-group">
                                             <button class="btn bg-muted-lt btn-icon" onclick="decrementarCantidad(event,<?php echo $valor['id'] ?>)">
-                                                <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                     <line x1="5" y1="12" x2="19" y2="12" />
@@ -29,7 +28,6 @@
                                             </button>
                                             <input type="number" class="form-control form-control-sm text-center cantidad-input" value="1" id="<?php echo $valor['id']; ?>" onclick="resaltarInput(this)" inputmode="numeric">
                                             <button class="btn bg-muted-lt btn-icon" onclick="incrementarCantidad(event,<?php echo $valor['id'] ?>)">
-                                                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                     <line x1="12" y1="5" x2="12" y2="19" />
@@ -53,8 +51,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
         </div>
+    
     <?php endforeach; ?>
 </div>

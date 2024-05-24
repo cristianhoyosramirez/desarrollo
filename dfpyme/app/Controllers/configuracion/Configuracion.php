@@ -642,4 +642,8 @@ class Configuracion extends BaseController
     function admin_imp(){
         return view('configuracion/impresora');
     }
+
+    function comanda(){
+        return view('configuracion/comanda');
+    }
 }

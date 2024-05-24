@@ -133,7 +133,8 @@ class Inventarios extends BaseController
     function productos_subcategoria()
     {
 
-        $productos = model('subCategoriaModel')->get_productos($this->request->getPost('id_subcategoria'));
+       // $productos = model('subCategoriaModel')->get_productos($this->request->getPost('id_subcategoria'));
+        $productos = model('subCategoriaModel')->get_productos_sub_categoria($this->request->getPost('id_subcategoria'));
 
         $items = view('pedido/productos_sub_categoria', [
             'productos' => $productos,

@@ -10,9 +10,6 @@
 
                 <div id="datos_editar_cliente"></div>
 
-
-
-
             </div>
 
         </div>

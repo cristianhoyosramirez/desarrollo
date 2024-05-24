@@ -497,14 +497,17 @@ class reporteDeVentasController extends BaseController
                 $cierre_usuario = $efectivo_cierre + $transaccion_cierre;
 
 
-                if ($cierre_usuario >= $total_ingresos) {
+              /*   if ($cierre_usuario >= $total_ingresos) {
 
                     $diferencia =  (($total_ingresos) - ($retiros_dinero)) - ($cierre_usuario);
                 }
                 if ($cierre_usuario < $total_ingresos) {
 
-                    $diferencia = $cierre_usuario -($total_ingresos -($retiros_dinero)) ;
-                }
+                    $diferencia =  ($total_ingresos -($retiros_dinero)) - $cierre_usuario;
+                } */
+
+               $diferencia =  $cierre_usuario - ($total_ingresos - $retiros_dinero );
+                
             }
 
 
