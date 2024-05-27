@@ -49,6 +49,7 @@ class FacturaElectronica extends BaseController
         $estado = $this->request->getPost('estado');
         $pago_total = $this->request->getPost('pago_total');
         $propina = $this->request->getPost('propina_format');
+        $nota=model('pedidoModel')->select('nota_pedido')->where('fk_mesa',$id_mesa)->first();
         /* 
          $id_mesa = 1;
         $tipo_pago = 1;         // Tipo de pago 1 = pago completo; 0 pago parcial
@@ -113,7 +114,9 @@ class FacturaElectronica extends BaseController
             'cancelled' => true,
             'fecha_y_hora_factura_venta' => $fecha_y_hora,
             'id_apertura' => $apertura['numero'],
-            'propina' => $propina
+            'propina' => $propina,
+            'nota'=>$nota['nota_pedido']
+
         ];
 
 
@@ -455,7 +458,7 @@ class FacturaElectronica extends BaseController
                  */
 
 
-                $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
+                $mesas = model('mesasModel')->where('estado',0)->orderBy('id', 'ASC')->findAll();
                 $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->findAll();
                 $returnData = array(
                     "resultado" => 1, //Falta plata

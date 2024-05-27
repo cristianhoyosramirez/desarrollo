@@ -22,11 +22,11 @@ $("#producto").autocomplete({
         let mesero = document.getElementById("mesero").value;
         let id_producto = ui.item.id_producto;
 
-        if (id_mesa == "") {
+       /*  if (id_mesa == "") {
 
             $('#error_producto').html('No se ha seleccionado una mesa ')
 
-        } else if (id_mesa != "") {
+        }  else if (id_mesa != "") {*/
 
             $.ajax({
                 data: {
@@ -48,6 +48,6 @@ $("#producto").autocomplete({
                     }
                 },
             });
-        }
+        //}
     },
 });

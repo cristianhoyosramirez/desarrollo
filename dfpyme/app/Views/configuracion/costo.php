@@ -38,9 +38,9 @@ Reporte de costos
 <!-- Data tables -->
 <link href="<?= base_url() ?>/Assets/plugin/data_tables/bootstrap.min.css" />
 <link href="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.css" />
-
-<!--select2 -->
-<script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
+<!-- Select 2 -->
+<link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.css" rel="stylesheet" />
+<link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
 <div class="container">
     <p class="text-center text-primary h3">INFORME COSTO DE VENTA </p>
@@ -56,35 +56,24 @@ Reporte de costos
 
     <div class="row">
         <input type="hidden" id="url" value="<?php echo base_url() ?>">
-        <!--    <div id="entre_fechas" class="col-4">
-            <table>
-                <tr>
-                    <td>Desde </td>
-                    <td colspan="3"> <input type="text" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d'); ?>">
-                    </td>
-                    <td>Hasta</td>
-                    <td> <input type="text" class="form-control" id="fecha_final" value="<?php echo date('Y-m-d'); ?>">
-                    </td>
-                </tr>
-            </table>
-        </div> -->
+
 
         <div id="entre_fechas" class="col-12">
             <div class="row">
-                <div class="col">
+                <div class="col-3">
                     <label for="">Período</label>
-                    <select class="form-select" id="periodo">
+                    <select class="form-select" id="periodo" onchange="select_periodo(this.value)">
                         <option></option>
                         <option value="1">Desde el inicio </option>
                         <option value="2">Fecha </option>
                         <option value="3">Periodo </option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <label for="fecha_inicial">Desde</label>
+                <div class="col-md-2" id="inicial" style="display:none">
+                    <label for="fecha_inicial">Fecha inicial </label>
 
                     <div class="input-group input-group-flat">
-                        <input type="text" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d'); ?>">
+                        <input type="text" class="form-control" id="fecha_inicial">
                         <span class="input-group-text">
                             <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_campo('fecha_inicial')"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -96,10 +85,10 @@ Reporte de costos
                         </span>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <label for="fecha_final">Hasta</label>
+                <div class="col-md-2" id="final" style="display:none">
+                    <label for="fecha_final">Fecha final </label>
                     <div class="input-group input-group-flat">
-                        <input type="text" class="form-control" id="fecha_final" value="<?php echo date('Y-m-d'); ?>">
+                        <input type="text" class="form-control" id="fecha_final">
                         <span class="input-group-text">
                             <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_campo('fecha_final')"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -112,13 +101,8 @@ Reporte de costos
                     </div>
                 </div>
                 <div class="col-1" id="boton_consulta"> <br>
-                    <button type="button" class="btn btn-primary btn-icon" onclick="buscar()" title="Buscar datos" data-bs-toggle="tooltip">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <circle cx="10" cy="10" r="7" />
-                            <line x1="21" y1="21" x2="15" y2="15" />
-                        </svg>
+                    <button type="button" class="btn btn-outline-primary btn-icon" onclick="buscar()" title="Buscar datos" data-bs-toggle="tooltip">
+                      Buscar
                     </button>
                 </div>
                 <div class="col-4">
@@ -146,6 +130,16 @@ Reporte de costos
         </div>
 
 
+    </div>
+    <div class="row">
+        <div class="col-3"><span class="h3">Fecha inicial:</span> <span class="text-primary h3 " id="fecha_inicial_reporte"></span>
+        </div>
+       
+        <div class="col-3 text-dark"><span class="h3">Fecha final:</span> <span class="text-primary h3" id="fecha_final_reporte"></span>
+        </div>
+        <div class="col-6">
+
+        </div>
     </div>
 
     <div id="processing-bar" style="display: none;">
@@ -242,15 +236,46 @@ Reporte de costos
 <script src="<?= base_url() ?>/Assets/plugin/data_tables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.js"></script>
 
-<!-- DataTables Buttons -->
+<!--select2 -->
+<script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
+
+<!-- DataTables Buttons 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>-->
 
+<script>
+    function select_periodo(periodo) {
 
+        var inicial = document.getElementById("inicial");
+        var final = document.getElementById("final");
+
+        if (periodo == 1) {
+            inicial.style.display = "none";
+            final.style.display = "none";
+
+            document.getElementById('fecha_inicial').value = '';
+            document.getElementById('fecha_final').value = '';
+
+        }
+        if (periodo == 2) {
+            inicial.style.display = "block";
+            final.style.display = "none";
+            document.getElementById('fecha_final').value = '';
+        }
+        if (periodo == 3) {
+            inicial.style.display = "block";
+            final.style.display = "block";
+
+            document.getElementById('fecha_inicial').value = '';
+            document.getElementById('fecha_final').value = '';
+        }
+
+    }
+</script>
 
 <script>
     $("#periodo").select2({
@@ -338,6 +363,8 @@ Reporte de costos
                     $('#base_inc').html(json.base_inc);
                     $('#inc').html(json.inc);
                     $('#costo').html(json.costo);
+                    $('#fecha_inicial_reporte').html(json.fecha_inicial);
+                    $('#fecha_final_reporte').html(json.fecha_final);
                     return json.data;
                 },
             },
@@ -459,10 +486,10 @@ Reporte de costos
         var fecha_final = document.getElementById("fecha_final").value;
 
         // Validación de fechas no vacías
-        if (fecha_inicial === '' || fecha_final === '') {
-            $('#error_fecha').html('Ingresa ambas fechas ')
-            return;
-        }
+        /*  if (fecha_inicial === '' || fecha_final === '') {
+             $('#error_fecha').html('Ingresa ambas fechas ')
+             return;
+         } */
 
         var dataTable = $('#consulta_costo').DataTable({
             serverSide: true,
@@ -516,6 +543,9 @@ Reporte de costos
                     $('#valor_venta').html(json.total_venta);
                     $('#base_inc').html(json.base_inc);
                     $('#inc').html(json.inc);
+                    $('#fecha_inicial_reporte').html(json.fecha_inicial);
+                    $('#fecha_final_reporte').html(json.fecha_final);
+                    $('#costo').html(json.costo);
                     return json.data;
                 },
             },

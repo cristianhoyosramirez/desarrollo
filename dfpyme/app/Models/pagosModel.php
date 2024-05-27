@@ -330,7 +330,7 @@ class pagosModel extends Model
 
         $datos = $this->db->query("
         SELECT 
-        sum(total_documento) AS total
+        sum(valor) AS total
         FROM
         pagos where fecha between '$fecha_inicial' and '$fecha_final'
         ");
@@ -455,8 +455,7 @@ class pagosModel extends Model
     FROM
         kardex
     WHERE
-        id_apertura = $id_apertura;
-                                 ");
+        id_apertura = $id_apertura;");
         return $datos->getResultArray();
     }
 
@@ -464,10 +463,16 @@ class pagosModel extends Model
     {
 
         $datos = $this->db->query("
-        select efectivo , transferencia from pagos where id = $id
-                                 ");
+        select efectivo , transferencia from pagos where id = $id");
         return $datos->getResultArray();
     }
+    public function costo($fecha_inicial , $fecha_final)
+    {
 
-
+        $datos = $this->db->query("
+        SELECT sum(costo) AS costo
+        FROM kardex
+        WHERE fecha BETWEEN '$fecha_inicial' AND '$fecha_final'");
+        return $datos->getResultArray();
+    }
 }

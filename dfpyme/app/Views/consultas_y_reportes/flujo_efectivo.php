@@ -27,6 +27,14 @@ REPORTE DE VENTAS DIARIAS
 <div class="card container">
     <div class="card-body">
         <div class="row">
+            <div class="col">
+                <select class="form-select" name="" id="">
+                    <option value=""></option>
+                    <option value="">Desde el inicio</option>
+                    <option value="">Fecha</option>
+                    <option value="">Período</option>
+                </select>
+            </div>
             <div class="col-md-4">
                 <label for="inputEmail4">Desde</label>
                 <input type="date" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d') ?>"> <br>

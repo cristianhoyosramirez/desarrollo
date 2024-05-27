@@ -66,12 +66,9 @@
                 </svg></button>
         </div>
 
-        <?php if ($sub_categoria == 't') : ?>
+        <?php if ($sub_categoria != 0) : ?>
 
             <?php $id_sub_categoria = model('productoModel')->select('id_subcategoria')->where('codigointernoproducto', $codigo_interno_producto)->first();
-
-
-
 
             ?>
 

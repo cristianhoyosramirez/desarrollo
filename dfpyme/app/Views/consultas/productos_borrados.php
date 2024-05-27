@@ -11,15 +11,18 @@ Reporte de costos
 <link href="<?= base_url() ?>/Assets/plugin/data_tables/bootstrap.min.css" />
 <link href="<?= base_url() ?>/Assets/plugin/data_tables/dataTables.bootstrap5.min.css" />
 
+<!-- Select 2 -->
+<link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.css" rel="stylesheet" />
+<link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
 <div class="container">
     <p class="text-center text-primary h3">INFORME COSTO DE VENTA </p>
 
     <div class="my-4"></div> <!-- Added space between the title and date inputs -->
 
 
-    <div class="row">
-        <input type="hidden" id="url" value="<?php echo base_url() ?>">
-        <!--    <div id="entre_fechas" class="col-4">
+    <input type="hidden" id="url" value="<?php echo base_url() ?>">
+    <!--    <div id="entre_fechas" class="col-4">
             <table>
                 <tr>
                     <td>Desde </td>
@@ -31,75 +34,86 @@ Reporte de costos
                 </tr>
             </table>
         </div> -->
-        <div id="entre_fechas" class="col-12">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="fecha_inicial">Desde</label>
+    <div id="entre_fechas" class="col-12">
+        <div class="row">
+            <div class="col-3">
+                <label class="form-label">Período</label>
+                <select class="form-select" onchange="select_periodo" id="periodo"  onchange="select_periodo(this.value)">
+                    <option></option>
+                    <option value="1">Desde el inicio </option>
+                    <option value="2">Fecha </option>
+                    <option value="3">Periodo</option>
+                </select>
 
-                    <div class="input-group input-group-flat">
-                        <input type="text" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d'); ?>">
-                        <span class="input-group-text">
-                            <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_campo('fecha_inicial')"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M18 6l-12 12" />
-                                    <path d="M6 6l12 12" />
-                                </svg>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <label for="fecha_final">Hasta</label>
-                    <div class="input-group input-group-flat">
-                        <input type="text" class="form-control" id="fecha_final" value="<?php echo date('Y-m-d'); ?>">
-                        <span class="input-group-text">
-                            <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_campo('fecha_final')"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M18 6l-12 12" />
-                                    <path d="M6 6l12 12" />
-                                </svg>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-1" id="boton_consulta"> <br>
-                    <button type="button" class="btn btn-primary btn-icon" onclick="buscar()" title="Buscar datos" data-bs-toggle="tooltip">
-                        <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <circle cx="10" cy="10" r="7" />
-                            <line x1="21" y1="21" x2="15" y2="15" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="col-4">
-                    <p class="text-red" id="error_fecha"></p>
-                </div>
-                <div class="col-md-2 text-end"><br>
-                    <!--  <form action="<?= base_url('reportes/exportar_reporte_costo') ?>" method="POST">
-                        <input type="hidden" id="inicial" name="inicial">
-                        <input type="hidden" id="final" name="final">
-                        <button class="btn btn-outline-danger" type="submit" title="Exportar a PDF" data-bs-toggle="tooltip">PDF</button>
-                    </form> -->
-                </div>
-                <div class="col-md-1 text-start"><br>
+            </div>
+            <div class="col-md-2" id="inicial" style="display:none">
+                <label for="fecha_inicial" class="form-label">Fecha inicial </label>
 
-                    <!-- <button class="btn btn-outline-success" onclick="exportToExcel()" title="Exportar a excel " data-bs-toggle="tooltip">Excel</button> -->
-
-                    <!-- <form action="<?= base_url('reportes/exportar_reporte_costo') ?>" method="POST">
-                        <input type="hidden" id="inicial" name="inicial">
-                        <input type="hidden" id="final" name="final">
-                        <button class="btn btn-outline-danger" type="submit" title="Exportar a PDF" data-bs-toggle="tooltip">PDF</button>
-                    </form> -->
+                <div class="input-group input-group-flat">
+                    <input type="text" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d'); ?>">
+                    <span class="input-group-text">
+                        <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_campo('fecha_inicial')"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M18 6l-12 12" />
+                                <path d="M6 6l12 12" />
+                            </svg>
+                        </a>
+                    </span>
                 </div>
             </div>
+            <div class="col-md-2" id="final" style="display: none;">
+                <label for="fecha_final" class="form-label">Fecha final </label>
+                <div class="input-group input-group-flat">
+                    <input type="text" class="form-control" id="fecha_final" value="<?php echo date('Y-m-d'); ?>">
+                    <span class="input-group-text">
+                        <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_campo('fecha_final')"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M18 6l-12 12" />
+                                <path d="M6 6l12 12" />
+                            </svg>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="col-1" id="boton_consulta">
+                <label for="fecha_final" class="form-label text-light">Fecha final </label>
+                <button type="button" class="btn btn-primary btn-icon" onclick="buscar()" title="Buscar datos" data-bs-toggle="tooltip">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <circle cx="10" cy="10" r="7" />
+                        <line x1="21" y1="21" x2="15" y2="15" />
+                    </svg>
+                </button>
+            </div>
+            <div class="col-4">
+                <p class="text-red" id="error_fecha"></p>
+            </div>
+            <div class="col-md-2 text-end"><br>
+                <!--  <form action="<?= base_url('reportes/exportar_reporte_costo') ?>" method="POST">
+                        <input type="hidden" id="inicial" name="inicial">
+                        <input type="hidden" id="final" name="final">
+                        <button class="btn btn-outline-danger" type="submit" title="Exportar a PDF" data-bs-toggle="tooltip">PDF</button>
+                    </form> -->
+            </div>
+            <div class="col-md-1 text-start"><br>
 
+                <!-- <button class="btn btn-outline-success" onclick="exportToExcel()" title="Exportar a excel " data-bs-toggle="tooltip">Excel</button> -->
+
+                <!-- <form action="<?= base_url('reportes/exportar_reporte_costo') ?>" method="POST">
+                        <input type="hidden" id="inicial" name="inicial">
+                        <input type="hidden" id="final" name="final">
+                        <button class="btn btn-outline-danger" type="submit" title="Exportar a PDF" data-bs-toggle="tooltip">PDF</button>
+                    </form> -->
+            </div>
         </div>
 
-
     </div>
+
+
+
 
 
     <div class="my-3"></div> <!-- Added space between the buttons and the table -->
@@ -152,39 +166,50 @@ Reporte de costos
 <!-- Sweet alert -->
 <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
 
-<!-- <script>
-    $(function() {
-        //var dateFormat = "yy/mm/dd";
-        var dateFormat = "mm-dd-yy"
+<!--select2 -->
+<script src="<?php echo base_url(); ?>/Assets/plugin/select2/select2.min.js"></script>
 
-        var from = $("#fecha_inicial").datepicker({
-            changeMonth: true,
-            numberOfMonths: 1,
-            changeYear: true,
-            onClose: function(selectedDate) {
-                to.datepicker("option", "minDate", selectedDate);
+<script>
+    function select_periodo(periodo) {
+console.log(periodo)
+        var inicial = document.getElementById("inicial");
+        var final = document.getElementById("final");
+
+        if (periodo == 1) {
+            inicial.style.display = "none";
+            final.style.display = "none";
+        }
+        if (periodo == 2) {
+            inicial.style.display = "block";
+            final.style.display = "none";
+        }
+        if (periodo == 3) {
+            inicial.style.display = "block";
+            final.style.display = "block";
+        }
+
+    }
+</script>
+
+<script>
+    $("#periodo").select2({
+        width: "100%",
+        language: "es",
+        theme: "bootstrap-5",
+        allowClear: false,
+        placeholder: "Seleccionar un rango ",
+        minimumResultsForSearch: -1,
+        language: {
+            noResults: function() {
+                return "No hay resultado";
+            },
+            searching: function() {
+                return "Buscando..";
             }
-        });
+        },
 
-        var to = $("#fecha_final").datepicker({
-            changeMonth: true,
-            numberOfMonths: 1,
-            changeYear: true,
-            onClose: function(selectedDate) {
-                from.datepicker("option", "maxDate", selectedDate);
-            }
-        });
-
-        // Export to Excel and PDF functionality
-        $('#exportExcelBtn').click(function() {
-            // Add your code to export to Excel here
-        });
-
-        $('#exportPdfBtn').click(function() {
-            // Add your code to export to PDF here
-        });
     });
-</script> -->
+</script>
 
 <script>
     let mensaje = "<?php echo $session->getFlashdata('mensaje'); ?>";

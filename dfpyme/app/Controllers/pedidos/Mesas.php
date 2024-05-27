@@ -12,7 +12,7 @@ class Mesas extends BaseController
     {
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
         $salones = model('salonesModel')->findAll();
-        $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
+        $mesas = model('mesasModel')->where('estado', 0)->orderBy('id', 'ASC')->findAll();
         $estado = model('estadoModel')->orderBy('idestado', 'ASC')->findAll();
         $cliente_dian = model('clientesModel')->where('nitcliente', '222222222222')->first();
         $bancos = model('BancoModel')->findAll();
@@ -402,7 +402,16 @@ class Mesas extends BaseController
          * Datos recibidos por ajax desde la vista de mesas 
          */
         //$id_mesa = 1;
-        $id_mesa = $this->request->getPost('id_mesa');
+        if (empty($this->request->getPost('id_mesa'))) {
+            $temp_id_mesa = model('mesasModel')->select('id')->where('estado', 1)->first();
+            $id_mesa = $temp_id_mesa['id'];
+        }
+
+        if (!empty($this->request->getPost('id_mesa'))) {
+
+            $id_mesa = $this->request->getPost('id_mesa');
+        }
+
         $id_mesero = $this->request->getPost('mesero');
 
         //$id_usuario = "";
@@ -752,7 +761,7 @@ class Mesas extends BaseController
 
     function get_mesas()
     {
-        $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
+        $mesas = model('mesasModel')->where('estado', 0)->orderBy('id', 'ASC')->findAll();
         $returnData = array(
             "resultado" => 1,
 
@@ -1498,7 +1507,7 @@ class Mesas extends BaseController
     function todas_las_mesas()
     {
 
-        $mesas = model('mesasModel')->orderBy('id', 'asc')->findAll();
+        $mesas = model('mesasModel')->where('estado', 0)->orderBy('id', 'asc')->findAll();
 
         $returnData = array(
             "resultado" => 1,

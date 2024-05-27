@@ -41,7 +41,7 @@
                             <thead class="table-primary">
                                 <tr>
                                     <td></td>
-                                    <td colspan="3">INC <?php echo $valor['inc'] ?> </td>
+                                    <td colspan="3">INC <?php echo $valor['inc'] ?> % </td>
                                     <!-- colspan aplicado correctamente a la celda -->
                                 </tr>
                             </thead>

@@ -414,7 +414,7 @@ class CerrarVenta extends BaseController
                     $mensaje = "";
                 }
 
-                $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
+                $mesas = model('mesasModel')->where('estado',0)->orderBy('id', 'ASC')->findAll();
 
                 $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido);
                 $valor_pedido = "";

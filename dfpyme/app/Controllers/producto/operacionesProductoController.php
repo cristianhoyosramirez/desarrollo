@@ -477,7 +477,8 @@ class operacionesProductoController extends BaseController
         $valor_impuesto_saludable = model('productoModel')->select('valor_impuesto_saludable')->where('codigointernoproducto', $id_producto)->first();
         $codigo_barras = model('productoModel')->select('codigobarrasproducto')->where('codigointernoproducto', $id_producto)->first();
 
-        $sub_categoria = model('categoriasModel')->select('subcategoria')->where('codigocategoria', $id_categoria['codigocategoria'])->first();
+        //$sub_categoria = model('categoriasModel')->select('subcategoria')->where('codigocategoria', $id_categoria['codigocategoria'])->first();
+        $sub_categoria = model('productoModel')->select('id_subcategoria')->where('codigointernoproducto', $id_producto)->first();
 
 
         $sub_categorias = model('subCategoriaModel')->findAll();
@@ -504,7 +505,8 @@ class operacionesProductoController extends BaseController
                 'impuesto_saludable' => $impuesto_saludable,
                 'valor_impuesto_saludable' => number_format($valor_impuesto_saludable['valor_impuesto_saludable'], 0, ",", "."),
                 'codigo_barras' => $codigo_barras['codigobarrasproducto'],
-                'sub_categoria' => $sub_categoria['subcategoria'],
+                //'sub_categoria' => $sub_categoria['subcategoria'],
+                'sub_categoria' => $sub_categoria['id_subcategoria'],
                 'sub_categorias' => $sub_categorias
 
             ])
@@ -597,6 +599,10 @@ class operacionesProductoController extends BaseController
             $pre_2 = (str_replace('.', '', $this->request->getPost('precio_2')) * 100) / $valor_venta_producto;
             $precio_2 = 100 - $pre_2;
 
+          
+
+
+            
             $actualizar_precio = [
                 'codigobarrasproducto' => $this->request->getPost('crear_producto_codigo_de_barras'),
                 'nombreproducto' => $this->request->getPost('crear_producto_nombre'),
@@ -612,6 +618,7 @@ class operacionesProductoController extends BaseController
                 'aplica_ico' => $aplica_ico,
                 'aplica_descuento' => $permite_descuento,
                 'valor_impuesto_saludable' => $this->request->getPost('edicion_de_valor_costo_producto'),
+                'id_subcategoria'=>$this->request->getPost('sub_categoria')
             ];
 
             $model = model('productoModel');

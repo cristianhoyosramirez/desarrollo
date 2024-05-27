@@ -161,10 +161,10 @@ class Ventas extends BaseController
     function productos_borrados()
     {
 
-        $productos = model('productosBorradosModel')->getProductosBorrados(date('Y-m-d'), date('Y-m-d'));
+        //$productos = model('productosBorradosModel')->getProductosBorrados(date('Y-m-d'), date('Y-m-d'));
 
         return view('consultas/productos_borrados', [
-            'productos' => $productos
+            //'productos' => $productos
         ]);
     }
     function datos_productos_borrados()
@@ -199,6 +199,29 @@ class Ventas extends BaseController
 
         //$fecha_inicial = '2024-01-01';
         $fecha_final = $this->request->getGet('fecha_final');
+
+
+
+        if (empty($fecha_inicial) and empty($fecha_final)) {
+
+            $id_inicial = model('pagosModel')->selectMin('id')->first();
+            $id_final = model('pagosModel')->selectMax('id')->first();
+
+            $temp_fecha_inicial = model('pagosModel')->select('fecha')->where('id', $id_inicial['id'])->first();
+            $temp_fecha_final = model('pagosModel')->select('fecha')->where('id', $id_final['id'])->first();
+
+            $fecha_inicial = $temp_fecha_inicial['fecha'];
+            $fecha_final = $temp_fecha_final['fecha'];
+        }
+        if (empty($fecha_final)) {
+            /* 
+            $id_final = model('pagosModel')->selectMax('id')->first();
+            $temp_fecha_final = model('pagosModel')->select('fecha')->where('id', $id_final['id'])->first();
+            $fecha_final = $temp_fecha_final['fecha']; */
+            $fecha_final = $fecha_inicial;
+        }
+
+
         //$fecha_final = '2024-03-13';
         $sql_count = '';
         $sql_data = '';
@@ -260,16 +283,26 @@ class Ventas extends BaseController
             $iva = model('kardexModel')->selectSum('iva')->where('id_factura', $detalle['id_factura'])->findAll();
             $inc = model('kardexModel')->selectSum('ico')->where('id_factura', $detalle['id_factura'])->findAll();
 
+            if ($detalle['id_factura'] == 8) {
+                $temp_documento = model('facturaElectronicaModel')->select('numero')->where('id', $detalle['id_factura'])->first();
+                $documento = $temp_documento['numero'];
+            }
+
+            if ($detalle['id_factura'] != 8) {
+                $documento = $detalle['documento'];
+            }
+
             $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $detalle['nit_cliente'])->first();
             $sub_array[] = $detalle['fecha'];
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
-            $sub_array[] = $detalle['documento'];
-            $sub_array[] = "$ " . number_format($detalle['total_documento'], 0, ",", ".");
+            //$sub_array[] = $detalle['documento'];
+            $sub_array[] = $documento['numero'];
+            $sub_array[] = number_format($detalle['total_documento'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $tipo_documento['descripcionestado'];
-            $sub_array[] = "$ " . number_format($costo[0]['costo'], 0, ",", ".");
+            $sub_array[] = number_format($costo[0]['costo'], 0, ",", ".");
             $sub_array[] = number_format($detalle['total_documento'] - ($iva[0]['iva'] + $inc[0]['ico']), 0, ",", ".");
             $sub_array[] = number_format($iva[0]['iva'], 0, ",", ".");
             $sub_array[] = number_format($inc[0]['ico'], 0, ",", ".");
@@ -310,6 +343,8 @@ class Ventas extends BaseController
             $iva_5 = $venta_iva_5[0]['iva'];
         }
 
+        $costo = model('pagosModel')->costo($fecha_inicial, $fecha_final);
+
 
         $json_data = [
             'draw' => intval($this->request->getGEt(index: 'draw')),
@@ -322,9 +357,11 @@ class Ventas extends BaseController
             'base_iva_5' => number_format($base_iva_5, 0, ",", "."),
             'iva_5' => number_format($iva_5, 0, ",", "."),
             'inc' => number_format($venta_inc[0]['inc'], 0, ",", "."),
-            'base_inc' => number_format($total_venta_inc[0]['total'] - $venta_inc[0]['inc'], 0, ",", ".")
+            'base_inc' => number_format($total_venta_inc[0]['total'] - $venta_inc[0]['inc'], 0, ",", "."),
+            'fecha_inicial' => $fecha_inicial,
+            'fecha_final' => $fecha_final,
+            'costo' => number_format($costo[0]['costo'], 0, ",", ".")
         ];
-
         echo  json_encode($json_data);
     }
     /*  function datos_reporte_costo()
@@ -1057,6 +1094,15 @@ class Ventas extends BaseController
         $id_apertura = model('aperturaModel')->selectMax('id')->findAll();
         $apertura = $id_apertura[0]['id'];
 
+
+        $id_inicial = model('pagosModel')->selectMin('id')->where('id_apertura', $apertura)->first();
+        $id_final = model('pagosModel')->selectMax('id')->first();
+
+        $fecha_inicial = model('pagosModel')->select('fecha')->where('id', $id_inicial['id'])->first();
+        $fecha_final = model('pagosModel')->select('fecha')->where('id', $id_final['id'])->first();
+
+
+
         $sql_count = '';
         $sql_data = '';
 
@@ -1132,7 +1178,7 @@ class Ventas extends BaseController
 
             $data[] = $sub_array;
         }
-        $total_venta = model('pagosModel')->selectSum('total_documento')->where('id_apertura', $apertura)->findAll();
+        $total_venta = model('pagosModel')->selectSum('valor')->where('id_apertura', $apertura)->findAll();
         $total_venta_iva_5 = model('kardexModel')->total_venta_iva_5($apertura);  //Total de la venta con impuestos 
         $venta_iva_5 = model('kardexModel')->venta_iva_5($apertura);  // Total del valor del iva 5 % 
 
@@ -1168,14 +1214,16 @@ class Ventas extends BaseController
             'recordsTotal' => $total_count->total,
             'recordsFiltered' => $total_count->total,
             'data' => $data,
-            'total_venta' => number_format($total_venta[0]['total_documento'], 0, ",", "."),
+            'total_venta' => number_format($total_venta[0]['valor'], 0, ",", "."),
             'base_iva_19' => number_format($base_iva_019, 0, ",", "."),
             'iva_19' => 0,
             'base_iva_5' => number_format($base_iva_5, 0, ",", "."),
             'iva_5' => number_format($iva_5, 0, ",", "."),
             'inc' => number_format($venta_inc[0]['inc'], 0, ",", "."),
             'base_inc' => number_format($total_venta_inc[0]['total'] - $venta_inc[0]['inc'], 0, ",", "."),
-            'costo' => number_format($costo[0]['costo'], 0, ",", ".")
+            'costo' => number_format($costo[0]['costo'], 0, ",", "."),
+            'fecha_inicial' => $fecha_inicial['fecha'],
+            'fecha_final' => $fecha_final['fecha']
         ];
 
         echo  json_encode($json_data);

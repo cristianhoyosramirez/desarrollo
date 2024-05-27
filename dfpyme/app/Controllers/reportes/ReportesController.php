@@ -78,12 +78,21 @@ class ReportesController extends BaseController
             $iva = model('kardexModel')->selectSum('iva')->where('id_factura', $detalle['id_factura'])->findAll();
             $inc = model('kardexModel')->selectSum('ico')->where('id_factura', $detalle['id_factura'])->findAll();
 
+            if ($detalle['id_factura'] == 8) {
+                $temp_documento = model('facturaElectronicaModel')->select('numero')->where('id', $detalle['id_factura'])->first();
+                $documento = $temp_documento['numero'];
+            }
+
+            if($detalle['id_factura'] != 8){
+                $documento=$detalle['documento'];
+            }
+
             $nombre_cliente = model('clientesModel')->select('nombrescliente')->where('nitcliente', $detalle['nit_cliente'])->first();
             $sub_array[] = $detalle['fecha'];
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
-            $sub_array[] = $detalle['documento'];
-
+            // $sub_array[] = $detalle['documento'];
+            $sub_array[] = $documento;
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $tipo_documento['descripcionestado'];
@@ -97,7 +106,7 @@ class ReportesController extends BaseController
 
             $data[] = $sub_array;
         }
-        $total_venta = model('pagosModel')->selectSum('total_documento')->where('id_apertura', $apertura)->findAll();
+        $total_venta = model('pagosModel')->selectSum('valor')->where('id_apertura', $apertura)->findAll();
         /*  $total_venta_iva_5 = model('kardexModel')->total_venta_iva_5($apertura);  //Total de la venta con impuestos 
         $venta_iva_5 = model('kardexModel')->venta_iva_5($apertura);  // Total del valor del iva 5 % 
 
@@ -137,7 +146,7 @@ class ReportesController extends BaseController
             'recordsTotal' => $total_count->total,
             'recordsFiltered' => $total_count->total,
             'data' => $data,
-            'total_venta' => number_format($total_venta[0]['total_documento'], 0, ",", "."),
+            'total_venta' => "$ " . number_format($total_venta[0]['valor'], 0, ",", "."),
             'impuestos' => view('impuestos/impuestos', [
                 'iva' => $iva,
                 'inc' => $inc,
