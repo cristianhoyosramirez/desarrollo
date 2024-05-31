@@ -5,26 +5,17 @@ LISTADO DE PRODUCTOS
 <?= $this->section('content') ?>
 
 
-<div class="container">
-    <div class="row text-center align-items-center flex-row-reverse">
-        <div class="col-lg-auto ms-lg-auto">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Salones</a></li>
-                    <li class="breadcrumb-item"><a href="#">Mesas</a></li>
-                    <li class="breadcrumb-item"><a href="#">Usuarios</a></li>
-                    <li class="breadcrumb-item"><a href="#">Empresa</a></li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-</div>
+
 <br>
 <!--Sart row-->
 <div class="container">
     <div class="row text-center align-items-center flex-row-reverse">
         <div class="col-lg-auto ms-lg-auto">
             <div class="row">
+                <div class="col">
+                  
+                        <a class="btn  btn-outline-success btn-icon  " title="Exportar a Excel " data-bs-toggle="tooltip" type="submit">Productos Borrados </a>
+                </div>
                 <div class="col">
                     <form action="<?php echo base_url() ?>/inventario/exportar_excel" method="get">
                         <button class="btn  btn-outline-success btn-icon w-100 " title="Exportar a Excel " data-bs-toggle="tooltip" type="submit">Excel</button>

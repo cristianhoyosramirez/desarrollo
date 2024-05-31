@@ -843,14 +843,16 @@ class Boletas extends BaseController
     function borrar_propina()
     {
 
-        $id_mesa = $this->request->getPost('id_mesa');
+        $id_mesa = $this->request->getPost('id_mesa'); 
 
 
         $pedido = model('pedidoModel')->set('propina', 0)->where('fk_mesa', $id_mesa)->update();
+        $valor_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa)->first();
 
         if ($pedido) {
             $returnData = array(
                 "resultado" => 1,  // Se actulizo el registro 
+                "total"=>number_format($valor_pedido['valor_total'], 0, ",", ".")
 
             );
             echo  json_encode($returnData);
@@ -891,7 +893,8 @@ class Boletas extends BaseController
                     id_estado,
                     nit_cliente,
                     id_estado,
-                    id_factura
+                    id_factura,
+                    saldo
                 FROM
                     pagos where id_apertura=$apertura";
 
@@ -938,6 +941,7 @@ class Boletas extends BaseController
             }
             $sub_array[] = $numero_documento;
             $sub_array[] = "$ " . number_format($detalle['total_documento'], 0, ",", ".");
+            $sub_array[] = "$ " . number_format($detalle['saldo'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $tipo_documento['descripcionestado'];
@@ -1077,6 +1081,7 @@ class Boletas extends BaseController
             $sub_array[] =  $nombre_cliente['nombrescliente'];
             $sub_array[] = $detalle['documento'];
             $sub_array[] =  number_format($detalle['total_documento'], 0, ",", ".");
+            $sub_array[] =  number_format($detalle['saldo'], 0, ",", ".");
             $documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $documento['descripcionestado'];
@@ -1211,5 +1216,20 @@ class Boletas extends BaseController
         ];
 
         echo  json_encode($json_data);
+    }
+
+    function get_mesas_pedido(){
+        $mesas=model('pedidoModel')->select('fk_mesa')->find();
+
+        
+
+        $returnData = array(
+            "resultado" => 1,
+            "mesas"=>$mesas  // Se actulizo el registro 
+
+        );
+        echo  json_encode($returnData);
+
+
     }
 }

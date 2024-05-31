@@ -12,7 +12,7 @@ class kardexModel extends Model
     protected $allowedFields = [
         'idcompra', 'codigo', 'idusuario', 'idconcepto', 'numerodocumento', 'fecha', 'hora',
         'cantidad', 'valor', 'total', 'fecha_y_hora_factura_venta', 'id_categoria', 'id_apertura', 'valor_unitario', 'id_factura', 'costo',
-        'ico', 'iva', 'id_estado', 'valor_ico', 'valor_iva', 'aplica_ico','id_pedido'
+        'ico', 'iva', 'id_estado', 'valor_ico', 'valor_iva', 'aplica_ico', 'id_pedido'
     ];
 
     public function get_productos($id_apertura)
@@ -329,7 +329,7 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
-    public function total_venta_inc($id_apertura,$inc)  //Total de la venta con impuestos 
+    public function total_venta_inc($id_apertura, $inc)  //Total de la venta con impuestos 
     {
         $datos = $this->db->query("
         select sum (total )as total from kardex where valor_ico= $inc and id_apertura =  $id_apertura and aplica_ico='true'
@@ -431,6 +431,15 @@ class kardexModel extends Model
         FROM   kardex
         WHERE  aplica_ico = 'true'
         AND id_apertura = $apertura
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_producto($codigo)
+    {
+        $datos = $this->db->query("
+        SELECT id
+        FROM kardex
+        WHERE codigo = '$codigo'
         ");
         return $datos->getResultArray();
     }

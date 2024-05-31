@@ -893,10 +893,10 @@ class facturacionConImpuestosController extends BaseController
 
                 $printer->feed(1);
                 $printer->cut();
-                $printer->pulse();
+                //$printer->pulse();
                 $printer->close();
             } else if (empty($movimientos_transaccion[0]['valorfactura_forma_pago'])) {
-                $printer->pulse();
+                //$printer->pulse();
                 $printer->close();
             }
         }

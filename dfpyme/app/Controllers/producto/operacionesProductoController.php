@@ -657,11 +657,15 @@ class operacionesProductoController extends BaseController
 
     function borrar_producto_inventario()
     {
-        $codigo_interno_producto = $this->request->getPost('codigo_interno_producto');
-        $tiene_movimientos = model('productoFacturaVentaModel')->where('codigointernoproducto', $this->request->getPost('codigo_interno_producto'));
+         $codigo_interno_producto = $this->request->getPost('codigo_interno_producto'); 
+        // $codigo_interno_producto = '3'; 
+        //$tiene_movimientos = model('kardexModel')->select('id')->where('codigo', $this->request->getPost('codigo_interno_producto'))->first();
+        $tiene_movimientos = model('kardexModel')->get_producto($codigo_interno_producto);
+
+        
 
         if (!empty($tiene_movimientos)) {
-
+           
             $data = [
                 'estadoproducto' => false,
 

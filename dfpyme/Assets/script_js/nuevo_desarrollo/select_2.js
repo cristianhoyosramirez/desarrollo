@@ -51,6 +51,23 @@ $("#tipo_documento").select2({
     allowClear: true,
     dropdownParent: $("#crear_cliente"),
 });
+$("#documento").select2({
+    width: "100%",
+    //placeholder: "Filtrar productos por categoria",
+    language: "es",
+    theme: "bootstrap-5",
+    allowClear: false,
+    dropdownParent: $("#finalizar_venta"),
+    minimumResultsForSearch: -1,
+});
+$("#tipo_documento").select2({
+    width: "100%",
+    //placeholder: "Filtrar productos por categoria",
+    language: "es",
+    theme: "bootstrap-5",
+    allowClear: true,
+    dropdownParent: $("#crear_cliente"),
+});
 
 $("#regimen").select2({
     minimumResultsForSearch: -1,

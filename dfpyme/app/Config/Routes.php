@@ -510,6 +510,7 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('actualizar_propina', 'Boletas::actualizar_propina');
     $routes->get('consultar_de_tipo_documento', 'Boletas::consultar_de_tipo_documento');
     $routes->get('consultar_cliente', 'Boletas::consultar_cliente');
+    $routes->get('get_mesas_pedido', 'Boletas::get_mesas_pedido');
 });
 
 

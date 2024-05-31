@@ -30,9 +30,20 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" onclick="devolucion()" id="generar_devolucion">Guardar</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-outline-success" onclick="devolucion()" id="generar_devolucion">Guardar</button>
+      <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="cancelar_devolucion()">Cancelar</button>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  function cancelar_devolucion() {
+    document.getElementById('codigo_producto_devolucion').value = ''
+    document.getElementById('devolucion_producto').value = ''
+    document.getElementById('precio_devolucion').value = ''
+    document.getElementById('cantidad_devolucion').value = 1
+    document.getElementById('total_devolucion').value = ''
+    
+  }
+</script>

@@ -225,7 +225,29 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_precio.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/abrir_cajon.js"></script>
 
+    <script>
+        function get_mesas_pedido() {
 
+            let url = document.getElementById("url").value;
+
+            $.ajax({
+
+                url: url + "/" + "pedidos/agregar_producto_celular",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+
+
+
+
+
+                    }
+                },
+            });
+            setInterval(get_mesas_pedido, 1000);
+        }
+    </script>
 
     <script>
         function cambiar_precio(valor, id_producto) {
@@ -493,6 +515,7 @@
 
                         $('#propina_pesos').val(0)
                         $('#propina_del_pedido').val(0)
+                        $('#valor_pedido').html('$' + resultado.total)
 
                         sweet_alert_start('success', 'Propina borrada  ');
 
@@ -981,7 +1004,7 @@
 
     <script>
         function cortesia() {
-           
+
 
             var url = document.getElementById("url").value;
             var id_producto_pedido = document.getElementById("id_producto_pedido").value;

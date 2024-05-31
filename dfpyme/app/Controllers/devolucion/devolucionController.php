@@ -22,7 +22,8 @@ class devolucionController extends BaseController
     public function guardar_devolucion()
     {
         $usuario = $_POST['usuario'];
-        $nit_cliente = $_POST['nit_cliente'];
+        //$nit_cliente = $_POST['nit_cliente'];
+        $nit_cliente = 222222222222;
         $codigo_producto_devolucion = $_POST['codigo_producto_devolucion'];
         $cantidad_devolucion = $_POST['cantidad_devolucion'];
         $precio_devo = $_POST['precio_devolucion'];

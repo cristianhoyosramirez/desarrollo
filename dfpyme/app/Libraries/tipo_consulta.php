@@ -31,7 +31,8 @@ class tipo_consulta
                         id_estado,
                         nit_cliente,
                         id_estado,
-                        id_factura
+                        id_factura,
+                        saldo
                     FROM
                         pagos
                     $where_clause";

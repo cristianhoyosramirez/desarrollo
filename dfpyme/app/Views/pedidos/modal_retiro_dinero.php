@@ -15,13 +15,8 @@
                         <select id="cuenta_retiro" class="form-select" name="cuenta_retiro" id="cuenta_retiro" onchange="rubros_retiro()" onkeyup="saltar_factura_pos(event,'cuenta_rubro')">
 
                             <?php foreach ($cuentas as $detalle) { ?>
-                                <?php if ($detalle['nombre_cuenta'] == 'GENERAL') : ?>
-                                    <option value="<?php echo $detalle['id'] ?>" selected><?php echo $detalle['nombre_cuenta'] ?></option>
-                                <?php endif ?>
-                                <?php if ($detalle['nombre_cuenta'] != 'GENERAL') : ?>
-                                    <option value="<?php echo $detalle['id'] ?>"><?php echo $detalle['nombre_cuenta'] ?></option>
-                                <?php endif ?>
 
+                                <option value="<?php echo $detalle['id'] ?>" <?php if ($detalle['id'] == 1) : ?>selected <?php endif; ?>><?php echo $detalle['nombre_cuenta'] ?> </option>
 
                             <?php } ?>
                         </select>
@@ -33,11 +28,9 @@
                         <select id="cuenta_rubro" class="form-select" name="cuenta_rubro">
                             <?php foreach ($rubros as $detalle) : ?>
                                 <?php if ($detalle['nombre_rubro'] == "GENERAL") : ?>
-                                    <option value="<?php  echo $detalle['id_cuenta_retiro']?> " selected> <?php echo $detalle['nombre_rubro'] ?></option>
+                                    <option value="<?php echo $detalle['id_cuenta_retiro'] ?> " selected> <?php echo $detalle['nombre_rubro'] ?></option>
                                 <?php endif ?>
-                                <?php if ($detalle['nombre_rubro'] != "GENERAL") : ?>
-                                    <option value="<?php  echo $detalle['id_cuenta_retiro']?> " > <?php echo $detalle['nombre_rubro'] ?></option>
-                                <?php endif ?>
+
 
 
                             <?php endforeach ?>
@@ -55,7 +48,7 @@
 
                     <div class="col-md-6">
                         <label for="inputPassword4" class="form-label">Concepto</label>
-                        <textarea class="form-control" id="concepto_retiro" rows="1" ></textarea>
+                        <textarea class="form-control" id="concepto_retiro" rows="1"></textarea>
                         <span id="error_concepto_retiro" style="color:#FF0000" ;></span>
                     </div>
                     <div class="col-md-6">
@@ -71,34 +64,34 @@
 </div>
 
 
-<!-- <script type="text/javascript">
-  function rubros_retiro() {
-    var cuenta_retiro = document.getElementById("cuenta_retiro").value;
-    var url = document.getElementById("url").value;
-console.log(uenta_retiro)
-    $.ajax({
-      data: {
-        cuenta_retiro,
-      },
-      url: url + "/" + "devolucion/cuenta_rubro",
-      type: "POST",
-      success: function(resultado) {
-        var resultado = JSON.parse(resultado);
+<script type="text/javascript">
+    function rubros_retiro() {
+        var cuenta_retiro = document.getElementById("cuenta_retiro").value;
+        var url = document.getElementById("url").value;
+        console.log(cuenta_retiro)
+        $.ajax({
+            data: {
+                cuenta_retiro,
+            },
+            url: url + "/" + "devolucion/cuenta_rubro",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
 
 
-        if (resultado.resultado == 1) {
-          $('#cuenta_rubro').html(resultado.rubros)
-        }
-      },
-    });
+                if (resultado.resultado == 1) {
+                    $('#cuenta_rubro').html(resultado.rubros)
+                }
+            },
+        });
 
 
-  }
-</script> -->
+    }
+</script>
 <!--jQuery -->
 <script src="<?= base_url() ?>/Assets/js/jquery-3.5.1.js"></script>
 
-<script>
+<!-- <script>
     $(document).ready(function() {
         // Agregamos un listener de cambio a select1
 
@@ -138,4 +131,4 @@ console.log(uenta_retiro)
         // Disparamos el evento de cambio inicialmente para llenar select2
         $('#select1').trigger('change');
     });
-</script>
+</script> -->

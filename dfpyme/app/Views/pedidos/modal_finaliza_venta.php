@@ -64,7 +64,7 @@
 
                       <input type="text" class="form-control" id="buscar_cliente" name="buscar_cliente" placeholder="Buscar cliente por identificación o nombre">
                       <span class="input-group-text">
-                        <a href="#" class="link-secondary" title="Limpiar busqueda" data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                        <a href="#" class="link-secondary" title="Limpiar busqueda" data-bs-toggle="tooltip" onclick="document.getElementById('buscar_cliente').value = ''"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
                           <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M18 6l-12 12" />

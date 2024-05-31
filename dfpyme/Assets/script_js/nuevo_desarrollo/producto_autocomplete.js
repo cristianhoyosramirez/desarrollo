@@ -45,6 +45,11 @@ $("#producto").autocomplete({
                         $('#mesa_productos').html(resultado.productos_pedido)
                         $('#valor_pedido').html(resultado.total_pedido)
                         $('#subtotal_pedido').val(resultado.total_pedido)
+                        $('#id_mesa_pedido').val(resultado.id_mesa)
+
+                        if (resultado.id_mesa==1){
+                            $('#pedido_mesa').html('Ventas de mostrador ')
+                        }
                     }
                 },
             });

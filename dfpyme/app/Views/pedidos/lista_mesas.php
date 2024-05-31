@@ -49,8 +49,8 @@
                                                                                 ?></strong><br>
                                 <strong class="text-truncate text-center small"><?php echo "$ " . number_format($tiene_pedido[0]['valor_total'], 0, ",", ".")
                                                                                 ?></strong><br>
-                                <strong class="text-truncate text-center small"><?php echo $tiene_pedido[0]['nombresusuario_sistema']
-                                                                                ?></strong>
+                                <strong class="text-truncate text-center small"><?php echo $tiene_pedido[0]['nombresusuario_sistema']?></strong><br>
+                                <strong class="text-truncate text-center small"><?php echo $tiene_pedido[0]['nota_pedido']?></strong>
                             </div>
                         </div>
                     </div>

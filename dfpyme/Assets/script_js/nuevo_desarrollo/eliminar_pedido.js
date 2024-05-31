@@ -40,7 +40,7 @@ function eliminar_pedido() {
                             let lista_categorias = document.getElementById("lista_categorias");
                             lista_categorias.style.display = "none";
 
-                            $("#producto").attr("readonly", true);
+                            //$("#producto").attr("readonly", true);
 
 
                         }

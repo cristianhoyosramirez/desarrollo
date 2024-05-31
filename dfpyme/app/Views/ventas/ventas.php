@@ -281,6 +281,7 @@ Ventas
                         <td>Cliente</th>
                         <td>Documento</th>
                         <td>Valor </th>
+                        <td>Saldo </th>
                         <td>Tipo documento</th>
                         <td>Acción </th>
                     </tr>

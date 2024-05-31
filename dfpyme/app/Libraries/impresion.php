@@ -67,14 +67,14 @@ class impresion
         $printer->text("\n");
 
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $id_apertura)->first();
-        $printer->text("Valor apertura: " . "        $ " . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
+        
         $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura);
 
         $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura);
         $propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $id_apertura)->findAll();
-        $printer->text("Ventas pos: " . "            $ " . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
-        $printer->text("Valor electrónicas: "  .  "    $ " . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
-        $printer->text("Propinas: "  .  "              $ " . number_format($propinas[0]['propina'], 0, ",", ".") . "\n");
+        $printer->text("Ventas POS: " . "             $ " . number_format($ventas_pos[0]['valor'], 0, ",", ".") . "\n");
+        $printer->text("Ventas electrónicas: "  .  "    $ " . number_format($ventas_electronicas[0]['valor'], 0, ",", ".") . "\n");
+        $printer->text("Propinas: "  .  "               $ " . number_format($propinas[0]['propina'], 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -91,10 +91,11 @@ class impresion
         $propinas = model('pagosModel')->selectSum('propina')->where('id_apertura', $id_apertura)->findAll();
 
         //dd($efectivo);
+        $printer->text("Valor apertura: " . "        $ " . number_format($valor_apertura['valor'], 0, ",", ".") . "\n");
         $printer->text("Ingresos efectivo:      " . "$ " . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
         $printer->text("Ingresos transacción: " . "  $ " . number_format($ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
         //$total_ingresos = model('facturaFormaPagoModel')->total_ingresos($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
-        $printer->text("Total ingresos          " . "$ " . number_format(($ingresos_efectivo[0]['efectivo']  + $valor_apertura['valor']), 0, ",", ".") . "\n");
+        $printer->text("Total ingresos          " . "$ " . number_format(($ingresos_efectivo[0]['efectivo']  + $valor_apertura['valor']+$ingresos_transaccion[0]['transferencia']), 0, ",", ".") . "\n");
 
 
         $printer->text("\n");
@@ -158,10 +159,10 @@ class impresion
 
         $printer->text("\n");
         $printer->text("------------------------------------------------\n");
-        $printer->text("Ingresos-retiros-devoluciones \n");
+        $printer->text("Ingresos-(Retiros-Devoluciones) \n");
         $printer->text("------------------------------------------------\n");
 
-        $printer->text("Ingresos+apertura " . "      $ " . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
+        $printer->text("Ingresos a caja " . "        $ " . number_format($ingresos_efectivo[0]['efectivo'] + $valor_apertura['valor'], 0, ",", ".") . "\n");
 
         $printer->text("(-) Total retiros: " . "     $ " . number_format($total_retiros, 0, ",", ".") . "\n");
         $printer->text("(-) Total devoluciones:" . " $ " . number_format($total_devoluciones, 0, ",", ".") . "\n");
@@ -204,9 +205,6 @@ class impresion
             $transaccion = $ingresos_transaccion[0]['transferencia'];
         }
 
-
-        $printer->text("Efectivo: " . "              $ " . number_format($total_en_caja, 0, ",", ".") . "\n");
-        $printer->text("Transacciones: " . "         $ " . number_format($transaccion, 0, ",", ".") . "\n\n");
         if (!empty($id_cierre)) {
             $valor_cierre_transaccion_usuari = model('cierreFormaPagoModel')->valor_cierre_transaccion_usuario($id_cierre['id']);
         }
@@ -219,10 +217,13 @@ class impresion
             $valor_cierre_transaccion_usuario = $valor_cierre_transaccion_usuari[0]['valor'];
         }
 
-        $printer->text("Cierre efectivo  " . "       $ " .  number_format($cierre_usuario, 0, ",", ".") .  "\n");
-        $printer->text("Cierre transacciones  " . "  $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n\n");
+        $printer->text("Efectivo caja: " . "              $ " . number_format($total_en_caja, 0, ",", ".") . "\n");
+        $printer->text("Cierre efectivo  " . "            $ " .  number_format($cierre_usuario, 0, ",", ".") .  "\n");
+        $printer->text("Diferencia efectivo  " . "        $ " . number_format(($cierre_usuario ) - $total_en_caja, 0, ",", ".") . "\n\n");
 
-        $printer->text("Diferencia efectivo  " . "   $ " . number_format(($cierre_usuario ) - $total_en_caja, 0, ",", ".") . "\n");
+        $printer->text("Transacciones caja: " . "         $ " . number_format($transaccion, 0, ",", ".") . "\n");
+        $printer->text("Cierre transacciones  " . "       $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n");
+
     
        /*  if ($total_en_caja > $cierre_usuario) {
         $printer->text("Diferencia efectivo  " . "   $ " . number_format(($total_en_caja) - $cierre_usuario, 0, ",", ".") . "\n");
@@ -232,7 +233,7 @@ class impresion
         } */
 
 
-        $printer->text("Diferencia transaccion  " . "$ " . number_format($valor_cierre_transaccion_usuario -  $transaccion , 0, ",", ".") . "\n");
+        $printer->text("Diferencia transaccion  " .      "     $ " . number_format($valor_cierre_transaccion_usuario -  $transaccion , 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
@@ -242,7 +243,7 @@ class impresion
         if ($total_en_caja < $cierre_usuario) {
             $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($cierre_usuario ) - $total_en_caja ) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
         } */
-        $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((( $cierre_usuario ) - $total_en_caja ) + ($valor_cierre_transaccion_usuario  - $transaccion ), 0, ",", ".") . "\n");
+        $printer->text("TOTAL DIFERENCIAS  " . "          $ " . number_format((( $cierre_usuario ) - $total_en_caja ) + ($valor_cierre_transaccion_usuario  - $transaccion ), 0, ",", ".") . "\n");
         $printer->text("\n");
 
         $printer->feed(1);
