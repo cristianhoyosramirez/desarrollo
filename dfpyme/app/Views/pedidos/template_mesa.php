@@ -227,27 +227,29 @@
 
     <script>
         function get_mesas_pedido() {
-
             let url = document.getElementById("url").value;
 
             $.ajax({
-
-                url: url + "/" + "pedidos/agregar_producto_celular",
-                type: "POST",
+                url: url + "/" + "eventos/get_mesas_pedido",
+                type: "GET",
                 success: function(resultado) {
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
-
-
-
-
-
+                        // Aquí puedes agregar lo que necesitas hacer si resultado.resultado es 1
                     }
                 },
             });
-            setInterval(get_mesas_pedido, 1000);
         }
+
+        $(document).ready(function() {
+            // Ejecuta la función una vez al cargar la página
+            get_mesas_pedido();
+
+            // Luego, ejecuta la función cada 1000 ms (1 segundo)
+            setInterval(get_mesas_pedido, 1000);
+        });
     </script>
+
 
     <script>
         function cambiar_precio(valor, id_producto) {

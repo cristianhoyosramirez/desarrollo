@@ -1221,7 +1221,6 @@ class Boletas extends BaseController
     function get_mesas_pedido(){
         $mesas=model('pedidoModel')->select('fk_mesa')->find();
 
-        
 
         $returnData = array(
             "resultado" => 1,
