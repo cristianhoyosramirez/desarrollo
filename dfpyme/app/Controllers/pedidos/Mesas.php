@@ -146,6 +146,7 @@ class Mesas extends BaseController
         $id_mesa = $this->request->getPost('id_mesa');
         $id_mesero = $this->request->getPost('mesero');
         $cantidad = $this->request->getPost('cantidad');
+        $estado_mesa = model('mesasModel')->select('estado')->where('id', $id_mesa)->first();
 
 
         if (!empty($id_mesero)) {
@@ -235,7 +236,8 @@ class Mesas extends BaseController
                 ]),
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                 "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                "id" => $this->request->getPost('id_input')
+                "id" => $this->request->getPost('id_input'),
+                "estado"=>$estado_mesa['estado']
 
             );
             echo  json_encode($returnData);
@@ -297,7 +299,8 @@ class Mesas extends BaseController
                         "numero_pedido" => $numero_pedido['id'],
                         "productos_pedido" => $productos_del_pedido,
                         "total_pedido" =>  "$" . number_format($total['valor_total'], 0, ',', '.'),
-                        "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
+                        "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
+                        "estado"=>$estado_mesa['estado']
 
                     );
                     echo  json_encode($returnData);
@@ -389,7 +392,8 @@ class Mesas extends BaseController
                         "productos" => $productos_pedido,
                     ]),
                     "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
-                    "id" => $this->request->getPost('id_input')
+                    "id" => $this->request->getPost('id_input'),
+                    "estado"=>$estado_mesa['estado']
 
                 );
                 echo  json_encode($returnData);
@@ -445,6 +449,7 @@ class Mesas extends BaseController
 
         $tiene_pedido = model('pedidoModel')->pedido_mesa($id_mesa);
         $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
+        $estado_mesa=model('mesasModel')->select('estado')->where('id',$id_mesa)->first();
 
 
         if (empty($tiene_pedido)) {
@@ -509,7 +514,8 @@ class Mesas extends BaseController
                 ]),
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                 "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                "id" => $ultimo_id_producto[0]['id']
+                "id" => $ultimo_id_producto[0]['id'],
+                "estado"=>$estado_mesa['estado']
 
             );
             echo  json_encode($returnData);
@@ -599,6 +605,7 @@ class Mesas extends BaseController
 
                     $total = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
                     $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido['id'])->first();
+                    $ultimo_id_producto = model('productoPedidoModel')->insertID;
 
                     $returnData = array(
                         "resultado" => 1,  // la mesa ya tiene productos
@@ -610,7 +617,8 @@ class Mesas extends BaseController
                         "cantidad_de_productos" => $cantidad_de_productos['cantidad_de_productos'],
                         "numero_pedido" => $numero_pedido['id'],
                         "id_mesa" => $id_mesa,
-                        "valor_total" => $total['valor_total']
+                        "valor_total" => $total['valor_total'],
+                        "id" => $ultimo_id_producto
                     );
                     echo  json_encode($returnData);
                 }

@@ -4,10 +4,54 @@
 Bienvenido DFpyme
 <?= $this->endSection('title') ?>
 
+
+
 <?= $this->section('content') ?>
 <div class="page">
     <!-- Navbar -->
     <div id="header">
+        <style>
+            .elemento {
+
+                padding: 10px;
+                transition: background-color 0.3s;
+            }
+
+            .elemento:hover {
+
+                background-color: #f0f0f0;
+            }
+        </style>
+
+
+        <style>
+            .num-pad {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 5px;
+                /* Reduce el espacio entre los botones */
+            }
+
+            .num-key {
+                padding: 8px;
+                /* Reduce el padding para hacer los botones más pequeños */
+                font-size: 14px;
+                /* Reduce el tamaño de fuente */
+                background-color: #fff;
+                border: 2px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+            }
+
+            .num-key:hover {
+                background-color: #e0e0e0;
+            }
+
+            .num-key:active {
+                transform: scale(0.95);
+            }
+        </style>
 
 
         <?= $this->include('layout/header_mesas') ?>
@@ -46,72 +90,74 @@ Bienvenido DFpyme
         <input type="hidden" id="tipo_pedido" name="tipo_pedido" value="computador">
         <div class="container-fluid">
             <div class="row row-deck row-cards">
-                <div class="col-md-12 col-xl-12">
-                    <div class="card">
-                        <ul class="nav nav-tabs" data-bs-toggle="tabs">
-
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" onclick="todas_las_mesas()"><!-- Download SVG icon from http://tabler-icons.io/i/arrows-maximize -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <polyline points="16 4 20 4 20 8" />
-                                        <line x1="14" y1="10" x2="20" y2="4" />
-                                        <polyline points="8 20 4 20 4 16" />
-                                        <line x1="4" y1="20" x2="10" y2="14" />
-                                        <polyline points="16 20 20 20 20 16" />
-                                        <line x1="14" y1="14" x2="20" y2="20" />
-                                        <polyline points="8 4 4 4 4 8" />
-                                        <line x1="4" y1="4" x2="10" y2="10" />
-                                    </svg></a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link " data-bs-toggle="tab" onclick="get_mesas()">TODAS</a>
-                            </li>
-                            <?php foreach ($salones as $detalle) : ?>
+                <?php $requiere_mesa = model('configuracionPedidoModel')->select('requiere_mesa')->first(); ?>
+                <?php if ($requiere_mesa['requiere_mesa'] == 't') : ?>
+                    <div class="col-md-12 col-xl-12">
+                        <div class="card">
+                            <ul class="nav nav-tabs" data-bs-toggle="tabs">
 
                                 <li class="nav-item">
-                                    <a href="#tabs-home-7" class="nav-link" data-bs-toggle="tab" onclick="mesas_salon(<?php echo $detalle['id'] ?>)"><?php echo $detalle['nombre'] ?> </a>
+                                    <a href="#" class="nav-link" onclick="todas_las_mesas()"><!-- Download SVG icon from http://tabler-icons.io/i/arrows-maximize -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <polyline points="16 4 20 4 20 8" />
+                                            <line x1="14" y1="10" x2="20" y2="4" />
+                                            <polyline points="8 20 4 20 4 16" />
+                                            <line x1="4" y1="20" x2="10" y2="14" />
+                                            <polyline points="16 20 20 20 20 16" />
+                                            <line x1="14" y1="14" x2="20" y2="20" />
+                                            <polyline points="8 4 4 4 4 8" />
+                                            <line x1="4" y1="4" x2="10" y2="10" />
+                                        </svg></a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link " data-bs-toggle="tab" onclick="get_mesas()">TODAS</a>
+                                </li>
+                                <?php foreach ($salones as $detalle) : ?>
 
-                            <?php endforeach ?>
-                            <li class="nav-item ms-auto">
-                                <a href="#tabs-settings-7" class="nav-link" title="Settings" data-bs-toggle="tab"><!-- Download SVG icon from http://tabler-icons.io/i/settings -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
-                                        <circle cx="12" cy="12" r="3" />
-                                    </svg>
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="card-body">
-                            <div class="tab-content">
-                                <div class="tab-pane active show">
+                                    <li class="nav-item">
+                                        <a href="#tabs-home-7" class="nav-link" data-bs-toggle="tab" onclick="mesas_salon(<?php echo $detalle['id'] ?>)"><?php echo $detalle['nombre'] ?> </a>
+                                    </li>
+
+                                <?php endforeach ?>
+                                <li class="nav-item ms-auto">
+                                    <a href="#tabs-settings-7" class="nav-link" title="Settings" data-bs-toggle="tab"><!-- Download SVG icon from http://tabler-icons.io/i/settings -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane active show">
 
 
-                                    <div style="display: block" id="todas_las_mesas">
-                                        <div id="lista_completa_mesas">
-                                            <?= $this->include('pedidos/todas_las_mesas_lista') ?>
+                                        <div style="display: block" id="todas_las_mesas">
+                                            <div id="lista_completa_mesas">
+                                                <?= $this->include('pedidos/todas_las_mesas_lista') ?>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="table-responsive">
-                                        <div id="lista_categorias" style="display: none">
-                                            <ul class="horizontal-list">
-                                                <?php foreach ($categorias as $detalle) : ?>
+                                        <div class="table-responsive">
+                                            <div id="lista_categorias" style="display: none">
+                                                <ul class="horizontal-list">
+                                                    <?php foreach ($categorias as $detalle) : ?>
 
-                                                    <li><button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php echo $detalle['codigocategoria'] ?>" onclick="productos_categoria(<?php echo $detalle['codigocategoria'] ?>)"><?php echo $detalle['nombrecategoria'] ?></button></li>
+                                                        <li><button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php echo $detalle['codigocategoria'] ?>" onclick="productos_categoria(<?php echo $detalle['codigocategoria'] ?>)"><?php echo $detalle['nombrecategoria'] ?></button></li>
 
-                                                <?php endforeach ?>
-                                            </ul>
+                                                    <?php endforeach ?>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
+                <?php endif ?>
                 <?php $alturaCalc = "25rem + 10px"; // Calcula la altura 
                 ?>
 
@@ -122,7 +168,7 @@ Bienvenido DFpyme
                             <div class="card-title">
                                 <div class="mb-3">
                                     <div class="input-group input-group-flat">
-                                        <input type="text"  class="form-control " autocomplete="off" placeholder="Buscar por nombre o código" id="producto">
+                                        <input type="text" class="form-control " autocomplete="off" placeholder="Buscar por nombre o código" id="producto">
                                         <span class="input-group-text">
                                             <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiarCampo()"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -138,8 +184,34 @@ Bienvenido DFpyme
                             </div>
                         </div>
                         <div class="card-body card-body-scrollable card-body-scrollable-shadow">
+
+                            <?php $temp_favorito = model('configuracionPedidoModel')->select('producto_favoroitos')->first() ?>
+
+                            <?php if ($temp_favorito['producto_favoroitos'] == 't') : ?>
+
+                                <?php $productos = model('productoModel')->select('*')->where('favorito', true)->findAll(); ?>
+
+                                <?php if (!empty($productos)) : ?>
+                                    <!-- <span class="text-primary h3">Favoritos</span> -->
+                                    <?php foreach ($productos as $valor) : ?>
+                                        <div class="cursor-pointer mb-1 elemento" onclick="agregar_al_pedido(<?php echo $valor['codigointernoproducto'] ?>)">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="text-truncate" title="<?php echo $valor['nombreproducto'] ?>">
+                                                        <strong><?php echo $valor['nombreproducto'] ?></strong>
+                                                    </div>
+                                                    <div class="text-muted"><?php echo "$" . number_format($valor['valorventaproducto'], 0, ",", ".") ?></div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-1">
+                                        </div>
+                                    <?php endforeach ?>
+                                <?php endif ?>
+                            <?php endif ?>
+
                             <div id="productos_categoria"></div>
                             <p id="bogota"></p>
+
 
                         </div>
                     </div>
@@ -210,7 +282,7 @@ Bienvenido DFpyme
 
                                     <div class="col-md-3">
                                         <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
-                                            Eliminar pedido
+                                            Borrar pedido
                                         </a>
                                     </div>
                                 <?php endif ?>
@@ -224,7 +296,7 @@ Bienvenido DFpyme
                                         </div>
                                         <div class="col-md-3 text-start">
                                             <a href="#" class="btn btn-outline-red w-100" onclick="eliminar_pedido()">
-                                                Eliminar pedido
+                                                Borrar pedido
                                             </a>
                                         </div>
                                     </div>
@@ -324,6 +396,23 @@ Bienvenido DFpyme
 
                             </form>
 
+
+
+                         <!--    <div class="num-pad">
+                                <button class="num-key" onclick="addNumber('1')">1</button>
+                                <button class="num-key" onclick="addNumber('2')">2</button>
+                                <button class="num-key" onclick="addNumber('3')">3</button>
+                                <button class="num-key" onclick="addNumber('4')">4</button>
+                                <button class="num-key" onclick="addNumber('5')">5</button>
+                                <button class="num-key" onclick="addNumber('6')">6</button>
+                                <button class="num-key" onclick="addNumber('7')">7</button>
+                                <button class="num-key" onclick="addNumber('8')">8</button>
+                                <button class="num-key" onclick="addNumber('9')">9</button>
+                                <button class="num-key" onclick="addNumber('0')">0</button>
+                                <button class="num-key btn-warning" onclick="clearInput()">C</button>
+                                <button class="num-key btn-danger" onclick="deleteLast()">←</button>
+                            </div> -->
+
                         </div>
                         <div class="container">
                             <div class="row mb-2 gy-2"> <!-- Fila para los botones -->
@@ -331,7 +420,7 @@ Bienvenido DFpyme
 
 
                                     <a href="#" class="btn btn-outline-cyan w-100" onclick="prefactura()">
-                                        Orden de pedido
+                                        Orden pedido
                                     </a>
 
                                 </div>
@@ -388,5 +477,7 @@ Bienvenido DFpyme
         </div>
     </div>
 </div>
+
+
 
 <?= $this->endSection('content') ?>

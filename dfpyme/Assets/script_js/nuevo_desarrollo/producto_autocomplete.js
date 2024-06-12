@@ -47,8 +47,9 @@ $("#producto").autocomplete({
                         $('#subtotal_pedido').val(resultado.total_pedido)
                         $('#id_mesa_pedido').val(resultado.id_mesa)
 
-                        if (resultado.id_mesa==1){
-                            $('#pedido_mesa').html('Ventas de mostrador ')
+                        if (resultado.estado==1){
+                            $('#mesa_pedido').html('Ventas de mostrador ')
+                            $('#input'+resultado.id).select()
                         }
                     }
                 },

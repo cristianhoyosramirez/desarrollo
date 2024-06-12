@@ -2,11 +2,51 @@
     <p class="h4 text-primary">Editar <?php echo $nombre_producto ?></p>
 </div>
 
+<div class="text-end">
+
+    <?php
+    $temp_favorito = model('productoModel')->select('favorito')->where('codigointernoproducto', $codigo_interno_producto)->first();
+
+
+
+
+
+
+
+
+    ?>
+
+
+    <?php if ($temp_favorito['favorito'] == NULL || $temp_favorito['favorito'] == 'f') {
+        $favorito = "false"; ?>
+        <a href="#" id="favorito-btn_editar" class="btn btn-outline-warning btn-icon " data-bs-toggle="tooltip" data-bs-placement="bottom" title="Agregar a favoritos" onclick="favorito_editar()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
+            </svg>
+        </a>
+    <?php } ?>
+
+    <?php if ($temp_favorito['favorito'] == 't') {
+        $favorito = "true"; ?>
+        <a href="#" id="favorito-btn_editar" class="btn btn-warning btn-icon " data-bs-toggle="tooltip" data-bs-placement="bottom" title="Agregar a favoritos" onclick="favorito_editar()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
+            </svg>
+        </a>
+    <?php } ?>
+</div>
+
+</div>
+
+
 <div class="hr-text hr-text-left">
     <p class="h4 text-green">Información general </p>
 </div>
 
 <form class="row g-1" action="<?= base_url('producto/actualizar_precio_producto'); ?>" method="post" id="cambiar_datos_de_producto" autocomplete="off">
+    <input type="hidden"  id="favorito_editar" name="favorito_editar" value="<?php echo $favorito ?>">
     <input type="hidden" id="codigo_interno_producto_editar" value="<?php echo $codigo_interno_producto ?>" name="codigo_interno_producto_editar">
     <div class="col-md-2">
         <label for="inputEmail4" class="form-label">Código interno </label>
@@ -277,6 +317,26 @@
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
     </div>
 </form>
+
+<script>
+    function favorito_editar() {
+        var favorito = document.getElementById("favorito_editar");
+        var favoritoBtn = document.getElementById("favorito-btn_editar");
+
+        if (favorito.value == "false") {
+            favorito.value = "true";
+            favoritoBtn.classList.remove("btn-outline-warning");
+            favoritoBtn.classList.add("btn-warning");
+        } else {
+            favorito.value = "false";
+            favoritoBtn.classList.remove("btn-warning");
+            favoritoBtn.classList.add("btn-outline-warning");
+        }
+
+        // Actualizar el texto de estado
+        //document.getElementById("status-value").textContent = favorito.value;
+    }
+</script>
 
 <script>
     /**

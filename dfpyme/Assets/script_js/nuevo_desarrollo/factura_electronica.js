@@ -9,12 +9,14 @@ async function sendInvoice(iddoc) {
     $("#id_de_factura").val(iddoc);
     $("#barra_progreso").modal("show");
 
-    //let url = new URL("http://localhost:5000/api/Invoice/id");
-    let url = new URL("http://localhost:3000/api2");
+    let url = new URL("http://localhost:5000/api/Invoice/id");
+    //let url = new URL("http://localhost:3000/api2");
     url.search = new URLSearchParams({ id: iddoc });
     const response = await fetch(url, { method: "GET" });
     const data = await response.json();
-    console.log(invoice.id)
+    //console.log(invoice.id)
+    console.log(response.status)
+
     if (response.status === 200) {
         invoice = JSON.parse(JSON.stringify(data, null, 2));
 
@@ -114,8 +116,9 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                         confirmButtonColor: "#2AA13D",
                     });
                 }
-                if (resultado.resultado == 1) {let button = document.querySelector("#btn_pagar");
-                button.disabled = false; // Habilitar el botón
+                if (resultado.resultado == 1) {
+                    let button = document.querySelector("#btn_pagar");
+                    button.disabled = false; // Habilitar el botón
 
 
 
@@ -138,7 +141,7 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     $('#nombre_mesero').html("Mesero: ")
                     $('#tipo_pago').val(1)
 
-                    
+
 
                     let lista_categorias = document.getElementById("lista_categorias");
                     lista_categorias.style.display = "none";

@@ -664,6 +664,21 @@
                                 $(".valor_venta_producto_error").html("");
                                 $('#categoria_producto').val(null).trigger('change');
                                 $('#marca_producto').val(null).trigger('change');
+
+                                var favorito = document.getElementById("favorito");
+                                var favoritoBtn = document.getElementById("favorito-btn");
+
+                                if (favoritoBtn.classList.contains("btn-warning")) {
+                                    favoritoBtn.classList.remove("btn-warning");
+                                    favoritoBtn.classList.add("btn-outline-warning");
+                                    favorito.value = "false";
+                                } else if (favoritoBtn.classList.contains("btn-outline-warning")) {
+                                    favoritoBtn.classList.remove("btn-outline-warning");
+                                    favoritoBtn.classList.add("btn-warning");
+                                    favorito.value = "true";
+                                }
+
+
                                 var informacion_tribuitaria = document.getElementById("informacion_tributaria").value;
                                 if (informacion_tribuitaria == 2) {
                                     ico.style.display = 'block';

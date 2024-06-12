@@ -52,7 +52,7 @@ class facturaElectronicaModel extends Model
         return $this->db->insertID();
     }
 
-    public function  dian_ceptado($id_apertura)
+    public function  dian_ceptado()
     {
         $datos = $this->db->query("
         SELECT
@@ -60,11 +60,11 @@ class facturaElectronicaModel extends Model
         FROM
                 documento_electronico
         WHERE
-        id_apertura = $id_apertura AND id_status = 2
+         id_status = 2
     ");
         return $datos->getResultArray();
     }
-    public function  dian_no_enviado($id_apertura)
+    public function  dian_no_enviado()
     {
         $datos = $this->db->query("
         SELECT
@@ -72,11 +72,11 @@ class facturaElectronicaModel extends Model
         FROM
                 documento_electronico
         WHERE
-        id_apertura = $id_apertura AND id_status = 1
+         id_status = 1
     ");
         return $datos->getResultArray();
     }
-    public function  dian_rechazado($id_apertura)
+    public function  dian_rechazado()
     {
         $datos = $this->db->query("
         SELECT
@@ -84,11 +84,11 @@ class facturaElectronicaModel extends Model
         FROM
                 documento_electronico
         WHERE
-        id_apertura = $id_apertura AND id_status = 3
+         id_status = 3
     ");
         return $datos->getResultArray();
     }
-    public function  dian_error($id_apertura)
+    public function  dian_error()
     {
         $datos = $this->db->query("
         SELECT
@@ -96,7 +96,7 @@ class facturaElectronicaModel extends Model
         FROM
                 documento_electronico
         WHERE
-        id_apertura = $id_apertura AND id_status = 4
+         id_status = 4
     ");
         return $datos->getResultArray();
     }

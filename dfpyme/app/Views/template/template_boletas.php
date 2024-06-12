@@ -40,6 +40,7 @@
         <!-- Sweet alert -->
         <script src="<?php echo base_url(); ?>/Assets/plugin/sweet-alert2/sweetalert2@11.js"></script>
         <script src="<?= base_url() ?>/Assets/script_js/factura_pos/cliente_autocompletar.js"></script>
+        <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert_start.js"></script>
 
         <script>
             let mensaje = "<?php echo $session->getFlashdata('mensaje'); ?>";

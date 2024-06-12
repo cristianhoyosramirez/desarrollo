@@ -225,7 +225,7 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_precio.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/abrir_cajon.js"></script>
 
-    <script>
+<!--     <script>
         function get_mesas_pedido() {
             let url = document.getElementById("url").value;
 
@@ -236,6 +236,10 @@
                     var resultado = JSON.parse(resultado);
                     if (resultado.resultado == 1) {
                         // Aquí puedes agregar lo que necesitas hacer si resultado.resultado es 1
+
+
+
+                        
                     }
                 },
             });
@@ -248,7 +252,7 @@
             // Luego, ejecuta la función cada 1000 ms (1 segundo)
             setInterval(get_mesas_pedido, 1000);
         });
-    </script>
+    </script> -->
 
 
     <script>

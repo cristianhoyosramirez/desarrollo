@@ -3,7 +3,7 @@
         <?php $tiene_pedido = model('pedidoModel')->pedido_mesa($detalle['id']); ?>
         <?php if (empty($tiene_pedido)) : ?>
             <li>
-                <div class="cursor-pointer card card_mesas text-white bg-green-lt" onclick="pedido('<?php echo $detalle['id'] ?>','<?php echo $detalle['nombre'] ?>')">
+                <div id="mesa<?php $detalle['id'] ?> "class="cursor-pointer card card_mesas text-white bg-green-lt" onclick="pedido('<?php echo $detalle['id'] ?>','<?php echo $detalle['nombre'] ?>')">
                     <div class="row">
                         <div class="col-3">
                             <span class="avatar">
@@ -13,6 +13,7 @@
                         <div class="col">
                             <div class="text-center">
                                 <strong><?php echo $detalle['nombre'] ?></strong>
+                                <span id="datos"></span>
                             </div>
 
                         </div>

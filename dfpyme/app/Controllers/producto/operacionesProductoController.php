@@ -309,7 +309,8 @@ class operacionesProductoController extends BaseController
                     'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
                     'valor_impuesto_saludable' => 0,
                     //'id_subcategoria'=>$this->request->getPost('sub_categoria')
-                    'id_subcategoria' => $id_categoria
+                    'id_subcategoria' => $id_categoria,
+                    'favorito'=>$this->request->getPost('favorito')
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -396,7 +397,10 @@ class operacionesProductoController extends BaseController
                     'id_impuesto_saludable' => $this->request->getPost('impuesto_saludable'),
                     'valor_impuesto_saludable' => $valorImpuestoSaludable,
                     //'id_subcategoria' => $this->request->getPost('sub_categoria')
-                    'id_subcategoria' => 1
+                    //'id_subcategoria' => 0,
+                    'id_subcategoria' => $id_categoria,
+                    'favorito'=>$this->request->getPost('favorito')
+
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -618,7 +622,8 @@ class operacionesProductoController extends BaseController
                 'aplica_ico' => $aplica_ico,
                 'aplica_descuento' => $permite_descuento,
                 'valor_impuesto_saludable' => $this->request->getPost('edicion_de_valor_costo_producto'),
-                'id_subcategoria'=>$this->request->getPost('sub_categoria')
+                'id_subcategoria'=>$this->request->getPost('sub_categoria'),
+                'favorito'=>$this->request->getPost('favorito_editar')
             ];
 
             $model = model('productoModel');

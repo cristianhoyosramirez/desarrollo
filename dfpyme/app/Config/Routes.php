@@ -569,6 +569,11 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->get('abrir_cajon', 'Configuracion::abrir_cajon');
     $routes->get('admin_imp', 'Configuracion::admin_imp');
     $routes->get('comanda', 'Configuracion::comanda');
+    $routes->post('actualizar_comanda', 'Configuracion::actualizar_comanda');
+    $routes->get('productos_favoritos', 'Configuracion::productos_favoritos');
+    $routes->get('encabezado', 'Configuracion::encabezado');
+    $routes->post('actualizar_encabezado', 'Configuracion::actualizar_encabezado');
+    $routes->post('actualizar_pie', 'Configuracion::actualizar_pie');
 });
 
 /*

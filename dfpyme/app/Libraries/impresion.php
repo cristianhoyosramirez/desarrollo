@@ -67,7 +67,7 @@ class impresion
         $printer->text("\n");
 
         $valor_apertura = model('aperturaModel')->select('valor')->where('id', $id_apertura)->first();
-        
+
         $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura);
 
         $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura);
@@ -95,7 +95,7 @@ class impresion
         $printer->text("Ingresos efectivo:      " . "$ " . number_format($ingresos_efectivo[0]['efectivo'], 0, ",", ".") . "\n");
         $printer->text("Ingresos transacción: " . "  $ " . number_format($ingresos_transaccion[0]['transferencia'], 0, ",", ".") . "\n");
         //$total_ingresos = model('facturaFormaPagoModel')->total_ingresos($fecha_y_hora_apertura['fecha_y_hora_apertura'], $fecha_y_hora_actual);
-        $printer->text("Total ingresos          " . "$ " . number_format(($ingresos_efectivo[0]['efectivo']  + $valor_apertura['valor']+$ingresos_transaccion[0]['transferencia']), 0, ",", ".") . "\n");
+        $printer->text("Total ingresos          " . "$ " . number_format(($ingresos_efectivo[0]['efectivo']  + $valor_apertura['valor'] + $ingresos_transaccion[0]['transferencia']), 0, ",", ".") . "\n");
 
 
         $printer->text("\n");
@@ -219,31 +219,31 @@ class impresion
 
         $printer->text("Efectivo caja: " . "              $ " . number_format($total_en_caja, 0, ",", ".") . "\n");
         $printer->text("Cierre efectivo  " . "            $ " .  number_format($cierre_usuario, 0, ",", ".") .  "\n");
-        $printer->text("Diferencia efectivo  " . "        $ " . number_format(($cierre_usuario ) - $total_en_caja, 0, ",", ".") . "\n\n");
+        $printer->text("Diferencia efectivo  " . "        $ " . number_format(($cierre_usuario) - $total_en_caja, 0, ",", ".") . "\n\n");
 
         $printer->text("Transacciones caja: " . "         $ " . number_format($transaccion, 0, ",", ".") . "\n");
         $printer->text("Cierre transacciones  " . "       $ " .  number_format($valor_cierre_transaccion_usuario, 0, ",", ".") .  "\n");
 
-    
-       /*  if ($total_en_caja > $cierre_usuario) {
+
+        /*  if ($total_en_caja > $cierre_usuario) {
         $printer->text("Diferencia efectivo  " . "   $ " . number_format(($total_en_caja) - $cierre_usuario, 0, ",", ".") . "\n");
         } */
-      /*   if ($total_en_caja < $cierre_usuario) {
+        /*   if ($total_en_caja < $cierre_usuario) {
         $printer->text("Diferencia efectivo  " . "   $ " . number_format(($cierre_usuario) - $total_en_caja , 0, ",", ".") . "\n");
         } */
 
 
-        $printer->text("Diferencia transaccion  " .      "     $ " . number_format($valor_cierre_transaccion_usuario -  $transaccion , 0, ",", ".") . "\n");
+        $printer->text("Diferencia transaccion  " .      "     $ " . number_format($valor_cierre_transaccion_usuario -  $transaccion, 0, ",", ".") . "\n");
 
         $printer->text("\n");
 
-      /*   if ($total_en_caja > $cierre_usuario) {
+        /*   if ($total_en_caja > $cierre_usuario) {
             $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($total_en_caja) - $cierre_usuario) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
         }
         if ($total_en_caja < $cierre_usuario) {
             $printer->text("TOTAL DIFERENCIAS  " . "     $ " . number_format((($cierre_usuario ) - $total_en_caja ) + ($transaccion - $valor_cierre_transaccion_usuario), 0, ",", ".") . "\n");
         } */
-        $printer->text("TOTAL DIFERENCIAS  " . "          $ " . number_format((( $cierre_usuario ) - $total_en_caja ) + ($valor_cierre_transaccion_usuario  - $transaccion ), 0, ",", ".") . "\n");
+        $printer->text("TOTAL DIFERENCIAS  " . "          $ " . number_format((($cierre_usuario) - $total_en_caja) + ($valor_cierre_transaccion_usuario  - $transaccion), 0, ",", ".") . "\n");
         $printer->text("\n");
 
         $printer->feed(1);
@@ -370,10 +370,12 @@ class impresion
 
         //$printer->text("Cambio:."" ."\n");
 
+        $temp_encabezado = model('ConfiguracionPedidoModel')->select('encabezado_factura')->first();
+        $encabezado = $temp_encabezado['encabezado_factura'];
+        $printer->text("$encabezado \n");
 
 
-
-        $printer->text("_______________________________________________ \n");
+        /*    $printer->text("_______________________________________________ \n");
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("ACTIVIDAD ECONÓMICA 1063;4719 \n");
         $printer->text("NO CONTRIBUYENTES DE RENTA  \n");
@@ -381,7 +383,7 @@ class impresion
         $printer->text("GRAN CONTRIBUYENTE  \n");
         $printer->text("AGENTE RETENEDOR IVA \n");
         $printer->text("DOMICILIO PRINCIPAL: CALLE 73 NO. 8 - 13  \n");
-        $printer->text("BOGOTÁ - COLOMBIA. \n");
+        $printer->text("BOGOTÁ - COLOMBIA. \n"); */
         $printer->text("_______________________________________________ \n");
         $total = model('facturaElectronicaModel')->select('total')->where('id', $id_factura)->first();
         $printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -404,7 +406,7 @@ class impresion
 
     function impresion_factura_electronica($id_factura)
     {
-        //$id_factura = $this->request->getPost('id_factura');
+        //$id_factura = 115;
 
         $id_factura = $id_factura;
         $id_impresora = model('cajaModel')->select('id_impresora')->first();
@@ -441,15 +443,29 @@ class impresion
         $printer->text("NIT: " . $datos_empresa[0]['nitempresa'] . "\n");
         $printer->text($datos_empresa[0]['direccionempresa'] . "  " . $datos_empresa[0]['nombreciudad'] . " " . $datos_empresa[0]['nombredepartamento'] . "\n");
         $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
-        $printer->text("Responsable de IVA – INC\n\n");
+
+        $temp_descripcion = model('regimenModel')->select('descripcion')->where('idregimen', $datos_empresa[0]['idregimen'])->first();
+        $descripcion = $temp_descripcion['descripcion'];
+
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("          ".$descripcion);
+
+
+
+        // Obtener el encabezado de la base de datos
+        $temp_encabezado = model('ConfiguracionPedidoModel')->select('encabezado_factura')->first();
+        $encabezado = $temp_encabezado['encabezado_factura'];
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("$encabezado \n");
+
         /*  $printer->text($datos_empresa[0]['nombreregimen'] . "\n"); */
-        $printer->text("ACTIVIDAD ECONÓMICA 1063;4719 \n");
+        /*   $printer->text("ACTIVIDAD ECONÓMICA 1063;4719 \n");
         $printer->text("NO CONTRIBUYENTES DE RENTA  \n");
         $printer->text("NO SUJETO A RETENCIÓN  \n");
         $printer->text("GRAN CONTRIBUYENTE  \n");
         $printer->text("AGENTE RETENEDOR IVA \n");
         $printer->text("COMITE DEPARTAMENTAL DE CAFETEROS DE RISARALDA  \n");
-        $printer->text("CR 9 No 36-43 PEREIRA RISARALDA  \n");;
+        $printer->text("CR 9 No 36-43 PEREIRA RISARALDA  \n");; */
         $printer->text("\n");
 
         $printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -643,8 +659,10 @@ class impresion
         $printer->setTextSize(1, 1);
         $printer->text("_______________________________________________ ");
         $printer->text("\n");
-        $printer->text("IMPRESO POR SOFTWARE DFPYME INTREDETE. \n");
-        $printer->text("NIT: 901448365-5\n");
+        $temp_pie = model('ConfiguracionPedidoModel')->select('pie_factura')->first();
+        $pie = $temp_pie['pie_factura'];
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("$pie \n");
         $printer->text("\n");
 
 
@@ -1014,11 +1032,7 @@ class impresion
     }
 
 
-    function imprimir_comanda(){
-        
+    function imprimir_comanda()
+    {
     }
-
-
-
-
 }

@@ -348,7 +348,7 @@
                   </svg>
                   Borrar remisiones
                 </a>
-                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/borrar_remisiones">
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/comanda">
                   <!-- Download SVG icon from http://tabler-icons.io/i/list-details -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -360,6 +360,42 @@
                     <rect x="3" y="14" width="6" height="6" rx="1" />
                   </svg>
                   Comanda
+                </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/productos_favoritos">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart-plus -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <circle cx="6" cy="19" r="2" />
+                    <circle cx="17" cy="19" r="2" />
+                    <path d="M17 17h-11v-14h-2" />
+                    <path d="M6 5l6.005 .429m7.138 6.573l-.143 .998h-13" />
+                    <path d="M15 6h6m-3 -3v6" />
+                  </svg>
+                  Productos favoritos
+                </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/productos_favoritos">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart-plus -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <circle cx="6" cy="19" r="2" />
+                    <circle cx="17" cy="19" r="2" />
+                    <path d="M17 17h-11v-14h-2" />
+                    <path d="M6 5l6.005 .429m7.138 6.573l-.143 .998h-13" />
+                    <path d="M15 6h6m-3 -3v6" />
+                  </svg>
+                  Venta multiple 
+                </a>
+                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/encabezado">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart-plus -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <circle cx="6" cy="19" r="2" />
+                    <circle cx="17" cy="19" r="2" />
+                    <path d="M17 17h-11v-14h-2" />
+                    <path d="M6 5l6.005 .429m7.138 6.573l-.143 .998h-13" />
+                    <path d="M15 6h6m-3 -3v6" />
+                  </svg>
+                  Encabezado y pie de factura electrónica
                 </a>
               </div>
           </li>

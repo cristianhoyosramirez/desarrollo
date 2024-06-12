@@ -707,7 +707,8 @@ class Boletas extends BaseController
                     id_estado,
                     nit_cliente,
                     id_estado,
-                    id_factura
+                    id_factura,
+                    saldo
                 FROM
                     pagos 
                 where
@@ -744,7 +745,9 @@ class Boletas extends BaseController
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
             $sub_array[] = $detalle['documento'];
+            
             $sub_array[] =  number_format($detalle['total_documento'], 0, ",", ".");
+            $sub_array[] = $detalle['saldo'];
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $tipo_documento['descripcionestado'];
@@ -866,6 +869,8 @@ class Boletas extends BaseController
         $id_apertura = model('aperturaModel')->selectMax('id')->findAll();
         $apertura = $id_apertura[0]['id'];
 
+
+
         $sql_count = '';
         $sql_data = '';
 
@@ -899,7 +904,7 @@ class Boletas extends BaseController
                     pagos where id_apertura=$apertura";
 
         $condition = "";
-
+    
         if (!empty($valor_buscado)) {
             $condition .= " AND cliente.nitcliente ILIKE '%" . $valor_buscado . "%'";
             $condition .= " OR descripcionestado ILIKE '%" . $valor_buscado . "%'";
@@ -967,10 +972,10 @@ class Boletas extends BaseController
         }
         $total_ventas = model('pagosModel')->total_venta($id_apertura[0]['id']);
 
-        $dian_aceptado=model('facturaElectronicaModel')->dian_ceptado($id_apertura[0]['id']);
+        $dian_aceptado=model('facturaElectronicaModel')->dian_ceptado();
         $dian_no_enviado=model('facturaElectronicaModel')->dian_no_enviado($id_apertura[0]['id']);
-        $dian_rechazado=model('facturaElectronicaModel')->dian_rechazado($id_apertura[0]['id']);
-        $dian_error=model('facturaElectronicaModel')->dian_error($id_apertura[0]['id']);
+        $dian_rechazado=model('facturaElectronicaModel')->dian_rechazado();
+        $dian_error=model('facturaElectronicaModel')->dian_error();
 
         $json_data = [
             'draw' => intval($this->request->getGEt(index: 'draw')),

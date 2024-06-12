@@ -41,7 +41,7 @@
                 <td scope="col">EFECTIVO</th>
                 <td scope="col">TRANSFERENCIA</th>
                 <td scope="col">TOTAL PAGO</th>
-                <td scope="col">CAMBIO </th>
+                <!-- <td scope="col">CAMBIO </th> -->
                 <td scope="col">USUARIO </th>
                 <td scope="col">Accion </th>
             </tr>
@@ -65,7 +65,7 @@
                     <td><?php echo "$ " . number_format($valor['recibido_efectivo'], 0, ",", ".") ?></td>
                     <td><?php echo "$ " . number_format($valor['recibido_transferencia'], 0, ",", ".") ?></td>
                     <td><?php echo "$ " . number_format($valor['total_pago'], 0, ",", ".") ?></td>
-                    <td><?php echo "$ " . number_format($valor['cambio'], 0, ",", ".") ?></td>
+                    <!-- <td><?php #echo "$ " . number_format($valor['cambio'], 0, ",", ".") ?></td> -->
                     <td><?php echo $nombre_usuario['nombresusuario_sistema'] ?></td>
                     <td><a href="#" class="btn btn-outline-success  btn-icon" onclick="editar_pago(<?php echo $valor['id'] ?>)">
                             <!-- Download SVG icon from http://tabler-icons.io/i/pencil -->

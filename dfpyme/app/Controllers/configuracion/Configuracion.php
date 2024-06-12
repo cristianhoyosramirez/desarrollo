@@ -3,6 +3,7 @@
 namespace App\Controllers\configuracion;
 
 use App\Controllers\BaseController;
+
 require APPPATH . "Controllers/mike42/autoload.php";
 
 use Mike42\Escpos\Printer;
@@ -608,42 +609,112 @@ class Configuracion extends BaseController
         $id_apertura = $this->request->getPost('id_apertura');
 
         $borrar_remisiones = model('pagosModel')->borrar_remisiones($id_apertura);
-       
 
-        if ($borrar_remisiones  ){
+
+        if ($borrar_remisiones) {
             $session = session();
             $session->setFlashdata('iconoMensaje', 'success');
             return redirect()->to(base_url('consultas_y_reportes/consultas_caja'))->with('mensaje', 'Borrado éxitoso ');
         }
-
-
     }
 
-    function abrir_cajon(){
+    function abrir_cajon()
+    {
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
         $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
         $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
-        $printer = new Printer($connector); 
-        
+        $printer = new Printer($connector);
+
         //$printer->feed(1);
         //$printer->cut();
         $printer->pulse();
         $printer->close();
 
-        if ($printer){
+        if ($printer) {
             $returnData = array(
                 "resultado" => 1
             );
             echo  json_encode($returnData);
         }
-
     }
 
-    function admin_imp(){
+    function admin_imp()
+    {
         return view('configuracion/impresora');
     }
 
-    function comanda(){
-        return view('configuracion/comanda');
+    function comanda()
+    {
+
+        $temp_comanda = model('configuracionPedidoModel')->select('partir_comanda')->first();
+
+        if ($temp_comanda['partir_comanda'] == 'f') {
+            $comanda = "false";
+        } else if ($temp_comanda['partir_comanda'] == 't') {
+            $comanda = "true";
+        }
+
+        return view('configuracion/comanda', [
+            'comanda' => $comanda
+        ]);
+    }
+
+    function actualizar_comanda()
+    {
+        $valor = $this->request->getPost('valor');
+
+        $actualizar = model('configuracionPedidoModel')->set('partir_comanda', $valor)->update();
+
+
+        if ($actualizar) {
+            $returnData = array(
+                "resultado" => 1, //Falta plata  
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+    function productos_favoritos()
+    {
+
+
+        return view('configuracion/favoritos');
+    }
+
+    function encabezado()
+    {
+        $encabezado = model('configuracionPedidoModel')->select('encabezado_factura')->first();
+        $pie = model('configuracionPedidoModel')->select('pie_factura')->first();
+        return view('configuracion/encabezado_pie', [
+            'encabezado' => $encabezado['encabezado_factura'],
+            'pie' => $pie['pie_factura'],
+        ]);
+    }
+
+    function actualizar_encabezado()
+    {
+
+        $encabezado = $this->request->getPost('valor');
+        $actualizar = model('configuracionPedidoModel')->set('encabezado_factura', $encabezado)->update();
+
+        if ($actualizar) {
+            $returnData = array(
+                "resultado" => 1, //Falta plata  
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+    function actualizar_pie()
+    {
+        $pie = $this->request->getPost('valor');
+        $actualizar = model('configuracionPedidoModel')->set('pie_factura', $pie)->update();
+
+        if ($actualizar) {
+            $returnData = array(
+                "resultado" => 1, //Falta plata  
+            );
+            echo  json_encode($returnData);
+        }
     }
 }

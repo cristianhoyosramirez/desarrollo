@@ -147,7 +147,7 @@
         </label>
         <?php $postal = model('CodigoPostalModel')->findAll();  ?>
 
-        <select class="form-select" id="codigo_postal_cliente" name="codigo_postal">
+        <select class="form-select" id="codigo_postal_cliente" name="codigo_postal_editar">
 
             <?php foreach ($postal as $detalle) { ?>
                 <option value="<?php echo $detalle['c_postal'] ?>" <?php if ($detalle['id'] == $codigo_postal) : ?>selected <?php endif; ?>><?php echo $detalle['ciudad'] . "-" . $detalle['departamento'] . "-" . $detalle['c_postal'] ?> </option>
