@@ -447,4 +447,17 @@ class ReportesController extends BaseController
         );
         echo  json_encode($returnData);
     }
+
+    function ver_productos_eliminanados(){
+        $productos_eliminados=model('productoModel')->get_productos_borrados();
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata  
+            "productos" => view('producto/eliminados',[
+                'productos'=>$productos_eliminados
+            ]), //Falta plata  
+        );
+        echo  json_encode($returnData);
+
+    }
 }

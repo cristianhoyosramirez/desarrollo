@@ -457,4 +457,13 @@ class productoModel extends Model
         ");
         return $datos->getResultArray();
     }
+    function get_productos_borrados()
+    {
+
+        $datos = $this->db->query("
+            SELECT * FROM  producto where estadoproducto = 'false'
+   
+        ");
+        return $datos->getResultArray();
+    }
 }

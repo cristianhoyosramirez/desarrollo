@@ -544,6 +544,7 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->get('estado_dian', 'ReportesController::estado_dian');
     $routes->post('actualizar_pagos', 'ReportesController::actualizar_pagos');
     $routes->post('datos_pagos', 'ReportesController::datos_pagos');
+    $routes->get('ver_productos_eliminanados', 'ReportesController::ver_productos_eliminanados');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
