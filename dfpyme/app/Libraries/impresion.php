@@ -691,14 +691,16 @@ class impresion
 
         $id_factura = $id_factura;
 
+       
+
         $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
 
         $regimen = model('empresaModel')->select('idregimen')->first();
-
+        
         if (!empty($numero_factura['numerofactura_venta'])) {
 
             $numero_factura['numerofactura_venta'];
-
+           
 
             $fecha_factura_venta = model('facturaVentaModel')->select('fecha_factura_venta')->where('id', $id_factura)->first();
             $hora_factura_venta = model('facturaVentaModel')->select('horafactura_venta')->where('id', $id_factura)->first();
@@ -714,9 +716,9 @@ class impresion
             $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
 
             $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
-
+            
             $printer = new Printer($connector);
-
+           
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->setTextSize(1, 2);
             $printer->text($datos_empresa[0]['nombrecomercialempresa'] . "\n");
@@ -727,7 +729,7 @@ class impresion
             $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
             $printer->text($datos_empresa[0]['nombreregimen'] . "\n");
             $id_regimen = model('empresaModel')->select('idregimen')->first();
-            $regimen = model('regimenModel')->select('descripcion')->where('id', $id_regimen['idregimen'])->first();
+            $regimen = model('regimenModel')->select('descripcion')->where('idregimen', $id_regimen['idregimen'])->first();
             $printer->text($regimen['descripcion']);
             //$printer->text(" Responsable de IVA – INC \n");
             $printer->text("\n");
@@ -736,7 +738,6 @@ class impresion
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->setTextSize(1, 1);
             $estado_factura = model('facturaVentaModel')->estado_factura($id_factura);
-
             if ($estado_factura[0]['idestado'] == 1 or $estado_factura[0]['idestado'] == 2) {
                 $printer->text("FACTURA DE VENTA: " . $numero_factura['numerofactura_venta'] . "\n");
             }
@@ -808,7 +809,7 @@ class impresion
 
             $impuesto_saludable = model('productoFacturaVentaModel')->get_impuesto_saluidable($id_factura);
 
-            if ($regimen['idregimen'] == 1) {
+            if ($id_regimen['idregimen'] == 1) {
 
                 if ($estado_factura[0]['idestado'] == 1 or $estado_factura[0]['idestado'] == 2) {
 

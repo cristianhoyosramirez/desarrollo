@@ -41,10 +41,10 @@ class CerrarVenta extends BaseController
 
 
 
-        /*  $id_mesa = 2;
+   /*      $id_mesa = 2;
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
-        //$numero_pedido = $pedido['id'];
-        $numero_pedido = 13;
+        $numero_pedido = $pedido['id'];
+        //$numero_pedido = 13;
         $efectivo = 3000;
         $transaccion = 0;
         $valor_venta = 3000;
@@ -57,7 +57,7 @@ class CerrarVenta extends BaseController
 
         // var_dump($this->request->getPost()); exit();
 
-        $id_mesa = $this->request->getPost('id_mesa');
+          $id_mesa = $this->request->getPost('id_mesa');
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
         $efectivo = $_POST['efectivo'];
@@ -68,7 +68,7 @@ class CerrarVenta extends BaseController
         $estado = $_POST['estado'];
         $propina = $_POST['propina_Format'];
         $descuento = 0;
-        $tipo_pago = $_POST['tipo_pago'];
+        $tipo_pago = $_POST['tipo_pago']; 
 
 
 

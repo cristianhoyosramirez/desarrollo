@@ -92,10 +92,9 @@ class Imprimir extends BaseController
                             array_push($productos, $data);
                         }
                         //$this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], $codigo_categoria[0]['codigo_categoria']);
-                        $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'],'1');
+                        $this->generar_comanda($productos, $pedido['id'], $nombre_mesa['nombre'], '1');
                         $productos = array();
                     }
-
                 }
                 $returnData = array(
                     "resultado" => 1
@@ -395,13 +394,13 @@ class Imprimir extends BaseController
     public function imprimir_factura()
     {
 
-        // $id_factura = 15;
+        //$id_factura = 35;
 
         $id_factura = $_POST['numero_de_factura'];
 
         $imp = new impresion();
         $impresion = $imp->imprimir_factura($id_factura);
-
+    
         $imprime_boucher = model('cajaModel')->select('imp_comprobante_transferencia')->where('numerocaja', 1)->first();
 
 
@@ -470,7 +469,7 @@ class Imprimir extends BaseController
         $imp = new impresion();
 
 
-        $id_factura = $this->request->getPost('id_factura'); 
+        $id_factura = $this->request->getPost('id_factura');
         //$id_factura = 51;
 
 

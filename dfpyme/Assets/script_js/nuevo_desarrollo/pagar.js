@@ -163,7 +163,9 @@ function pagar() {
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     let categorias = document.getElementById("lista_categorias");
-                                    categorias.style.display = "block";
+                                    if (categorias) {
+                                        categorias.style.display = "block";
+                                    }
                                     let numero_de_factura = resultado.id_factura;
 
                                     $.ajax({
@@ -181,7 +183,9 @@ function pagar() {
                                                 }
                                                 //mesas.style.display = "block";
                                                 let lista_categorias = document.getElementById("lista_categorias");
-                                                lista_categorias.style.display = "none";
+                                                if (lista_categorias) {
+                                                    lista_categorias.style.display = "none";
+                                                }
                                                 sweet_alert('success', 'Impresión de factura correcto');
                                             }
                                         },
@@ -204,7 +208,9 @@ function pagar() {
                                                     mesas.style.display = "block";
                                                 }
                                                 let lista_categorias = document.getElementById("lista_categorias");
-                                                lista_categorias.style.display = "none";
+                                                if (lista_categorias) {
+                                                    lista_categorias.style.display = "none";
+                                                }
                                                 sweet_alert('success', 'Se ha finalizado la venta');
                                             }
                                         },
@@ -349,8 +355,10 @@ function pagar() {
                                                 mesas.style.display = "block";
                                             }
 
-                                            let lista_categorias = document.getElementById("lista_categorias");
-                                            lista_categorias.style.display = "none";
+                                            let = document.getElementById("lista_categorias");
+                                            if (lista_categorias) {
+                                                lista_categolista_categoriasrias.style.display = "none";
+                                            }
                                             /**
                                              * Aca llamo a la funcion sweet alert y se le pasan los parametros.
                                              */
@@ -383,8 +391,10 @@ function pagar() {
                                             }
 
                                             let lista_categorias = document.getElementById("lista_categorias");
-                                            lista_categorias.style.display = "none";
 
+                                            if (lista_categorias) {
+                                                lista_categorias.style.display = "none";
+                                            }
                                             /**
                                              * Aca llamo a la funcion sweet alert y se le pasan los parametros.
                                              */
