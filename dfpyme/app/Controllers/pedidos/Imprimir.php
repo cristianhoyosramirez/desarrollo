@@ -470,8 +470,8 @@ class Imprimir extends BaseController
         $imp = new impresion();
 
 
-        $id_factura = $this->request->getPost('id_factura');
-        //$id_factura = 7;
+        $id_factura = $this->request->getPost('id_factura'); 
+        //$id_factura = 51;
 
 
         $id_resolucion = model('facturaElectronicaModel')->select('id_resolucion')->where('id', $id_factura)->first();

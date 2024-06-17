@@ -11,13 +11,18 @@ Configuración
 
     <div class="card-body">
 
-
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onclick="actualizar_comanda()" value="<?php #echo $comanda 
-                                                                                                                                ?>">
-            <label class="form-check-label" for="flexSwitchCheckDefault">No</label>
-        </div>
-
+        <?php if ($favorito == "f") : ?>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onclick="actualizar_comanda()" value="false">
+                <label class="form-check-label" for="flexSwitchCheckDefault">No</label>
+            </div>
+        <?php endif ?>
+        <?php if ($favorito == "t") : ?>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked onclick="actualizar_comanda()" value="true">
+                <label class="form-check-label" for="flexSwitchCheckDefault">si </label>
+            </div>
+        <?php endif ?>
 
     </div>
 </div>
@@ -43,6 +48,8 @@ Configuración
 
         const temp_valor = document.getElementById('flexSwitchCheckDefault').value;
 
+        
+
         if (temp_valor == "false") {
             valor = "true"
         }
@@ -58,14 +65,14 @@ Configuración
             data: {
                 valor
             },
-            url: url + "/" + "configuracion/actualizar_comanda",
+            url: url + "/" + "configuracion/actualizar_favorito",
             type: "POST",
             success: function(resultado) {
                 var resultado = JSON.parse(resultado);
                 if (resultado.resultado == 1) {
                     // Aquí puedes agregar lo que necesitas hacer si resultado.resultado es 1
 
-                    sweet_alert_start('success', 'Configuración de propina actualizada   ');
+                    sweet_alert_start('success', ' Configuración de productos favoritos correcta   ');
 
 
                 }

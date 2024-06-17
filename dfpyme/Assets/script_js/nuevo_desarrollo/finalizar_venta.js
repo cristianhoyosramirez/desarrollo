@@ -4,6 +4,8 @@ function finalizar_venta() {
     var url = document.getElementById("url").value;
     var id_usuario = document.getElementById("id_usuario").value;
 
+    
+
     if (id_mesa != "") {
         $.ajax({
             data: {
@@ -23,11 +25,13 @@ function finalizar_venta() {
                     $('#requiere_factura_electronica').val(resultado.requiere_factura_electronica)
 
                     var propina_pedido = document.getElementById("propina_del_pedido").value;
-                    var propina_pedido_limpio = propina_pedido.replace(/\./g, "");
+                    //var propina_pedido_limpio = propina_pedido.replace(/\./g, "");
+                    var propina_pedido_limpio = propina_pedido.replace(/[\.\$]/g, "");
 
                     //console.log(propina_pedido_limpio)
 
                     totales = parseInt(resultado.valor_total) + parseInt(propina_pedido_limpio)
+                
                     $('#valor_total_a_pagar').val(totales)
 
                     $('#total_pedido').html('Valor pago: ' + totales.toLocaleString('es-ES'))

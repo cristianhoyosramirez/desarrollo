@@ -249,7 +249,7 @@ class kardexModel extends Model
         total
  FROM kardex
  INNER JOIN producto ON producto.codigointernoproducto = kardex.codigo
- WHERE id_factura= $id_factura
+ WHERE id_factura= $id_factura and id_estado= 8
         ");
         return $datos->getResultArray();
     }

@@ -43,6 +43,7 @@ function agregar_al_pedido(id_producto) {
                 $('#subtotal_pedido').val(resultado.total_pedido)
                 $('#id_mesa_pedido').val(resultado.id_mesa)
                 $('#mesa_pedido').html('VENTAS DE MOSTRADOR')
+               
                 
                 $("#input"+resultado.id).select()
             }

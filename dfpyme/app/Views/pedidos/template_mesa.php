@@ -225,7 +225,108 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_precio.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/abrir_cajon.js"></script>
 
-<!--     <script>
+    <script>
+        $(document).ready(function() {
+            var autocomplete = function() {
+                // Tu función de autocompletado aquí
+                console.log("Autocompletado ejecutado");
+            };
+            let url = document.getElementById("url").value;
+            let id_mesa = document.getElementById("id_mesa_pedido").value;
+            let id_usuario = document.getElementById("id_usuario").value;
+            let mesero = document.getElementById("mesero").value;
+
+            
+            $('#producto').on('keypress', function(e) {
+                if (e.which === 13) { // Si se pulsa Enter
+                    e.preventDefault();
+
+                    var codigo = document.getElementById("producto").value;
+                    $.ajax({
+                        data: {
+                            codigo,id_mesa,id_usuario,mesero
+                        },
+                        url: url + "/" + "pre_factura/buscar_por_codigo",
+                        type: "POST",
+                        success: function(resultado) {
+                            var resultado = JSON.parse(resultado);
+                            if (resultado.resultado == 1) {
+
+                                $('#producto').val('');
+                                $('#mesa_productos').html(resultado.productos_pedido)
+                                $('#valor_pedido').html(resultado.total_pedido)
+                                $('#subtotal_pedido').val(resultado.total_pedido)
+                                $('#id_mesa_pedido').val(resultado.id_mesa)
+                                $("#producto").autocomplete("close");
+
+                                if (resultado.estado == 1) {
+                                    $('#mesa_pedido').html('Ventas de mostrador ')
+                                    $('#input' + resultado.id).select()
+                                }
+                            }
+                        },
+                    });
+                } else {
+                    $("#producto").autocomplete({
+                        source: function(request, response) {
+
+                            $.ajax({
+                                type: "POST",
+                                url: url + "/" + "producto/pedido",
+                                data: request,
+                                success: response,
+                                dataType: "json",
+                            });
+                        },
+                    }, {
+                        minLength: 1,
+                    }, {
+                        select: function(event, ui) {
+
+
+                            /*   let url = document.getElementById("url").value;
+                              let id_mesa = document.getElementById("id_mesa_pedido").value;
+                              let id_usuario = document.getElementById("id_usuario").value;
+                              let mesero = document.getElementById("mesero").value; */
+                            let id_producto = ui.item.id_producto;
+
+                            $.ajax({
+                                data: {
+                                    id_producto,
+                                    id_mesa,
+                                    id_usuario,
+                                    mesero
+                                },
+                                url: url + "/" + "pedidos/agregar_producto",
+                                type: "POST",
+                                success: function(resultado) {
+                                    var resultado = JSON.parse(resultado);
+                                    if (resultado.resultado == 1) {
+
+                                        $('#producto').val('');
+                                        $('#mesa_productos').html(resultado.productos_pedido)
+                                        $('#valor_pedido').html(resultado.total_pedido)
+                                        $('#subtotal_pedido').val(resultado.total_pedido)
+                                        $('#id_mesa_pedido').val(resultado.id_mesa)
+
+                                        if (resultado.estado == 1) {
+                                            $('#mesa_pedido').html('Ventas de mostrador ')
+                                            $('#input' + resultado.id).select()
+                                        }
+                                    }
+                                },
+                            });
+                            //}
+                        },
+                    });
+                }
+            });
+        });
+    </script>
+
+
+
+    <!--     <script>
         function get_mesas_pedido() {
             let url = document.getElementById("url").value;
 
@@ -246,15 +347,73 @@
         }
 
         $(document).ready(function() {
-            // Ejecuta la función una vez al cargar la página
+            // Ejecuta la función una vez al.HTML cargar la página
             get_mesas_pedido();
 
             // Luego, ejecuta la función cada 1000 ms (1 segundo)
             setInterval(get_mesas_pedido, 1000);
         });
     </script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let url = document.getElementById("url").value;
+            $.ajax({
+                url: url + "/" + "eventos/validar_venta_directa",
+                type: "GET",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    if (resultado.resultado == 1) {
+                        // Aquí puedes agregar lo que necesitas hacer si resultado.resultado es 1
+                        $('#mesa_productos').html(resultado.productos)
+                        $('#id_mesa_pedido').val(resultado.id_mesa)
+                        $('#valor_pedido').html(resultado.total)
+                        $('#valor_total_a_pagar').val(resultado.total)
+                        $('#subtotal_pedido').val(resultado.sub_total)
+                        $('#propina_del_pedido').val(resultado.propina)
 
 
+                    }
+                },
+            });
+        });
+    </script>
+
+    <script>
+        function cambiar_valor_precio(id_producto) {
+
+            
+            var id_producto_pedido = id_producto;
+
+
+            //cambio_precio(url, valor, id_producto_pedido);
+
+            const dynamicId = id_producto;
+            // formatNumber(dynamicId);
+
+
+            const input = document.querySelector("#input" + dynamicId);
+            // Verificar si se encontró el input
+            if (!input) {
+                console.error("Input con ID '" + id + "' no encontrado.");
+                return;
+            }
+            // Definir la función para formatear el número
+            function format(n) {
+                // Elimina cualquier carácter que no sea un número
+                n = n.replace(/\D/g, "");
+                // Formatea el número
+                return n === "" ? n : parseFloat(n).toLocaleString('es-CO');
+            }
+            // Agregar el evento "input" al input
+            input.addEventListener("input", (e) => {
+                const element = e.target;
+                const value = element.value;
+                element.value = format(value);
+            });
+
+ 
+        }
+    </script>
     <script>
         function cambiar_precio(valor, id_producto) {
 
@@ -753,10 +912,12 @@
         });
     </script>
     <script>
-        function actualizacion_cantidades() {
+        function actualizacion_cantidades(cantidad, id) {
             var url = document.getElementById("url").value;
-            var id_producto = document.getElementById("id_edicion_producto").value;
-            var cantidad_producto = document.getElementById("cantidad_producto").value;
+            //var id_producto = document.getElementById("id_edicion_producto").value;
+            var id_producto = id;
+            //var cantidad_producto = document.getElementById("cantidad_producto").value;
+            var cantidad_producto = cantidad;
             var id_usuario = document.getElementById("id_usuario").value;
 
             $.ajax({

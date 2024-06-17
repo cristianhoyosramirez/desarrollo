@@ -97,7 +97,7 @@
                     </svg> Salones
                   </a>
                 <?php endif ?>
-                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3 ) : ?>
 
                   <a class="dropdown-item" href="<?= base_url() ?>/salones/list">
                     <!-- Download SVG icon from http://tabler-icons.io/i/building-pavilon -->
@@ -373,7 +373,7 @@
                   </svg>
                   Productos favoritos
                 </a>
-                <a class="dropdown-item" href="<?= base_url() ?>/configuracion/productos_favoritos">
+                <a class="dropdown-item" href="<?= base_url() ?>/eventos/venta_multiple">
                   <!-- Download SVG icon from http://tabler-icons.io/i/shopping-cart-plus -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -422,7 +422,7 @@
                 </span>
               </a>
             <?php endif ?>
-            <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+            <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3 ) : ?>
               <a class="nav-link " href="<?= base_url() ?>/pedidos/mesas">
                 <span class="text-blue">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag">

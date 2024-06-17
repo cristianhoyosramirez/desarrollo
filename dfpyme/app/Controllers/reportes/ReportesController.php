@@ -460,4 +460,20 @@ class ReportesController extends BaseController
         echo  json_encode($returnData);
 
     }
+
+    function activar_producto(){
+        $codigo_interno=$this->request->getPost('codigo');
+
+        $actualizar=model('productoModel')->set('estadoproducto','true')->where('codigointernoproducto', $codigo_interno)->update();
+
+        if ($actualizar){
+            $returnData = array(
+                "resultado" => 1, //Falta plata  
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+   
+
 }

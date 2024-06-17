@@ -291,7 +291,10 @@ class impresion
         $printer->text("NIT :" . $datos_empresa[0]['nitempresa'] . "\n");
         $printer->text($datos_empresa[0]['direccionempresa'] . "  " . $datos_empresa[0]['nombreciudad'] . " " . $datos_empresa[0]['nombredepartamento'] . "\n");
         $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
-        $printer->text("Responsable de IVA – INC\n");
+
+        $id_regimen = model('empresaModel')->select('idregimen')->first();
+        $regimen = model('regimenModel')->select('descripcion')->where('id', $id_regimen['idregimen'])->first();
+        $printer->text($regimen['descripcion']);
         /*  $printer->text($datos_empresa[0]['nombreregimen'] . "\n"); */
         $printer->text("\n");
 
@@ -303,6 +306,7 @@ class impresion
         $printer->text("CAJERO:          Usuario administrador"  . "\n");
         $printer->text("\n");
         $items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
+
 
         $printer->text("---------------------------------------------" . "\n");
         $printer->text("CLIENTE:         " . $nombres_cliente['nombrescliente'] . "\n");
@@ -448,7 +452,7 @@ class impresion
         $descripcion = $temp_descripcion['descripcion'];
 
         $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->text("          ".$descripcion);
+        $printer->text("          " . $descripcion);
 
 
 
@@ -479,7 +483,9 @@ class impresion
         $printer->text("CAJERO:          Usuario administrador"  . "\n");
         $printer->text("\n");
         //$items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
+
         $items = model('kardexModel')->get_productos_factura($id_factura);
+        //dd($items);
 
         $printer->text("---------------------------------------------" . "\n");
         $printer->text("CLIENTE:     " . $nombres_cliente['nombrescliente'] . "\n");
@@ -720,6 +726,9 @@ class impresion
             $printer->text($datos_empresa[0]['direccionempresa'] . "  " . $datos_empresa[0]['nombreciudad'] . " " . $datos_empresa[0]['nombredepartamento'] . "\n");
             $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
             $printer->text($datos_empresa[0]['nombreregimen'] . "\n");
+            $id_regimen = model('empresaModel')->select('idregimen')->first();
+            $regimen = model('regimenModel')->select('descripcion')->where('id', $id_regimen['idregimen'])->first();
+            $printer->text($regimen['descripcion']);
             //$printer->text(" Responsable de IVA – INC \n");
             $printer->text("\n");
 

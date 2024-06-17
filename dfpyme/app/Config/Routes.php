@@ -212,6 +212,7 @@ $routes->group('pre_factura', ['namespace' => 'App\Controllers\pre_factura', 'fi
     $routes->post('imprimir_desde_pedido', 'prefacturaController::imprimir_desde_pedido');
     $routes->get('impresora', 'prefacturaController::impresora');
     $routes->post('asignar_impresora', 'prefacturaController::asignar_impresora');
+    $routes->post('buscar_por_codigo', 'prefacturaController::buscar_por_codigo');
 });
 
 $routes->group('clientes', ['namespace' => 'App\Controllers\clientes', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -511,6 +512,10 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->get('consultar_de_tipo_documento', 'Boletas::consultar_de_tipo_documento');
     $routes->get('consultar_cliente', 'Boletas::consultar_cliente');
     $routes->get('get_mesas_pedido', 'Boletas::get_mesas_pedido');
+    $routes->get('venta_multiple', 'Boletas::venta_multiple');
+    $routes->post('actualizar_venta_multiple', 'Boletas::actualizar_venta_multiple');
+    $routes->get('validar_venta_directa', 'Boletas::validar_venta_directa');
+    $routes->post('editar_precio', 'Boletas::editar_precio');
 });
 
 
@@ -545,6 +550,7 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->post('actualizar_pagos', 'ReportesController::actualizar_pagos');
     $routes->post('datos_pagos', 'ReportesController::datos_pagos');
     $routes->get('ver_productos_eliminanados', 'ReportesController::ver_productos_eliminanados');
+    $routes->post('activar_producto', 'ReportesController::activar_producto');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -575,6 +581,7 @@ $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion',
     $routes->get('encabezado', 'Configuracion::encabezado');
     $routes->post('actualizar_encabezado', 'Configuracion::actualizar_encabezado');
     $routes->post('actualizar_pie', 'Configuracion::actualizar_pie');
+    $routes->post('actualizar_favorito', 'Configuracion::actualizar_favorito');
 });
 
 /*

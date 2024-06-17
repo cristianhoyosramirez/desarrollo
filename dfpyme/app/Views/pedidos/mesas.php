@@ -158,7 +158,7 @@ Bienvenido DFpyme
                         </div>
                     </div>
                 <?php endif ?>
-                <?php $alturaCalc = "25rem + 10px"; // Calcula la altura 
+                <?php $alturaCalc = "32rem + 10px"; // Calcula la altura 
                 ?>
 
                 <!--Productos-->
@@ -217,6 +217,13 @@ Bienvenido DFpyme
                     </div>
                 </div>
 
+                <?php
+                $id_mesa = model('mesasModel')->select('id')->where('estado', 1)->first();
+                $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa['id'])->first();
+
+
+                ?>
+
                 <!--Pedido-->
                 <div class="col-md-6" id="productos" style="display: block">
                     <input type="hidden" id="id_mesa_pedido">
@@ -243,7 +250,7 @@ Bienvenido DFpyme
                                                 <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
                                                     <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
                                                 <?php endif ?>
-                                                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3 ) : ?>
                                                     <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Vendedor </p>
                                                 <?php endif ?>
                                             </td>
@@ -255,7 +262,10 @@ Bienvenido DFpyme
                         </div>
                         <div class="card-body card-body-scrollable card-body-scrollable-shadow">
 
-                            <div id="mesa_productos"></div>
+                            <div id="mesa_productos">
+
+
+                            </div>
 
                         </div>
 
@@ -286,7 +296,7 @@ Bienvenido DFpyme
                                         </a>
                                     </div>
                                 <?php endif ?>
-                                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3) : ?>
 
                                     <div class="row justify-content-end">
                                         <div class="col-md-3">
@@ -322,7 +332,7 @@ Bienvenido DFpyme
                                         <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
                                             <p id="pedido_mesa">Valor pedido </p>
                                         <?php endif ?>
-                                        <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                        <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3) : ?>
                                             <p id="pedido_mesa">Valor venta </p>
                                         <?php endif ?>
                                     </div>
@@ -380,7 +390,7 @@ Bienvenido DFpyme
                                     </div>
                                 <?php endif ?>
 
-                                <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
+                                <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3) : ?>
                                     <input type="hidden" aria-label="Last name" class="form-control" style="width: 50px;" id="propina_del_pedido" name="propina_del_pedido" onkeyup="total_pedido(this.value)" value=0 placeholder="$">
                                 <?php endif ?>
 
@@ -398,7 +408,7 @@ Bienvenido DFpyme
 
 
 
-                         <!--    <div class="num-pad">
+                            <!--    <div class="num-pad">
                                 <button class="num-key" onclick="addNumber('1')">1</button>
                                 <button class="num-key" onclick="addNumber('2')">2</button>
                                 <button class="num-key" onclick="addNumber('3')">3</button>

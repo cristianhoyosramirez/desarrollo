@@ -24,35 +24,36 @@ class CerrarVenta extends BaseController
     public function cerrar_venta()
     {
 
-       
+
 
         $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
-       
+
         //$datos_empresa = model('empresaModel')->datosEmpresa();
-        
+
         $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
 
         $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
         $printer = new Printer($connector);
-  
+
 
         $printer->pulse();
         $printer->close();
 
 
-        
-     /*    $id_mesa = 1;
+
+        /*  $id_mesa = 2;
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
-        $numero_pedido = $pedido['id'];
-        $efectivo = 500;
+        //$numero_pedido = $pedido['id'];
+        $numero_pedido = 13;
+        $efectivo = 3000;
         $transaccion = 0;
-        $valor_venta = 500;
-        $nit_cliente = '222222222';
+        $valor_venta = 3000;
+        $nit_cliente = '222222222222';
         $id_usuario = 6;
-        $estado = 2;
+        $estado = 1;
         $propina = 0;
         $descuento = 0;
-        $tipo_pago = 1;  */
+        $tipo_pago = 1; */
 
         // var_dump($this->request->getPost()); exit();
 
@@ -67,7 +68,9 @@ class CerrarVenta extends BaseController
         $estado = $_POST['estado'];
         $propina = $_POST['propina_Format'];
         $descuento = 0;
-        $tipo_pago = $_POST['tipo_pago']; 
+        $tipo_pago = $_POST['tipo_pago'];
+
+
 
         $rol = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_usuario)->first();
         if ($rol['idtipo'] == 1 or $rol['idtipo'] == 0) {
@@ -84,7 +87,7 @@ class CerrarVenta extends BaseController
             $prefijo_factura = model('dianModel')->select('inicialestatica')->where('iddian', $id_dian['numeroconsecutivo'])->first();
             $serie = model('consecutivosModel')->select('numeroconsecutivo')->where('idconsecutivos', '14')->first();
 
-            if ($estado == 1    or $estado == 2 ) {
+            if ($estado == 1    or $estado == 2) {
                 $serie_update  = $serie['numeroconsecutivo'] + 1;
                 $incremento = model('consecutivosModel')->update_serie($serie_update);
                 $numeracion_factura = $prefijo_factura['inicialestatica'] . "-" . $numero_facturas['numeroconsecutivo'];
@@ -414,7 +417,7 @@ class CerrarVenta extends BaseController
                     $mensaje = "";
                 }
 
-                $mesas = model('mesasModel')->where('estado',0)->orderBy('id', 'ASC')->findAll();
+                $mesas = model('mesasModel')->where('estado', 0)->orderBy('id', 'ASC')->findAll();
 
                 $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido);
                 $valor_pedido = "";

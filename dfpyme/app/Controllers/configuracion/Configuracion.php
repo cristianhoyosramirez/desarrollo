@@ -677,8 +677,10 @@ class Configuracion extends BaseController
     function productos_favoritos()
     {
 
-
-        return view('configuracion/favoritos');
+        $favoritos=model('configuracionPedidoModel')->select('producto_favoroitos')->first();
+        return view('configuracion/favoritos',[
+           'favorito' =>$favoritos['producto_favoroitos']
+        ]);
     }
 
     function encabezado()
@@ -709,6 +711,21 @@ class Configuracion extends BaseController
     {
         $pie = $this->request->getPost('valor');
         $actualizar = model('configuracionPedidoModel')->set('pie_factura', $pie)->update();
+
+        if ($actualizar) {
+            $returnData = array(
+                "resultado" => 1, //Falta plata  
+            );
+            echo  json_encode($returnData);
+        }
+    }
+
+    function actualizar_favorito()
+    {
+        $valor = $this->request->getPost('valor');
+
+        $actualizar = model('configuracionPedidoModel')->set('producto_favoroitos', $valor)->update();
+
 
         if ($actualizar) {
             $returnData = array(

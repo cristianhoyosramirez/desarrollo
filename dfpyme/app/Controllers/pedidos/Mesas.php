@@ -237,7 +237,7 @@ class Mesas extends BaseController
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                 "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
                 "id" => $this->request->getPost('id_input'),
-                "estado"=>$estado_mesa['estado']
+                "estado" => $estado_mesa['estado']
 
             );
             echo  json_encode($returnData);
@@ -300,7 +300,7 @@ class Mesas extends BaseController
                         "productos_pedido" => $productos_del_pedido,
                         "total_pedido" =>  "$" . number_format($total['valor_total'], 0, ',', '.'),
                         "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                        "estado"=>$estado_mesa['estado']
+                        "estado" => $estado_mesa['estado']
 
                     );
                     echo  json_encode($returnData);
@@ -393,7 +393,7 @@ class Mesas extends BaseController
                     ]),
                     "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                     "id" => $this->request->getPost('id_input'),
-                    "estado"=>$estado_mesa['estado']
+                    "estado" => $estado_mesa['estado']
 
                 );
                 echo  json_encode($returnData);
@@ -449,7 +449,7 @@ class Mesas extends BaseController
 
         $tiene_pedido = model('pedidoModel')->pedido_mesa($id_mesa);
         $numero_pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
-        $estado_mesa=model('mesasModel')->select('estado')->where('id',$id_mesa)->first();
+        $estado_mesa = model('mesasModel')->select('estado')->where('id', $id_mesa)->first();
 
 
         if (empty($tiene_pedido)) {
@@ -515,7 +515,7 @@ class Mesas extends BaseController
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                 "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
                 "id" => $ultimo_id_producto[0]['id'],
-                "estado"=>$estado_mesa['estado']
+                "estado" => $estado_mesa['estado']
 
             );
             echo  json_encode($returnData);

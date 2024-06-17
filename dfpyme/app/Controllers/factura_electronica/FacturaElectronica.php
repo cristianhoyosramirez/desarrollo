@@ -294,6 +294,7 @@ class FacturaElectronica extends BaseController
                         'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
                         'ico' => 0,
                         'iva' => 0,
+                        'id_estado' => 8,
                         'valor_ico' => 0,
                         'valor_iva' => 0,
                         'aplica_ico' => 'false'

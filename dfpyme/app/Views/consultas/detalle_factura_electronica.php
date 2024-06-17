@@ -22,7 +22,7 @@
 
                 <td><?php echo $detalle['descripcion'] ?></td>
                 <td><?php echo "$ " . number_format($detalle['precio_unitario'], 0, ',', '.') ?></td>
-                <td><?php echo "$ " . number_format($detalle['total'] , 0, ',', '.') ?></td>
+                <td><?php echo "$ " . number_format($detalle['precio_unitario']*$detalle['cantidad'], 0, ',', '.') ?></td>
             </tr>
         <?php } ?>
     </tbody>
