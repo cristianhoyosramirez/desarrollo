@@ -31,7 +31,7 @@ function limpiar_todo() {
     $('#efectivo').val(0);
     $('#propina_pesos').val(0);
     $('#transaccion').val('');
-    $("#documento")[0].selectedIndex = 0;
+    //$("#documento")[0].selectedIndex = 0;
     $('#pago').html('Valor pago: 0');
     $('#cambio').html('Cambio: 0');
     $('#mesa_pedido').html('');

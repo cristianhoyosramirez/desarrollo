@@ -430,6 +430,7 @@ class CerrarVenta extends BaseController
                 }
                 $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
 
+
                 if ($tipo_pago == 0) {
                     $returnData = array(
                         "id_factura" => $factura_venta,
@@ -449,7 +450,8 @@ class CerrarVenta extends BaseController
                         "valor_pedio" => "$ " . number_format($valor_pedido, 0, ",", "."),
                         "nombre_mesa" => $nombre_mesa['nombre'],
                         "pedido" => $pedido['id'],
-                        "tipo_pago" => $tipo_pago
+                        "tipo_pago" => $tipo_pago,
+                        "documentos" => view('pedidos/documento')
 
 
                     );
@@ -470,7 +472,8 @@ class CerrarVenta extends BaseController
                         "mesas" => view('pedidos/todas_las_mesas_lista', [
                             "mesas" => $mesas,
                         ]),
-                        "tipo_pago" => $tipo_pago
+                        "tipo_pago" => $tipo_pago,
+                        "documentos" => view('pedidos/documento')
                     );
 
                     echo  json_encode($returnData);

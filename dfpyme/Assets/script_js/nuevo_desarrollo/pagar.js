@@ -1,7 +1,7 @@
 
 function pagar() {
-   
-    
+
+
     let requiere_factura_electronica = document.getElementById("requiere_factura_electronica").value; // Determinar si se requiere factura electronica o no  
     let estado = document.getElementById("documento").value; // Tipo de documento 
 
@@ -22,7 +22,7 @@ function pagar() {
     let pago_total = parseInt(efectivo) + parseInt(transaccion);
     let tipo_pago = document.getElementById("tipo_pago").value; // Tipo de pago 1 = pago completo; 2 pago parcial
 
-    
+
 
 
     let valor_venta = "";
@@ -77,10 +77,10 @@ function pagar() {
             let button = document.querySelector("#btn_pagar");
             button.disabled = true; // Deshabilitar el botón de pagar
 
-            
+
 
             if (pago_total >= parseInt(valor_venta)) {
-                
+
                 $.ajax({
                     data: {
                         id_mesa,
@@ -108,6 +108,7 @@ function pagar() {
                             $('#propina_pesos_final').val(0);
                             $('#total_propina').val(0);
                             $('#tipo_pago').val(1);
+                            $('#documento').html(resultado.documentos);
 
                             if (resultado.valor_pedio == '$ 0') {
                                 $('#mesa_pedido').html('');

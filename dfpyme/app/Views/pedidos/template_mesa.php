@@ -266,7 +266,8 @@
                                 $('#id_mesa_pedido').val(resultado.id_mesa)
                                 $("#producto").autocomplete("close");
 
-                                $('#input' + resultado.id).select()
+                                //$('#input' + resultado.id).select()
+                                $('#producto').focus();
 
                                 /*  if (resultado.estado == 1) {
                                      $('#mesa_pedido').html('Ventas de mostrador ')
@@ -320,7 +321,9 @@
 
                                         if (resultado.estado == 1) {
                                             $('#mesa_pedido').html('Ventas de mostrador ')
-                                            $('#input' + resultado.id).select()
+                                            //$('#input' + resultado.id).select()
+                                            $('#producto').focus();
+
                                         }
                                     }
                                 },

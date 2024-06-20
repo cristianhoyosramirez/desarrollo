@@ -518,7 +518,7 @@ class impresion
 
 
 
-            $printer->text("Cant. " . $productos['cantidad'] . "      " . "$" . number_format($productos['neto'], 0, ',', '.') . "                   " . "$" . number_format($productos['total'], 0, ',', '.') . " " .  $productos['valor_ico'] . "%" . "\n");
+            $printer->text("Cant. " . $productos['cantidad'] . "      " . "$" . number_format($productos['neto'], 0, ',', '.') . "               " . "$" . number_format($productos['total'], 0, ',', '.') . " " .  $impuesto . "%" . "\n");
             if (!empty($productos['nota_producto'])) {
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("NOTAS:\n");
