@@ -232,19 +232,25 @@
                 console.log("Autocompletado ejecutado");
             };
             let url = document.getElementById("url").value;
-            let id_mesa = document.getElementById("id_mesa_pedido").value;
+
             let id_usuario = document.getElementById("id_usuario").value;
             let mesero = document.getElementById("mesero").value;
 
-            
+
+
             $('#producto').on('keypress', function(e) {
                 if (e.which === 13) { // Si se pulsa Enter
                     e.preventDefault();
 
+                    let id_mesa = document.getElementById("id_mesa_pedido").value;
                     var codigo = document.getElementById("producto").value;
+
                     $.ajax({
                         data: {
-                            codigo,id_mesa,id_usuario,mesero
+                            codigo,
+                            id_mesa,
+                            id_usuario,
+                            mesero
                         },
                         url: url + "/" + "pre_factura/buscar_por_codigo",
                         type: "POST",
@@ -255,14 +261,17 @@
                                 $('#producto').val('');
                                 $('#mesa_productos').html(resultado.productos_pedido)
                                 $('#valor_pedido').html(resultado.total_pedido)
+                                $('#mesa_pedido').html(resultado.nombre_mesa)
                                 $('#subtotal_pedido').val(resultado.total_pedido)
                                 $('#id_mesa_pedido').val(resultado.id_mesa)
                                 $("#producto").autocomplete("close");
 
-                                if (resultado.estado == 1) {
-                                    $('#mesa_pedido').html('Ventas de mostrador ')
-                                    $('#input' + resultado.id).select()
-                                }
+                                $('#input' + resultado.id).select()
+
+                                /*  if (resultado.estado == 1) {
+                                     $('#mesa_pedido').html('Ventas de mostrador ')
+                                     $('#input' + resultado.id).select()
+                                 } */
                             }
                         },
                     });
@@ -370,6 +379,7 @@
                         $('#valor_total_a_pagar').val(resultado.total)
                         $('#subtotal_pedido').val(resultado.sub_total)
                         $('#propina_del_pedido').val(resultado.propina)
+                        $('#mesa_pedido').html(resultado.nombre_mesa)
 
 
                     }
@@ -381,7 +391,7 @@
     <script>
         function cambiar_valor_precio(id_producto) {
 
-            
+
             var id_producto_pedido = id_producto;
 
 
@@ -411,7 +421,7 @@
                 element.value = format(value);
             });
 
- 
+
         }
     </script>
     <script>
@@ -579,6 +589,14 @@
             let id_usuario = document.getElementById("id_usuario").value;
             let mesero = document.getElementById("mesero").value;
             let cantidad = document.getElementById(id_input).value;
+
+            if (cantidad === undefined || isNaN(cantidad) || cantidad === "") {
+                cantidad = 1;
+            } else {
+                cantidad = Number(cantidad);
+            }
+
+
 
             //let cantidad = 1;
 

@@ -427,6 +427,9 @@ class prefacturaController extends BaseController
             $id_usuario = $this->request->getPost('id_usuario');
         }
 
+
+        $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
+
         //$id_usuario = 6;
 
 
@@ -504,6 +507,8 @@ class prefacturaController extends BaseController
             // $ultimo_id_producto = model('productoPedidoModel')->insertID;
             $ultimo_id_producto = model('productoPedidoModel')->selectMax('id')->find();
 
+
+
             $returnData = array(
                 "resultado" => 1,
                 "id_mesa" => $id_mesa,
@@ -514,7 +519,8 @@ class prefacturaController extends BaseController
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                 "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
                 "id" => $ultimo_id_producto[0]['id'],
-                "estado" => $estado_mesa['estado']
+                "estado" => $estado_mesa['estado'],
+                'nombre_mesa'=>$nombre_mesa['nombre']
 
             );
             echo  json_encode($returnData);
@@ -574,7 +580,8 @@ class prefacturaController extends BaseController
                         "productos_pedido" => $productos_del_pedido,
                         "total_pedido" =>  "$" . number_format($total['valor_total'], 0, ',', '.'),
                         "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                        "id" => $ultimo_id_producto
+                        "id" => $ultimo_id_producto,
+                        'nombre_mesa'=>$nombre_mesa['nombre']
 
 
 
@@ -617,7 +624,8 @@ class prefacturaController extends BaseController
                         "numero_pedido" => $numero_pedido['id'],
                         "id_mesa" => $id_mesa,
                         "valor_total" => $total['valor_total'],
-                        "id" => $ultimo_id_producto
+                        "id" => $ultimo_id_producto,
+                        'nombre_mesa'=>$nombre_mesa['nombre']
                     );
                     echo  json_encode($returnData);
                 }
@@ -671,7 +679,8 @@ class prefacturaController extends BaseController
                     ]),
                     "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                     //"cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos']
-                    "id" => $ultimo_id_producto
+                    "id" => $ultimo_id_producto,
+                    'nombre_mesa'=>$nombre_mesa['nombre']
                 );
                 echo  json_encode($returnData);
             }

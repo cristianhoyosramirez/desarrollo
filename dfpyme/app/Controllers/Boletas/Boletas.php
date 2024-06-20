@@ -1266,7 +1266,7 @@ class Boletas extends BaseController
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa['id'])->first();
         $valor_pedido = model('pedidoModel')->select('valor_total')->where('fk_mesa', $id_mesa['id'])->first();
         $propina = model('pedidoModel')->select('propina')->where('fk_mesa', $id_mesa['id'])->first();
-
+        $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa['id'])->first();
 
 
 
@@ -1282,6 +1282,7 @@ class Boletas extends BaseController
                 'sub_total' => number_format($valor_pedido['valor_total'] - $propina['propina'], 0, ",", "."),
                 'total' => "$ " . number_format($valor_pedido['valor_total'] + $propina['propina'], 0, ",", "."),
                 'propina' => "$ " . number_format($propina['propina'], 0, ",", "."),
+                'nombre_mesa'=>$nombre_mesa['nombre']
             );
 
             echo  json_encode($returnData);

@@ -220,8 +220,6 @@ Bienvenido DFpyme
                 <?php
                 $id_mesa = model('mesasModel')->select('id')->where('estado', 1)->first();
                 $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa['id'])->first();
-
-
                 ?>
 
                 <!--Pedido-->
@@ -250,7 +248,7 @@ Bienvenido DFpyme
                                                 <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
                                                     <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Mesero </p>
                                                 <?php endif ?>
-                                                <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3 ) : ?>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3) : ?>
                                                     <p id="nombre_mesero" class="cursor-pointer text-primary" onclick="cambiar_mesero()" title="Cambiar de mesero " data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-placement="bottom">Vendedor </p>
                                                 <?php endif ?>
                                             </td>

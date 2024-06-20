@@ -1,6 +1,7 @@
 
 function pagar() {
-
+   
+    
     let requiere_factura_electronica = document.getElementById("requiere_factura_electronica").value; // Determinar si se requiere factura electronica o no  
     let estado = document.getElementById("documento").value; // Tipo de documento 
 
@@ -21,12 +22,15 @@ function pagar() {
     let pago_total = parseInt(efectivo) + parseInt(transaccion);
     let tipo_pago = document.getElementById("tipo_pago").value; // Tipo de pago 1 = pago completo; 2 pago parcial
 
+    
+
 
     let valor_venta = "";
 
     if (tipo_pago == 1) {
         //var propina = document.getElementById("propina_del_pedido").value;
         var propina = document.getElementById("total_propina").value;
+        propina = propina.replace(/[\$,]/g, '');
         let val_venta = document.getElementById("valor_total_a_pagar").value; // El valor de la venta 
         valor_venta = parseInt(val_venta)
 
@@ -73,10 +77,10 @@ function pagar() {
             let button = document.querySelector("#btn_pagar");
             button.disabled = true; // Deshabilitar el botón de pagar
 
-
+            
 
             if (pago_total >= parseInt(valor_venta)) {
-
+                
                 $.ajax({
                     data: {
                         id_mesa,
