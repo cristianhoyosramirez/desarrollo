@@ -293,10 +293,10 @@
                         select: function(event, ui) {
 
 
-                            /*   let url = document.getElementById("url").value;
-                              let id_mesa = document.getElementById("id_mesa_pedido").value;
-                              let id_usuario = document.getElementById("id_usuario").value;
-                              let mesero = document.getElementById("mesero").value; */
+                            let url = document.getElementById("url").value;
+                            let id_mesa = document.getElementById("id_mesa_pedido").value;
+                            let id_usuario = document.getElementById("id_usuario").value;
+                            let mesero = document.getElementById("mesero").value;
                             let id_producto = ui.item.id_producto;
 
                             $.ajax({

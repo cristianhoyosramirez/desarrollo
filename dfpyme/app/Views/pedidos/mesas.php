@@ -160,6 +160,27 @@ Bienvenido DFpyme
                 <?php endif ?>
                 <?php $alturaCalc = "32rem + 10px"; // Calcula la altura 
                 ?>
+                <?php $venta_multiple = model('configuracionPedidoModel')->select('requiere_mesa')->first(); ?>
+
+                <?php if (($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3) || $venta_multiple['requiere_mesa'] == "f") : ?>
+                    <br>
+                    <div class="container">
+                        <div class="card">
+                            <div id="lista_categorias">
+                                <ul class="horizontal-list">
+                                    <?php foreach ($categorias as $detalle) : ?>
+                                        <li>
+                                            <button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php echo $detalle['codigocategoria'] ?>" onclick="productos_categoria(<?php echo $detalle['codigocategoria'] ?>)">
+                                                <?php echo $detalle['nombrecategoria'] ?>
+                                            </button>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
 
                 <!--Productos-->
                 <div class="col-md-3" id="pedido" style="display: block">

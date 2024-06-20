@@ -406,3 +406,21 @@ CRITICAL - 2024-06-19 15:23:11 --> Unsupported operand types: string * string
 #2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
 #3 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
 #4 {main}
+CRITICAL - 2024-06-19 21:25:39 --> syntax error, unexpected token "||"
+#0 C:\xampp\htdocs\dfpyme\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#1 C:\xampp\htdocs\dfpyme\system\Common.php(1089): CodeIgniter\View\View->render('pedidos/mesas', Array, true)
+#2 C:\xampp\htdocs\dfpyme\app\Controllers\pedidos\Mesas.php(33): view('pedidos/mesas', Array)
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\pedidos\Mesas->index()
+#4 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\pedidos\Mesas))
+#5 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2024-06-19 21:31:43 --> syntax error, unexpected token ";"
+#0 C:\xampp\htdocs\dfpyme\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#1 C:\xampp\htdocs\dfpyme\system\Common.php(1089): CodeIgniter\View\View->render('pedidos/mesas', Array, true)
+#2 C:\xampp\htdocs\dfpyme\app\Controllers\pedidos\Mesas.php(33): view('pedidos/mesas', Array)
+#3 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\pedidos\Mesas->index()
+#4 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\pedidos\Mesas))
+#5 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
