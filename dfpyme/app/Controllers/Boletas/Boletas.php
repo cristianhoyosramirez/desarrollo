@@ -626,18 +626,28 @@ class Boletas extends BaseController
         if ($resultado == 1) {
             $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
             $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['numero_de_pedido'])->first();
+            $id_mesa = model('pedidoModel')->select('fk_mesa')->where('id', $numero_pedido['numero_de_pedido'])->first();
+            $estado_mesa = model('mesasModel')->select('estado')->where('id', $id_mesa['fk_mesa'])->first();
             $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido['numero_de_pedido'])->first();
             $productos_del_pedido = view('pedidos/productos_pedido', [
                 "productos" => $productos_pedido,
                 "pedido" => $numero_pedido['numero_de_pedido']
             ]);
 
+
+
+            $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
+
             $returnData = array(
                 "resultado" => 1,  // Se actulizo el registro 
-                "productos_pedido" => $productos_del_pedido,
+                //"productos_pedido" => $productos_del_pedido,
                 "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
                 "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
-                "numero_pedido" => $numero_pedido['numero_de_pedido']
+                "numero_pedido" => $numero_pedido['numero_de_pedido'],
+                "estado_mesa" => $estado_mesa['estado'],
+                "productos_pedido" => view('pedidos/productos_pedido', [
+                    "productos" => $productos_pedido,
+                ]),
             );
             echo  json_encode($returnData);
         }
@@ -1282,7 +1292,8 @@ class Boletas extends BaseController
                 'sub_total' => number_format($valor_pedido['valor_total'] - $propina['propina'], 0, ",", "."),
                 'total' => "$ " . number_format($valor_pedido['valor_total'] + $propina['propina'], 0, ",", "."),
                 'propina' => "$ " . number_format($propina['propina'], 0, ",", "."),
-                'nombre_mesa'=>$nombre_mesa['nombre']
+                'nombre_mesa' => $nombre_mesa['nombre'],
+                "estado" => 1
             );
 
             echo  json_encode($returnData);
@@ -1318,12 +1329,19 @@ class Boletas extends BaseController
             $actualizar = $model->where('id',  $numero_pedido['numero_de_pedido']);
             $actualizar = $model->update();
 
+
+
+            $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
+
             $returnData = array(
                 "resultado" => 1, //Falta plata 
                 "precio_producto" => number_format($precio, 0, ',', '.'),
                 "total_pedido" => number_format($total_pedido[0]['valor_total'], 0, ',', '.'),
                 "id" => $id_producto,
-                "total_producto" => number_format($total_producto, 0, ',', '.')
+                "total_producto" => number_format($total_producto, 0, ',', '.'),
+                "productos_pedido" => view('pedidos/productos_pedido', [
+                    "productos" => $productos_pedido,
+                ]),
             );
             echo  json_encode($returnData);
         }

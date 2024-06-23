@@ -833,8 +833,11 @@ class Mesas extends BaseController
     {
 
 
+
         $id_tabla_producto = $_POST['id_tabla_producto'];
+        //$id_tabla_producto = 32;
         $id_usuario = $_POST['id_usuario'];
+        //$id_usuario = 6;
 
 
         $tipo_usuario = model('usuariosModel')->select('idtipo')->where('idusuario_sistema', $id_usuario)->first();
@@ -1018,6 +1021,78 @@ class Mesas extends BaseController
             }
 
 
+
+
+            if ($tipo_usuario['idtipo'] == 2) {
+
+                $returnData = array(
+                    "resultado" => 0,  // Se actulizo el registro 
+
+                );
+                echo  json_encode($returnData);
+            }
+        }
+        if ($cantidad_producto['cantidad_producto'] == "") {
+
+            if ($tipo_usuario['idtipo'] == 0) {
+                if ($tipo_usuario['idtipo'] == 0 or $tipo_usuario['idtipo'] == 1) {
+                    $item = model('productoPedidoModel')->where('id', $id_tabla_producto)->first();
+
+                    $producto = [
+                        'codigointernoproducto' => $item['codigointernoproducto'],
+                        'cantidad' => $item['cantidad_producto'],
+                        'fecha_eliminacion' => date('Y-m-d'),
+                        'hora_eliminacion' => date('H:i:s'),
+                        'usuario_eliminacion' => $id_usuario,
+                        'pedido' => $item['numero_de_pedido']
+                    ];
+
+                    $insert = model('productosBorradosModel')->insert($producto);
+
+                    $numero_pedido = model('productoPedidoModel')->select('numero_de_pedido')->where('id', $id_tabla_producto)->first();
+                    $borrar_producto_pedido = model('productoPedidoModel')->where('id', $id_tabla_producto);
+                    $borrar_producto_pedido->delete();
+
+                    if ($borrar_producto_pedido) {
+
+                        $fk_mesa = model('pedidoModel')->select('fk_mesa')->where('id', $numero_pedido['numero_de_pedido'])->first();
+                        $valor_total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
+                        $cantidad_productos = model('productoPedidoModel')->selectSum('cantidad_producto')->where('numero_de_pedido', $numero_pedido['numero_de_pedido'])->find();
+
+
+
+                        $actualizar_total_pedido = [
+                            'valor_total' => $valor_total_pedido[0]['valor_total'],
+                            'cantidad_de_productos' => $cantidad_productos[0]['cantidad_producto']
+                        ];
+                        $model = model('pedidoModel');
+                        $actualizar = $model->set($actualizar_total_pedido);
+                        $actualizar = $model->where('id', $numero_pedido['numero_de_pedido']);
+                        $actualizar = $model->update();
+
+                        $productos_pedido = model('productoPedidoModel')->producto_pedido($numero_pedido['numero_de_pedido']);
+                        $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['numero_de_pedido'])->first();
+                        $cantidad_de_productos = model('pedidoModel')->select('cantidad_de_productos')->where('id', $numero_pedido['numero_de_pedido'])->first();
+                        $productos_del_pedido = view('pedidos/productos_pedido', [
+                            "productos" => $productos_pedido,
+                            "pedido" => $numero_pedido['numero_de_pedido']
+                        ]);
+
+                        $returnData = array(
+                            "resultado" => 1,  // Se actulizo el registro 
+                            "productos" => $productos_del_pedido,
+                            "total_pedido" =>  "$" . number_format($total_pedido['valor_total'], 0, ',', '.'),
+                            "cantidad_de_pruductos" => $cantidad_de_productos['cantidad_de_productos'],
+                            "mensaje" => "Eliminación correcta"
+                        );
+                        echo  json_encode($returnData);
+                    }
+                }
+            }
+
+
+
+
             if ($tipo_usuario['idtipo'] == 2) {
 
                 $returnData = array(
@@ -1159,7 +1234,7 @@ class Mesas extends BaseController
             $model = model('pedidoModel');
             $borrar = $model->where('id', $numero_pedido);
             $borrar = $model->delete();
-            $mesas = model('mesasModel')->orderBy('id', 'ASC')->findAll();
+            $mesas = model('mesasModel')->where('estado',0)->orderBy('id', 'ASC')->findAll();
 
             if ($borrarPedido && $borrar) {
 

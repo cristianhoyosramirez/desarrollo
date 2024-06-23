@@ -87,6 +87,7 @@ Bienvenido DFpyme
         <input type="hidden" value="<?php echo $requiere_mesero ?>" id="requiere_mesero" name="requiere_mesero">
         <input type="hidden" value="<?php echo $user_session->tipo ?>" id="tipo_usuario" name="tipo_usuario">
         <input type="hidden" id="mesero" name="mesero">
+        <input type="hidden" id="estado_mesa" name="estado_mesa">
         <input type="hidden" id="tipo_pedido" name="tipo_pedido" value="computador">
         <div class="container-fluid">
             <div class="row row-deck row-cards">
@@ -160,7 +161,7 @@ Bienvenido DFpyme
                 <?php endif ?>
                 <?php $alturaCalc = "20rem + 10px"; // Calcula la altura 
                 ?>
-                <?php $venta_multiple = model('configuracionPedidoModel')->select('requiere_mesa')->first(); ?>
+                <?php # $venta_multiple = model('configuracionPedidoModel')->select('requiere_mesa')->first(); ?>
 
                 <!--   <?php #if (($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3) || $venta_multiple['requiere_mesa'] == "f") : 
                         ?>
@@ -172,7 +173,7 @@ Bienvenido DFpyme
                                     <?php #foreach ($categorias as $detalle) : 
                                     ?>
                                         <li>
-                                            <button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php echo $detalle['codigocategoria'] ?>" onclick="productos_categoria(<?php echo $detalle['codigocategoria'] ?>)">
+                                            <button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php #echo $detalle['codigocategoria'] ?>" onclick="productos_categoria(<?php #echo $detalle['codigocategoria'] ?>)">
                                                 <?php #echo $detalle['nombrecategoria'] 
                                                 ?>
                                             </button>
@@ -252,21 +253,24 @@ Bienvenido DFpyme
                 <div class="col-md-6" id="productos" style="display: block">
                     <input type="hidden" id="id_mesa_pedido">
                     <div class="card" style="height: calc(<?php echo $alturaCalc; ?>)">
-                        <div class="card-header border-1" style="margin-bottom: -10px; padding-bottom: 0;">
-                            <div class="card-title">
+                        <div class="card-header  " style="margin-bottom: -10px; padding-bottom: 0;" id="myCardHeader">
+                            <div class="card-title ">
                                 <div class="row align-items-start">
+
                                     <table>
                                         <tr>
                                             <td tyle="width: 25%;">
-                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1 || $id_tipo['fk_tipo_empresa'] == 3) : ?>
                                                     <p id="mesa_pedido" class="text-warning "> Mesa:</p>
+                                                    <img style ="display:none" id="img_ventas_directas" src="<?php echo base_url(); ?>/Assets/img/caja-registradora.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
                                                 <?php endif ?>
                                                 <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
                                                     <p id="mesa_pedido" class="text-warning "> Venta:</p>
+                                                    <img style ="display:none" id="img_ventas_directas" src="<?php echo base_url(); ?>/Assets/img/caja-registradora.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
                                                 <?php endif ?>
                                             </td>
                                             <td yle="width: 25%;">
-                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1) : ?>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1 || $id_tipo['fk_tipo_empresa'] == 2 ) : ?>
                                                     <p id="pedido_mesa">Pedio: </p>
                                                 <?php endif ?>
                                             </td>

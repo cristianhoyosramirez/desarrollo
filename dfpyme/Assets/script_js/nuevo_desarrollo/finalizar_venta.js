@@ -16,6 +16,9 @@ function finalizar_venta() {
             success: function (resultado) {
                 var resultado = JSON.parse(resultado);
                 if (resultado.resultado == 1) {
+
+                    
+
                     $('#finalizar_venta').on('shown.bs.modal', function () {
                         $('#efectivo').focus();
                     })

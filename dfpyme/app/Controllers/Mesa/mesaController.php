@@ -122,7 +122,7 @@ class mesaController extends BaseController
         $id_mesa = $_POST['id_mesa'];
         $nombre_mesa = model('mesasModel')->select('nombre')->where('id', $id_mesa)->first();
         $tiene_pedido = model('pedidoModel')->select('fk_mesa')->where('fk_mesa', $id_mesa)->first();
-        $mesas = model('mesasModel')->select('*')->orderBy('id', 'asc')->find();
+        $mesas = model('mesasModel')->select('*')->where('estado',0)->orderBy('id', 'asc')->find();
         $cambiar_mesa = view('cambiar_de_mesa/cambiar_de_mesa', [
             'mesas' => $mesas,
             'nombre_mesa' => $nombre_mesa['nombre'],

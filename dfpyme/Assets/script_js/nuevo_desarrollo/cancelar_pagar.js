@@ -9,6 +9,7 @@ function cancelar_pagar() {
     $('#faltante').html('Faltante: 0')
     $('#cambio').html('Cambio: 0')
     $('#error_documento').html('')
+    $("#btn_pagar").prop("disabled", false);
 
     let id_mesa = document.getElementById("id_mesa_pedido").value;
     let url = document.getElementById("url").value;

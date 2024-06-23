@@ -1,7 +1,7 @@
 
 function pagar() {
 
-
+   
     let requiere_factura_electronica = document.getElementById("requiere_factura_electronica").value; // Determinar si se requiere factura electronica o no  
     let estado = document.getElementById("documento").value; // Tipo de documento 
 
@@ -137,7 +137,9 @@ function pagar() {
                                 mesas.style.display = "block";
                             }
                             //mesas.style.display = "block";
-
+                            
+                            header_pedido();
+   
                             Swal.fire({
                                 title: 'Resumen',
                                 showDenyButton: true,

@@ -65,7 +65,7 @@ class productoPedidoModel extends Model
 
     public function productos_pedido($numero_pedido)
     {
-        $datos =$this->db->query ("
+        $datos = $this->db->query("
         SELECT
              producto_pedido.id as id,
              producto.nombreproducto,
@@ -81,12 +81,11 @@ class productoPedidoModel extends Model
         INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
         where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto  order by id asc;
         ");
-    return $datos->getResultArray(); 
-       
+        return $datos->getResultArray();
     }
     public function productos_borrar($numero_pedido)
     {
-        $datos =$this->db->query ("
+        $datos = $this->db->query("
         SELECT
              producto_pedido.id as id,
              producto.nombreproducto,
@@ -102,12 +101,11 @@ class productoPedidoModel extends Model
         INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
         where numero_de_pedido='$numero_pedido' ;
         ");
-    return $datos->getResultArray(); 
-       
+        return $datos->getResultArray();
     }
-    public function productos_pedido_comanda($numero_pedido,$codigo_categoria)
+    public function productos_pedido_comanda($numero_pedido, $codigo_categoria)
     {
-        $datos =$this->db->query ("
+        $datos = $this->db->query("
         SELECT
              producto_pedido.id as id,
              producto.nombreproducto,
@@ -123,12 +121,11 @@ class productoPedidoModel extends Model
         INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
         where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto and codigo_categoria='$codigo_categoria' order by id asc;
         ");
-    return $datos->getResultArray(); 
-       
+        return $datos->getResultArray();
     }
     public function productos_pedido_comanda_todos($numero_pedido)
     {
-        $datos =$this->db->query ("
+        $datos = $this->db->query("
         SELECT
              producto_pedido.id as id,
              producto.nombreproducto,
@@ -144,11 +141,10 @@ class productoPedidoModel extends Model
         INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
         where numero_de_pedido='$numero_pedido'  and se_imprime_en_comanda='true' and  numero_productos_impresos_en_comanda < cantidad_producto  order by id asc;
         ");
-    return $datos->getResultArray(); 
-       
+        return $datos->getResultArray();
     }
 
-    public function reimprimir_comanda($numero_pedido,$codigo_categoria)
+    public function reimprimir_comanda($numero_pedido, $codigo_categoria)
     {
         $datos = $this->db->query("
         SELECT
@@ -189,7 +185,7 @@ class productoPedidoModel extends Model
         return $datos->getResultArray();
     }
 
-  
+
 
 
     public function productos_pedido_pos($numero_pedido, $id_categoria)
@@ -311,25 +307,16 @@ class productoPedidoModel extends Model
         return $datos;
     }
 
- /*    public function reimprimir_comanda($numero_pedido, $id_categoria)
+    public function validar_pedido($numero_pedido)
     {
         $datos = $this->db->query("
-        SELECT
-        producto_pedido.id,
-             producto.nombreproducto,
-             producto.valorventaproducto,
-             valor_total,
-             cantidad_producto,
-             nota_producto,
-             valor_unitario,
-             producto_pedido.codigointernoproducto
-        FROM
-             producto_pedido
-        INNER JOIN producto ON producto_pedido.codigointernoproducto = producto.codigointernoproducto
-        where numero_de_pedido='$numero_pedido' and codigo_categoria='$id_categoria' and se_imprime_en_comanda='true'   order by id asc;
+     SELECT COUNT(id) as total
+    FROM producto_pedido
+    WHERE cantidad_producto IS NULL
+    AND numero_de_pedido = $numero_pedido;
         ");
         return $datos->getResultArray();
-    } */
+    }
 
     public function detalle_pedido($numero_pedido)
     {
@@ -505,7 +492,7 @@ class productoPedidoModel extends Model
 
 
 
-    public function insertar($ultimo_id_pedido, $valor_unitario, $se_imprime_en_comanda, $codigo_categoria, $codigo_interno_producto,$cantidad)
+    public function insertar($ultimo_id_pedido, $valor_unitario, $se_imprime_en_comanda, $codigo_categoria, $codigo_interno_producto, $cantidad)
     {
 
         $data = [
@@ -515,7 +502,7 @@ class productoPedidoModel extends Model
             'valor_unitario' => $valor_unitario,
             'impresion_en_comanda' => false,
             'cantidad_entregada' => 0,
-            'valor_total' => $valor_unitario*$cantidad,
+            'valor_total' => $valor_unitario * $cantidad,
             'se_imprime_en_comanda' => $se_imprime_en_comanda,
             'codigo_categoria' => $codigo_categoria,
             'codigointernoproducto' => $codigo_interno_producto,

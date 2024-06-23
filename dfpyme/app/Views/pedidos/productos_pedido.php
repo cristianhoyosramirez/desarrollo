@@ -52,7 +52,8 @@
                         </a>
                     </div>
                     <input type="hidden" class="form-control" value="<?php echo $detalle['cantidad_producto'] ?>">
-                    <input type="number" class="form-control form-control-sm text-center custom-width" value="<?php echo $detalle['cantidad_producto'] ?>" onclick="detener_propagacion(event),abrir_modal_editar_cantidad(<?php echo $detalle['id_tabla_producto'] ?>)" onkeypress="return valideKey(event)" min="1" max="100">
+                    <!-- <input type="number" class="form-control form-control-sm text-center custom-width" value="<?php echo $detalle['cantidad_producto'] ?>" onclick="detener_propagacion(event),abrir_modal_editar_cantidad(<?php echo $detalle['id_tabla_producto'] ?>)" onkeypress="return valideKey(event)" min="1" max="100"> -->
+                    <input type="number" class="form-control form-control-sm text-center custom-width" value="<?php echo $detalle['cantidad_producto'] ?>" oninput="actualizacion_cantidades(this.value, <?php echo $detalle['id_tabla_producto'] ?>)" min="1" max="100" id="input_cantidad<?php echo $detalle['id_tabla_producto'] ?>" onclick="resaltar_cantidad(<?php echo $detalle['id_tabla_producto'] ?>)">
                     <div class="input-group-append">
                         <a href="#" class="btn bg-muted-lt btn-icon" onclick="actualizar_cantidades(event,'<?php echo $detalle['id_tabla_producto'] ?>')" title="Agregar producto">
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
@@ -188,7 +189,7 @@
                                 </svg>
                             </a>
                         </div>
-                        <input type="hidden" class="form-control" value="<?php echo $detalle['cantidad_producto'] ?>" id="cant_prod" required>
+                        <input type="hidden" class="form-control" value="<?php echo $detalle['cantidad_producto'] ?>" id="cant_prod<?php echo $detalle['id_tabla_producto'] ?>" required>
                         <input type="number" class="form-control form-control-sm text-center custom-width" value="<?php echo $detalle['cantidad_producto'] ?>" oninput="actualizacion_cantidades(this.value, <?php echo $detalle['id_tabla_producto'] ?>)" min="1" max="100" id="input_cantidad<?php echo $detalle['id_tabla_producto'] ?>" onclick="resaltar_cantidad(<?php echo $detalle['id_tabla_producto'] ?>)">
                         <!--                        <input type="number" class="form-control form-control-sm text-center custom-width" value="<?php echo $detalle['cantidad_producto'] ?>" onclick="detener_propagacion(event),abrir_modal_editar_cantidad(<?php echo $detalle['id_tabla_producto'] ?>)" onkeypress="return valideKey(event)" min="1" max="100">
  -->
@@ -274,7 +275,7 @@
 
 
 <script>
-    function precio_manual(precio, id) {
+    /* function precio_manual(precio, id) {
 
         let url = document.getElementById("url").value;
         let cantidad = document.getElementById("cant_prod").value;
@@ -297,6 +298,33 @@
                     $('#valor_pedido').html(resultado.total_pedido)
 
 
+                }
+            },
+        });
+    } */
+
+    function precio_manual(precio, id) {
+
+        let url = document.getElementById("url").value;
+        let cantidad = $('#input_cantidad'+id).val();
+        valor = precio.trim() === '' ? 0 : parseInt(precio.replace(/\./g, ''));
+
+        $.ajax({
+            data: {
+                precio: valor,
+                id,
+                cantidad
+            },
+            url: url + "/" + "eventos/editar_precio",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
+                if (resultado.resultado == 1) {
+                    // Update the total product price using the dynamic id
+                    $('#valor_total_producto' + resultado.id).html('$ ' + resultado.total_producto);
+
+                    // Update the total order price
+                    $('#valor_pedido').html(resultado.total_pedido);
                 }
             },
         });

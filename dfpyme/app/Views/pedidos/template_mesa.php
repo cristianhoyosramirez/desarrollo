@@ -224,6 +224,8 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/nueva_factura.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/cambio_precio.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/abrir_cajon.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/header_pedido.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/header_mesa.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -245,92 +247,104 @@
                     let id_mesa = document.getElementById("id_mesa_pedido").value;
                     var codigo = document.getElementById("producto").value;
 
-                    $.ajax({
-                        data: {
-                            codigo,
-                            id_mesa,
-                            id_usuario,
-                            mesero
-                        },
-                        url: url + "/" + "pre_factura/buscar_por_codigo",
-                        type: "POST",
-                        success: function(resultado) {
-                            var resultado = JSON.parse(resultado);
-                            if (resultado.resultado == 1) {
+                    if (id_mesa.trim() === "") {
+                        $('#error_producto').html('No hay venta seleccionada ')
+                    } else if (id_mesa.trim() !== "") {
 
-                                $('#producto').val('');
-                                $('#mesa_productos').html(resultado.productos_pedido)
-                                $('#valor_pedido').html(resultado.total_pedido)
-                                $('#mesa_pedido').html(resultado.nombre_mesa)
-                                $('#subtotal_pedido').val(resultado.total_pedido)
-                                $('#id_mesa_pedido').val(resultado.id_mesa)
-                                $("#producto").autocomplete("close");
+                        $.ajax({
+                            data: {
+                                codigo,
+                                id_mesa,
+                                id_usuario,
+                                mesero
+                            },
+                            url: url + "/" + "pre_factura/buscar_por_codigo",
+                            type: "POST",
+                            success: function(resultado) {
+                                var resultado = JSON.parse(resultado);
+                                if (resultado.resultado == 1) {
 
-                                //$('#input' + resultado.id).select()
-                                $('#producto').focus();
+                                    $('#producto').val('');
+                                    $('#mesa_productos').html(resultado.productos_pedido)
+                                    $('#valor_pedido').html(resultado.total_pedido)
+                                    $('#mesa_pedido').html(resultado.nombre_mesa)
+                                    $('#subtotal_pedido').val(resultado.total_pedido)
+                                    $('#id_mesa_pedido').val(resultado.id_mesa)
+                                    $('#estado_mesa').val(resultado.estado)
+                                    $("#producto").autocomplete("close");
 
-                                /*  if (resultado.estado == 1) {
-                                     $('#mesa_pedido').html('Ventas de mostrador ')
-                                     $('#input' + resultado.id).select()
-                                 } */
-                            }
-                        },
-                    });
-                } else {
-                    $("#producto").autocomplete({
-                        source: function(request, response) {
+                                    //$('#input' + resultado.id).select()
+                                    $('#producto').focus();
 
-                            $.ajax({
-                                type: "POST",
-                                url: url + "/" + "producto/pedido",
-                                data: request,
-                                success: response,
-                                dataType: "json",
-                            });
-                        },
-                    }, {
-                        minLength: 1,
-                    }, {
-                        select: function(event, ui) {
-
-
-                            let url = document.getElementById("url").value;
-                            let id_mesa = document.getElementById("id_mesa_pedido").value;
-                            let id_usuario = document.getElementById("id_usuario").value;
-                            let mesero = document.getElementById("mesero").value;
-                            let id_producto = ui.item.id_producto;
-
-                            $.ajax({
-                                data: {
-                                    id_producto,
-                                    id_mesa,
-                                    id_usuario,
-                                    mesero
-                                },
-                                url: url + "/" + "pedidos/agregar_producto",
-                                type: "POST",
-                                success: function(resultado) {
-                                    var resultado = JSON.parse(resultado);
-                                    if (resultado.resultado == 1) {
-
-                                        $('#producto').val('');
-                                        $('#mesa_productos').html(resultado.productos_pedido)
-                                        $('#valor_pedido').html(resultado.total_pedido)
-                                        $('#subtotal_pedido').val(resultado.total_pedido)
-                                        $('#id_mesa_pedido').val(resultado.id_mesa)
-
-                                        if (resultado.estado == 1) {
-                                            $('#mesa_pedido').html('Ventas de mostrador ')
-                                            //$('#input' + resultado.id).select()
-                                            $('#producto').focus();
-
-                                        }
+                                    if (resultado.estado == 1) {
+                                        header_mesa()
                                     }
-                                },
-                            });
-                            //}
-                        },
-                    });
+
+                                }
+                                if (resultado.resultado == 0) {
+                                    $('error_producto').html('No hay coincidencias')
+                                    $("#producto").autocomplete("close");
+
+                                }
+                            },
+                        });
+                    } else {
+                        $("#producto").autocomplete({
+                            source: function(request, response) {
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: url + "/" + "producto/pedido",
+                                    data: request,
+                                    success: response,
+                                    dataType: "json",
+                                });
+                            },
+                        }, {
+                            minLength: 1,
+                        }, {
+                            select: function(event, ui) {
+
+
+                                let url = document.getElementById("url").value;
+                                let id_mesa = document.getElementById("id_mesa_pedido").value;
+                                let id_usuario = document.getElementById("id_usuario").value;
+                                let mesero = document.getElementById("mesero").value;
+                                let id_producto = ui.item.id_producto;
+
+                                $.ajax({
+                                    data: {
+                                        id_producto,
+                                        id_mesa,
+                                        id_usuario,
+                                        mesero
+                                    },
+                                    url: url + "/" + "pedidos/agregar_producto",
+                                    type: "POST",
+                                    success: function(resultado) {
+                                        var resultado = JSON.parse(resultado);
+                                        if (resultado.resultado == 1) {
+
+                                            $('#producto').val('');
+                                            $('#mesa_productos').html(resultado.productos_pedido)
+                                            $('#valor_pedido').html(resultado.total_pedido)
+                                            $('#subtotal_pedido').val(resultado.total_pedido)
+                                            $('#id_mesa_pedido').val(resultado.id_mesa)
+
+                                            if (resultado.estado == 1) {
+                                                $('#mesa_pedido').html('Ventas de mostrador ')
+                                                //$('#input' + resultado.id).select()
+                                                $('#producto').focus();
+
+                                            }
+                                        }
+                                    },
+                                });
+                                //}
+                            },
+                        });
+                    }
+
                 }
             });
         });
@@ -338,34 +352,6 @@
 
 
 
-    <!--     <script>
-        function get_mesas_pedido() {
-            let url = document.getElementById("url").value;
-
-            $.ajax({
-                url: url + "/" + "eventos/get_mesas_pedido",
-                type: "GET",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-                    if (resultado.resultado == 1) {
-                        // Aquí puedes agregar lo que necesitas hacer si resultado.resultado es 1
-
-
-
-                        
-                    }
-                },
-            });
-        }
-
-        $(document).ready(function() {
-            // Ejecuta la función una vez al.HTML cargar la página
-            get_mesas_pedido();
-
-            // Luego, ejecuta la función cada 1000 ms (1 segundo)
-            setInterval(get_mesas_pedido, 1000);
-        });
-    </script> -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let url = document.getElementById("url").value;
@@ -382,7 +368,30 @@
                         $('#valor_total_a_pagar').val(resultado.total)
                         $('#subtotal_pedido').val(resultado.sub_total)
                         $('#propina_del_pedido').val(resultado.propina)
+                        $('#estado_mesa').val(resultado.estado)
                         $('#mesa_pedido').html(resultado.nombre_mesa)
+
+                        if (resultado.estado == 1) {
+                            const cardHeader = document.getElementById('myCardHeader');
+                            cardHeader.classList.add('border-1', 'bg-indigo-lt');
+                            const img = document.getElementById('img_ventas_directas');
+                            img.style.display = 'block';
+
+                            const mesa = document.getElementById('mesa_pedido');
+                            mesa.style.display = 'none';
+
+                            const pedido = document.getElementById('pedido_mesa');
+                            const mesero = document.getElementById('nombre_mesero');
+                            if (pedido) {
+                                pedido.textContent = 'VENTAS DE MOSTRADOR';
+                            }
+
+                            if (mesero) {
+                                mesero.style.display = 'none';
+
+                            }
+
+                        }
 
 
                     }
@@ -483,6 +492,8 @@
                         $('#total_producto' + resultado.id).html(resultado.total_producto);
                         //$('#input' + resultado.id).val(resultado.precio_producto);
                         $('#valor_pedido').html(resultado.total_pedido);
+                        $('#mesa_productos').html(resultado.productos_pedido);
+
 
 
                     }
@@ -961,6 +972,14 @@
                         $('#val_pedido').html(resultado.total_pedido)
                         $('#pedido_mesa').html('Pedido: ' + resultado.numero_pedido)
                         $('#subtotal_pedido').val(resultado.total_pedido)
+                        $('#mesa_productos').html(resultado.productos_pedido)
+
+                        if (resultado.estado_mesa == 0) {
+                            header_pedido();
+                        }
+                        if (resultado.estado_mesa == 1) {
+                            header_mesa();
+                        }
 
                     }
 

@@ -37,6 +37,8 @@ function limpiar_todo() {
     $('#mesa_pedido').html('');
     $('#valor_pago_error').html('');
     $('#sub_total_pedido').html('Sub total: 0');
+    $('#error_producto').html('')
+    $('#producto').val('')
 
     $('#efectivo').select()
 
