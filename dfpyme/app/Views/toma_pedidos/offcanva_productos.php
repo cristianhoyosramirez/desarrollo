@@ -113,7 +113,7 @@
                                                                         <line x1="5" y1="12" x2="19" y2="12" />
                                                                     </svg>
                                                                 </button>
-                                                                <input type="number" class="form-control form-control-sm text-center cantidad-input" value="1" id="<?php echo $valor['id']; ?>" onclick="resaltarInput(this)" inputmode="numeric">
+                                                                <input type="number" class="form-control form-control-sm text-center cantidad-input" value="1" id="<?php echo $valor['id']; ?>"  inputmode="numeric">
                                                                 <button class="btn bg-muted-lt btn-icon" onclick="incrementarCantidad(event,<?php echo $valor['id'] ?>)">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />

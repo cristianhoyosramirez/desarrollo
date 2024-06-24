@@ -1,11 +1,16 @@
 function pedido(id_mesa, nombre_mesa) {
 
-    
+
 
     const cardHeader = document.getElementById('myCardHeader');
-    cardHeader.classList.remove('border-1', 'bg-indigo-lt');
+    if (cardHeader) {
+        cardHeader.classList.remove('border-1', 'bg-indigo-lt');
+    }
     const img = document.getElementById('img_ventas_directas');
-    img.style.display = 'none';
+
+    if (img) {
+        img.style.display = 'none';
+    }
 
     const mesa = document.getElementById('mesa_pedido');
     mesa.style.display = 'block';

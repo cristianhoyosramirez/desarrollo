@@ -239,18 +239,15 @@
             let mesero = document.getElementById("mesero").value;
 
 
-
             $('#producto').on('keypress', function(e) {
                 if (e.which === 13) { // Si se pulsa Enter
                     e.preventDefault();
 
                     let id_mesa = document.getElementById("id_mesa_pedido").value;
                     var codigo = document.getElementById("producto").value;
-
                     if (id_mesa.trim() === "") {
                         $('#error_producto').html('No hay venta seleccionada ')
                     } else if (id_mesa.trim() !== "") {
-
                         $.ajax({
                             data: {
                                 codigo,
@@ -288,7 +285,12 @@
                                 }
                             },
                         });
-                    } else {
+                    }
+                } else {
+                    let id_mesa = document.getElementById("id_mesa_pedido").value;
+                    if (id_mesa.trim() === "") {
+                        $('#error_producto').html('No hay venta seleccionada ')
+                    } else if (id_mesa.trim() !== "") {
                         $("#producto").autocomplete({
                             source: function(request, response) {
 
@@ -344,9 +346,9 @@
                             },
                         });
                     }
-
                 }
             });
+
         });
     </script>
 
@@ -603,6 +605,8 @@
             let id_usuario = document.getElementById("id_usuario").value;
             let mesero = document.getElementById("mesero").value;
             let cantidad = document.getElementById(id_input).value;
+
+            console.log(cantidad)
 
             if (cantidad === undefined || isNaN(cantidad) || cantidad === "") {
                 cantidad = 1;

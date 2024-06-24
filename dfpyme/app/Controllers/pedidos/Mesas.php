@@ -245,8 +245,6 @@ class Mesas extends BaseController
             $configuracion_pedido = model('configuracionPedidoModel')->select('agregar_item')->first();
 
 
-
-
             if ($configuracion_pedido['agregar_item'] == 0) {   // Actualiza el producto 
 
 
@@ -268,7 +266,12 @@ class Mesas extends BaseController
 
                     $valor_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
 
-                    $val_pedido = $valor_pedido['valor_total'] + $valor_unitario['valorventaproducto'];
+                    //$val_pedido = $valor_pedido['valor_total'] + $valor_unitario['valorventaproducto'];
+
+                    $total_pedido=model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido',$numero_pedido['id'])->findall();
+
+                    $val_pedido= $total_pedido[0]['valor_total'];
+
                     $pedido = [
                         'valor_total' => $val_pedido,
                         'cantidad_de_productos' => $cant_productos,
@@ -367,8 +370,10 @@ class Mesas extends BaseController
 
                 $cant_productos = $cantidad_productos['cantidad_de_productos'] + $cantidad;
 
-                $valor_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
-                $val_pedido = $valor_pedido['valor_total'] + $valor_unitario['valorventaproducto'];
+                //$valor_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
+                $valor_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['id'])->findAll();
+                //$val_pedido = $valor_pedido['valor_total'] + $valor_unitario['valorventaproducto']*$cantidad;
+                $val_pedido = $valor_pedido[0]['valor_total']; 
                 $pedido = [
                     'valor_total' => $val_pedido,
                     'cantidad_de_productos' => $cant_productos,
