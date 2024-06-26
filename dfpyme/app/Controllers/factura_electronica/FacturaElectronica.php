@@ -481,7 +481,8 @@ class FacturaElectronica extends BaseController
                         "categorias" => view('pedidos/categorias', [
                             'categorias' => $categorias
                         ]),
-                        "id_factura" => $id_factura
+                        "id_factura" => $id_factura,
+                        "documentos" => view('pedidos/documento')
                     );
                     echo  json_encode($returnData);
                 }
@@ -605,7 +606,8 @@ class FacturaElectronica extends BaseController
                         "valor_pedio" => "$ " . number_format($valor_pedido['valor_total'], 0, ",", "."),
                         "id_mesa" => $id_mesa,
                         "pedido" => $numero_pedido['id'],
-                        "nombre_mesa" => $nombre_mesa['nombre']
+                        "nombre_mesa" => $nombre_mesa['nombre'],
+                        "documentos" => view('pedidos/documento')
                     );
                     echo  json_encode($returnData);
                 }

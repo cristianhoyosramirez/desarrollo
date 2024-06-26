@@ -108,7 +108,7 @@ function pagar() {
                             $('#propina_pesos_final').val(0);
                             $('#total_propina').val(0);
                             $('#tipo_pago').val(1);
-                            $('#documento').html(resultado.documentos);
+                            $('#documentos_factura').html(resultado.documentos);
 
                             if (resultado.valor_pedio == '$ 0') {
                                 $('#mesa_pedido').html('');

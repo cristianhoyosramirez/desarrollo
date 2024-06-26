@@ -93,15 +93,18 @@
                   <div class="row mb-2">
                     <label for="inputEmail3" class="col-sm-4 col-form-label">Documento</label>
                     <?php $estados = model('estadoModel')->estados(); ?>
-                    
+
                     <div class="col-sm-8">
-                      <select class="form-select" id="documento" name="documento" onchange="habilitarBotonPago()">
-                        <?php foreach ($estados as $detalle) { ?>
-                          <option value="<?php echo $detalle['idestado'] ?>"><?php echo $detalle['descripcionestado'] ?></option>
-                        <?php } ?>
-                      </select>
-                      <p class="text-danger h3" id="error_documento"></p>
+                      <div id="documentos_factura"> 
+                        <select class="form-select" id="documento" name="documento" onchange="habilitarBotonPago()">
+                          <?php foreach ($estados as $detalle) { ?>
+                            <option value="<?php echo $detalle['idestado'] ?>"><?php echo $detalle['descripcionestado'] ?></option>
+                          <?php } ?>
+                        </select>
+                        <p class="text-danger h3" id="error_documento"></p>
+                      </div>
                     </div>
+
                   </div>
 
                   <!--     <div class="row mb-2">
@@ -286,7 +289,7 @@
 
           </div>
 
-       
+
         </div>
       </div>
     </div>

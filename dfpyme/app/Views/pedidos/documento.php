@@ -1,6 +1,6 @@
  <?php $estados = model('estadoModel')->estados();
     ?>
- <div class="col-sm-8">
+ 
      <select class="form-select" id="documento" name="documento" onchange="habilitarBotonPago()">
          <?php foreach ($estados as $detalle) {
             ?>
@@ -11,4 +11,4 @@
             ?>
      </select>
      <p class="text-danger h3" id="error_documento"></p>
- </div>
+ 

@@ -555,3 +555,33 @@ LINE 1: SELECT &quot;encabezado_factura&quot;
 #11 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
 #12 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
 #13 {main}
+CRITICAL - 2024-06-26 13:07:57 --> Division by zero
+#0 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\producto\operacionesProductoController->actualizar_precio_producto()
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\producto\operacionesProductoController))
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2024-06-26 13:07:58 --> Division by zero
+#0 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\producto\operacionesProductoController->actualizar_precio_producto()
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\producto\operacionesProductoController))
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2024-06-26 13:07:59 --> Division by zero
+#0 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\producto\operacionesProductoController->actualizar_precio_producto()
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\producto\operacionesProductoController))
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2024-06-26 13:08:11 --> Division by zero
+#0 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\producto\operacionesProductoController->actualizar_precio_producto()
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\producto\operacionesProductoController))
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2024-06-26 13:09:10 --> Division by zero
+#0 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(832): App\Controllers\producto\operacionesProductoController->actualizar_precio_producto()
+#1 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\producto\operacionesProductoController))
+#2 C:\xampp\htdocs\dfpyme\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\dfpyme\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}

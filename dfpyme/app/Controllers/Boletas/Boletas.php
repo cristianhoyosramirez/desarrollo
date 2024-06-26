@@ -1211,6 +1211,7 @@ class Boletas extends BaseController
             $sub_array[] =  $nombre_cliente['nombrescliente'];
             $sub_array[] = $detalle['documento'];
             $sub_array[] =  number_format($detalle['total_documento'], 0, ",", ".");
+            $sub_array[] =  number_format($detalle['saldo'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
             $sub_array[] = $tipo_documento['descripcionestado'];

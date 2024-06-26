@@ -714,9 +714,9 @@ class impresion
     public function imprimir_factura($id_factura)
     {
 
-        $id_factura = 28;
+        //$id_factura = 28;
 
-        //$id_factura = $id_factura;
+        $id_factura = $id_factura;
 
 
 

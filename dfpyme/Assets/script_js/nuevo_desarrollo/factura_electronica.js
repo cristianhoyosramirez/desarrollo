@@ -119,12 +119,13 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     $('#pedido_mesa').html("Pedido: ")
                     $('#mesa_pedido').html("Mesa: ")
                     $('#nombre_mesero').html("Mesero: ")
+                    $('#documentos_factura').html(resultado.documentos)
                     $('#tipo_pago').val(1)
 
 
 
                     let lista_categorias = document.getElementById("lista_categorias");
-                    
+
                     if (lista_categorias) {
                         lista_categorias.style.display = "none";
                     }
