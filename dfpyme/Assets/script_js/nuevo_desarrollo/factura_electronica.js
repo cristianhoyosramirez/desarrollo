@@ -107,7 +107,11 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
 
                     $('#todas_las_mesas').html(resultado.mesas)
                     $('#mesa_productos').html(resultado.productos)
-                    $('#lista_categorias').html(resultado.categorias)
+                    //$('#lista_categorias').html(resultado.categorias)
+                    if ($('#lista_categorias').length) {
+                        // Si existe, actualizar su contenido con resultado.categorias
+                        $('#lista_categorias').html(resultado.categorias);
+                    }
                     $('#valor_pedido').html(resultado.valor_pedio)
                     $('#subtotal_pedido').val(resultado.valor_pedio)
 
@@ -120,7 +124,10 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
 
 
                     let lista_categorias = document.getElementById("lista_categorias");
-                    lista_categorias.style.display = "none";
+                    
+                    if (lista_categorias) {
+                        lista_categorias.style.display = "none";
+                    }
 
                     Swal.fire({
                         title: 'Información de pago',

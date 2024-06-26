@@ -609,8 +609,6 @@ class ClienteController extends BaseController
             'is_customer' => 'true'
         ];
 
-
-
         $model = model('clientesModel');
         $cliente = $model->set($data);
         $cliente = $model->where('id', $_POST['id_cliente']);

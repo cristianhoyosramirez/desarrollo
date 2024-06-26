@@ -93,6 +93,18 @@ class productoFacturaVentaModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function tarifa_iva_kardex($id_factura, $id_estado)
+    {
+        $datos = $this->db->query("
+        SELECT DISTINCT
+            valor_iva
+         FROM
+            producto_factura_venta
+        WHERE
+        id_factura = '$id_factura' and aplica_ico='false';
+        ");
+        return $datos->getResultArray();
+    }
 
     public function tarifa_ico($id_factura)
     {

@@ -400,7 +400,7 @@ class Imprimir extends BaseController
 
         $imp = new impresion();
         $impresion = $imp->imprimir_factura($id_factura);
-    
+
         $imprime_boucher = model('cajaModel')->select('imp_comprobante_transferencia')->where('numerocaja', 1)->first();
 
 
@@ -469,8 +469,8 @@ class Imprimir extends BaseController
         $imp = new impresion();
 
 
-        $id_factura = $this->request->getPost('id_factura');
-        //$id_factura = 51;
+        $id_factura = $this->request->getPost('id_factura'); 
+        //$id_factura = 32;
 
 
         $id_resolucion = model('facturaElectronicaModel')->select('id_resolucion')->where('id', $id_factura)->first();
@@ -482,6 +482,7 @@ class Imprimir extends BaseController
             $impresion = $imp->impresion_factura_electronica($id_factura);
         }
         if (empty($datos_resolucion)) {
+
 
             $impresion = $imp->imprimir_factura_electronica($id_factura);
         }

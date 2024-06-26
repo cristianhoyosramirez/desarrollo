@@ -10,6 +10,7 @@ class Mesas extends BaseController
 {
     public function index()
     {
+        
         $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->orderBy('nombrecategoria', 'asc')->findAll();
         $salones = model('salonesModel')->findAll();
         $mesas = model('mesasModel')->where('estado', 0)->orderBy('id', 'ASC')->findAll();
@@ -20,7 +21,7 @@ class Mesas extends BaseController
         $meseros = model('usuariosModel')->where('idtipo', 2)->orderBy('nombresusuario_sistema', 'asc')->find();
         $meseros = model('usuariosModel')->where('estadousuario_sistema', true)->orderBy('nombresusuario_sistema', 'asc')->find();
 
-
+        
         return view('pedidos/mesas', [
             'categorias' => $categorias,
             'salones' => $salones,
@@ -268,9 +269,9 @@ class Mesas extends BaseController
 
                     //$val_pedido = $valor_pedido['valor_total'] + $valor_unitario['valorventaproducto'];
 
-                    $total_pedido=model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido',$numero_pedido['id'])->findall();
+                    $total_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['id'])->findall();
 
-                    $val_pedido= $total_pedido[0]['valor_total'];
+                    $val_pedido = $total_pedido[0]['valor_total'];
 
                     $pedido = [
                         'valor_total' => $val_pedido,
@@ -373,7 +374,7 @@ class Mesas extends BaseController
                 //$valor_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido['id'])->first();
                 $valor_pedido = model('productoPedidoModel')->selectSum('valor_total')->where('numero_de_pedido', $numero_pedido['id'])->findAll();
                 //$val_pedido = $valor_pedido['valor_total'] + $valor_unitario['valorventaproducto']*$cantidad;
-                $val_pedido = $valor_pedido[0]['valor_total']; 
+                $val_pedido = $valor_pedido[0]['valor_total'];
                 $pedido = [
                     'valor_total' => $val_pedido,
                     'cantidad_de_productos' => $cant_productos,
@@ -1239,7 +1240,7 @@ class Mesas extends BaseController
             $model = model('pedidoModel');
             $borrar = $model->where('id', $numero_pedido);
             $borrar = $model->delete();
-            $mesas = model('mesasModel')->where('estado',0)->orderBy('id', 'ASC')->findAll();
+            $mesas = model('mesasModel')->where('estado', 0)->orderBy('id', 'ASC')->findAll();
 
             if ($borrarPedido && $borrar) {
 

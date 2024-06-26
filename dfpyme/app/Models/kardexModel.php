@@ -192,7 +192,7 @@ class kardexModel extends Model
         SELECT DISTINCT ( valor_ico )
         FROM   kardex
         WHERE  id_factura =$id_factura
-               AND aplica_ico = true 
+               AND aplica_ico = true and id_estado=8
         ");
         return $datos->getResultArray();
     }
@@ -209,7 +209,7 @@ class kardexModel extends Model
     public function get_iva_calc($id_factura)
     {
         $datos = $this->db->query("
-        select distinct (valor_iva ) from kardex where id_factura = $id_factura and aplica_ico= false
+        select distinct (valor_iva ) from kardex where id_factura = $id_factura and aplica_ico= false 
         ");
         return $datos->getResultArray();
     }
@@ -440,6 +440,55 @@ class kardexModel extends Model
         SELECT id
         FROM kardex
         WHERE codigo = '$codigo'
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_total_factura($id_factura)
+    {
+        $datos = $this->db->query("
+        select valor from pagos where id_factura= $id_factura and id_estado = 8
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_recibido_transferencia($id_factura)
+    {
+        $datos = $this->db->query("
+        select recibido_transferencia from pagos where id_factura= $id_factura and id_estado = 8
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_recibido_efectivo($id_factura)
+    {
+        $datos = $this->db->query("
+        select recibido_efectivo from pagos where id_factura= $id_factura and id_estado = 8
+        ");
+        return $datos->getResultArray();
+    }
+    public function cambio($id_factura)
+    {
+        $datos = $this->db->query("
+        select cambio from pagos where id_factura= $id_factura and id_estado = 8
+        ");
+        return $datos->getResultArray();
+    }
+    public function items($id_factura)
+    {
+        $datos = $this->db->query("
+        select count(id) as id  from kardex where id_factura= $id_factura and id_estado = 8
+        ");
+        return $datos->getResultArray();
+    }
+    public function iva_producto($id_factura, $id_estado)
+    {
+        $datos = $this->db->query("
+            select distinct(valor_iva) as porcentaje_iva  from kardex where id_factura = $id_factura and id_estado = $id_estado
+        ");
+        return $datos->getResultArray();
+    }
+    public function total_iva_producto($id_factura, $id_estado)
+    {
+        $datos = $this->db->query("
+           select sum(iva) as iva from kardex where id_factura = $id_factura and id_estado = $id_estado
         ");
         return $datos->getResultArray();
     }

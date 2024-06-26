@@ -25,6 +25,7 @@ class FacturaElectronica extends BaseController
     {
         //var_dump($this->request->getPost());
         $id_mesa = $this->request->getPost('id_mesa');
+        // $id_mesa = 2;
 
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
@@ -204,7 +205,7 @@ class FacturaElectronica extends BaseController
                             $ico = $porcentaje_ico['valor_ico'];
                             $iva = 0;
 
-                            $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $precio_unitario, $detalle['valor_unitario']);
+                            $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $precio_unitario, $detalle['valor_unitario'], $numero_pedido);
                             //$id_factura, $codigo_interno, $nombre_producto, $cantidad, $costo, $iva, $ico, $precio_unitario, $total
 
 
@@ -218,7 +219,7 @@ class FacturaElectronica extends BaseController
                             $precio_unitario = $detalle['valor_unitario'] - $valor_antes_de_iva;
                             $ico = 0;
                             $iva = $porcentaje_iva['valoriva'];
-                            $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $valor_antes_de_iva, $detalle['valor_unitario']);
+                            $insertar = model('itemFacturaElectronicaModel')->set_item_factura($id_factura, $detalle['codigointernoproducto'], $nombre_producto, $detalle['cantidad_producto'], $costo, $iva, $ico, $valor_antes_de_iva, $detalle['valor_unitario'], $numero_pedido);
                         }
 
 
@@ -254,7 +255,8 @@ class FacturaElectronica extends BaseController
                                 'id_estado' => 8,
                                 'valor_ico' => $calculo[0]['valor_ico'],
                                 'valor_iva' => $calculo[0]['valor_iva'],
-                                'aplica_ico' => $calculo[0]['aplica_ico']
+                                'aplica_ico' => $calculo[0]['aplica_ico'],
+                                //'id_pedido'=>$numero_pedido
                             ];
 
                             $insertar = model('kardexModel')->insert($data);
@@ -301,7 +303,8 @@ class FacturaElectronica extends BaseController
                             'id_estado' => 8,
                             'valor_ico' => 0,
                             'valor_iva' => 0,
-                            'aplica_ico' => 'false'
+                            'aplica_ico' => 'false',
+                            
                         ];
 
 
@@ -416,7 +419,8 @@ class FacturaElectronica extends BaseController
                         'recibido_transferencia' => $recibido_transaccion,
                         'id_factura' => $id_factura,
                         'saldo' => $saldo,
-                        'nit_cliente' => $nit_cliente
+                        'nit_cliente' => $nit_cliente,
+                        'id_pedido' => $numero_pedido
                     ];
 
                     $pagos = model('pagosModel')->insert($pagos);

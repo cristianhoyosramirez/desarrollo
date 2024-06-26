@@ -256,6 +256,8 @@ class impresion
     function imprimir_factura_electronica($id_factura)
     {
         //$id_factura = $this->request->getPost('id_factura');
+
+
         $id_factura = $id_factura;
         //$id_factura = 24;
         $id_impresora = model('cajaModel')->select('id_impresora')->first();
@@ -293,7 +295,8 @@ class impresion
         $printer->text("TELEFONO:" . $datos_empresa[0]['telefonoempresa'] . "\n");
 
         $id_regimen = model('empresaModel')->select('idregimen')->first();
-        $regimen = model('regimenModel')->select('descripcion')->where('id', $id_regimen['idregimen'])->first();
+        $regimen = model('regimenModel')->select('descripcion')->where('idregimen', $id_regimen['idregimen'])->first();
+
         $printer->text($regimen['descripcion']);
         /*  $printer->text($datos_empresa[0]['nombreregimen'] . "\n"); */
         $printer->text("\n");
@@ -343,33 +346,42 @@ class impresion
 
 
 
-        $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
-        $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
-        $transferencia =  model('pagosModel')->select('recibido_transferencia')->where('id_factura', $id_factura)->first();
-        $efectivo =  model('pagosModel')->select('recibido_efectivo')->where('id_factura', $id_factura)->first();
+        //$total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
+        $total =  model('kardexModel')->get_total_factura($id_factura);
 
-        $sub_total = $total['total_documento'] - ($inc[0]['total_inc'] + $iva[0]['total_iva']);
+        //$total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
+        // $transferencia =  model('pagosModel')->select('recibido_transferencia')->where('id_factura', $id_factura)->first();
+        //$efectivo =  model('pagosModel')->select('recibido_efectivo')->where('id_factura', $id_factura)->first();
+
+
+        $transferencia =  model('kardexModel')->get_recibido_transferencia($id_factura);
+        $efectivo =  model('kardexModel')->get_recibido_efectivo($id_factura);
+
+        $sub_total = $total[0]['valor'] - ($inc[0]['total_inc'] + $iva[0]['total_iva']);
 
 
 
 
         $printer->text("_______________________________________________ \n");
         $printer->setJustification(Printer::JUSTIFY_RIGHT);
-        $printer->text("SUB TOTAL:" .    number_format($sub_total, 0, ",", ".") . "\n");
-        $printer->text("INC:"    .     number_format($inc[0]['total_inc'], 0, ",", ".") . "\n");
-        $printer->text("IVA:"    .     number_format($iva[0]['total_iva'], 0, ",", ".") . "\n");
 
+        if ($id_regimen['idregimen'] == 1) {
+
+            $printer->text("SUB TOTAL:" .    number_format($sub_total, 0, ",", ".") . "\n");
+            $printer->text("INC:"    .     number_format($inc[0]['total_inc'], 0, ",", ".") . "\n");
+            $printer->text("IVA:"    .     number_format($iva[0]['total_iva'], 0, ",", ".") . "\n");
+        }
         $printer->text("\n");
         $printer->setTextSize(2, 1);
-        $printer->text("TOTAL:      " . "$ " . number_format($total['total_documento'], 0, ",", ".") . "\n");
+        $printer->text("TOTAL:      " . "$ " . number_format($total[0]['valor'], 0, ",", ".") . "\n");
         $printer->text("\n");
         $printer->setTextSize(1, 1);
 
-        if ($efectivo['recibido_efectivo'] > 0) {
-            $printer->text("Efectivo:" . "$ " . number_format($efectivo['recibido_efectivo'], 0, ",", ".")  . "\n");
+        if ($efectivo[0]['recibido_efectivo'] > 0) {
+            $printer->text("Efectivo:" . "$ " . number_format($efectivo[0]['recibido_efectivo'], 0, ",", ".")  . "\n");
         }
-        if ($transferencia['recibido_transferencia'] > 0) {
-            $printer->text("Transferencia:" . "$ " . number_format($transferencia['recibido_transferencia'], 0, ",", ".") . "\n");
+        if ($transferencia[0]['recibido_transferencia'] > 0) {
+            $printer->text("Transferencia:" . "$ " . number_format($transferencia[0]['recibido_transferencia'], 0, ",", ".") . "\n");
         }
 
         //$printer->text("Cambio:."" ."\n");
@@ -452,7 +464,7 @@ class impresion
         $descripcion = $temp_descripcion['descripcion'];
 
         $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->text("          " . $descripcion);
+        $printer->text($descripcion);
 
 
 
@@ -484,8 +496,11 @@ class impresion
         $printer->text("\n");
         //$items = model('itemFacturaElectronicaModel')->where('id_de', $id_factura)->findAll();
 
+        //$estado_factura=model('facturaElectronicaModel')->select('estado')->where('id',$id_factura)->first();
+
+        //dd( $estado_factura);
+
         $items = model('kardexModel')->get_productos_factura($id_factura);
-        //dd($items);
 
         $printer->text("---------------------------------------------" . "\n");
         $printer->text("CLIENTE:     " . $nombres_cliente['nombrescliente'] . "\n");
@@ -534,12 +549,17 @@ class impresion
 
 
 
-        $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
-        $total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
-        $transferencia =  model('pagosModel')->select('recibido_transferencia')->where('id_factura', $id_factura)->first();
-        $efectivo =  model('pagosModel')->select('recibido_efectivo')->where('id_factura', $id_factura)->first();
+        //$total =  model('pagosModel')->select('valor')->where('id_factura', $id_factura)->first();
 
-        $sub_total = $total['total_documento'] - ($inc[0]['total_inc'] + $iva[0]['total_iva']);
+        $total =  model('kardexModel')->get_total_factura($id_factura);
+
+        //$total =  model('pagosModel')->select('total_documento')->where('id_factura', $id_factura)->first();
+        //$transferencia =  model('pagosModel')->select('recibido_transferencia')->where('id_factura', $id_factura)->first();
+        $transferencia =  model('kardexModel')->get_recibido_transferencia($id_factura);
+        $efectivo =  model('kardexModel')->get_recibido_efectivo($id_factura);
+        //$efectivo =  model('pagosModel')->select('recibido_efectivo')->where('id_factura', $id_factura)->first();
+
+        $sub_total = $total[0]['valor'] - ($inc[0]['total_inc'] + $iva[0]['total_iva']);
 
         function formatValue($label, $value)
         {
@@ -551,28 +571,31 @@ class impresion
             $spaces = str_repeat(' ', 40 - strlen($label) - strlen($formatted_value));
             return $label . $spaces . $formatted_value . "\n";
         }
+        $id_regimen = model('empresaModel')->select('idregimen')->first();
+
 
         $printer->text("_______________________________________________ \n");
-        $printer->setJustification(Printer::JUSTIFY_RIGHT);
-        $printer->text(formatValue("SUB TOTAL:", $sub_total));
-        $printer->text(formatValue("INC:", $inc[0]['total_inc']));
-        $printer->text(formatValue("IVA :", $iva[0]['total_iva']));
-
+        if ($id_regimen['idregimen'] == 1) {
+            $printer->setJustification(Printer::JUSTIFY_RIGHT);
+            $printer->text(formatValue("SUB TOTAL:", $sub_total));
+            $printer->text(formatValue("INC:", $inc[0]['total_inc']));
+            $printer->text(formatValue("IVA :", $iva[0]['total_iva']));
+        }
         $printer->text("\n");
         $printer->setTextSize(2, 1);
-        $printer->text("TOTAL:      " . "$ " . number_format($total['total_documento'], 0, ",", ".") . "\n");
+        $printer->text("TOTAL:      " . "$ " . number_format($total[0]['valor'], 0, ",", ".") . "\n");
         $printer->text("\n");
         $printer->setTextSize(1, 1);
 
-        $printer->text(str_pad("PAGO EFECTIVO:", 40, " ")  . number_format($efectivo['recibido_efectivo'], 0, ",", ".") . "\n");
+        $printer->text(str_pad("PAGO EFECTIVO:", 40, " ")  . number_format($efectivo[0]['recibido_efectivo'], 0, ",", ".") . "\n");
 
-        if ($transferencia['recibido_transferencia'] > 0) {
+        if ($transferencia[0]['recibido_transferencia'] > 0) {
             $printer->text(str_pad("PAGO TRANSFERENCIA :", 40, " ") . "$ " . number_format($transferencia['recibido_transferencia'], 0, ",", ".") . "\n");
         }
 
-        $cambio = model('pagosModel')->select('cambio')->where('id_factura', $id_factura)->first();
+        $cambio = model('kardexModel')->cambio($id_factura);
 
-        $printer->text(str_pad("CAMBIO:", 40, " ") . $cambio['cambio'] . "\n");
+        $printer->text(str_pad("CAMBIO:", 40, " ") . $cambio[0]['cambio'] . "\n");
 
 
         $printer->text("_______________________________________________ \n\n");
@@ -581,58 +604,61 @@ class impresion
         $inc_tarifa = model('kardexModel')->get_inc_calc($id_factura);
         $iva_tarifa = model('kardexModel')->get_iva_calc($id_factura);
 
-        $items = model('kardexModel')->selectCount('id')->where('id_factura', $id_factura)->findAll();
+        $items = model('kardexModel')->items($id_factura);
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text("Numero de items: " . $items[0]['id'] .  "\n");
         $printer->text("_______________________________________________ \n");
         if (!empty($inc_tarifa)) {
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("** DISCRIMINACIÓN DE TARIFAS DE INC **   \n");
-            $printer->setJustification(Printer::JUSTIFY_LEFT);
-            /*   $printer->text("TARIFA          BASE/INC          VENTA   \n");
+            if ($id_regimen['idregimen'] == 1) {
+                $printer->text("** DISCRIMINACIÓN DE TARIFAS DE INC **   \n");
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                /*   $printer->text("TARIFA          BASE/INC          VENTA   \n");
 
              foreach($inc_tarifa as $detalle ){
                 $inc = model('kardexModel')->get_tarifa_ico($id_factura,$detalle['valor_ico']);
                 $printer->text($inc_tarifa[0]['valor_ico']." %        ".  number_format(($total['total']-$inc[0]['inc']   ), 0, ",", ".").  "   " .number_format($total['total'], 0, ",", ".").   "\n");
              } */
 
-            $printer->text(str_pad("TARIFA", 15, " ") . str_pad("BASE/INC", 15, " ") . "VENTA\n");
+                $printer->text(str_pad("TARIFA", 15, " ") . str_pad("BASE/INC", 15, " ") . "VENTA\n");
 
-            foreach ($inc_tarifa as $detalle) {
-                $inc = model('kardexModel')->get_tarifa_ico($id_factura, $detalle['valor_ico']);
+                foreach ($inc_tarifa as $detalle) {
+                    $inc = model('kardexModel')->get_tarifa_ico($id_factura, $detalle['valor_ico']);
 
-                $tarifa = $inc_tarifa[0]['valor_ico'] . " %";
-                $base_inc = number_format(($total['total'] - $inc[0]['inc']), 0, ",", ".");
-                $venta = number_format($total['total'], 0, ",", ".");
+                    $tarifa = $inc_tarifa[0]['valor_ico'] . " %";
+                    $base_inc = number_format(($total['total'] - $inc[0]['inc']), 0, ",", ".");
+                    $venta = number_format($total['total'], 0, ",", ".");
 
-                $printer->text(str_pad($tarifa, 15, " ") . str_pad($base_inc, 15, " ") . $venta . "\n");
-            }
-        }
+                    $printer->text(str_pad($tarifa, 15, " ") . str_pad($base_inc, 15, " ") . $venta . "\n");
+                }
 
 
-        if (!empty($iva_tarifa)) {
 
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("** DISCRIMINACIÓN DE TARIFAS DE IVA **   \n");
-            $printer->setJustification(Printer::JUSTIFY_LEFT);
-            /*   $printer->text("TARIFA          BASE/INC          VENTA   \n");
+                if (!empty($iva_tarifa)) {
+
+                    $printer->setJustification(Printer::JUSTIFY_CENTER);
+                    $printer->text("** DISCRIMINACIÓN DE TARIFAS DE IVA **   \n");
+                    $printer->setJustification(Printer::JUSTIFY_LEFT);
+                    /*   $printer->text("TARIFA          BASE/INC          VENTA   \n");
 
              foreach($inc_tarifa as $detalle ){
                 $inc = model('kardexModel')->get_tarifa_ico($id_factura,$detalle['valor_ico']);
                 $printer->text($inc_tarifa[0]['valor_ico']." %        ".  number_format(($total['total']-$inc[0]['inc']   ), 0, ",", ".").  "   " .number_format($total['total'], 0, ",", ".").   "\n");
              } */
 
-            $printer->text(str_pad("TARIFA", 15, " ") . str_pad("BASE/IVA", 15, " ") . "VENTA\n");
+                    $printer->text(str_pad("TARIFA", 15, " ") . str_pad("BASE/IVA", 15, " ") . "VENTA\n");
 
-            foreach ($iva_tarifa as $detalle) {
-                $iva = model('kardexModel')->get_tarifa_iva($id_factura, $detalle['valor_iva']);
+                    foreach ($iva_tarifa as $detalle) {
+                        $iva = model('kardexModel')->get_tarifa_iva($id_factura, $detalle['valor_iva']);
 
-                $tarifa = $iva_tarifa[0]['valor_iva'] . " %";
-                $base_iva = number_format(($total['total'] - $iva[0]['iva']), 0, ",", ".");
-                $venta = number_format($total['total'], 0, ",", ".");
+                        $tarifa = $iva_tarifa[0]['valor_iva'] . " %";
+                        $base_iva = number_format(($total['total'] - $iva[0]['iva']), 0, ",", ".");
+                        $venta = number_format($total['total'], 0, ",", ".");
 
-                $printer->text(str_pad($tarifa, 15, " ") . str_pad($base_iva, 15, " ") . $venta . "\n");
+                        $printer->text(str_pad($tarifa, 15, " ") . str_pad($base_iva, 15, " ") . $venta . "\n");
+                    }
+                }
             }
         }
 
@@ -671,6 +697,7 @@ class impresion
         $printer->text("$pie \n");
         $printer->text("\n");
 
+        $printer->text("Impreso por DATAICO \n");
 
         $printer->feed(1);
         $printer->cut();
@@ -687,20 +714,20 @@ class impresion
     public function imprimir_factura($id_factura)
     {
 
-        // $id_factura = 57069;
+        $id_factura = 28;
 
-        $id_factura = $id_factura;
+        //$id_factura = $id_factura;
 
-       
+
 
         $numero_factura = model('facturaVentaModel')->select('numerofactura_venta')->where('id', $id_factura)->first();
 
         $regimen = model('empresaModel')->select('idregimen')->first();
-        
+
         if (!empty($numero_factura['numerofactura_venta'])) {
 
             $numero_factura['numerofactura_venta'];
-           
+
 
             $fecha_factura_venta = model('facturaVentaModel')->select('fecha_factura_venta')->where('id', $id_factura)->first();
             $hora_factura_venta = model('facturaVentaModel')->select('horafactura_venta')->where('id', $id_factura)->first();
@@ -716,9 +743,9 @@ class impresion
             $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
 
             $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
-            
+
             $printer = new Printer($connector);
-           
+
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->setTextSize(1, 2);
             $printer->text($datos_empresa[0]['nombrecomercialempresa'] . "\n");
@@ -777,16 +804,33 @@ class impresion
 
             $cantidad_iva = model('productoFacturaVentaModel')->impuestos($id_factura);
 
+
+
             $iva_temp = 0;
             $ico_temp = 0;
             $venta_real_temp = 0;
 
 
-
-
+            //dd($cantidad_iva);
+            /* 
             foreach ($cantidad_iva  as $detalle) {
                 $iva = $detalle['cantidadproducto_factura_venta'] * $detalle['iva'];
                 $impuesto_al_consumo = $detalle['cantidadproducto_factura_venta'] * $detalle['impuesto_al_consumo'];
+                $total_iva = $iva + $iva_temp;
+                $iva_temp = $total_iva;
+
+                $total_ico = $impuesto_al_consumo + $ico_temp;
+                $ico_temp = $total_ico;
+
+                $sub_total = $detalle['valor_venta_real'] * $detalle['cantidadproducto_factura_venta'];
+
+                $sub_totales = $sub_total + $venta_real_temp;
+                $venta_real_temp = $sub_totales;
+            } */
+
+            foreach ($cantidad_iva  as $detalle) {
+                $iva =  $detalle['iva'];
+                $impuesto_al_consumo =  $detalle['impuesto_al_consumo'];
                 $total_iva = $iva + $iva_temp;
                 $iva_temp = $total_iva;
 
@@ -804,16 +848,21 @@ class impresion
 
             $printer->text("---------------------------------------------" . "\n");
             $total = model('productoFacturaVentaModel')->selectSum('total')->where('id_factura', $id_factura)->find();
+
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
 
-
             $impuesto_saludable = model('productoFacturaVentaModel')->get_impuesto_saluidable($id_factura);
+
+            //dd($impuesto_saludable);
+
+
 
             if ($id_regimen['idregimen'] == 1) {
 
                 if ($estado_factura[0]['idestado'] == 1 or $estado_factura[0]['idestado'] == 2) {
 
-                    $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva) - $impuesto_saludable[0]['total_impuesto_saludable'], 0, ",", ".") . "\n");
+                    //$printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva) , 0, ",", ".") . "\n");
+                    $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($cantidad_iva[0]['iva'] - $cantidad_iva[0]['impuesto_al_consumo']), 0, ",", ".") . "\n");
 
 
                     if ($total_iva != 0) {
@@ -860,7 +909,13 @@ class impresion
 
             if ($regimen['idregimen'] == 1) {
                 if ($estado_factura[0]['idestado'] == 1 or $estado_factura[0]['idestado'] == 2) {
-                    $tarifa_iva = model('productoFacturaVentaModel')->tarifa_iva($id_factura);
+                    //$tarifa_iva = model('productoFacturaVentaModel')->tarifa_iva($id_factura);
+                    $tarifa_iva = model('kardexModel')->iva_producto($id_factura,$estado_factura[0]['idestado'] );
+                    
+
+                    
+
+
                     if (!empty($tarifa_iva)) {
                         $printer->setJustification(Printer::JUSTIFY_CENTER);
                         $printer->setTextSize(1, 1);
@@ -868,9 +923,10 @@ class impresion
                         $printer->setJustification(Printer::JUSTIFY_LEFT);
                         $printer->text("TARIFA    VENTA       BASE/IMP         IVA" . "\n");
                         foreach ($tarifa_iva as $iva) {
-                            $datos_iva = model('productoFacturaVentaModel')->base_iva($iva['valor_iva'], $id_factura);
+                           // $datos_iva = model('productoFacturaVentaModel')->base_iva($iva['valor_iva'], $id_factura);
+                            $datos_iva = model('kardexModel')->total_iva_producto($id_factura, $estado_factura[0]['idestado']);
                             if (!empty($datos_iva)) {
-                                $printer->text($iva['valor_iva'] . "%" . "          " . "$" . number_format($datos_iva[0]['compra'], 0, ",", ".") . "   " . "$" . number_format($datos_iva[0]['base'] * $datos_iva[0]['cantidadproducto_factura_venta'], 0, ",", ".") . "    " . "$" . number_format($datos_iva[0]['compra'] - ($datos_iva[0]['base'] * $datos_iva[0]['cantidadproducto_factura_venta']), 0, ",", ".") . "\n");
+                                $printer->text($iva['porcentaje_iva'] . "%" . "       " . "$" . number_format($total[0]['total'], 0, ",", ".") . "   " . "$" . number_format($total[0]['total']-$datos_iva[0]['iva'], 0, ",", ".") . "    " . "$" . number_format( ($datos_iva[0]['iva']), 0, ",", ".") . "\n");
                             }
                         }
                     }
