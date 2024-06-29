@@ -490,6 +490,16 @@ class productoPedidoModel extends Model
         return $datos->getResultArray();
     }
 
+    public function total_pedido($id_pedido)
+    {
+        $datos = $this->db->query("
+      SELECT SUM (total) AS total
+      FROM kardex
+      WHERE id_pedido = $id_pedido
+        ");
+        return $datos->getResultArray();
+    }
+
 
 
     public function insertar($ultimo_id_pedido, $valor_unitario, $se_imprime_en_comanda, $codigo_categoria, $codigo_interno_producto, $cantidad)

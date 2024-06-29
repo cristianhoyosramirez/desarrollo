@@ -195,8 +195,8 @@ class Ventas extends BaseController
 
     function datos_reporte_costo()
     {
-        $fecha_inicial = $this->request->getGet('fecha_inicial');
 
+        $fecha_inicial = $this->request->getGet('fecha_inicial');
         //$fecha_inicial = '2024-01-01';
         $fecha_final = $this->request->getGet('fecha_final');
 
@@ -297,7 +297,17 @@ class Ventas extends BaseController
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
             //$sub_array[] = $detalle['documento'];
-            $sub_array[] = $documento['numero'];
+            //$sub_array[] = $documento['numero'];
+
+
+            if ($detalle['id_estado'] == 8) {
+                $documento = model('facturaElectronicaModel')->select('numero')->where('id', $detalle['id_factura'])->first();
+                $sub_array[] = $documento['numero'];
+                //var_dump($documento);
+            } else if ($detalle['id_estado'] != 8) {
+                $sub_array[] = $detalle['documento'];
+            }
+
             $sub_array[] = number_format($detalle['total_documento'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 
@@ -364,61 +374,7 @@ class Ventas extends BaseController
         ];
         echo  json_encode($json_data);
     }
-    /*  function datos_reporte_costo()
-    {
-        $fecha_inicial = $this->request->getPost('fecha_inicial');
-        //$fecha_inicial = '2023-11-16';
-        $fecha_final = $this->request->getPost('fecha_final');
-        //$fecha_final = '2023-11-16';
-
-
-
-        //$id_facturas_pos = model('pagosModel')->get_id_pos($fecha_inicial, $fecha_final);
-        $id_facturas = model('pagosModel')->get_id($fecha_inicial, $fecha_final);
-        //$id_facturas_electronicas = model('pagosModel')->get_id_electronicas($fecha_inicial, $fecha_final);
-
-        $total_costo = model('pagosModel')->get_costo_total($fecha_inicial, $fecha_final);
-        $total_ico = model('pagosModel')->get_ico_total($fecha_inicial, $fecha_final);
-        $total_iva = model('pagosModel')->get_iva_total($fecha_inicial, $fecha_final);
-
-        $total_venta = model('pagosModel')->get_venta_total($fecha_inicial, $fecha_final);
-
-        $base_iva = model('pagosModel')->get_base_iva($fecha_inicial, $fecha_final);
-        $base_ico = model('pagosModel')->get_base_ico($fecha_inicial, $fecha_final);
-
-
-
-        if (!empty($id_facturas)) {
-            $returnData = [
-                'resultado' => 1, //No hay resultados
-                'datos' => view('consultas/tabla_costos', [
-                    'id_facturas' => $id_facturas,
-                    'total_costo' => $total_costo[0]['total_costo'],
-                    'total_ico' => $total_ico[0]['total_ico'],
-                    'total_iva' => $total_iva[0]['total_iva'],
-                    'total_venta' => $total_venta[0]['total_venta'],
-                    "total_base" => number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", "."),
-                    "fecha_inicial" => $fecha_inicial,
-                    "fecha_final" => $fecha_final,
-                    //"base_ico" => number_format($total_venta[0]['total_venta'] - ($total_ico[0]['total_ico']), 0, ",", "."),
-                    "base_ico" => number_format($base_ico[0]['base_ico'], 0, ",", "."),
-                    // "base_iva" => number_format($total_venta[0]['total_venta'] - ($total_iva[0]['total_iva']), 0, ",", "."),
-                    "base_iva" => number_format($base_iva[0]['base_iva'], 0, ",", "."),
-                    "total_impuesto" => number_format(($total_ico[0]['total_ico'] + $total_iva[0]['total_iva']), 0, ",", ".")
-                ]),
-                'fecha_inicial' => $fecha_inicial,
-                'fecha_final' => $fecha_final
-            ];
-            echo json_encode($returnData);
-        }
-        if (empty($id_facturas)) {
-            $returnData = [
-                'resultado' => 0, //No hay resultados
-
-            ];
-            echo json_encode($returnData);
-        }
-    } */
+    
     function datos_reporte_ventas()
     {
         $fecha_inicial = $this->request->getPost('fecha_inicial');
