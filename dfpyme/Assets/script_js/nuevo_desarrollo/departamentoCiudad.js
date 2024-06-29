@@ -19,8 +19,8 @@ function departamentoCiudad() {
 
            $('#ciudad').html(resultado.ciudad)
            $('#ciudad_cliente_edicion').html(resultado.ciudad)
-           $('#municipios').html(resultado.ciudad)
-           //$('#municipios').html(resultado.municipios)
+           //$('#municipios').html(resultado.ciudad)
+           $('#municipios').html(resultado.municipios)
 
         }
 

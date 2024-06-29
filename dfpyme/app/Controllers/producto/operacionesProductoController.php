@@ -310,7 +310,7 @@ class operacionesProductoController extends BaseController
                     'valor_impuesto_saludable' => 0,
                     //'id_subcategoria'=>$this->request->getPost('sub_categoria')
                     'id_subcategoria' => $id_categoria,
-                    'favorito'=>$this->request->getPost('favorito')
+                    'favorito' => $this->request->getPost('favorito')
                 ];
 
                 $insert = model('productoModel')->insert($data);
@@ -399,7 +399,7 @@ class operacionesProductoController extends BaseController
                     //'id_subcategoria' => $this->request->getPost('sub_categoria')
                     //'id_subcategoria' => 0,
                     'id_subcategoria' => $id_categoria,
-                    'favorito'=>$this->request->getPost('favorito')
+                    'favorito' => $this->request->getPost('favorito')
 
                 ];
 
@@ -460,7 +460,9 @@ class operacionesProductoController extends BaseController
 
     function editar_precios()
     {
-        $id_producto = $this->request->getPost('id_producto');
+        $id_producto = $this->request->getPost('id_producto'); 
+        //$id_producto = '6';
+
         $iva = model('ivaModel')->orderBy('idiva', 'DESC')->findAll();
         $ico = model('icoConsumoModel')->orderBy('id_ico', 'DESC')->findAll();
         $valor_costo = model('productoModel')->select('precio_costo')->where('codigointernoproducto', $id_producto)->first();
@@ -483,7 +485,6 @@ class operacionesProductoController extends BaseController
 
         //$sub_categoria = model('categoriasModel')->select('subcategoria')->where('codigocategoria', $id_categoria['codigocategoria'])->first();
         $sub_categoria = model('productoModel')->select('id_subcategoria')->where('codigointernoproducto', $id_producto)->first();
-
 
         $sub_categorias = model('subCategoriaModel')->findAll();
 
@@ -603,10 +604,10 @@ class operacionesProductoController extends BaseController
             $pre_2 = (str_replace('.', '', $this->request->getPost('precio_2')) * 100) / $valor_venta_producto;
             $precio_2 = 100 - $pre_2;
 
-          
 
 
-            
+
+
             $actualizar_precio = [
                 'codigobarrasproducto' => $this->request->getPost('crear_producto_codigo_de_barras'),
                 'nombreproducto' => $this->request->getPost('crear_producto_nombre'),
@@ -622,8 +623,8 @@ class operacionesProductoController extends BaseController
                 'aplica_ico' => $aplica_ico,
                 'aplica_descuento' => $permite_descuento,
                 'valor_impuesto_saludable' => $this->request->getPost('edicion_de_valor_costo_producto'),
-                'id_subcategoria'=>$this->request->getPost('sub_categoria'),
-                'favorito'=>$this->request->getPost('favorito_editar')
+                'id_subcategoria' => $this->request->getPost('sub_categoria'),
+                'favorito' => $this->request->getPost('favorito_editar')
             ];
 
             $model = model('productoModel');
@@ -662,15 +663,15 @@ class operacionesProductoController extends BaseController
 
     function borrar_producto_inventario()
     {
-         $codigo_interno_producto = $this->request->getPost('codigo_interno_producto'); 
+        $codigo_interno_producto = $this->request->getPost('codigo_interno_producto');
         // $codigo_interno_producto = '3'; 
         //$tiene_movimientos = model('kardexModel')->select('id')->where('codigo', $this->request->getPost('codigo_interno_producto'))->first();
         $tiene_movimientos = model('kardexModel')->get_producto($codigo_interno_producto);
 
-        
+
 
         if (!empty($tiene_movimientos)) {
-           
+
             $data = [
                 'estadoproducto' => false,
 
@@ -767,7 +768,7 @@ class operacionesProductoController extends BaseController
             echo  json_encode($returnData);
         }
     }
-   
+
 
     function autorizacion_pin()
     {

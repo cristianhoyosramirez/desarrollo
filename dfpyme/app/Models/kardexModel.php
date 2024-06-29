@@ -202,7 +202,7 @@ class kardexModel extends Model
         SELECT sum ( ico ) as total_inc
         FROM   kardex
         WHERE  id_factura =$id_factura
-               AND aplica_ico = true 
+               AND aplica_ico = true and id_estado=8
         ");
         return $datos->getResultArray();
     }
@@ -216,7 +216,7 @@ class kardexModel extends Model
     public function get_total_iva($id_factura)
     {
         $datos = $this->db->query("
-        select sum (iva ) as total_iva from kardex where id_factura = $id_factura and aplica_ico= false
+        select sum (iva ) as total_iva from kardex where id_factura = $id_factura and aplica_ico= false and id_estado=8
         ");
         return $datos->getResultArray();
     }

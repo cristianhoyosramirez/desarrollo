@@ -754,7 +754,18 @@ class Boletas extends BaseController
             $sub_array[] = $detalle['fecha'];
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
-            $sub_array[] = $detalle['documento'];
+
+            //$sub_array[] = $detalle['documento'];
+
+
+            if ($detalle['id_estado'] == 8) {
+                $documento = model('facturaElectronicaModel')->select('numero')->where('id', $detalle['id_factura'])->first();
+                $sub_array[] = $documento['numero'];
+                //var_dump($documento);
+            } else if ($detalle['id_estado'] != 8) {
+                $sub_array[] = $detalle['documento'];
+            }
+
 
             $sub_array[] =  number_format($detalle['total_documento'], 0, ",", ".");
             $sub_array[] = $detalle['saldo'];
@@ -1201,6 +1212,7 @@ class Boletas extends BaseController
         $data = [];
 
 
+
         $accion = new data_table();
         foreach ($datos as $detalle) {
             $sub_array = array();
@@ -1209,7 +1221,13 @@ class Boletas extends BaseController
             $sub_array[] = $detalle['fecha'];
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
-            $sub_array[] = $detalle['documento'];
+
+            if ($detalle['id_estado'] == 8) {
+                $documento = model('facturaElectronicaModel')->select('numero')->where('id', $detalle['id_factura'])->first();
+                $sub_array[] = $documento['numero'];
+            } else if ($detalle['id_estado'] != 8) {
+                $sub_array[] = $detalle['documento'];
+            }
             $sub_array[] =  number_format($detalle['total_documento'], 0, ",", ".");
             $sub_array[] =  number_format($detalle['saldo'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();

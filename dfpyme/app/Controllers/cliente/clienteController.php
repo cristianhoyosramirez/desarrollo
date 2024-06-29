@@ -165,7 +165,7 @@ class ClienteController extends BaseController
 
 
             $model = model('ciudadModel');
-            $ciudad = $model->set('code', $code['code']);
+            $ciudad = $model->set('code', $_POST['municipios']);
             $ciudad = $model->set('code_postal', $_POST['codigo_postal']);
             $ciudad = $model->where('idciudad', $id_ciudad);
             $ciudad = $model->update();
