@@ -24,7 +24,7 @@ class CerrarVenta extends BaseController
     public function cerrar_venta()
     {
 
-        $id_mesa = $this->request->getPost('id_mesa');
+         $id_mesa = $this->request->getPost('id_mesa');
         //$id_mesa = 1;
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
@@ -34,8 +34,6 @@ class CerrarVenta extends BaseController
 
         $suma_pedido = model('productoPedidoModel')->total_pedido($numero_pedido);
         $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
-
-
 
         if ($validar_pedido[0]['total'] == 0 and $suma_pedido[0]['total'] == $total_pedido['valor_total']) {
 

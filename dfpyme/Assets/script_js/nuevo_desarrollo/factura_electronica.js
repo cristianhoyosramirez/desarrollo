@@ -179,8 +179,8 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                                 success: function (resultado) {
                                     var resultado = JSON.parse(resultado);
                                     if (resultado.resultado == 1) {
-
-                                        btnPagar.setAttribute("disabled", "true");
+                                        let button = document.querySelector("#btn_pagar");
+                                        button.setAttribute("disabled", "true");
 
                                         let mesas = document.getElementById("todas_las_mesas");
                                         mesas.style.display = "block"

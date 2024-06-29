@@ -32,7 +32,10 @@ class FacturaElectronica extends BaseController
 
         $validar_pedido = model('productoPedidoModel')->validar_pedido($numero_pedido);
 
-        if ($validar_pedido[0]['total'] == 0) {
+        $suma_pedido = model('productoPedidoModel')->total_pedido($numero_pedido);
+        $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
+
+        if ($validar_pedido[0]['total'] == 0 and $suma_pedido[0]['total'] == $total_pedido['valor_total']) {
             $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
             $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
             $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
@@ -256,7 +259,7 @@ class FacturaElectronica extends BaseController
                                 'valor_ico' => $calculo[0]['valor_ico'],
                                 'valor_iva' => $calculo[0]['valor_iva'],
                                 'aplica_ico' => $calculo[0]['aplica_ico'],
-                                //'id_pedido'=>$numero_pedido
+                                'id_pedido'=>$numero_pedido
                             ];
 
                             $insertar = model('kardexModel')->insert($data);

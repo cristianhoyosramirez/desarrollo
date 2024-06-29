@@ -493,9 +493,9 @@ class productoPedidoModel extends Model
     public function total_pedido($id_pedido)
     {
         $datos = $this->db->query("
-      SELECT SUM (total) AS total
-      FROM kardex
-      WHERE id_pedido = $id_pedido
+      SELECT SUM (valor_total) AS total
+      FROM producto_pedido
+      WHERE numero_de_pedido = $id_pedido
         ");
         return $datos->getResultArray();
     }
