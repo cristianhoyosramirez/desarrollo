@@ -426,11 +426,18 @@ class Boletas extends BaseController
 
         $code_depto = model('departamentoModel')->select('code')->where('iddepartamento', $id_departamento)->first();
 
-        $municipios = model('municipiosModel')->where('code_depto', $code_depto['code'])->orderBy('nombre', 'asc')->findAll();
+
+
+        if ($code_depto['code'] == 5 ||  $code_depto['code'] == 8) {
+            $codigo_departamento = '0' . $code_depto['code'];
+        } else if ($code_depto['code'] != 5 ||  $code_depto['code'] != 8) {
+
+            $codigo_departamento = $code_depto['code'];
+        }
+
+        $municipios = model('municipiosModel')->where('code_depto', $codigo_departamento)->orderBy('nombre', 'asc')->findAll();
 
         $ciudad = model('ciudadModel')->where('iddepartamento', $id_departamento)->orderBy('nombreciudad', 'asc')->findAll();
-
-
 
         $returnData = array(
             "resultado" => 1, //Falta plata
