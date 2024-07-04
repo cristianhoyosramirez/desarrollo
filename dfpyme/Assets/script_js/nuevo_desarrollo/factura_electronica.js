@@ -179,15 +179,26 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                                 success: function (resultado) {
                                     var resultado = JSON.parse(resultado);
                                     if (resultado.resultado == 1) {
+
+                                        /*     let button = document.querySelector("#btn_pagar");
+                                            button.setAttribute("disabled", "false"); */
+
                                         let button = document.querySelector("#btn_pagar");
-                                        button.setAttribute("disabled", "true");
+                                        button.disabled = false;
+
+
 
                                         let mesas = document.getElementById("todas_las_mesas");
-                                        mesas.style.display = "block"
+                                        if (mesas) {
+                                            mesas.style.display = "block"
+                                        }
+
 
                                         let lista_categorias = document.getElementById("lista_categorias");
-                                        lista_categorias.style.display = "none";
 
+                                        if (lista_categorias) {
+                                            lista_categorias.style.display = "none";
+                                        }
                                         /**
                                          * Aca llamo a la funcion sweet alert y se le pasan los parametros.
                                          */

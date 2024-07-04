@@ -35,12 +35,12 @@
                 <td scope="col">FECHA</th>
                 <td scope="col">HORA</th>
                 <td scope="col">DOCUMENTO</th>
-                <td scope="col">VALOR</th>
+                <td scope="col">VALOR VENTA</th>
                 <td scope="col">PROPINA</th>
-                <td scope="col">TOTAL</th>
+                <td scope="col">(V VENTA + PROPINA) </th>
                 <td scope="col">EFECTIVO</th>
                 <td scope="col">TRANSFERENCIA</th>
-                <td scope="col">TOTAL PAGO</th>
+                <td scope="col">TOTAL MEDIO DE  PAGO</th>
                 <!-- <td scope="col">CAMBIO </th> -->
                 <td scope="col">USUARIO </th>
                 <td scope="col">Accion </th>

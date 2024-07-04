@@ -492,4 +492,28 @@ class kardexModel extends Model
         ");
         return $datos->getResultArray();
     }
+    public function get_inc_pos($id_factura, $id_estado)
+    {
+        $datos = $this->db->query("
+          SELECT
+          SUM(ico) AS inc
+          FROM
+                kardex
+          WHERE
+                id_factura = $id_factura AND id_estado = $id_estado and aplica_ico='true'
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_iva_pos($id_factura, $id_estado)
+    {
+        $datos = $this->db->query("
+          SELECT
+          SUM(iva) AS iva
+          FROM
+                kardex
+          WHERE
+                id_factura = $id_factura AND id_estado = $id_estado and aplica_ico='false'
+        ");
+        return $datos->getResultArray();
+    }
 }

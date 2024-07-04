@@ -106,7 +106,7 @@
         <label for="inputCity" class="form-label">Departamento
         </label>
         <?php $departamento = model('departamentoModel')->where('idpais', 49)->findAll(); ?>
-        <select class="form-select" name="departamento" id="departamento_cliente" onchange="departamentoCiudadEditar()">
+        <select class="form-select" name="departamento_cliente" id="departamento_cliente" onchange="departamentoCiudadEditar()">
             <?php foreach ($departamento as $detalle) : ?>
 
                 <option value="<?php echo $detalle['iddepartamento'] ?>" <?php if ($detalle['iddepartamento'] == $id_departamento) : ?>selected <?php endif; ?>><?php echo $detalle['nombredepartamento'] . "-" . $detalle['code']  ?> </option>

@@ -25,7 +25,7 @@ class Ventas extends BaseController
 
         $id_apertura = $this->request->getPost('id_apertura');
         //$id_apertura = 56;
-        $movimientos = model('pagosModel')->where('id_apertura', $id_apertura)->orderBy('id', 'asc')->findAll();
+        $movimientos = model('pagosModel')->where('id_apertura', $id_apertura)->orderBy('id', 'desc')->findAll();
         $ventas_pos = model('pagosModel')->set_ventas_pos($id_apertura);
 
         $ventas_electronicas = model('pagosModel')->set_ventas_electronicas($id_apertura);
@@ -1050,6 +1050,7 @@ class Ventas extends BaseController
         $id_apertura = model('aperturaModel')->selectMax('id')->findAll();
         $apertura = $id_apertura[0]['id'];
 
+    
 
         $id_inicial = model('pagosModel')->selectMin('id')->where('id_apertura', $apertura)->first();
         $id_final = model('pagosModel')->selectMax('id')->first();
@@ -1121,7 +1122,15 @@ class Ventas extends BaseController
             $sub_array[] = $detalle['fecha'];
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
-            $sub_array[] = $detalle['documento'];
+            
+            if ($detalle['id_estado'] == 8) {
+                $documento = model('facturaElectronicaModel')->select('numero')->where('id', $detalle['id_factura'])->first();
+                $sub_array[] = $documento['numero'];
+                //var_dump($documento);
+            } else if ($detalle['id_estado'] != 8) {
+                $sub_array[] = $detalle['documento'];
+            }
+            
             $sub_array[] = "$ " . number_format($detalle['total_documento'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 

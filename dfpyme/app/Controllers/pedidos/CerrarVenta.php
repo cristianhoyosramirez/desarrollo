@@ -344,9 +344,9 @@ class CerrarVenta extends BaseController
                     $numero_pedido = $pedido['id'];
                     $id_mesero = model('pedidoModel')->select('fk_usuario')->where('id', $numero_pedido)->first();
 
-                    $id_pedido = model('pagosModel')->select('id_pedido')->where('id_pedido', $numero_pedido)->first();
+                    //$id_pedido = model('pagosModel')->select('id_pedido')->where('id_pedido', $numero_pedido)->first();
 
-                    if (empty($id_pedido['id_pedido'])) {
+                    //if (empty($id_pedido['id_pedido'])) {
 
                         $pagos = [
 
@@ -374,7 +374,7 @@ class CerrarVenta extends BaseController
                         ];
 
                         $pagos = model('pagosModel')->insert($pagos);
-                    }
+                    //}
 
                     if ($tipo_pago == 1) {  // si el tipo de pago es 1 quiere decir que se factura el pedido completo 
                         // borrar productos del pedido 

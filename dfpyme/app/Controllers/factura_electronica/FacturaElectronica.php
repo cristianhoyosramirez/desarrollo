@@ -259,7 +259,7 @@ class FacturaElectronica extends BaseController
                                 'valor_ico' => $calculo[0]['valor_ico'],
                                 'valor_iva' => $calculo[0]['valor_iva'],
                                 'aplica_ico' => $calculo[0]['aplica_ico'],
-                                'id_pedido'=>$numero_pedido
+                                //'id_pedido'=>$numero_pedido
                             ];
 
                             $insertar = model('kardexModel')->insert($data);
