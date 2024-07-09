@@ -4,12 +4,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Trasmisión de factura electrónica </h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick=""></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="id_de_factura">
                         <div class="mb-3" id="barra_de_progreso">
-                            <label class="form-label">Esperando respuesta DIAN</label>
+                            <label class="form-label" id="respuesta_de_dian">Esperando respuesta DIAN</label>
                             <div class="progress">
                                 <div class="progress-bar progress-bar-indeterminate bg-green"></div>
                             </div>

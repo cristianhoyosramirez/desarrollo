@@ -8,9 +8,11 @@ async function sendInvoice(iddoc) {
     invoice.id = iddoc;
     $("#id_de_factura").val(iddoc);
     $("#barra_progreso").modal("show");
-
-    //let url = new URL("http://localhost:5000/api/Invoice/id");
-    let url = new URL("http://localhost:3000/api2");
+    $("#barra_de_progreso").show();
+    $("#respuesta_de_dian").html('Esperando respuesta DIAN');
+    $("#texto_dian").html('')
+    let url = new URL("http://localhost:5000/api/Invoice/id");
+    //let url = new URL("http://localhost:3000/api2");
     url.search = new URLSearchParams({ id: iddoc });
     const response = await fetch(url, { method: "GET" });
     const data = await response.json();
@@ -29,8 +31,11 @@ async function sendInvoice(iddoc) {
         $("#respuesta_dian").show();
         $("#opciones_dian").show();
         $("#texto_dian").html(invoice.order_reference + ' ' + invoice.dian_status);
-        table = $('#consulta_ventas').DataTable();
-        table.draw();
+    
+       /*  table = $('#consulta_ventas').DataTable();
+        if (table) {
+            table.draw();
+        } */
 
     }
     else if (response.status === 400) {   // Advertencia
@@ -56,6 +61,10 @@ async function sendInvoice(iddoc) {
     }
 
 }
+
+
+
+
 
 
 
@@ -160,16 +169,15 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                     }).then((result) => {
                         /* Read more about isConfirmed, isDenied below */
                         if (result.isConfirmed) {
-                            // Swal.fire('Saved!', '', 'success')
+
 
                             let id_factura = resultado.id_factura
-
 
                             sendInvoice(id_factura);
 
                         } else if (result.isDenied) {
                             let id_factura = resultado.id_factura
-
+                            location.reload();
                             $.ajax({
                                 data: {
                                     id_factura,
@@ -203,6 +211,8 @@ function factura_electronica(id_mesa, estado, nit_cliente, id_usuario, url, pago
                                          * Aca llamo a la funcion sweet alert y se le pasan los parametros.
                                          */
                                         sweet_alert('success', 'Se ha finalizado la venta ');
+
+
                                     }
                                 },
                             });

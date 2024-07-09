@@ -15,9 +15,13 @@ async function sendInvoice(iddoc) {
     invoice.id = iddoc;
     $("#id_de_factura").val(iddoc);
     $("#barra_progreso").modal("show");
+    $("#barra_de_progreso").show();
+    $("#respuesta_de_dian").html('Esperando respuesta DIAN');
+    $("#texto_dian").html('')
+    
 
-    //let url = new URL("http://localhost:5000/api/Invoice/id");
-    let url = new URL("http://localhost:3000/api");
+    let url = new URL("http://localhost:5000/api/Invoice/id");
+    //let url = new URL("http://localhost:3000/api");
     url.search = new URLSearchParams({
         id: iddoc
     });
@@ -37,8 +41,10 @@ async function sendInvoice(iddoc) {
         $("#respuesta_dian").show();
         $("#opciones_dian").show();
         $("#texto_dian").html(invoice.order_reference + ' ' + invoice.dian_status);
-
-
+        table = $('#consulta_ventas').DataTable();
+        if (table) {
+            table.draw();
+        }
     } else if (response.status === 400) { // Advertencia
         erroresp = JSON.parse(JSON.stringify(data, null, 2));
         //console.log(erroresp.errors[0].error);
@@ -73,7 +79,7 @@ function sendInvoiceDian(id_fact) {
             "/" +
             "reportes/retrasmistir",
         type: "post",
-        success: function(resultado) {
+        success: function (resultado) {
             var resultado = JSON.parse(resultado);
             if (resultado.resultado == 1) {
 
@@ -84,5 +90,5 @@ function sendInvoiceDian(id_fact) {
             }
         },
     });
-    
+
 }
