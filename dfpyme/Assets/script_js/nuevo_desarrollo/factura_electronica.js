@@ -31,6 +31,7 @@ async function sendInvoice(iddoc) {
         $("#respuesta_dian").show();
         $("#opciones_dian").show();
         $("#texto_dian").html(invoice.order_reference + ' ' + invoice.dian_status);
+        
     
        /*  table = $('#consulta_ventas').DataTable();
         if (table) {

@@ -37,7 +37,7 @@ CAJA
                 <div class="col-md-3">
                     <label for="inputEmail4" class="form-label">Fecha de aperura </label>
                     <input type="text" class="form-control" id="fecha_apertura_caja" name="fecha_apertura_caja" value=<?php echo date(
-                        'd-m-Y'
+                        'Y-m-d'
                     ); ?> readonly>
                     <div class="text-danger"><?= session(
                         'errors.salon'
