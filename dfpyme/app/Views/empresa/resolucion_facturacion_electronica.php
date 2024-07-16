@@ -130,7 +130,7 @@ RESOLUCIÓN ElECTRÓNICA
             </div>
 
             <div class="col-3">
-              <label for="inputAddress2" class="form-label">Hasta el núemro </label>
+              <label for="inputAddress2" class="form-label">Hasta el número </label>
               <input type="text" class="form-control" id="numero_final" name="numero_final">
               <span class="text-danger error-text numero_final_error" id="error_numero_final"></span>
             </div>

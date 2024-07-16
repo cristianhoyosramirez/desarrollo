@@ -170,9 +170,35 @@ class Ventas extends BaseController
     function datos_productos_borrados()
     {
 
-        $fecha_inicial=$this->request->getPost('fecha_inicial');
-        $fecha_final=$this->request->getPost('fecha_final');
+        $fecha_inicial = $this->request->getPost('fecha_inicial');
+        $fecha_final = $this->request->getPost('fecha_final');
+        $opcion = $this->request->getPost('opcion');
+        //$opcion = 1;
+
+
+        if ($opcion == 1) {
+            $temp_fecha_inicial = model('productosBorradosModel')->get_fecha_inicial();
+            $fecha_inicial = $temp_fecha_inicial[0]['fecha_inicial'];
+
+            $temp_fecha_final = model('productosBorradosModel')->get_fecha_final();
+            $fecha_final = $temp_fecha_final[0]['fecha_final'];
+        }
+        if ($opcion == 2) {
+           
+            $fecha_inicial = $this->request->getPost('fecha_inicial');
+            $fecha_final = $this->request->getPost('fecha_inicial');
+        }
+        if ($opcion == 3) {
+           
+            $fecha_inicial = $this->request->getPost('fecha_inicial');
+            $fecha_final = $this->request->getPost('fecha_final');
+        }
+
+
+
         $productos = model('productosBorradosModel')->getProductosBorrados($fecha_inicial, $fecha_final);
+
+        //dd($productos);
 
 
         $returnData = [
@@ -376,7 +402,7 @@ class Ventas extends BaseController
         ];
         echo  json_encode($json_data);
     }
-    
+
     function datos_reporte_ventas()
     {
         $fecha_inicial = $this->request->getPost('fecha_inicial');
@@ -1052,14 +1078,14 @@ class Ventas extends BaseController
         $id_apertura = model('aperturaModel')->selectMax('id')->findAll();
         $apertura = $id_apertura[0]['id'];
 
-    
+
 
         $id_inicial = model('pagosModel')->selectMin('id')->where('id_apertura', $apertura)->first();
         $id_final = model('pagosModel')->selectMax('id')->first();
 
         $fecha_inicial = model('pagosModel')->select('fecha')->where('id', $id_inicial['id'])->first();
         $fecha_final = model('pagosModel')->select('fecha')->where('id', $id_final['id'])->first();
-/* 
+        /* 
         if (!empty($fecha_inicial)){
             $fecha_inicial = $fecha_inicial['fehca'];
         }else if (empty($fecha_inicial)){
@@ -1136,7 +1162,7 @@ class Ventas extends BaseController
             $sub_array[] = $detalle['fecha'];
             $sub_array[] = $detalle['nit_cliente'];
             $sub_array[] =  $nombre_cliente['nombrescliente'];
-            
+
             if ($detalle['id_estado'] == 8) {
                 $documento = model('facturaElectronicaModel')->select('numero')->where('id', $detalle['id_factura'])->first();
                 $sub_array[] = $documento['numero'];
@@ -1144,7 +1170,7 @@ class Ventas extends BaseController
             } else if ($detalle['id_estado'] != 8) {
                 $sub_array[] = $detalle['documento'];
             }
-            
+
             $sub_array[] = "$ " . number_format($detalle['total_documento'], 0, ",", ".");
             $tipo_documento = model('estadoModel')->select('descripcionestado')->where('idestado', $detalle['id_estado'])->first();
 

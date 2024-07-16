@@ -16,7 +16,7 @@ Reporte de costos
 <link href="<?php echo base_url(); ?>/Assets/plugin/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
 <div class="container">
-    <p class="text-center text-primary h3">INFORME COSTO DE VENTA </p>
+    <p class="text-center text-primary h3">INFORME PRODUCTOS BORRADOS </p>
 
     <div class="my-4"></div> <!-- Added space between the title and date inputs -->
 
@@ -52,7 +52,7 @@ Reporte de costos
                 <label for="fecha_inicial" class="form-label">Fecha inicial </label>
 
                 <div class="input-group input-group-flat">
-                    <input type="text" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d'); ?>">
+                    <input type="text" class="form-control" id="fecha_inicial" value="<?php echo date('Y-m-d'); ?>" onkeyup="document.getElementById('error_de_fecha_inicial').innerText = '';"  onchange="document.getElementById('error_de_fecha_inicial').innerText = '';">
                     <span class="input-group-text">
                         <a href="#" class="link-secondary" title="Limpiar campo" data-bs-toggle="tooltip" onclick="limpiar_campo('fecha_inicial')"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -63,6 +63,7 @@ Reporte de costos
                         </a>
                     </span>
                 </div>
+                <span id="error_de_fecha_inicial" class="text-danger"></span>
             </div>
             <div class="col-md-2" id="final" style="display: none;">
                 <label for="fecha_final" class="form-label">Fecha final </label>
@@ -122,14 +123,14 @@ Reporte de costos
     <div class="table-responsive">
         <table class="table">
             <thead class="table-dark">
-                <td scope="col">Pedido</th>
+               <!--  <td scope="col">Pedido</th> -->
                 <td scope="col">Código </th>
                 <td scope="col">Producto </th>
                 <td scope="col">Cantidad </th>
                 <td scope="col">Fecha</th>
                 <td scope="col">Hora</th>
-                <td scope="col">Usuario creacion</th>
-                <td scope="col">Usuario eliminación</th>
+                <!-- <td scope="col">Usuario creacion</th>
+                <td scope="col">Usuario eliminación</th> -->
 
             </thead>
             <tbody id="productos_borrados">
@@ -317,6 +318,19 @@ Reporte de costos
 
             if (periodo == 1) {
                 buscar_productos_borrados(periodo, fecha_inicial, fecha_final,url)
+            }
+
+            if (periodo == 2){
+                if(fecha_inicial !=""){
+                    buscar_productos_borrados(periodo, fecha_inicial, fecha_final,url)
+                }else if (fecha_inicial ==""){
+                    $('#error_de_fecha_inicial').html('Debe definir una fecha')                }
+            }
+            if (periodo == 3){
+                if(fecha_inicial !="" && fecha_final !="" ){
+                    buscar_productos_borrados(periodo, fecha_inicial, fecha_final,url)
+                }else if (fecha_inicial =="" || fecha_final =="" ){
+                    $('#error_de_fecha_inicial').html('Debe definir una fecha')                }
             }
 
 

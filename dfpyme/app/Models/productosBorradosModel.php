@@ -16,7 +16,7 @@ class productosBorradosModel extends Model
     {
         $datos = $this->db->query("
         SELECT  
-        eliminador.nombresusuario_sistema AS eliminador_nombre,
+        eliminador.nombresusuario_sistema AS nombresusuario_sistema,
         producto.nombreproducto,
         fecha_eliminacion,
         hora_eliminacion,
@@ -59,6 +59,25 @@ class productosBorradosModel extends Model
         usuario_sistema AS eliminador ON productos_borrados.usuario_eliminacion = eliminador.idusuario_sistema
     WHERE 
         pedido = $id_pedido;
+        ");
+        return $datos->getResultArray();
+    }
+
+    public function get_fecha_inicial()
+    {
+        $datos = $this->db->query("
+            SELECT MIN(fecha) AS fecha_inicial
+            FROM pagos;
+
+        ");
+        return $datos->getResultArray();
+    }
+    public function get_fecha_final()
+    {
+        $datos = $this->db->query("
+            SELECT MAX(fecha) AS fecha_final
+            FROM pagos;
+
         ");
         return $datos->getResultArray();
     }

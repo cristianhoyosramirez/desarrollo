@@ -427,21 +427,16 @@ class Boletas extends BaseController
         $code_depto = model('departamentoModel')->select('code')->where('iddepartamento', $id_departamento)->first();
 
 
-        /* 
-         if ($code_depto['code'] == '5' ||  $code_depto['code'] == '8') {
-            $codigo_departamento = '0' . $code_depto['code'];
-        } else if ($code_depto['code'] != 5 ||  $code_depto['code'] != 8) {
-
-            $codigo_departamento = $code_depto['code'];
-        }  */
-
+/* 
         if ($code_depto['code'] === '08') {
             $codigo_departamento = $code_depto['code'];
         } else if (in_array($code_depto['code'], array('5', '8'))) {
             $codigo_departamento = '0' . $code_depto['code'];
         } else {
             $codigo_departamento = $code_depto['code'];
-        }
+        } */
+
+        $codigo_departamento = $code_depto['code'];
 
         $municipios = model('municipiosModel')->where('code_depto', $codigo_departamento)->orderBy('nombre', 'asc')->findAll();
 

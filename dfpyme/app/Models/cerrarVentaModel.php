@@ -81,38 +81,7 @@ class cerrarVentaModel extends Model
              * Consultar el tipo de inventario y descontarlo y actualizar el inventario 
              */
 
-            /*   if ($id_tipo_inventario['id_tipo_inventario'] == 1) {
-                $cantidad_inventario = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                $inventario_final = $cantidad_inventario['cantidad_inventario'] - $detalle['cantidad_producto'];
 
-                $data = [
-                    'cantidad_inventario' => $inventario_final,
-
-                ];
-                $model = model('inventarioModel');
-                $actualizar = $model->set($data);
-                $actualizar = $model->where('codigointernoproducto', $detalle['codigointernoproducto']);
-                $actualizar = $model->update();
-            } elseif ($id_tipo_inventario['id_tipo_inventario'] == 3) {
-
-                $producto_fabricado = model('productoFabricadoModel')->select('*')->where('prod_fabricado', $detalle['codigointernoproducto'])->find();
-
-                foreach ($producto_fabricado as $detall) {
-                    $descontar_de_inventario = $detalle['cantidad_producto'] * $detall['cantidad'];
-
-                    $cantidad_inventario = model('inventarioModel')->select('cantidad_inventario')->where('codigointernoproducto', $detall['prod_proceso'])->first();
-
-                    $data = [
-                        'cantidad_inventario' => $cantidad_inventario['cantidad_inventario'] - $descontar_de_inventario,
-
-                    ];
-
-                    $model = model('inventarioModel');
-                    $actualizar = $model->set($data);
-                    $actualizar = $model->where('codigointernoproducto', $detall['prod_proceso']);
-                    $actualizar = $model->update();
-                }
-            } */
 
             $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
 
@@ -159,7 +128,7 @@ class cerrarVentaModel extends Model
 
             $id_pedido = model('kardexModel')->select('id_pedido')->where('id_pedido', $detalle['id'])->first();
 
-            if (empty($id_pedido['id_pedido'])) {
+            //if (empty($id_pedido['id_pedido'])) {
 
                 $data_kardex = [
                     'idcompra' => 0,
@@ -189,7 +158,40 @@ class cerrarVentaModel extends Model
                 ];
 
                 $insertar = model('kardexModel')->insert($data_kardex);
-            }
+           // }
+
+          /*   if ($tipo_pago==0){
+
+                $data_kardex = [
+                    'idcompra' => 0,
+                    'codigo' => $detalle['codigointernoproducto'],
+                    'idusuario' => $id_usuario,
+                    'idconcepto' => 10,
+                    'numerodocumento' => $numero_factura,
+                    'fecha' => date('Y-m-d'),
+                    'hora' => date("H:i:s"),
+                    'cantidad' => $detalle['cantidad_producto'],
+                    'valor' => $valor_unidad,
+                    'total' => $valor_unidad * $detalle['cantidad_producto'],
+                    'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                    'id_categoria' => $codigo_categoria['codigocategoria'],
+                    'id_apertura' => $id_apertura,
+                    'valor_unitario' => $detalle['valor_unitario'],
+                    'id_factura' => $factura_venta,
+                    //'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
+                    'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
+                    'ico' => $calculo[0]['ico'],
+                    'iva' => $calculo[0]['iva'],
+                    'id_estado' => $estado,
+                    'valor_ico' => $calculo[0]['valor_ico'],
+                    'valor_iva' => $calculo[0]['valor_iva'],
+                    'aplica_ico' => $calculo[0]['aplica_ico'],
+                    //'id_pedido'=>$numero_pedido
+                ];
+
+                $insertar = model('kardexModel')->insert($data_kardex);
+                
+            } */
         }
     }
 

@@ -8,7 +8,7 @@
             <td><?php echo $detalle['cantidad'] ?></td>
             <td><?php echo $detalle['fecha_eliminacion'] ?></td>
             <td><?php echo $detalle['hora_eliminacion'] ?></td>
-            <td><?php echo $detalle['nombresusuario_sistema'] ?></td>
+            <!-- <td><?php #echo $detalle['nombresusuario_sistema'] ?></td> -->
 
         </tr>
 

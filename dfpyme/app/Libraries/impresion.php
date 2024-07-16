@@ -805,43 +805,14 @@ class impresion
                 $printer->text("Cant. " . $detalle['cantidadproducto_factura_venta'] . "      " . "$" . number_format($valor_venta, 0, ',', '.') . "                   " . "$" . number_format($detalle['total'], 0, ',', '.') . "\n");
             }
 
-            //$cantidad_iva = model('productoFacturaVentaModel')->impuestos($id_factura);
-
-            //dd($cantidad_iva);
-
-          /*   $iva_temp = 0;
-            $ico_temp = 0;
-            $venta_real_temp = 0; */
-
-
-
-/* 
-            foreach ($cantidad_iva  as $detalle) {
-                $iva =  $detalle['iva'];
-                $impuesto_al_consumo =  $detalle['impuesto_al_consumo'];
-                $total_iva = $iva + $iva_temp;
-                $iva_temp = $total_iva;
-
-                $total_ico = $impuesto_al_consumo + $ico_temp;
-                $ico_temp = $total_ico;
-
-                $sub_total = $detalle['valor_venta_real'] * $detalle['cantidadproducto_factura_venta'];
-
-                $sub_totales = $sub_total + $venta_real_temp;
-                $venta_real_temp = $sub_totales;
-            } */
-
-            //echo $total_iva."</br>";
-
+ 
 
             $id_estado = model('facturaVentaModel')->select('idestado')->where('id',$id_factura)->first();
-
 
 
             $inc=model('kardexModel')->get_inc_pos($id_factura,$id_estado['idestado']);
             $iva=model('kardexModel')->get_iva_pos($id_factura,$id_estado['idestado']);
             
-
 
             $printer->text("---------------------------------------------" . "\n");
             $total = model('productoFacturaVentaModel')->selectSum('total')->where('id_factura', $id_factura)->find();
@@ -850,24 +821,22 @@ class impresion
 
             $impuesto_saludable = model('productoFacturaVentaModel')->get_impuesto_saluidable($id_factura);
 
-            //dd($impuesto_saludable);
-
-
 
             if ($id_regimen['idregimen'] == 1) {
 
                 if ($estado_factura[0]['idestado'] == 1 or $estado_factura[0]['idestado'] == 2) {
 
-                    //$printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($total_ico - $total_iva) , 0, ",", ".") . "\n");
-                    //$printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total'] - ($cantidad_iva[0]['iva'] - $cantidad_iva[0]['impuesto_al_consumo']), 0, ",", ".") . "\n");
-                    $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total']-($inc[0]['inc']), 0, ",", ".") . "\n");
+                   
+                    //$printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total']-($inc[0]['inc']), 0, ",", ".") . "\n");
 
 
                     if (!empty($iva[0]['iva']) ) {
+                        $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total']-($iva[0]['iva']), 0, ",", ".") . "\n");
                         $printer->text("IVA       :" . "$" . number_format($iva[0]['iva'], 0, ",", ".") . "\n");
                     } 
 
                     if (!empty($inc[0]['inc']) ) {
+                        $printer->text("SUB TOTAL :" . "$" . number_format($total[0]['total']-($inc[0]['inc']), 0, ",", ".") . "\n");
                         $printer->text("IMPUESTO AL CONSUMO :" . "$" . number_format($inc[0]['inc'], 0, ",", ".") . "\n");
                     } 
                 }

@@ -33,17 +33,7 @@
             -ms-user-select: none;
         }
     </style>
-    <style>
-        @import url('https://rsms.me/inter/inter.css');
 
-        :root {
-            --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
-        }
-
-        body {
-            font-feature-settings: "cv03", "cv04", "cv11";
-        }
-    </style>
 
 </head>
 
@@ -64,7 +54,7 @@
                 </div>
 
                 <div class="col-lg-auto ms-lg-auto">
-                    <p class="text-primary h3">SALIDA DE INVENTARIO  </p>
+                    <p class="text-primary h3">SALIDA DE INVENTARIO </p>
                 </div>
                 <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                     <a class="nav-link"><img style="cursor:pointer;" src="<?php echo base_url(); ?>/Assets/img/atras.png" width="20" height="20" onClick="history.go(-1);" title="Sección anterior"></a>
@@ -111,7 +101,7 @@
                                 <div class="text-danger"><?= session('errors.nombre') ?></div>
                             </div>
                             <div class="col-md-3">
-                                <label for="inputEmail4" class="form-label">Cantidad entrada </label>
+                                <label for="inputEmail4" class="form-label">Cantidad salida </label>
                                 <input type="number" class="form-control" name="cantidad_entrada" id="cantidad_entrada" required onkeyup="cantidad_entrada_final()">
                                 <div class="text-danger"><?= session('errors.nombre') ?></div>
                             </div>
@@ -191,8 +181,12 @@
             var cantidadInventario = $('#cantidad_inventario').val();
 
 
-            var resultado =  parseInt(cantidadInventario)-parseInt(cantidadEntrada);
-
+            if (parseInt(cantidadInventario) < 0) {
+                var resultado = parseInt(cantidadInventario) + parseInt(cantidadEntrada);
+            }
+            if (parseInt(cantidadInventario) > 0) {
+                var resultado = parseInt(cantidadInventario) - parseInt(cantidadEntrada);
+            }
             // Update the result in another input or do something with it
             $('#cantidad_final').val(resultado);
 

@@ -36,6 +36,7 @@ class CerrarVenta extends BaseController
         $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
 
         if ($validar_pedido[0]['total'] == 0 and $suma_pedido[0]['total'] == $total_pedido['valor_total']) {
+            
 
             $items = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
 
