@@ -24,7 +24,7 @@ class CerrarVenta extends BaseController
     public function cerrar_venta()
     {
 
-         $id_mesa = $this->request->getPost('id_mesa');
+        $id_mesa = $this->request->getPost('id_mesa');
         //$id_mesa = 1;
         $pedido = model('pedidoModel')->select('id')->where('fk_mesa', $id_mesa)->first();
         $numero_pedido = $pedido['id'];
@@ -35,8 +35,9 @@ class CerrarVenta extends BaseController
         $suma_pedido = model('productoPedidoModel')->total_pedido($numero_pedido);
         $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
 
+
         if ($validar_pedido[0]['total'] == 0 and $suma_pedido[0]['total'] == $total_pedido['valor_total']) {
-            
+
 
             $items = model('productoPedidoModel')->where('numero_de_pedido', $numero_pedido)->find();
 
@@ -349,32 +350,32 @@ class CerrarVenta extends BaseController
 
                     //if (empty($id_pedido['id_pedido'])) {
 
-                        $pagos = [
+                    $pagos = [
 
-                            'fecha' => date('Y-m-d'),
-                            'hora' => date("H:i:s"),
-                            'documento' => $numeracion_factura,
-                            'valor' => $valor_venta - $propina,
-                            'propina' => $propina,
-                            'total_documento' => $valor_venta,
-                            'efectivo' => $valor_pago_efectivo,
-                            'transferencia' => $valor_pago_transferencia,
-                            'total_pago' => $efectivo + $transaccion,
-                            'id_usuario_facturacion' => $id_usuario,
-                            'id_mesero' => $id_mesero['fk_usuario'],
-                            'id_estado' => $estado,
-                            'id_apertura' => $id_apertura['numero'],
-                            'cambio' => $cambio,
-                            'recibido_efectivo' => $recibido_efectivo,
-                            'recibido_transferencia' => $recibido_transaccion,
-                            'id_factura' => $factura_venta,
-                            'saldo' => $saldo,
-                            'nit_cliente' => $nit_cliente,
-                            'id_pedido' => $numero_pedido
+                        'fecha' => date('Y-m-d'),
+                        'hora' => date("H:i:s"),
+                        'documento' => $numeracion_factura,
+                        'valor' => $valor_venta - $propina,
+                        'propina' => $propina,
+                        'total_documento' => $valor_venta,
+                        'efectivo' => $valor_pago_efectivo,
+                        'transferencia' => $valor_pago_transferencia,
+                        'total_pago' => $efectivo + $transaccion,
+                        'id_usuario_facturacion' => $id_usuario,
+                        'id_mesero' => $id_mesero['fk_usuario'],
+                        'id_estado' => $estado,
+                        'id_apertura' => $id_apertura['numero'],
+                        'cambio' => $cambio,
+                        'recibido_efectivo' => $recibido_efectivo,
+                        'recibido_transferencia' => $recibido_transaccion,
+                        'id_factura' => $factura_venta,
+                        'saldo' => $saldo,
+                        'nit_cliente' => $nit_cliente,
+                        'id_pedido' => $numero_pedido
 
-                        ];
+                    ];
 
-                        $pagos = model('pagosModel')->insert($pagos);
+                    $pagos = model('pagosModel')->insert($pagos);
                     //}
 
                     if ($tipo_pago == 1) {  // si el tipo de pago es 1 quiere decir que se factura el pedido completo 

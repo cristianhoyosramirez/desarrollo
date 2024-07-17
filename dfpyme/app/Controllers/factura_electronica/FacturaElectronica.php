@@ -35,7 +35,8 @@ class FacturaElectronica extends BaseController
         $suma_pedido = model('productoPedidoModel')->total_pedido($numero_pedido);
         $total_pedido = model('pedidoModel')->select('valor_total')->where('id', $numero_pedido)->first();
 
-        if ($validar_pedido[0]['total'] == 0 and $suma_pedido[0]['total'] == $total_pedido['valor_total']) {
+        //if ($validar_pedido[0]['total'] == 0 and $suma_pedido[0]['total'] == $total_pedido['valor_total']) {
+        if ($validar_pedido[0]['total'] == 0 ) {
             $id_impresora = model('impresionFacturaModel')->select('id_impresora')->first();
             $nombre_impresora = model('impresorasModel')->select('nombre')->where('id', $id_impresora['id_impresora'])->first();
             $connector = new WindowsPrintConnector($nombre_impresora['nombre']);
@@ -236,40 +237,40 @@ class FacturaElectronica extends BaseController
                         $codigo_categoria = model('productoModel')->select('codigocategoria')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
                         $id_pedido = model('kardexModel')->select('id_pedido')->where('id_pedido', $detalle['id'])->first();
                         //if (empty($id_pedido['id_pedido'])) {
-                            $data = [
-                                'idcompra' => 0,
-                                'codigo' => $detalle['codigointernoproducto'],
-                                'idusuario' => $id_usuario,
-                                'idconcepto' => 10,
-                                'numerodocumento' => $id_factura,
-                                'fecha' => date('Y-m-d'),
-                                'hora' => date('H:i:s'),
-                                'cantidad' => $detalle['cantidad_producto'],
-                                'valor' => $detalle['valor_unitario'],
-                                'total' => $detalle['valor_total'],
-                                'fecha_y_hora_factura_venta' => $fecha_y_hora,
-                                'id_categoria' => $codigo_categoria['codigocategoria'],
-                                'id_apertura' => $apertura['numero'],
-                                'valor_unitario' => $detalle['valor_unitario'],
-                                'id_factura' => $id_factura,
-                                'costo' => round($costo['precio_costo'] * $detalle['cantidad_producto']),
-                                'ico' => $calculo[0]['ico'],
-                                'iva' => $calculo[0]['iva'],
-                                'id_estado' => 8,
-                                'valor_ico' => $calculo[0]['valor_ico'],
-                                'valor_iva' => $calculo[0]['valor_iva'],
-                                'aplica_ico' => $calculo[0]['aplica_ico'],
-                                //'id_pedido'=>$numero_pedido
-                            ];
+                        $data = [
+                            'idcompra' => 0,
+                            'codigo' => $detalle['codigointernoproducto'],
+                            'idusuario' => $id_usuario,
+                            'idconcepto' => 10,
+                            'numerodocumento' => $id_factura,
+                            'fecha' => date('Y-m-d'),
+                            'hora' => date('H:i:s'),
+                            'cantidad' => $detalle['cantidad_producto'],
+                            'valor' => $detalle['valor_unitario'],
+                            'total' => $detalle['valor_total'],
+                            'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                            'id_categoria' => $codigo_categoria['codigocategoria'],
+                            'id_apertura' => $apertura['numero'],
+                            'valor_unitario' => $detalle['valor_unitario'],
+                            'id_factura' => $id_factura,
+                            'costo' => round($costo['precio_costo'] * $detalle['cantidad_producto']),
+                            'ico' => $calculo[0]['ico'],
+                            'iva' => $calculo[0]['iva'],
+                            'id_estado' => 8,
+                            'valor_ico' => $calculo[0]['valor_ico'],
+                            'valor_iva' => $calculo[0]['valor_iva'],
+                            'aplica_ico' => $calculo[0]['aplica_ico'],
+                            //'id_pedido'=>$numero_pedido
+                        ];
 
-                            $insertar = model('kardexModel')->insert($data);
+                        $insertar = model('kardexModel')->insert($data);
 
 
-                            $id_tipo_inventario = model('productoModel')->select('id_tipo_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                            $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
+                        $id_tipo_inventario = model('productoModel')->select('id_tipo_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                        $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
                         //}
 
-                       /*  if ($tipo_pago == 0) {
+                        /*  if ($tipo_pago == 0) {
 
                             $data = [
                                 'idcompra' => 0,
@@ -317,38 +318,38 @@ class FacturaElectronica extends BaseController
                     $id_pedido = model('kardexModel')->select('id_pedido')->where('id_pedido', $detalle['id'])->first();
 
                     //if (empty($id_pedido['id_pedido'])) {
-                        $data = [
-                            'idcompra' => 0,
-                            'codigo' => $detalle['codigointernoproducto'],
-                            'idusuario' => $id_usuario,
-                            'idconcepto' => 10,
-                            'numerodocumento' => $id_factura,
-                            'fecha' => date('Y-m-d'),
-                            'hora' => date('H:i:s'),
-                            'cantidad' => $detalle['cantidad_producto'],
-                            'valor' => $detalle['valor_unitario'],
-                            'total' => $detalle['valor_total'],
-                            'fecha_y_hora_factura_venta' => $fecha_y_hora,
-                            'id_categoria' => $codigo_categoria['codigocategoria'],
-                            'id_apertura' => $apertura['numero'],
-                            'valor_unitario' => $detalle['valor_unitario'],
-                            'id_factura' => $id_factura,
-                            'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
-                            'ico' => 0,
-                            'iva' => 0,
-                            'id_estado' => 8,
-                            'valor_ico' => 0,
-                            'valor_iva' => 0,
-                            'aplica_ico' => 'false',
+                    $data = [
+                        'idcompra' => 0,
+                        'codigo' => $detalle['codigointernoproducto'],
+                        'idusuario' => $id_usuario,
+                        'idconcepto' => 10,
+                        'numerodocumento' => $id_factura,
+                        'fecha' => date('Y-m-d'),
+                        'hora' => date('H:i:s'),
+                        'cantidad' => $detalle['cantidad_producto'],
+                        'valor' => $detalle['valor_unitario'],
+                        'total' => $detalle['valor_total'],
+                        'fecha_y_hora_factura_venta' => $fecha_y_hora,
+                        'id_categoria' => $codigo_categoria['codigocategoria'],
+                        'id_apertura' => $apertura['numero'],
+                        'valor_unitario' => $detalle['valor_unitario'],
+                        'id_factura' => $id_factura,
+                        'costo' => $costo['precio_costo'] * $detalle['cantidad_producto'],
+                        'ico' => 0,
+                        'iva' => 0,
+                        'id_estado' => 8,
+                        'valor_ico' => 0,
+                        'valor_iva' => 0,
+                        'aplica_ico' => 'false',
 
-                        ];
+                    ];
 
 
-                        $insertar = model('kardexModel')->insert($data);
+                    $insertar = model('kardexModel')->insert($data);
 
-                        $id_tipo_inventario = model('productoModel')->select('id_tipo_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
-                        $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
-                    
+                    $id_tipo_inventario = model('productoModel')->select('id_tipo_inventario')->where('codigointernoproducto', $detalle['codigointernoproducto'])->first();
+                    $actualizar_inventario = $inventario->actualizar_inventario($detalle['codigointernoproducto'], $id_tipo_inventario['id_tipo_inventario'], $detalle['cantidad_producto']);
+
 
                     /* if ($tipo_pago == 0) {
 
@@ -464,36 +465,36 @@ class FacturaElectronica extends BaseController
                     }
                 }
 
-                $id_pedidos = model('pagosModel')->select('id_pedido')->where('id_pedido', $numero_pedido)->first();
+                //$id_pedidos = model('pagosModel')->select('id_pedido')->where('id_pedido', $numero_pedido)->first();
 
-                if (empty($id_pedidos['id_pedido'])) {
+                // if (empty($id_pedidos['id_pedido'])) {
 
-                    $pagos = [
+                $pagos = [
 
-                        'fecha' => date('Y-m-d'),
-                        'hora' => date("H:i:s"),
-                        'documento' => $id_factura,
-                        'valor' => $valor_venta - $propina,
-                        'propina' => $propina,
-                        'total_documento' => $valor_venta,
-                        'efectivo' => $valor_pago_efectivo,
-                        'transferencia' => $valor_pago_transferencia,
-                        'total_pago' => $efectivo + $transaccion,
-                        'id_usuario_facturacion' => $id_usuario,
-                        'id_mesero' => $id_usuario,
-                        'id_estado' => $estado,
-                        'id_apertura' => $id_apertura['numero'],
-                        'cambio' => $cambio,
-                        'recibido_efectivo' => $recibido_efectivo,
-                        'recibido_transferencia' => $recibido_transaccion,
-                        'id_factura' => $id_factura,
-                        'saldo' => $saldo,
-                        'nit_cliente' => $nit_cliente,
-                        'id_pedido' => $numero_pedido
-                    ];
+                    'fecha' => date('Y-m-d'),
+                    'hora' => date("H:i:s"),
+                    'documento' => $id_factura,
+                    'valor' => $valor_venta - $propina,
+                    'propina' => $propina,
+                    'total_documento' => $valor_venta,
+                    'efectivo' => $valor_pago_efectivo,
+                    'transferencia' => $valor_pago_transferencia,
+                    'total_pago' => $efectivo + $transaccion,
+                    'id_usuario_facturacion' => $id_usuario,
+                    'id_mesero' => $id_usuario,
+                    'id_estado' => $estado,
+                    'id_apertura' => $id_apertura['numero'],
+                    'cambio' => $cambio,
+                    'recibido_efectivo' => $recibido_efectivo,
+                    'recibido_transferencia' => $recibido_transaccion,
+                    'id_factura' => $id_factura,
+                    'saldo' => $saldo,
+                    'nit_cliente' => $nit_cliente,
+                    'id_pedido' => $numero_pedido
+                ];
 
-                    $pagos = model('pagosModel')->insert($pagos);
-                }
+                $pagos = model('pagosModel')->insert($pagos);
+                //}
 
                 if ($tipo_pago == 1) {
 

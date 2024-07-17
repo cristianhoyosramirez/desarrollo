@@ -20,6 +20,8 @@ class cerrarVentaModel extends Model
         $inventario = new Inventario();
         $valor_unidad = "";
 
+    
+
         foreach ($productos as $detalle) {
 
             // pago parcial
@@ -154,7 +156,7 @@ class cerrarVentaModel extends Model
                     'valor_ico' => $calculo[0]['valor_ico'],
                     'valor_iva' => $calculo[0]['valor_iva'],
                     'aplica_ico' => $calculo[0]['aplica_ico'],
-                    'id_pedido'=>$detalle['id']
+                    //'id_pedido'=>$detalle['id']
                 ];
 
                 $insertar = model('kardexModel')->insert($data_kardex);
