@@ -1383,4 +1383,19 @@ class Boletas extends BaseController
             echo  json_encode($returnData);
         }
     }
+
+    function eliminar_f_e(){
+        $id=$this->request->getPost('id');
+
+        $borrar=model('pagosModel')->borrar_f_e($id);
+
+        if ($borrar){
+           $borrar_documento=model('facturaElectronicaModel')->where('id',$id)->delete();
+        }
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+        );
+        echo  json_encode($returnData);
+    }
 }

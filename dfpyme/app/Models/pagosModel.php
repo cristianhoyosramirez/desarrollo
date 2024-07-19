@@ -445,6 +445,30 @@ class pagosModel extends Model
             return false;
         }
     }
+    public function borrar_f_e($id_factura)
+    {
+        try {
+            $this->db->transStart(); // Iniciar transacción
+
+            $this->db->query("
+                delete from pagos where id_factura = $id_factura and id_estado = 8
+            ");
+
+            $this->db->transComplete(); // Finalizar transacción
+
+            if ($this->db->transStatus() === false) {
+                // La transacción falló, por lo que se revierte
+                $this->db->transRollback();
+                return false;
+            } else {
+                // La transacción se completó con éxito
+                return true;
+            }
+        } catch (\Exception $e) {
+            // Captura cualquier excepción
+            return false;
+        }
+    }
 
     public function total_costo($id_apertura)
     {

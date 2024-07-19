@@ -809,4 +809,53 @@ Ventas
 </script>
 
 
+<script>
+    function eliminar_f_e(id){
+
+        var url = document.getElementById("url").value;
+
+        $.ajax({
+                data: {
+                    id
+                },
+                url: url + "/" + "eventos/eliminar_f_e",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+
+                 
+                    if (resultado.resultado == 1) {
+
+
+
+                        mytable = $('#consulta_ventas').DataTable();
+                        mytable.draw();
+
+                        const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'info',
+                        title: 'Registro borrado  '
+                    })
+
+
+
+                    }
+                },
+            });
+
+    }
+</script>
+
+
 <?= $this->endSection('content') ?>

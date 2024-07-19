@@ -516,6 +516,7 @@ $routes->group('eventos', ['namespace' => 'App\Controllers\Boletas', 'filter' =>
     $routes->post('actualizar_venta_multiple', 'Boletas::actualizar_venta_multiple');
     $routes->get('validar_venta_directa', 'Boletas::validar_venta_directa');
     $routes->post('editar_precio', 'Boletas::editar_precio');
+    $routes->post('eliminar_f_e', 'Boletas::eliminar_f_e');
 });
 
 
