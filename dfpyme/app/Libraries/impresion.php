@@ -590,7 +590,7 @@ class impresion
         $printer->text(str_pad("PAGO EFECTIVO:", 40, " ")  . number_format($efectivo[0]['recibido_efectivo'], 0, ",", ".") . "\n");
 
         if ($transferencia[0]['recibido_transferencia'] > 0) {
-            $printer->text(str_pad("PAGO TRANSFERENCIA :", 40, " ") . "$ " . number_format($transferencia['recibido_transferencia'], 0, ",", ".") . "\n");
+            $printer->text(str_pad("PAGO TRANSFERENCIA :", 40, " ") . "$ " . number_format($transferencia[0]['recibido_transferencia'], 0, ",", ".") . "\n");
         }
 
         $cambio = model('kardexModel')->cambio($id_factura);

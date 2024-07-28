@@ -391,6 +391,7 @@ Ventas
 
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/f_e.js"></script>
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/imprimir_electronica.js"></script>
+<script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/impresion_factura_electronica.js"></script>
 
 <!-- <script>
     function estado_dian(id_estado){

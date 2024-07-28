@@ -226,6 +226,7 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/abrir_cajon.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/header_pedido.js"></script>
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/header_mesa.js"></script>
+    <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/impresion_factura_electronica.js"></script>
 
     <script>
         $(document).ready(function() {
