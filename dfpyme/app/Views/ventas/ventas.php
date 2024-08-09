@@ -301,23 +301,7 @@ Ventas
 
 
             <div class="col-md-3 col-lg-3">
-                <!--   <div class="card card-sm">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
-                                </div>
-                                <div class="col">
-                                    <div class="font-weight-medium text-center">
-                                        Total de cuentas por cobrar
-                                    </div>
-                                    <div class="text-muted text-center">
-                                        <span id="c_x_c"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
+
             </div>
             <div class="col-md-3 col-lg-3" style="display: none;" id="pagos_recibidos">
                 <div class="card card-sm">
@@ -359,26 +343,27 @@ Ventas
                 </div>
             </div>
 
-
-            <div class="col-md-3 col-lg-3 w-10">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
-                            </div>
-                            <div class="col">
-                                <div class="font-weight-medium text-center">
-                                    <span id="total_ventas"></span>
+            <?php if ($user_session->tipo == 0) { ?>
+                <div class="col-md-3 col-lg-3 w-10">
+                    <div class="card card-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <div class="chart-sparkline chart-sparkline-square" id="sparkline-orders"></div>
                                 </div>
-                                <div class="text-muted text-center">
-                                    <span id="total_documentos"></span>
+                                <div class="col">
+                                    <div class="font-weight-medium text-center">
+                                        <span id="total_ventas"></span>
+                                    </div>
+                                    <div class="text-muted text-center">
+                                        <span id="total_documentos"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <?php  } ?>
         </div>
 
     </div>
@@ -811,28 +796,28 @@ Ventas
 
 
 <script>
-    function eliminar_f_e(id){
+    function eliminar_f_e(id) {
 
         var url = document.getElementById("url").value;
 
         $.ajax({
-                data: {
-                    id
-                },
-                url: url + "/" + "eventos/eliminar_f_e",
-                type: "POST",
-                success: function(resultado) {
-                    var resultado = JSON.parse(resultado);
-
-                 
-                    if (resultado.resultado == 1) {
+            data: {
+                id
+            },
+            url: url + "/" + "eventos/eliminar_f_e",
+            type: "POST",
+            success: function(resultado) {
+                var resultado = JSON.parse(resultado);
 
 
+                if (resultado.resultado == 1) {
 
-                        mytable = $('#consulta_ventas').DataTable();
-                        mytable.draw();
 
-                        const Toast = Swal.mixin({
+
+                    mytable = $('#consulta_ventas').DataTable();
+                    mytable.draw();
+
+                    const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-end',
                         showConfirmButton: false,
@@ -851,9 +836,9 @@ Ventas
 
 
 
-                    }
-                },
-            });
+                }
+            },
+        });
 
     }
 </script>

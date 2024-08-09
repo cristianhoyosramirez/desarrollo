@@ -159,9 +159,10 @@ Bienvenido DFpyme
                         </div>
                     </div>
                 <?php endif ?>
-                <?php $alturaCalc = "33rem + 10px"; // Calcula la altura 
+                <?php $alturaCalc = "25rem + 10px"; // Calcula la altura 
                 ?>
-                <?php # $venta_multiple = model('configuracionPedidoModel')->select('requiere_mesa')->first(); ?>
+                <?php # $venta_multiple = model('configuracionPedidoModel')->select('requiere_mesa')->first(); 
+                ?>
 
                 <!--   <?php #if (($id_tipo['fk_tipo_empresa'] == 2 || $id_tipo['fk_tipo_empresa'] == 3) || $venta_multiple['requiere_mesa'] == "f") : 
                         ?>
@@ -173,7 +174,9 @@ Bienvenido DFpyme
                                     <?php #foreach ($categorias as $detalle) : 
                                     ?>
                                         <li>
-                                            <button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php #echo $detalle['codigocategoria'] ?>" onclick="productos_categoria(<?php #echo $detalle['codigocategoria'] ?>)">
+                                            <button type="button" class="btn btn-outline-indigo btn-pill btn-sm" id="categoria_<?php #echo $detalle['codigocategoria'] 
+                                                                                                                                ?>" onclick="productos_categoria(<?php #echo $detalle['codigocategoria'] 
+                                                                                                                                                                                                        ?>)">
                                                 <?php #echo $detalle['nombrecategoria'] 
                                                 ?>
                                             </button>
@@ -262,15 +265,15 @@ Bienvenido DFpyme
                                             <td tyle="width: 25%;">
                                                 <?php if ($id_tipo['fk_tipo_empresa'] == 1 || $id_tipo['fk_tipo_empresa'] == 3) : ?>
                                                     <p id="mesa_pedido" class="text-warning "> Mesa:</p>
-                                                    <img style ="display:none" id="img_ventas_directas" src="<?php echo base_url(); ?>/Assets/img/caja-registradora.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
+                                                    <img style="display:none" id="img_ventas_directas" src="<?php echo base_url(); ?>/Assets/img/caja-registradora.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
                                                 <?php endif ?>
                                                 <?php if ($id_tipo['fk_tipo_empresa'] == 2) : ?>
                                                     <p id="mesa_pedido" class="text-warning "> Venta:</p>
-                                                    <img style ="display:none" id="img_ventas_directas" src="<?php echo base_url(); ?>/Assets/img/caja-registradora.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
+                                                    <img style="display:none" id="img_ventas_directas" src="<?php echo base_url(); ?>/Assets/img/caja-registradora.png" width="110" height="32" alt="Macondo" class="navbar-brand-image">
                                                 <?php endif ?>
                                             </td>
                                             <td yle="width: 25%;">
-                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1 || $id_tipo['fk_tipo_empresa'] == 2 ) : ?>
+                                                <?php if ($id_tipo['fk_tipo_empresa'] == 1 || $id_tipo['fk_tipo_empresa'] == 2) : ?>
                                                     <p id="pedido_mesa">Pedio: </p>
                                                 <?php endif ?>
                                             </td>
@@ -451,7 +454,10 @@ Bienvenido DFpyme
                                 <button class="num-key btn-danger" onclick="deleteLast()">←</button>
                             </div> -->
 
+
+
                         </div>
+
                         <div class="container">
                             <div class="row mb-2 gy-2"> <!-- Fila para los botones -->
                                 <div class="col-md-6">
@@ -479,7 +485,10 @@ Bienvenido DFpyme
                                             Pago parcial
                                         </a>
                                     </div>
-
+                                    
+                                    <a href="#" class="card card-link card-link-pop">
+                                        <div class="card-body"><p class="text-primary bold" id="ventas_electronicas">Total ventas electrónicas:</p></div>
+                                    </a>
                                 <?php endif ?>
                             </div>
 

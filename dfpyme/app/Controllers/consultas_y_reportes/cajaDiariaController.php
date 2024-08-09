@@ -86,6 +86,7 @@ class cajaDiariaController extends BaseController
 
 
 
+                //$vantas_contado = model('facturaVentaModel')->ventas_contado($vantas_de_contado[0]['id_inicial'], $vantas_de_contado[0]['id_final']);
                 $vantas_contado = model('facturaVentaModel')->ventas_contado($vantas_de_contado[0]['id_inicial'], $vantas_de_contado[0]['id_final']);
 
                 /**
@@ -2186,6 +2187,7 @@ class cajaDiariaController extends BaseController
                 "iva" => $array_iva,
                 "ico" => $array_ico,
                 "vantas_contado" => $vantas_contado[0]['total'],
+                //"vantas_contado" => 0,
 
                 "iva_devolucion" => $array_devoluciones_iva,
                 "ico_devolucion" => $array_devoluciones_ico,

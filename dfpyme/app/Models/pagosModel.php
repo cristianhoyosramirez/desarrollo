@@ -451,7 +451,8 @@ class pagosModel extends Model
             $this->db->transStart(); // Iniciar transacción
 
             $this->db->query("
-                delete from pagos where id_factura = $id_factura and id_estado = 8
+                delete from pagos where id_factura = $id_factura and id_estado = 8;
+                delete from kardex where id_factura = $id_factura and id_estado = 8;
             ");
 
             $this->db->transComplete(); // Finalizar transacción
@@ -497,6 +498,16 @@ class pagosModel extends Model
         SELECT sum(costo) AS costo
         FROM kardex
         WHERE fecha BETWEEN '$fecha_inicial' AND '$fecha_final'");
+        return $datos->getResultArray();
+    }
+    public function get_total_ventas_electronicas ($id_apertura)
+    {
+
+        $datos = $this->db->query("
+        SELECT SUM (total) AS total_electronicas
+        FROM   documento_electronico
+        WHERE  id_apertura = $id_apertura
+        AND id_status = 2 ");
         return $datos->getResultArray();
     }
 }

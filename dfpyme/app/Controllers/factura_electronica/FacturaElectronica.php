@@ -539,6 +539,9 @@ class FacturaElectronica extends BaseController
 
                     $mesas = model('mesasModel')->where('estado', 0)->orderBy('id', 'ASC')->findAll();
                     $categorias = model('categoriasModel')->where('permitir_categoria', 'true')->findAll();
+
+                    $total_ventas_electronicas=model('pagosModel')->get_total_ventas_electronicas($id_apertura['numero']);
+
                     $returnData = array(
                         "resultado" => 1, //Falta plata
                         "total" => "$ " . number_format($valor_venta, 0, ",", "."),
@@ -552,7 +555,8 @@ class FacturaElectronica extends BaseController
                             'categorias' => $categorias
                         ]),
                         "id_factura" => $id_factura,
-                        "documentos" => view('pedidos/documento')
+                        "documentos" => view('pedidos/documento'),
+                        'ventas_electronicas'=>"$ " . number_format($total_ventas_electronicas[0]['total_electronicas'], 0, ",", ".")
                     );
                     echo  json_encode($returnData);
                 }
@@ -658,6 +662,8 @@ class FacturaElectronica extends BaseController
                     $model = model('partirFacturaModel');
                     $borrar = $model->truncate();
 
+                    $total_ventas_electronicas=model('pagosModel')->get_total_ventas_electronicas($id_apertura['numero']);
+                    
                     $returnData = array(
                         "id_factura" => $id_factura,
                         "resultado" => 1,
@@ -677,7 +683,8 @@ class FacturaElectronica extends BaseController
                         "id_mesa" => $id_mesa,
                         "pedido" => $numero_pedido['id'],
                         "nombre_mesa" => $nombre_mesa['nombre'],
-                        "documentos" => view('pedidos/documento')
+                        "documentos" => view('pedidos/documento'),
+                        'ventas_electronicas'=>"$ " . number_format($total_ventas_electronicas[0]['total_electronicas'], 0, ",", ".")
                     );
                     echo  json_encode($returnData);
                 }

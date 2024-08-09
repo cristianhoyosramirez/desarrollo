@@ -229,6 +229,28 @@
     <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/impresion_factura_electronica.js"></script>
 
     <script>
+        function total_venta_electronicas() {
+            let url = document.getElementById("url").value;
+            $.ajax({
+                url: url + "/" + "reportes/total_ventas_electronicas",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    // Aquí puedes manejar el resultado como desees
+                   $('#ventas_electronicas').html('Total ventas electrónicas: '+resultado.ventas_electronicas)
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud AJAX:", status, error);
+                }
+            });
+        }
+
+        // Ejecuta la función total_venta_electronicas cada 5 segundos
+        setInterval(total_venta_electronicas, 5000); // 5000 ms = 5 segundos
+    </script>
+
+
+    <script>
         $(document).ready(function() {
             var autocomplete = function() {
                 // Tu función de autocompletado aquí

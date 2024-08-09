@@ -411,6 +411,19 @@ class ReportesController extends BaseController
         }
     }
 
+    function total_ventas_electronicas(){
+
+        $id_apertura=model('aperturaRegistroModel')->select('numero')->first();
+
+        $total_ventas_electronicas=model('pagosModel')->get_total_ventas_electronicas($id_apertura['numero']);
+
+        $returnData = array(
+            "resultado" => 1, //Falta plata 
+            'ventas_electronicas'=>"$ " . number_format($total_ventas_electronicas[0]['total_electronicas'], 0, ",", ".")
+        );
+        echo  json_encode($returnData);
+    }
+
    
 
 }

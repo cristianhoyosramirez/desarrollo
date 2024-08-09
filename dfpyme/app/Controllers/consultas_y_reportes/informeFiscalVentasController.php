@@ -1183,7 +1183,8 @@ class informeFiscalVentasController extends BaseController
             "ico_devolucion" => $array_devoluciones_ico,
             "consecutivo" => $movimientos['consecutivo'],
             //"consecutivo" => $consecutivo_informe['numero'],
-            "fecha" => $fecha
+            "fecha" => $fecha,
+            "titulo"=>"Informe fiscal de ventas electrónicas "
 
         ]));
 

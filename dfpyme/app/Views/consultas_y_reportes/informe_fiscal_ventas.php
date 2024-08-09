@@ -1,8 +1,7 @@
-
 <div class="card container">
     <div class="card-body">
         <div class="row">
-            <div class="col-1">
+            <div class="col-1 text-end">
                 <form action="<?php echo $action_url; ?>" method="POST">
                     <input type="hidden" value="<?php echo $fecha_apertura ?>" name="fecha_reporte">
                     <input type="hidden" value="<?php echo $id_apertura; ?>" name="id_apertura">
@@ -11,8 +10,17 @@
                         Pdf
                     </button>
                 </form>
-            
             </div>
+
+            <div class="col-1">
+
+                <button type="submit" title="Imprimir" class="btn btn-outline-green w-150 btn-icon" onclick="imprimir_fiscal()">
+                    Imprimir
+                </button>
+
+            </div>
+
+
         </div>
         <div class="row">
             <div class="col-6">
@@ -43,7 +51,7 @@
 
                     <tbody>
                         <tr>
-                            <th><?php  echo $titulo ?></th>
+                            <th><?php echo $titulo ?></th>
                         </tr>
                         <tr>
                             <td>N°:<?php echo $consecutivo ?></td>

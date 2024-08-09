@@ -62,6 +62,18 @@ class facturaVentaModel extends Model
          ");
         return $datos->getResultArray();
     }
+    public function ventas_contado_electronicas($id_inicial, $id_final)
+    {
+        $datos = $this->db->query("
+        SELECT
+        SUM(valor) as total_contado
+    FROM
+        pagos
+    WHERE
+        id BETWEEN $id_inicial AND $id_final and id_estado=8;
+         ");
+        return $datos->getResultArray();
+    }
     public function ventas_de_credito($fecha)
     {
         $datos = $this->db->query("

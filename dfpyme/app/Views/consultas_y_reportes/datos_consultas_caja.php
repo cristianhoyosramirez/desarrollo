@@ -638,6 +638,26 @@ MOVIMIENTO DE CAJA
 <script src="<?= base_url() ?>/Assets/script_js/nuevo_desarrollo/sweet_alert.js"></script>
 
 <script>
+    function imprimir_fiscal(){
+        let url = document.getElementById("url").value;
+        let id_apertura = document.getElementById("id_apertura").value;
+            $.ajax({
+                data:{id_apertura},
+                url: url + "/" + "pedidos/imprimir_fiscal",
+                type: "POST",
+                success: function(resultado) {
+                    var resultado = JSON.parse(resultado);
+                    // Aquí puedes manejar el resultado como desees
+                   $('#ventas_electronicas').html('Total ventas electrónicas: '+resultado.ventas_electronicas)
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud AJAX:", status, error);
+                }
+            });
+    }
+</script>
+
+<script>
     function seleccionar(){
         //$('#'+id).select()
         console.log('Gg')

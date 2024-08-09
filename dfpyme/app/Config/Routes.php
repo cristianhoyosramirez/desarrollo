@@ -464,6 +464,7 @@ $routes->group('pedidos', ['namespace' => 'App\Controllers\pedidos', 'filter' =>
     $routes->post('impresion_factura_electronica', 'Imprimir::impresion_factura_electronica');
     $routes->post('detalle_f_e', 'Imprimir::detalle_f_e');
     $routes->post('reporte_ventas', 'Imprimir::reporte_ventas');
+    $routes->post('imprimir_fiscal', 'Imprimir::imprimir_fiscal');
 });
 
 $routes->group('inventario', ['namespace' => 'App\Controllers\pedidos', 'filter' => \App\Filters\Auth::class], function ($routes) {
@@ -552,6 +553,7 @@ $routes->group('reportes', ['namespace' => 'App\Controllers\reportes', 'filter' 
     $routes->post('datos_pagos', 'ReportesController::datos_pagos');
     $routes->get('ver_productos_eliminanados', 'ReportesController::ver_productos_eliminanados');
     $routes->post('activar_producto', 'ReportesController::activar_producto');
+    $routes->post('total_ventas_electronicas', 'ReportesController::total_ventas_electronicas');
 });
 
 $routes->group('configuracion', ['namespace' => 'App\Controllers\configuracion', 'filter' => \App\Filters\Auth::class], function ($routes) {
